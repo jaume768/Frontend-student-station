@@ -1,6 +1,6 @@
 import React from 'react';
 
-const CallToAction = ({ onLoginClick }) => {
+const CallToAction = ({ onLoginClick, onRegisterClick }) => {
     return (
         <div className='call-to-action'>
             <section className="inicio-sesion">
@@ -12,8 +12,22 @@ const CallToAction = ({ onLoginClick }) => {
                     Déjate descubrir por los profesionales de la industria y conecta con otros creativos.
                 </p>
                 <div className="botones">
-                    <a href="#">Soy un creativo</a>
-                    <a href="#">Soy una empresa</a>
+                    <a href="#"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            onRegisterClick();
+                        }}
+                    >
+                        Soy un creativo
+                    </a>
+                    <a href="#" className="register"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            onRegisterClick();
+                        }}
+                    >
+                        Soy una empresa
+                    </a>
                 </div>
                 <div className='boton-inicio-movil'>
                     <a href="#" onClick={(e) => {

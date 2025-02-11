@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { FaBars, FaTimes, FaUser } from 'react-icons/fa';
 
-const Header = ({ onLoginClick }) => {
+const Header = ({ onLoginClick, onRegisterClick }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const toggleMenu = () => {
-        setIsMenuOpen(prev => !prev);
+        setIsMenuOpen((prev) => !prev);
     };
 
     return (
@@ -28,11 +28,20 @@ const Header = ({ onLoginClick }) => {
                 </nav>
 
                 <div className="user-actions">
-                    <a href="#" className="register">Registro</a>
-                    <a href="#" className="login" onClick={(e) => {
-                        e.preventDefault();
-                        onLoginClick();
-                    }}>
+                    <a href="#" className="register"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            onRegisterClick();
+                        }}
+                    >
+                        Registro
+                    </a>
+                    <a href="#" className="login"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            onLoginClick();
+                        }}
+                    >
                         Inicio sesión
                     </a>
                     <a href="#" className="user-icon">
@@ -41,10 +50,16 @@ const Header = ({ onLoginClick }) => {
                 </div>
 
                 <button className="menu-toggle" onClick={toggleMenu}>
-                    {isMenuOpen ? <FaTimes style={{ color: 'black' }} /> : <FaBars style={{ color: 'black' }} />}
+                    {isMenuOpen ? (
+                        <FaTimes style={{ color: 'black' }} />
+                    ) : (
+                        <FaBars style={{ color: 'black' }} />
+                    )}
                 </button>
             </div>
-            {isMenuOpen && <div className="menu-overlay" onClick={toggleMenu}></div>}
+            {isMenuOpen && (
+                <div className="menu-overlay" onClick={toggleMenu}></div>
+            )}
         </header>
     );
 };

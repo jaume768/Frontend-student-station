@@ -8,26 +8,42 @@ import Header from '../components/home/HeaderHome';
 import Footer from '../components/home/FooterHome';
 import CallToAction from '../components/home/CallToAction';
 import LoginModal from '../components/home/LoginModal';
+import RegisterModal from '../components/home/RegisterModal';
 
 const Home = () => {
   const [showLogin, setShowLogin] = useState(false);
+  const [showRegister, setShowRegister] = useState(false);
+
   return (
     <div className="page-wrapper">
-      {
-        !showLogin && (
-          <>
-            <Parallax />
-            <Header onLoginClick={() => setShowLogin(true)} />
-            <CallToAction onLoginClick={() => setShowLogin(true)} />
-          </>
-        )
-      }
+      {!showLogin && (
+        <>
+          <Parallax />
+          <Header onLoginClick={() => setShowLogin(true)} onRegisterClick={() => setShowRegister(true)} />
+          <CallToAction onLoginClick={() => setShowLogin(true)} onRegisterClick={() => setShowRegister(true)} />
+        </>
+      )}
 
-      {
-        showLogin && (
-          <LoginModal onClose={() => setShowLogin(false)} />
-        )
-      }
+      {showLogin && (
+        <LoginModal
+          onClose={() => setShowLogin(false)}
+          onSwitchToRegister={() => {
+            setShowLogin(false);
+            setShowRegister(true);
+          }}
+        />
+      )}
+
+      {showRegister && (
+        <RegisterModal
+          onClose={() => setShowRegister(false)}
+          onSwitchToLogin={() => {
+            setShowRegister(false);
+            setShowLogin(true);
+          }}
+        />
+      )}
+
       <Footer />
     </div>
   );
