@@ -15,14 +15,18 @@ const LoginModal = ({ onClose }) => {
                 <h1>Inicio de sesión</h1>
 
                 <div className="input-group">
+                    <label htmlFor="email">Email</label>
                     <input
+                        id="email"
                         type="email"
                         placeholder="Introduce tu email"
                     />
                 </div>
 
                 <div className="input-group password-group">
+                    <label htmlFor="password">Contraseña</label>
                     <input
+                        id="password"
                         type={showPassword ? 'text' : 'password'}
                         placeholder="Introduce tu contraseña"
                     />

@@ -72,5 +72,9 @@
     .parallax-content {
         display: none;
     }
+
+    .parallax-wrapper {
+        display: none;
+    }
 }
 

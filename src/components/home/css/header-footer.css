@@ -88,16 +88,6 @@
     cursor: pointer;
 }
 
-.parallax-wrapper {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 200vh;
-    overflow: hidden;
-    animation: scrollCycle 30s linear infinite;
-}
-
 .call-to-action {
     position: relative;
     padding: 1em;

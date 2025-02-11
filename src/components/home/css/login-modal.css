@@ -13,11 +13,11 @@
 .login-card {
     width: 320px;
     background-color: #fff;
-    border-radius: 10px;
-    margin-top: 80px;
+    border-radius: 30px;
     padding: 1.5rem;
+    height: 500px;
+    margin-top: 50px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    height: 450px;
     display: flex;
     flex-direction: column;
     gap: 0.8rem;
@@ -31,26 +31,62 @@
 
 .input-group {
     position: relative;
+    margin-bottom: 1rem;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-weight: bold;
+    color: #333;
 }
 
 .input-group input {
     width: 100%;
     padding: 0.75rem 1rem;
     font-size: 0.95rem;
-    border: 1px solid #ccc;
+    background-color: #fff;
+    color: black;
+    border: 1px solid transparent;
     border-radius: 8px;
     outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.input-group input::placeholder {
+    color: #999;
+    transition: opacity 0.2s ease;
+}
+
+.input-group input:focus {
+    border: 2px solid #333;
+}
+
+.input-group input:focus::placeholder {
+    opacity: 0;
 }
 
 .password-group {
-    display: flex;
-    align-items: center;
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.password-group input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+    background-color: #fff;
+    color: black;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.3s ease;
 }
 
 .toggle-password {
     position: absolute;
     right: 15px;
-    top: 50%;
+    top: 70%;
     transform: translateY(-50%);
     cursor: pointer;
     color: #999;
@@ -123,4 +159,10 @@
 .back-link {
     color: #666;
     margin-top: -2px;
+}
+
+@media (max-width: 668px) {
+    .login-card {
+        margin-top: 40%;
+    }
 }
