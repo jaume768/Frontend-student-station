@@ -1,0 +1,126 @@
+.login-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('/multimedia/desfile.jpg') center center no-repeat;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+}
+
+.login-card {
+    width: 320px;
+    background-color: #fff;
+    border-radius: 10px;
+    margin-top: 80px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    height: 450px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.login-card h1 {
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.input-group {
+    position: relative;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+}
+
+.password-group {
+    display: flex;
+    align-items: center;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #999;
+}
+
+.forgot-link {
+    font-size: 0.85rem;
+    color: #333;
+    text-decoration: none;
+    margin-left: auto;
+    margin-top: -5px;
+    margin-bottom: 10px;
+    display: inline-block;
+}
+
+.forgot-link:hover {
+    text-decoration: underline;
+}
+
+.btn {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 0.95rem;
+    border-radius: 25px;
+    border: none;
+    cursor: pointer;
+}
+
+.login-btn {
+    background-color: #000;
+    color: #fff;
+    margin-bottom: 0.75rem;
+}
+
+.login-btn:hover {
+    background-color: #333;
+}
+
+.google-btn {
+    background-color: #fff;
+    color: #000;
+    border: 1px solid #ccc;
+}
+
+.google-btn:hover {
+    background-color: #f3f3f3;
+}
+
+.extra-links {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.extra-links p {
+    font-size: 0.85rem;
+}
+
+.extra-links a {
+    color: #000;
+    text-decoration: none;
+    font-size: 0.85rem;
+}
+
+.extra-links a:hover {
+    text-decoration: underline;
+}
+
+.back-link {
+    color: #666;
+    margin-top: -2px;
+}
