@@ -21,6 +21,18 @@
     overflow: visible;
 }
 
+.error-message {
+    color: red;
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+}
+
+.success-message {
+    color: green;
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+}
+
 .close-button {
     position: absolute;
     top: -30px;
@@ -84,7 +96,6 @@
     border: 1px solid #ccc;
 }
 
-/* Checkbox */
 .checkbox-group {
     display: flex;
     align-items: center;
@@ -95,7 +106,6 @@
     margin-right: 0.5rem;
 }
 
-/* Botones */
 .btn {
     padding: 0.75rem;
     border: none;
@@ -124,7 +134,6 @@
     background-color: #f3f3f3;
 }
 
-/* Link para cambiar a login */
 .switch-login {
     text-align: center;
     font-size: 0.9rem;
@@ -136,7 +145,6 @@
     font-weight: bold;
 }
 
-/* Responsividad: en tablet/móvil se oculta la parte de la imagen */
 @media (max-width: 768px) {
     .register-modal {
         flex-direction: column;

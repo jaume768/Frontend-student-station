@@ -11,17 +11,94 @@ const RegisterModal = ({ onClose, onSwitchToLogin }) => {
         acceptedTerms: false,
     });
 
+    // Estado para almacenar errores de validación locales y de disponibilidad
+    const [errors, setErrors] = useState({
+        passwordMismatch: '',
+        incomplete: '',
+        username: '',
+        email: '',
+    });
+
+    const [backendError, setBackendError] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
+
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
         setFormData({
             ...formData,
             [name]: type === 'checkbox' ? checked : value,
         });
+        // Limpiamos los errores al escribir
+        setErrors({
+            passwordMismatch: '',
+            incomplete: '',
+            username: '',
+            email: '',
+        });
+        setBackendError('');
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formData);
+        setErrors({
+            passwordMismatch: '',
+            incomplete: '',
+            username: '',
+            email: '',
+        });
+        setBackendError('');
+        setSuccessMessage('');
+
+        if (
+            !formData.username ||
+            !formData.email ||
+            !formData.password ||
+            !formData.confirmPassword ||
+            !formData.acceptedTerms
+        ) {
+            setErrors(prev => ({
+                ...prev,
+                incomplete: 'Completa todos los campos para continuar',
+            }));
+            return;
+        }
+
+        if (formData.password !== formData.confirmPassword) {
+            setErrors(prev => ({
+                ...prev,
+                passwordMismatch: 'Las contraseñas no coinciden',
+            }));
+            return;
+        }
+
+        try {
+            const availabilityResponse = await fetch('http://localhost:5000/api/users/check-availability', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: formData.username,
+                    email: formData.email,
+                }),
+            });
+
+            const availabilityData = await availabilityResponse.json();
+
+            if (!availabilityResponse.ok) {
+                setErrors(prev => ({
+                    ...prev,
+                    username: availabilityData.errors?.username || '',
+                    email: availabilityData.errors?.email || '',
+                }));
+                return;
+            }
+
+            setSuccessMessage('¡Registro exitoso!');
+
+        } catch (error) {
+            console.log(error);
+            setBackendError('Error al verificar disponibilidad. Inténtalo de nuevo.');
+            return;
+        }
     };
 
     return (
@@ -30,7 +107,6 @@ const RegisterModal = ({ onClose, onSwitchToLogin }) => {
                 <button className="close-button" onClick={onClose}>
                     <FaTimes />
                 </button>
-
                 <div className="modal-content">
                     <div className="modal-image">
                         <img
@@ -38,7 +114,6 @@ const RegisterModal = ({ onClose, onSwitchToLogin }) => {
                             alt="Imagen de registro"
                         />
                     </div>
-
                     <div className="modal-form">
                         <h1>Registro</h1>
                         <form onSubmit={handleSubmit}>
@@ -53,6 +128,9 @@ const RegisterModal = ({ onClose, onSwitchToLogin }) => {
                                     onChange={handleChange}
                                     required
                                 />
+                                {errors.username && (
+                                    <p className="error-message">{errors.username}</p>
+                                )}
                             </div>
                             <div className="input-group">
                                 <label htmlFor="email">Email *</label>
@@ -65,6 +143,9 @@ const RegisterModal = ({ onClose, onSwitchToLogin }) => {
                                     onChange={handleChange}
                                     required
                                 />
+                                {errors.email && (
+                                    <p className="error-message">{errors.email}</p>
+                                )}
                             </div>
                             <div className="input-group">
                                 <label htmlFor="password">Contraseña *</label>
@@ -89,8 +170,10 @@ const RegisterModal = ({ onClose, onSwitchToLogin }) => {
                                     onChange={handleChange}
                                     required
                                 />
+                                {errors.passwordMismatch && (
+                                    <p className="error-message">{errors.passwordMismatch}</p>
+                                )}
                             </div>
-
                             <div className="checkbox-group">
                                 <input
                                     type="checkbox"
@@ -105,8 +188,16 @@ const RegisterModal = ({ onClose, onSwitchToLogin }) => {
                                     <a href="#">Términos y condiciones</a> y la{' '}
                                     <a href="#">Política de privacidad</a>.
                                 </label>
+                                {errors.incomplete && (
+                                    <p className="error-message">{errors.incomplete}</p>
+                                )}
                             </div>
-
+                            {backendError && (
+                                <p className="error-message">{backendError}</p>
+                            )}
+                            {successMessage && (
+                                <p className="success-message">{successMessage}</p>
+                            )}
                             <button type="submit" className="btn register-btn">
                                 Registrarse
                             </button>
