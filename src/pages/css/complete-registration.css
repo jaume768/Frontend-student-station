@@ -1,0 +1,103 @@
+.complete-profile-container {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 20px;
+    text-align: center;
+}
+
+.contenedor-registro-objetivo{
+    width: 300px;
+    margin: 10% auto auto auto;
+}
+
+.greeting {
+    color: gray;
+    margin-bottom: 0.5rem;
+}
+
+.username {
+    margin-bottom: 1rem;
+}
+
+.question {
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.objectives-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: auto;
+    width: 270px;
+    justify-content: center;
+    align-items: center;
+}
+
+.objective-button {
+    background-color: #f0f0f0;
+    color: #000;
+    border: none;
+    padding: 0.75rem;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 1rem;
+    width: 100%;
+}
+
+.form-group-datos{
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group-datos input{
+    background-color: #f0f0f0;
+    color: #000;
+    border: none;
+    padding: 0.75rem;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 1rem;
+    width: 100%;
+    margin: 0.6em;
+}
+
+.form-group-datos select{
+    background-color: #f0f0f0;
+    color: #000;
+    border: none;
+    padding: 0.75rem;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 1rem;
+    width: 100%;
+    margin: 0.6em;
+}
+
+.titulo-objetivo{
+    margin-bottom: 2em;
+}
+
+.paso{
+    margin-bottom: 10p;
+}
+
+.pagination-dots{
+    text-align: center;
+}
+
+.objective-button.selected {
+    background-color: #38c887;
+    color: white;
+}
+
+.next-button {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 1em;
+}

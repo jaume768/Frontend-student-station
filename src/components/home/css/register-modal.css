@@ -11,6 +11,34 @@
     z-index: 1000;
 }
 
+.registro-verification-content {
+    height: 500px;
+}
+
+.registro-email-enviado {
+    margin-bottom: 10px;
+}
+
+.code-cell {
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    font-size: 1.5rem;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.resend-button {
+    background: none;
+    border: none;
+    color: black;
+    cursor: pointer;
+    text-decoration: underline;
+    font-size: 1rem;
+    padding: 0;
+}
+
 .register-modal {
     background-color: #fff;
     border-radius: 30px;
@@ -113,6 +141,8 @@
     width: 100%;
     cursor: pointer;
     margin-bottom: 1rem;
+    background-color: black;
+    margin-top: 10px;
 }
 
 .register-btn {
