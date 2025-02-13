@@ -1,5 +1,5 @@
 // CompleteRegistrationProfesionalDatosPersonales.jsx
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/complete-registration.css';
 
@@ -11,21 +11,15 @@ const CompleteRegistrationProfesionalDatosPersonales = () => {
     const [country, setCountry] = useState("");
     const [city, setCity] = useState("");
 
+    // Ref para el input de fecha
+    const dateInputRef = useRef(null);
+
     const countries = [
         "Estados Unidos", "Reino Unido", "Canadá", "Australia", "Alemania",
         "Francia", "Italia", "España", "Brasil", "México",
         "Japón", "China", "India", "Rusia", "Corea del Sur",
         "Países Bajos", "Suiza", "Suecia", "Noruega", "Argentina"
     ];
-
-    const handleCalendarClick = () => {
-        // Ejemplo de asignación de fecha actual en formato mm/dd/yyyy
-        const now = new Date();
-        const month = ("0" + (now.getMonth() + 1)).slice(-2);
-        const day = ("0" + now.getDate()).slice(-2);
-        const year = now.getFullYear();
-        setDateOfBirth(`${month}/${day}/${year}`);
-    };
 
     const handleNext = async () => {
         if (!firstName || !lastName || !dateOfBirth || !country || !city) return;
@@ -42,7 +36,6 @@ const CompleteRegistrationProfesionalDatosPersonales = () => {
             });
             const data = await response.json();
             if (response.ok) {
-                // Luego de estos datos se comparte pantalla común (por ejemplo, perfil de foto)
                 navigate('/CompleteRegistrationCreativo03');
             } else {
                 console.error(data.error);
@@ -54,6 +47,17 @@ const CompleteRegistrationProfesionalDatosPersonales = () => {
 
     const handleBack = () => {
         navigate(-1);
+    };
+
+    // Función para abrir el selector de fecha
+    const openCalendar = () => {
+        if (dateInputRef.current) {
+            if (dateInputRef.current.showPicker) {
+                dateInputRef.current.showPicker();
+            } else {
+                dateInputRef.current.focus();
+            }
+        }
     };
 
     return (
@@ -87,17 +91,18 @@ const CompleteRegistrationProfesionalDatosPersonales = () => {
                     <label>Fecha de nacimiento</label>
                     <div className="input-with-icon" style={{ position: 'relative' }}>
                         <input
-                            type="text"
-                            placeholder="mm/dd/yyyy"
+                            ref={dateInputRef}
+                            type="date"
                             value={dateOfBirth}
                             onChange={(e) => setDateOfBirth(e.target.value)}
                             className="input-field"
                             style={{ backgroundColor: '#f0f0f0', color: '#000' }}
+                            max={new Date().toISOString().split("T")[0]}
                         />
                         <span
                             className="calendar-icon"
-                            onClick={handleCalendarClick}
-                            style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', cursor: 'pointer' }}
+                            onClick={openCalendar}
+                            style={{ position: 'absolute', right: '0px', top: '50%', transform: 'translateY(-50%)', cursor: 'pointer' }}
                         >
                             &#128197;
                         </span>
@@ -129,11 +134,7 @@ const CompleteRegistrationProfesionalDatosPersonales = () => {
                     />
                 </div>
                 <div className="navigation-buttons" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem' }}>
-                    <button
-                        className="back-button"
-                        onClick={handleBack}
-                        style={{ background: 'none', border: 'none', color: '#000', cursor: 'pointer' }}
-                    >
+                    <button className="back-button" onClick={handleBack} style={{ background: 'none', border: 'none', color: '#000', cursor: 'pointer' }}>
                         &#8592; Volver atrás
                     </button>
                     <button
@@ -144,7 +145,6 @@ const CompleteRegistrationProfesionalDatosPersonales = () => {
                         Siguiente
                     </button>
                 </div>
-                {/* Paginación: 5 puntos, con el segundo resaltado */}
                 <div className="pagination-dots" style={{ marginTop: '1rem' }}>
                     {[1, 2, 3, 4, 5].map((dot, index) => (
                         <span

@@ -1,5 +1,5 @@
 // CompleteRegistrationCreativoEstudiante06.jsx
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/complete-registration.css';
 
@@ -8,23 +8,27 @@ const CompleteRegistrationCreativoEstudiante06 = () => {
     const [institution, setInstitution] = useState("");
     const [graduationDate, setGraduationDate] = useState("");
 
+    // Ref para el input de fecha (tipo month)
+    const monthInputRef = useRef(null);
+
     const handleDateChange = (e) => {
         setGraduationDate(e.target.value);
     };
 
     const handleCalendarClick = () => {
-        // Ejemplo de asignación automática: se usa la fecha actual en formato mm/yy
-        const now = new Date();
-        const month = ("0" + (now.getMonth() + 1)).slice(-2);
-        const year = now.getFullYear().toString().slice(-2);
-        setGraduationDate(`${month}/${year}`);
+        if (monthInputRef.current) {
+            if (monthInputRef.current.showPicker) {
+                monthInputRef.current.showPicker();
+            } else {
+                monthInputRef.current.focus();
+            }
+        }
     };
 
     const handleNext = async () => {
         if (!institution || !graduationDate) return;
         try {
             const token = localStorage.getItem("authToken");
-            // Actualizamos el campo institution (graduationDate se puede almacenar aparte si fuera necesario)
             const response = await fetch('http://localhost:5000/api/users/profile', {
                 method: 'PUT',
                 headers: {
@@ -48,6 +52,12 @@ const CompleteRegistrationCreativoEstudiante06 = () => {
         navigate(-1);
     };
 
+    const currentMonth = (() => {
+        const now = new Date();
+        const month = ("0" + (now.getMonth() + 1)).slice(-2);
+        return `${now.getFullYear()}-${month}`;
+    })();
+
     return (
         <div className="complete-registration-container">
             <div className="contenedor-registro-objetivo">
@@ -69,17 +79,19 @@ const CompleteRegistrationCreativoEstudiante06 = () => {
                     <label>Fecha de graduación prevista:</label>
                     <div className="input-with-icon" style={{ position: 'relative' }}>
                         <input
-                            type="text"
-                            placeholder="mm/yy"
+                            ref={monthInputRef}
+                            type="month"
+                            placeholder="YYYY-MM"
                             value={graduationDate}
                             onChange={handleDateChange}
                             className="input-field"
                             style={{ backgroundColor: '#f0f0f0', color: '#000' }}
+                            max={currentMonth}
                         />
                         <span
                             className="calendar-icon"
                             onClick={handleCalendarClick}
-                            style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', cursor: 'pointer' }}
+                            style={{ position: 'absolute', right: '0px', top: '50%', transform: 'translateY(-50%)', cursor: 'pointer' }}
                         >
                             &#128197;
                         </span>
@@ -93,7 +105,6 @@ const CompleteRegistrationCreativoEstudiante06 = () => {
                         Siguiente
                     </button>
                 </div>
-                {/* Paginación: en este caso, mostramos 6 puntos con el sexto resaltado */}
                 <div className="pagination-dots" style={{ marginTop: '1rem' }}>
                     {[1, 2, 3, 4, 5, 6].map((dot, index) => (
                         <span key={index} style={{ margin: '0 4px', fontSize: index === 5 ? '1.2rem' : '1rem', color: 'gray' }}>

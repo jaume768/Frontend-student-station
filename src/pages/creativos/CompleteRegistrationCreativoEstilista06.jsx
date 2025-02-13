@@ -1,5 +1,5 @@
 // CompleteRegistrationCreativoEstilista06.jsx
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/complete-registration.css';
 
@@ -8,22 +8,27 @@ const CompleteRegistrationCreativoEstilista06 = () => {
     const [institution, setInstitution] = useState("");
     const [graduationDate, setGraduationDate] = useState("");
 
+    // Ref para el input de fecha (tipo month)
+    const monthInputRef = useRef(null);
+
     const handleDateChange = (e) => {
         setGraduationDate(e.target.value);
     };
 
     const handleCalendarClick = () => {
-        const now = new Date();
-        const month = ("0" + (now.getMonth() + 1)).slice(-2);
-        const year = now.getFullYear().toString().slice(-2);
-        setGraduationDate(`${month}/${year}`);
+        if (monthInputRef.current) {
+            if (monthInputRef.current.showPicker) {
+                monthInputRef.current.showPicker();
+            } else {
+                monthInputRef.current.focus();
+            }
+        }
     };
 
     const handleNext = async () => {
         if (!institution || !graduationDate) return;
         try {
             const token = localStorage.getItem("authToken");
-            // Actualizamos el campo institution
             const response = await fetch('http://localhost:5000/api/users/profile', {
                 method: 'PUT',
                 headers: {
@@ -47,6 +52,13 @@ const CompleteRegistrationCreativoEstilista06 = () => {
         navigate(-1);
     };
 
+    // Calcula el mes actual en formato YYYY-MM
+    const currentMonth = (() => {
+        const now = new Date();
+        const month = ("0" + (now.getMonth() + 1)).slice(-2);
+        return `${now.getFullYear()}-${month}`;
+    })();
+
     return (
         <div className="complete-registration-container">
             <div className="contenedor-registro-objetivo">
@@ -68,17 +80,19 @@ const CompleteRegistrationCreativoEstilista06 = () => {
                     <label>Fecha de graduación:</label>
                     <div className="input-with-icon" style={{ position: 'relative' }}>
                         <input
-                            type="text"
-                            placeholder="mm/yy"
+                            ref={monthInputRef}
+                            type="month"
+                            placeholder="YYYY-MM"
                             value={graduationDate}
                             onChange={handleDateChange}
                             className="input-field"
                             style={{ backgroundColor: '#f0f0f0', color: '#000' }}
+                            max={currentMonth}  // No permite meses futuros
                         />
                         <span
                             className="calendar-icon"
                             onClick={handleCalendarClick}
-                            style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', cursor: 'pointer' }}
+                            style={{ position: 'absolute', right: '0px', top: '50%', transform: 'translateY(-50%)', cursor: 'pointer' }}
                         >
                             &#128197;
                         </span>

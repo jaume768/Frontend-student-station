@@ -64,7 +64,7 @@ const CompleteRegistrationProfesionalAgencia05 = () => {
                         className="input-field"
                         style={{ backgroundColor: '#f0f0f0', color: '#000' }}
                     />
-                    <div>
+                    <div className="checkbox-wrapper">
                         <input
                             type="checkbox"
                             checked={!shareName}

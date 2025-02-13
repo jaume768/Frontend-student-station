@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+// CompleteRegistrationCreativo02.jsx
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/complete-registration.css';
 
@@ -10,27 +11,14 @@ const CompleteRegistrationCreativo02 = () => {
     const [country, setCountry] = useState("");
     const [city, setCity] = useState("");
 
+    // Ref para el input de fecha
+    const dateInputRef = useRef(null);
+
     const countries = [
-        "Estados Unidos",
-        "Reino Unido",
-        "Canadá",
-        "Australia",
-        "Alemania",
-        "Francia",
-        "Italia",
-        "España",
-        "Brasil",
-        "México",
-        "Japón",
-        "China",
-        "India",
-        "Rusia",
-        "Corea del Sur",
-        "Países Bajos",
-        "Suiza",
-        "Suecia",
-        "Noruega",
-        "Argentina"
+        "Estados Unidos", "Reino Unido", "Canadá", "Australia", "Alemania",
+        "Francia", "Italia", "España", "Brasil", "México",
+        "Japón", "China", "India", "Rusia", "Corea del Sur",
+        "Países Bajos", "Suiza", "Suecia", "Noruega", "Argentina"
     ];
 
     const handleNext = async () => {
@@ -44,12 +32,7 @@ const CompleteRegistrationCreativo02 = () => {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({
-                    fullName,
-                    dateOfBirth,
-                    country,
-                    city
-                })
+                body: JSON.stringify({ fullName, dateOfBirth, country, city })
             });
             const data = await response.json();
             if (response.ok) {
@@ -66,8 +49,15 @@ const CompleteRegistrationCreativo02 = () => {
         navigate(-1);
     };
 
+    // Función para abrir el selector de fecha al pulsar el icono
     const openCalendar = () => {
-        console.log("Abrir calendario");
+        if (dateInputRef.current) {
+            if (dateInputRef.current.showPicker) {
+                dateInputRef.current.showPicker();
+            } else {
+                dateInputRef.current.focus();
+            }
+        }
     };
 
     return (
@@ -101,17 +91,24 @@ const CompleteRegistrationCreativo02 = () => {
                     <label>Fecha de nacimiento</label>
                     <div className="input-with-icon" style={{ position: 'relative' }}>
                         <input
-                            type="text"
-                            placeholder="mm/dd/yyyy"
+                            ref={dateInputRef}
+                            type="date"
                             value={dateOfBirth}
                             onChange={(e) => setDateOfBirth(e.target.value)}
                             className="input-field"
                             style={{ backgroundColor: '#f0f0f0', color: '#000' }}
+                            max={new Date().toISOString().split("T")[0]}  // No permite fechas futuras
                         />
                         <span
                             className="calendar-icon"
                             onClick={openCalendar}
-                            style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', cursor: 'pointer' }}
+                            style={{
+                                position: 'absolute',
+                                right: '0px',
+                                top: '50%',
+                                transform: 'translateY(-50%)',
+                                cursor: 'pointer'
+                            }}
                         >
                             &#128197;
                         </span>

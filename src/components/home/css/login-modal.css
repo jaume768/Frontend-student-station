@@ -171,8 +171,18 @@
     margin-top: -2px;
 }
 
+@media (max-width: 1024px) {
+    .login-card.with-error {
+        margin-top: 5px;
+    }
+}
+
 @media (max-width: 668px) {
     .login-card {
         margin-top: 40%;
+    }
+
+    .login-card.with-error {
+        margin-top: 30%;
     }
 }

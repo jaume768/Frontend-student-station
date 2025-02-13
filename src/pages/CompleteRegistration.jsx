@@ -71,7 +71,7 @@ const CompleteRegistration = () => {
                     ))}
                 </div>
                 <button
-                    className="next-button"
+                    className="next-button-primer"
                     disabled={!selectedObjective}
                     onClick={handleNext}
                 >

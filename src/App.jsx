@@ -1,4 +1,3 @@
-// App.js
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
@@ -16,6 +15,7 @@ import CompleteRegistrationCreativoEstilista05 from './pages/creativos/CompleteR
 import CompleteRegistrationCreativoEstilista06 from './pages/creativos/CompleteRegistrationCreativoEstilista06';
 import CompleteRegistrationCreativoDisenador05 from './pages/creativos/CompleteRegistrationCreativoDisenador05';
 import CompleteRegistrationCreativoOtro05 from './pages/creativos/CompleteRegistrationCreativoOtro05';
+import Dashboard from './pages/Dashboard';
 
 // Rutas para el registro PROFESIONAL
 import CompleteRegistrationProfesional from './pages/profesionales/CompleteRegistrationProfesional';
@@ -31,8 +31,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/complete-registration" element={<CompleteRegistration />} />
+        <Route path="/dashboard" element={<Dashboard />} />
 
-        {/* Rutas para Registro Creativo */}
         <Route path="/CompleteRegistrationCreativo" element={<CompleteRegistrationCreativo />} />
         <Route path="/CompleteRegistrationCreativo02" element={<CompleteRegistrationCreativo02 />} />
         <Route path="/CompleteRegistrationCreativo03" element={<CompleteRegistrationCreativo03 />} />
@@ -45,7 +45,6 @@ function App() {
         <Route path="/CompleteRegistrationCreativoDisenador05" element={<CompleteRegistrationCreativoDisenador05 />} />
         <Route path="/CompleteRegistrationCreativoOtro05" element={<CompleteRegistrationCreativoOtro05 />} />
 
-        {/* Rutas para Registro Profesional */}
         <Route path="/CompleteRegistrationProfesional" element={<CompleteRegistrationProfesional />} />
         <Route path="/CompleteRegistrationProfesionalDatosPersonales" element={<CompleteRegistrationProfesionalDatosPersonales />} />
         <Route path="/CompleteRegistrationProfesionalInstitucion" element={<CompleteRegistrationProfesionalInstitucion />} />
