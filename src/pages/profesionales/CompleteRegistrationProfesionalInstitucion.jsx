@@ -22,7 +22,7 @@ const CompleteRegistrationProfesionalInstitucion = () => {
         try {
             const token = localStorage.getItem("authToken");
             // Actualizamos el usuario con los datos de la institución
-            const backendUrl = process.env.REACT_APP_BACKEND_URL;
+            const backendUrl = import.meta.env.VITE_BACKEND_URL;
             const response = await fetch(`${backendUrl}/api/users/profile`, {
                 method: 'PUT',
                 headers: {
