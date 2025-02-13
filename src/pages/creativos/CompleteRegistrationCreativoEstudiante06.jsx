@@ -29,7 +29,8 @@ const CompleteRegistrationCreativoEstudiante06 = () => {
         if (!institution || !graduationDate) return;
         try {
             const token = localStorage.getItem("authToken");
-            const response = await fetch('http://localhost:5000/api/users/profile', {
+            const backendUrl = process.env.REACT_APP_BACKEND_URL;
+            const response = await fetch(`${backendUrl}/api/users/profile`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

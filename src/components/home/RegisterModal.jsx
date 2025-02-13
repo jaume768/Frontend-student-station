@@ -82,7 +82,8 @@ const RegisterModal = ({ onClose, onSwitchToLogin }) => {
 
         try {
             // Llamada al endpoint que envía el código sin crear el usuario
-            const response = await fetch('http://localhost:5000/api/auth/send-verification-code-pre-registration', {
+            const backendUrl = process.env.REACT_APP_BACKEND_URL;
+            const response = await fetch(`${backendUrl}/api/auth/send-verification-code-pre-registration`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),
@@ -129,7 +130,8 @@ const RegisterModal = ({ onClose, onSwitchToLogin }) => {
 
         const code = codeDigits.join("");
         try {
-            const response = await fetch('http://localhost:5000/api/auth/verify-code-pre-registration', {
+            const backendUrl = process.env.REACT_APP_BACKEND_URL;
+            const response = await fetch(`${backendUrl}/api/auth/verify-code-pre-registration`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email: formData.email, code }),
@@ -158,7 +160,8 @@ const RegisterModal = ({ onClose, onSwitchToLogin }) => {
         e.preventDefault();
         setResendMessage('');
         try {
-            const response = await fetch('http://localhost:5000/api/auth/resend-code-pre-registration', {
+            const backendUrl = process.env.REACT_APP_BACKEND_URL;
+            const response = await fetch(`${backendUrl}/api/auth/resend-code-pre-registration`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email: formData.email }),
