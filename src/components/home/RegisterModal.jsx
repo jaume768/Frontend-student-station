@@ -122,6 +122,20 @@ const RegisterModal = ({ onClose, onSwitchToLogin }) => {
         }
     };
 
+    // Función para manejar el pegado en la primera celda
+    const handlePaste = (e) => {
+        e.preventDefault();
+        const pasteData = e.clipboardData.getData('Text');
+        // Extraer solo los dígitos y limitar a 6
+        const digits = pasteData.split('').filter(char => /\d/.test(char)).slice(0, 6);
+        if (digits.length > 0) {
+            setCodeDigits(digits);
+            // Enfoca la siguiente celda después del último dígito pegado, si es necesario
+            const nextInput = document.getElementById(`code-digit-${Math.min(digits.length, 5)}`);
+            if (nextInput) nextInput.focus();
+        }
+    };
+
     // Paso 2: Verificar el código introducido por el usuario
     const handleVerify = async (e) => {
         e.preventDefault();
@@ -143,7 +157,7 @@ const RegisterModal = ({ onClose, onSwitchToLogin }) => {
             }
             setVerificationSuccess(data.message || '¡Código verificado exitosamente!');
             const { token, user } = data;
-            
+
             localStorage.setItem("authToken", token);
 
             onClose();
@@ -186,10 +200,7 @@ const RegisterModal = ({ onClose, onSwitchToLogin }) => {
                 </button>
                 <div className="modal-content">
                     <div className="modal-image">
-                        <img
-                            src="/multimedia/foto-registro.png"
-                            alt="Imagen de registro"
-                        />
+                        <img src="/multimedia/foto-registro.png" alt="Imagen de registro" />
                     </div>
                     <div className="modal-form">
                         {step === "register" ? (
@@ -299,9 +310,9 @@ const RegisterModal = ({ onClose, onSwitchToLogin }) => {
                             </>
                         ) : (
                             <>
-                                <div className='registro-verification-content'>
+                                <div className="registro-verification-content">
                                     <h1>Código de verificación</h1>
-                                    <p className='registro-email-enviado'>
+                                    <p className="registro-email-enviado">
                                         Se ha enviado un código al correo{' '}
                                         <strong>{formData.email}</strong>
                                     </p>
@@ -315,6 +326,8 @@ const RegisterModal = ({ onClose, onSwitchToLogin }) => {
                                                     value={digit}
                                                     placeholder="-"
                                                     onChange={(e) => handleDigitChange(e, index)}
+                                                    // Solo la primera celda tendrá el onPaste para distribuir el código
+                                                    onPaste={index === 0 ? handlePaste : undefined}
                                                     id={`code-digit-${index}`}
                                                     className="code-cell"
                                                     inputMode="numeric"

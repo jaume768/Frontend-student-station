@@ -118,6 +118,7 @@
     display: flex;
     justify-content: space-between;
     margin-bottom: 0.5em;
+    gap: 20px;
 }
 
 .boton-inicio-movil a{
@@ -327,6 +328,7 @@ footer .wrapper {
 
     .botones {
         flex-direction: column;
+        gap: 10px;
     }
 
     footer {
@@ -401,7 +403,7 @@ footer .wrapper {
     .boton-inicio-movil a{
         display: block;
         margin-top: 10px;
-        margin-bottom: 80px;
+        margin-bottom: 20px;
     }
 
     .logo-movil img{
@@ -421,8 +423,10 @@ footer .wrapper {
     .botones {
         align-items: center;
         flex-direction: row;
-        width: 300px;
+        width: 100%;
+        justify-content: space-between;
         margin: auto;
+        gap: 5px;
     }
 
     .inicio-sesion {
