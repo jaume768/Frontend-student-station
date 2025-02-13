@@ -54,22 +54,6 @@ body {
   z-index: 999;
 }
 
-.parallax-wrapper {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 200vh;
-  overflow: hidden;
-  animation: scrollCycle 30s linear infinite;
-}
-
-.botones {
-  display: flex;
-  gap: 20px;
-  margin-bottom: 0.5em;
-}
-
 .botones a {
   padding: 0.5em 2em;
   text-decoration: none;

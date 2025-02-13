@@ -178,7 +178,7 @@
 @media (max-width: 768px) {
     .register-modal {
         flex-direction: column;
-        width: 90%;
+        width: 82%;
     }
 
     .modal-content {

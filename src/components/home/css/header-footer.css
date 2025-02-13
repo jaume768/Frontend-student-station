@@ -421,6 +421,8 @@ footer .wrapper {
     .botones {
         align-items: center;
         flex-direction: row;
+        width: 300px;
+        margin: auto;
     }
 
     .inicio-sesion {
