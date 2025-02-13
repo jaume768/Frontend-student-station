@@ -1,9 +1,9 @@
-// CompleteRegistrationCreativoEstudiante06.jsx
+// CompleteRegistrationCreativoEstilista06.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './css/complete-registration.css';
+import '../css/complete-registration.css';
 
-const CompleteRegistrationCreativoEstudiante06 = () => {
+const CompleteRegistrationCreativoEstilista06 = () => {
     const navigate = useNavigate();
     const [institution, setInstitution] = useState("");
     const [graduationDate, setGraduationDate] = useState("");
@@ -13,7 +13,6 @@ const CompleteRegistrationCreativoEstudiante06 = () => {
     };
 
     const handleCalendarClick = () => {
-        // Ejemplo de asignación automática: se usa la fecha actual en formato mm/yy
         const now = new Date();
         const month = ("0" + (now.getMonth() + 1)).slice(-2);
         const year = now.getFullYear().toString().slice(-2);
@@ -24,7 +23,7 @@ const CompleteRegistrationCreativoEstudiante06 = () => {
         if (!institution || !graduationDate) return;
         try {
             const token = localStorage.getItem("authToken");
-            // Actualizamos el campo institution (graduationDate se puede almacenar aparte si fuera necesario)
+            // Actualizamos el campo institution
             const response = await fetch('http://localhost:5000/api/users/profile', {
                 method: 'PUT',
                 headers: {
@@ -53,9 +52,9 @@ const CompleteRegistrationCreativoEstudiante06 = () => {
             <div className="contenedor-registro-objetivo">
                 <p className="paso" style={{ color: 'gray', fontSize: '0.8rem' }}>paso 6</p>
                 <h2 className="titulo">Tu formación</h2>
-                <p className="question">¿Qué tipo de formación estás cursando actualmente?</p>
+                <p className="question">¿Qué tipo de formación cursaste?</p>
                 <div className="form-group-datos">
-                    <label>¿En qué universidad o escuela estudias?</label>
+                    <label>¿En qué universidad o escuela estudiaste?</label>
                     <input
                         type="text"
                         placeholder="Introduce tu universidad"
@@ -66,7 +65,7 @@ const CompleteRegistrationCreativoEstudiante06 = () => {
                     />
                 </div>
                 <div className="form-group-datos">
-                    <label>Fecha de graduación prevista:</label>
+                    <label>Fecha de graduación:</label>
                     <div className="input-with-icon" style={{ position: 'relative' }}>
                         <input
                             type="text"
@@ -93,7 +92,6 @@ const CompleteRegistrationCreativoEstudiante06 = () => {
                         Siguiente
                     </button>
                 </div>
-                {/* Paginación: en este caso, mostramos 6 puntos con el sexto resaltado */}
                 <div className="pagination-dots" style={{ marginTop: '1rem' }}>
                     {[1, 2, 3, 4, 5, 6].map((dot, index) => (
                         <span key={index} style={{ margin: '0 4px', fontSize: index === 5 ? '1.2rem' : '1rem', color: 'gray' }}>
@@ -106,4 +104,4 @@ const CompleteRegistrationCreativoEstudiante06 = () => {
     );
 };
 
-export default CompleteRegistrationCreativoEstudiante06;
+export default CompleteRegistrationCreativoEstilista06;

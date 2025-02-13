@@ -1,7 +1,7 @@
 // CompleteRegistrationCreativoGraduado06.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './css/complete-registration.css';
+import '../css/complete-registration.css';
 
 const CompleteRegistrationCreativoGraduado06 = () => {
     const navigate = useNavigate();

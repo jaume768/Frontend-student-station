@@ -1,58 +1,42 @@
-// CompleteRegistrationCreativo04.jsx
+// CompleteRegistrationProfesionalMarca05.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './css/complete-registration.css';
+import '../css/complete-registration.css';
 
-const CompleteRegistrationCreativo04 = () => {
+const CompleteRegistrationProfesionalMarca05 = () => {
     const navigate = useNavigate();
-    const [referralSource, setReferralSource] = useState("");
-    const referralOptions = [
-        "Redes sociales",
-        "Boca a boca",
-        "Publicidad online",
-        "Evento",
-        "Recomendación de un amigo",
-        "Búsqueda en Google",
+    const [companyName, setCompanyName] = useState("");
+    const [foundingYear, setFoundingYear] = useState("");
+    const [productServiceType, setProductServiceType] = useState("");
+    const productOptions = [
+        "Confección a medida",
+        "Moda vintage",
+        "Accesorios",
+        "Joyería",
+        "Zapatos",
+        "Artículos de cuero",
+        "Cerámica",
+        "Arte textil",
+        "Artículos sostenibles",
         "Otro"
     ];
 
     const handleNext = async () => {
-        if (!referralSource) return;
+        if (!companyName || !foundingYear || !productServiceType) return;
         try {
             const token = localStorage.getItem("authToken");
+            // Actualizamos el usuario con los datos finales para marca pequeña
             const response = await fetch('http://localhost:5000/api/users/profile', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({ referralSource })
+                body: JSON.stringify({ companyName, foundingYear, productServiceType })
             });
             const data = await response.json();
             if (response.ok) {
-                // Recuperamos el creativeType almacenado en el paso 1
-                const creativeType = localStorage.getItem("creativeType");
-
-                // Redirigimos según la primera elección
-                switch (creativeType) {
-                    case "1": // Estudiante
-                        navigate('/CompleteRegistrationCreativoEstudiante05');
-                        break;
-                    case "2": // Graduado
-                        navigate('/CompleteRegistrationCreativoGraduado06');
-                        break;
-                    case "3": // Estilista
-                        navigate('/CompleteRegistrationCreativoEstilista05');
-                        break;
-                    case "4": // Diseñador/a activo
-                        navigate('/CompleteRegistrationCreativoDisenador05');
-                        break;
-                    case "5": // Otro
-                        navigate('/CompleteRegistrationCreativoOtro05');
-                        break;
-                    default:
-                        navigate('/dashboard');
-                }
+                navigate('/dashboard');
             } else {
                 console.error(data.error);
             }
@@ -68,21 +52,40 @@ const CompleteRegistrationCreativo04 = () => {
     return (
         <div className="complete-registration-container">
             <div className="contenedor-registro-objetivo">
-                {/* Indicador de paso */}
-                <p className="paso" style={{ color: 'gray', fontSize: '0.8rem' }}>paso 4</p>
-                <h2 className="titulo">¿Como nos has conocido?</h2>
-                <p className="question">
-                    Nos encanta tenerte aquí. Tu respuesta nos ayuda a mejorar y a llegar a más personas como tú.
-                </p>
-                <div className="form-group-select">
+                <p className="paso" style={{ color: 'gray', fontSize: '0.8rem' }}>paso 5</p>
+                <h2 className="titulo">Últimos datos...</h2>
+                <div className="form-group-datos">
+                    <label>Nombre de la marca</label>
+                    <input
+                        type="text"
+                        placeholder="Introduce el nombre"
+                        value={companyName}
+                        onChange={(e) => setCompanyName(e.target.value)}
+                        className="input-field"
+                        style={{ backgroundColor: '#f0f0f0', color: '#000' }}
+                    />
+                </div>
+                <div className="form-group-datos">
+                    <label>Año de la fundación</label>
+                    <input
+                        type="text"
+                        placeholder="yyyy"
+                        value={foundingYear}
+                        onChange={(e) => setFoundingYear(e.target.value)}
+                        className="input-field"
+                        style={{ backgroundColor: '#f0f0f0', color: '#000' }}
+                    />
+                </div>
+                <div className="form-group-datos">
+                    <label>¿Cuál es tu producto principal?</label>
                     <select
-                        value={referralSource}
-                        onChange={(e) => setReferralSource(e.target.value)}
+                        value={productServiceType}
+                        onChange={(e) => setProductServiceType(e.target.value)}
                         className="input-field"
                         style={{ backgroundColor: '#f0f0f0', color: '#000' }}
                     >
                         <option value="">Selecciona una opción</option>
-                        {referralOptions.map((option, index) => (
+                        {productOptions.map((option, index) => (
                             <option key={index} value={option}>{option}</option>
                         ))}
                     </select>
@@ -97,20 +100,20 @@ const CompleteRegistrationCreativo04 = () => {
                     </button>
                     <button
                         className="next-button"
-                        disabled={!referralSource}
+                        disabled={!companyName || !foundingYear || !productServiceType}
                         onClick={handleNext}
                     >
                         Siguiente
                     </button>
                 </div>
-                {/* Paginación: 5 puntos, con el cuarto más grande */}
+                {/* Paginación: 5 puntos, con el quinto resaltado */}
                 <div className="pagination-dots" style={{ marginTop: '1rem' }}>
                     {[1, 2, 3, 4, 5].map((dot, index) => (
                         <span
                             key={index}
                             style={{
                                 margin: '0 4px',
-                                fontSize: index === 3 ? '1.2rem' : '1rem',
+                                fontSize: index === 4 ? '1.2rem' : '1rem',
                                 color: 'gray'
                             }}
                         >
@@ -123,4 +126,4 @@ const CompleteRegistrationCreativo04 = () => {
     );
 };
 
-export default CompleteRegistrationCreativo04;
+export default CompleteRegistrationProfesionalMarca05;

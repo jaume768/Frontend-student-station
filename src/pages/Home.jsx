@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import '../components/home/css/header-footer.css';
 import '../components/home/css/efecto-parallex.css';
@@ -13,6 +14,13 @@ import RegisterModal from '../components/home/RegisterModal';
 const Home = () => {
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSwitchToRegister = () => {
+    navigate('/');
+    setShowLogin(false);
+    setShowRegister(true);
+  };
 
   return (
     <div className="page-wrapper">
@@ -27,10 +35,7 @@ const Home = () => {
       {showLogin && (
         <LoginModal
           onClose={() => setShowLogin(false)}
-          onSwitchToRegister={() => {
-            setShowLogin(false);
-            setShowRegister(true);
-          }}
+          onSwitchToRegister={handleSwitchToRegister}
         />
       )}
 

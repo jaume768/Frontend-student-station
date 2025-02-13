@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './css/complete-registration.css';
+import '../css/complete-registration.css';
 
 const CompleteRegistrationCreativo03 = () => {
     const navigate = useNavigate();
@@ -36,7 +36,7 @@ const CompleteRegistrationCreativo03 = () => {
                 <p className="question">No te preocupes, puedes modificar tu foto en cualquier momento</p>
                 <div style={{ textAlign: 'center', margin: '2rem 0' }}>
                     <img
-                        src={selectedImage || 'ruta/a/default-profile.png'}
+                        src={selectedImage || 'multimedia/usuarioDefault.jpg'}
                         alt="Foto de perfil"
                         style={{ width: '150px', height: '150px', borderRadius: '50%', objectFit: 'cover' }}
                     />

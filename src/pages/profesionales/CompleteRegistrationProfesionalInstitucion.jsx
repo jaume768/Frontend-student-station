@@ -1,58 +1,38 @@
+// CompleteRegistrationProfesionalInstitucion.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './css/complete-registration.css';
+import '../css/complete-registration.css';
 
-const CompleteRegistrationCreativo02 = () => {
+const CompleteRegistrationProfesionalInstitucion = () => {
     const navigate = useNavigate();
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [dateOfBirth, setDateOfBirth] = useState("");
+    const [institutionName, setInstitutionName] = useState("");
+    const [foundingYear, setFoundingYear] = useState("");
     const [country, setCountry] = useState("");
     const [city, setCity] = useState("");
 
     const countries = [
-        "Estados Unidos",
-        "Reino Unido",
-        "Canadá",
-        "Australia",
-        "Alemania",
-        "Francia",
-        "Italia",
-        "España",
-        "Brasil",
-        "México",
-        "Japón",
-        "China",
-        "India",
-        "Rusia",
-        "Corea del Sur",
-        "Países Bajos",
-        "Suiza",
-        "Suecia",
-        "Noruega",
-        "Argentina"
+        "Estados Unidos", "Reino Unido", "Canadá", "Australia", "Alemania",
+        "Francia", "Italia", "España", "Brasil", "México",
+        "Japón", "China", "India", "Rusia", "Corea del Sur",
+        "Países Bajos", "Suiza", "Suecia", "Noruega", "Argentina"
     ];
 
     const handleNext = async () => {
-        if (!firstName || !lastName || !dateOfBirth || !country || !city) return;
-        const fullName = `${firstName} ${lastName}`;
+        if (!institutionName || !foundingYear || !country || !city) return;
         try {
             const token = localStorage.getItem("authToken");
+            // Actualizamos el usuario con los datos de la institución
             const response = await fetch('http://localhost:5000/api/users/profile', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({
-                    fullName,
-                    dateOfBirth,
-                    country,
-                    city
-                })
+                body: JSON.stringify({ companyName: institutionName, foundingYear, country, city })
             });
             const data = await response.json();
             if (response.ok) {
+                // Luego se comparten las pantallas comunes (foto de perfil, referral, etc.)
                 navigate('/CompleteRegistrationCreativo03');
             } else {
                 console.error(data.error);
@@ -66,76 +46,52 @@ const CompleteRegistrationCreativo02 = () => {
         navigate(-1);
     };
 
-    const openCalendar = () => {
-        console.log("Abrir calendario");
-    };
-
     return (
         <div className="complete-registration-container">
             <div className="contenedor-registro-objetivo">
                 <p className="paso" style={{ color: 'gray', fontSize: '0.8rem' }}>paso 2</p>
-                <h2 className="titulo-objetivo">Datos personales</h2>
+                <h2 className="titulo">Datos de registro</h2>
                 <div className="form-group-datos">
-                    <label>Nombre</label>
+                    <label>Nombre de la institución educativa</label>
                     <input
                         type="text"
-                        placeholder="Introduce tu nombre"
-                        value={firstName}
-                        onChange={(e) => setFirstName(e.target.value)}
+                        placeholder="Introduce el nombre"
+                        value={institutionName}
+                        onChange={(e) => setInstitutionName(e.target.value)}
                         className="input-field"
                         style={{ backgroundColor: '#f0f0f0', color: '#000' }}
                     />
                 </div>
                 <div className="form-group-datos">
-                    <label>Apellidos</label>
+                    <label>Año de la fundación</label>
                     <input
                         type="text"
-                        placeholder="Introduce tus apellidos"
-                        value={lastName}
-                        onChange={(e) => setLastName(e.target.value)}
+                        placeholder="yyyy"
+                        value={foundingYear}
+                        onChange={(e) => setFoundingYear(e.target.value)}
                         className="input-field"
                         style={{ backgroundColor: '#f0f0f0', color: '#000' }}
                     />
                 </div>
                 <div className="form-group-datos">
-                    <label>Fecha de nacimiento</label>
-                    <div className="input-with-icon" style={{ position: 'relative' }}>
-                        <input
-                            type="text"
-                            placeholder="mm/dd/yyyy"
-                            value={dateOfBirth}
-                            onChange={(e) => setDateOfBirth(e.target.value)}
-                            className="input-field"
-                            style={{ backgroundColor: '#f0f0f0', color: '#000' }}
-                        />
-                        <span
-                            className="calendar-icon"
-                            onClick={openCalendar}
-                            style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', cursor: 'pointer' }}
-                        >
-                            &#128197;
-                        </span>
-                    </div>
-                </div>
-                <div className="form-group-datos">
-                    <label>País de residencia</label>
+                    <label>País de la sede</label>
                     <select
                         value={country}
                         onChange={(e) => setCountry(e.target.value)}
                         className="input-field"
                         style={{ backgroundColor: '#f0f0f0', color: '#000' }}
                     >
-                        <option value="">Selecciona tu país</option>
+                        <option value="">Selecciona el país</option>
                         {countries.map((c, index) => (
                             <option key={index} value={c}>{c}</option>
                         ))}
                     </select>
                 </div>
                 <div className="form-group-datos">
-                    <label>Ciudad de residencia</label>
+                    <label>Ciudad de la sede</label>
                     <input
                         type="text"
-                        placeholder="Introduce tu ciudad"
+                        placeholder="Introduce la ciudad"
                         value={city}
                         onChange={(e) => setCity(e.target.value)}
                         className="input-field"
@@ -143,22 +99,26 @@ const CompleteRegistrationCreativo02 = () => {
                     />
                 </div>
                 <div className="navigation-buttons" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem' }}>
-                    <button className="back-button" onClick={handleBack} style={{ background: 'none', border: 'none', color: '#000', cursor: 'pointer' }}>
+                    <button
+                        className="back-button"
+                        onClick={handleBack}
+                        style={{ background: 'none', border: 'none', color: '#000', cursor: 'pointer' }}
+                    >
                         &#8592; Volver atrás
                     </button>
                     <button
                         className="next-button"
-                        disabled={!firstName || !lastName || !dateOfBirth || !country || !city}
+                        disabled={!institutionName || !foundingYear || !country || !city}
                         onClick={handleNext}
                     >
                         Siguiente
                     </button>
                 </div>
+                {/* Paginación: 5 puntos, con el segundo resaltado */}
                 <div className="pagination-dots" style={{ marginTop: '1rem' }}>
                     {[1, 2, 3, 4, 5].map((dot, index) => (
                         <span
                             key={index}
-                            className={`dot ${index === 1 ? "active-dot" : ""}`}
                             style={{
                                 margin: '0 4px',
                                 fontSize: index === 1 ? '1.2rem' : '1rem',
@@ -174,4 +134,4 @@ const CompleteRegistrationCreativo02 = () => {
     );
 };
 
-export default CompleteRegistrationCreativo02;
+export default CompleteRegistrationProfesionalInstitucion;

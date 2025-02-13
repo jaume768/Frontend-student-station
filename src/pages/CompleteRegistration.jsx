@@ -38,13 +38,14 @@ const CompleteRegistration = () => {
             });
             const data = await response.json();
             if (response.ok) {
-                // Redireccionar según el rol
+                localStorage.setItem("role", role);
                 if (role === "Creativo") {
                     navigate('/CompleteRegistrationCreativo');
                 } else {
                     navigate('/CompleteRegistrationProfesional');
                 }
-            } else {
+            }
+             else {
                 console.error(data.error);
             }
         } catch (error) {

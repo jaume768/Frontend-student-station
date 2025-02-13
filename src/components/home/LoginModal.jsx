@@ -1,25 +1,54 @@
 import React, { useState } from 'react';
 import './css/login-modal.css';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
-const LoginModal = ({ onClose }) => {
+const LoginModal = ({ onClose, onSwitchToRegister }) => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const navigate = useNavigate();
 
     const togglePassword = () => {
         setShowPassword(!showPassword);
     };
 
+    const handleLogin = async () => {
+        setError('');
+        try {
+            const response = await fetch('http://localhost:5000/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            });
+            const data = await response.json();
+            if (response.ok) {
+                localStorage.setItem('authToken', data.token);
+                navigate('/dashboard');
+            } else {
+                setError(data.message || 'Error en el inicio de sesión');
+            }
+        } catch (err) {
+            setError('Error de red, inténtalo nuevamente.');
+        }
+    };
+
     return (
         <div className="login-modal">
-            <div className="login-card">
+            <div className={`login-card ${error ? 'with-error' : ''}`}>
                 <h1>Inicio de sesión</h1>
-
+                {error && <p className="error">{error}</p>}
                 <div className="input-group">
                     <label htmlFor="email">Email</label>
                     <input
                         id="email"
                         type="email"
                         placeholder="Introduce tu email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                     />
                 </div>
 
@@ -29,6 +58,8 @@ const LoginModal = ({ onClose }) => {
                         id="password"
                         type={showPassword ? 'text' : 'password'}
                         placeholder="Introduce tu contraseña"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                     />
                     <span className="toggle-password" onClick={togglePassword}>
                         {showPassword ? <FaEyeSlash /> : <FaEye />}
@@ -37,14 +68,27 @@ const LoginModal = ({ onClose }) => {
 
                 <a href="#" className="forgot-link">¿Has olvidado tu contraseña?</a>
 
-                <button className="btn login-btn">Iniciar sesión</button>
+                <button className="btn login-btn" onClick={handleLogin}>
+                    Iniciar sesión
+                </button>
 
                 <button className="btn google-btn">
                     Continuar con Google
                 </button>
 
                 <div className="extra-links">
-                    <p>¿No tienes cuenta? <a href="#">Regístrate</a></p>
+                    <p>
+                        ¿No tienes cuenta?{' '}
+                        <a
+                            href="#"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                onSwitchToRegister();
+                            }}
+                        >
+                            Regístrate
+                        </a>
+                    </p>
                     <a
                         href="#"
                         className="back-link"

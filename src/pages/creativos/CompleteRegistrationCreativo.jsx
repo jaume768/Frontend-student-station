@@ -1,34 +1,36 @@
-// CompleteRegistrationCreativoDisenador05.jsx
+// CompleteRegistrationCreativo.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './css/complete-registration.css';
+import '../css/complete-registration.css';
 
-const CompleteRegistrationCreativoDisenador05 = () => {
+const CompleteRegistrationCreativo = () => {
     const navigate = useNavigate();
-    const [creativeOther, setCreativeOther] = useState("");
-
-    const options = [
-        "Diseñador independiente",
-        "Diseñador de una marca propia",
-        "Trabajo para una empresa"
+    const [creativeType, setCreativeType] = useState(null);
+    const creativeOptions = [
+        "Estudiante",
+        "Graduado",
+        "Estilista",
+        "Diseñador/a activo",
+        "Otro"
     ];
 
     const handleNext = async () => {
-        if (!creativeOther) return;
+        if (!creativeType) return;
         try {
             const token = localStorage.getItem("authToken");
-            // Actualizamos creativeOther en el usuario
             const response = await fetch('http://localhost:5000/api/users/profile', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({ creativeOther })
+                body: JSON.stringify({ creativeType })
             });
             const data = await response.json();
             if (response.ok) {
-                navigate('/dashboard');
+                // Almacena el creativeType para usarlo en pasos posteriores
+                localStorage.setItem("creativeType", creativeType);
+                navigate('/CompleteRegistrationCreativo02');
             } else {
                 console.error(data.error);
             }
@@ -44,15 +46,15 @@ const CompleteRegistrationCreativoDisenador05 = () => {
     return (
         <div className="complete-registration-container">
             <div className="contenedor-registro-objetivo">
-                <p className="paso" style={{ color: 'gray', fontSize: '0.8rem' }}>paso 5</p>
-                <p className="question">Vamos a conocer un poco más sobre ti</p>
-                <h2 className="titulo">¿Qué opción describe mejor tu situación actual?</h2>
+                <p className="paso" style={{ color: 'gray', fontSize: '0.8rem' }}>paso 1</p>
+                <h1 className="greeting">¿Cuál es tu rol?</h1>
+                <h2 className="titulo-objetivo">Soy...</h2>
                 <div className="objectives-list">
-                    {options.map((option, index) => (
+                    {creativeOptions.map((option, index) => (
                         <button
                             key={index}
-                            className={`objective-button ${creativeOther === option ? "selected" : ""}`}
-                            onClick={() => setCreativeOther(option)}
+                            className={`objective-button ${creativeType === index + 1 ? "selected" : ""}`}
+                            onClick={() => setCreativeType(index + 1)}
                         >
                             {option}
                         </button>
@@ -62,13 +64,21 @@ const CompleteRegistrationCreativoDisenador05 = () => {
                     <button className="back-button" onClick={handleBack} style={{ background: 'none', border: 'none', color: '#000', cursor: 'pointer' }}>
                         &#8592; Volver atrás
                     </button>
-                    <button className="next-button" disabled={!creativeOther} onClick={handleNext}>
+                    <button className="next-button" disabled={!creativeType} onClick={handleNext}>
                         Siguiente
                     </button>
                 </div>
                 <div className="pagination-dots" style={{ marginTop: '1rem' }}>
                     {[1, 2, 3, 4, 5].map((dot, index) => (
-                        <span key={index} style={{ margin: '0 4px', fontSize: index === 4 ? '1.2rem' : '1rem', color: 'gray' }}>
+                        <span
+                            key={index}
+                            className={`dot ${index === 0 ? "active-dot" : ""}`}
+                            style={{
+                                margin: '0 4px',
+                                fontSize: index === 0 ? '1.2rem' : '1rem',
+                                color: 'gray'
+                            }}
+                        >
                             &#9679;
                         </span>
                     ))}
@@ -78,4 +88,4 @@ const CompleteRegistrationCreativoDisenador05 = () => {
     );
 };
 
-export default CompleteRegistrationCreativoDisenador05;
+export default CompleteRegistrationCreativo;
