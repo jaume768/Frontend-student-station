@@ -10,10 +10,12 @@ import Footer from '../components/home/FooterHome';
 import CallToAction from '../components/home/CallToAction';
 import LoginModal from '../components/home/LoginModal';
 import RegisterModal from '../components/home/RegisterModal';
+import PasswordResetModal from '../components/home/PasswordResetModal';
 
 const Home = () => {
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
+  const [showPasswordReset, setShowPasswordReset] = useState(false);
   const navigate = useNavigate();
 
   const handleSwitchToRegister = () => {
@@ -22,9 +24,14 @@ const Home = () => {
     setShowRegister(true);
   };
 
+  const handleSwitchToReset = () => {
+    setShowLogin(false);
+    setShowPasswordReset(true);
+  };
+
   return (
     <div className="page-wrapper">
-      {!showLogin && (
+      {!showLogin && !showRegister && !showPasswordReset && (
         <>
           <Parallax />
           <Header onLoginClick={() => setShowLogin(true)} onRegisterClick={() => setShowRegister(true)} />
@@ -36,6 +43,7 @@ const Home = () => {
         <LoginModal
           onClose={() => setShowLogin(false)}
           onSwitchToRegister={handleSwitchToRegister}
+          onSwitchToReset={handleSwitchToReset}
         />
       )}
 
@@ -44,6 +52,16 @@ const Home = () => {
           onClose={() => setShowRegister(false)}
           onSwitchToLogin={() => {
             setShowRegister(false);
+            setShowLogin(true);
+          }}
+        />
+      )}
+
+      {showPasswordReset && (
+        <PasswordResetModal
+          onClose={() => setShowPasswordReset(false)}
+          onSwitchToLogin={() => {
+            setShowPasswordReset(false);
             setShowLogin(true);
           }}
         />

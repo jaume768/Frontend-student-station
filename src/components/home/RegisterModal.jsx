@@ -326,7 +326,6 @@ const RegisterModal = ({ onClose, onSwitchToLogin }) => {
                                                     value={digit}
                                                     placeholder="-"
                                                     onChange={(e) => handleDigitChange(e, index)}
-                                                    // Solo la primera celda tendrá el onPaste para distribuir el código
                                                     onPaste={index === 0 ? handlePaste : undefined}
                                                     id={`code-digit-${index}`}
                                                     className="code-cell"

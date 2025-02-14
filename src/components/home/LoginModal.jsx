@@ -3,7 +3,7 @@ import './css/login-modal.css';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
-const LoginModal = ({ onClose, onSwitchToRegister }) => {
+const LoginModal = ({ onClose, onSwitchToRegister, onSwitchToReset }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -67,7 +67,16 @@ const LoginModal = ({ onClose, onSwitchToRegister }) => {
                     </span>
                 </div>
 
-                <a href="#" className="forgot-link">¿Has olvidado tu contraseña?</a>
+                <a
+                    href="#"
+                    className="forgot-link"
+                    onClick={(e) => {
+                        e.preventDefault();
+                        onSwitchToReset();
+                    }}
+                >
+                    ¿Has olvidado tu contraseña?
+                </a>
 
                 <button className="btn login-btn" onClick={handleLogin}>
                     Iniciar sesión
