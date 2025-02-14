@@ -5,7 +5,7 @@
     text-align: center;
 }
 
-.contenedor-registro-objetivo{
+.contenedor-registro-objetivo {
     width: 300px;
     margin: 10% auto auto auto;
 }
@@ -27,7 +27,7 @@
 .objectives-list {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.9rem;
     margin: auto;
     width: 270px;
     justify-content: center;
@@ -45,12 +45,12 @@
     width: 100%;
 }
 
-.form-group-datos{
+.form-group-datos {
     display: flex;
     flex-direction: column;
 }
 
-.form-group-datos input{
+.form-group-datos input {
     background-color: #f0f0f0;
     color: #000;
     border: none;
@@ -62,7 +62,7 @@
     margin: 0.6em;
 }
 
-.input-field-conocido{
+.input-field-conocido {
     background-color: #c9c6c6;
     color: #000;
     border: none;
@@ -74,7 +74,7 @@
     margin: 0.6em;
 }
 
-.form-group-datos select{
+.form-group-datos select {
     background-color: #f0f0f0;
     color: #000;
     border: none;
@@ -86,15 +86,15 @@
     margin: 0.6em;
 }
 
-.titulo-objetivo{
+.titulo-objetivo {
     margin-bottom: 2em;
 }
 
-.paso{
+.paso {
     margin-bottom: 10p;
 }
 
-.pagination-dots{
+.pagination-dots {
     text-align: center;
 }
 
@@ -102,6 +102,13 @@
     background-color: #38c887;
     color: white;
 }
+
+.error-message {
+    color: red;
+    font-size: 0.9rem;
+    margin: 0.5em 0;
+}
+
 
 .next-button {
     background-color: #000;
@@ -114,12 +121,12 @@
     margin-top: 1em;
 }
 
-.checkbox-wrapper{
+.checkbox-wrapper {
     display: flex;
     margin-left: 10px;
 }
 
-.checkbox-wrapper input{
+.checkbox-wrapper input {
     width: 10px;
 }
 
@@ -138,7 +145,7 @@
 
 @media (max-width: 668px) {
 
-    .contenedor-registro-objetivo{
+    .contenedor-registro-objetivo {
         margin: 30% auto auto auto;
     }
 

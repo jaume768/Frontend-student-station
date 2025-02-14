@@ -8,8 +8,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 1200;
 }
+
+.btn.verify-btn {
+    color: #fff;
+}
+
 
 .registro-verification-content {
     height: 500px;

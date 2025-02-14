@@ -193,8 +193,10 @@ const RegisterModal = ({ onClose, onSwitchToLogin }) => {
     };
 
     return (
-        <div className="register-modal-overlay">
-            <div className="register-modal">
+        // Agregamos el onClick en el overlay para que al hacer click fuera se cierre el modal
+        <div className="register-modal-overlay" onClick={onClose}>
+            {/* Evitamos que al hacer click dentro del modal se propague el evento */}
+            <div className="register-modal" onClick={(e) => e.stopPropagation()}>
                 <button className="close-button" onClick={onClose}>
                     <FaTimes />
                 </button>

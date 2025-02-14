@@ -10,6 +10,7 @@ const CompleteRegistrationProfesionalDatosPersonales = () => {
     const [dateOfBirth, setDateOfBirth] = useState("");
     const [country, setCountry] = useState("");
     const [city, setCity] = useState("");
+    const [error, setError] = useState(""); // Estado para mensaje de error
 
     // Ref para el input de fecha
     const dateInputRef = useRef(null);
@@ -22,7 +23,11 @@ const CompleteRegistrationProfesionalDatosPersonales = () => {
     ];
 
     const handleNext = async () => {
-        if (!firstName || !lastName || !dateOfBirth || !country || !city) return;
+        if (!firstName || !lastName || !dateOfBirth || !country || !city) {
+            setError("Por favor, completa todos los campos requeridos.");
+            return;
+        }
+        setError("");
         const fullName = `${firstName} ${lastName}`;
         try {
             const token = localStorage.getItem("authToken");
@@ -39,9 +44,11 @@ const CompleteRegistrationProfesionalDatosPersonales = () => {
             if (response.ok) {
                 navigate('/CompleteRegistrationCreativo03');
             } else {
+                setError(data.error || "Ha ocurrido un error.");
                 console.error(data.error);
             }
         } catch (error) {
+            setError("Error en la conexión o en el servidor.");
             console.error(error);
         }
     };
@@ -72,7 +79,10 @@ const CompleteRegistrationProfesionalDatosPersonales = () => {
                         type="text"
                         placeholder="Introduce tu nombre"
                         value={firstName}
-                        onChange={(e) => setFirstName(e.target.value)}
+                        onChange={(e) => {
+                            setFirstName(e.target.value);
+                            setError("");
+                        }}
                         className="input-field"
                         style={{ backgroundColor: '#f0f0f0', color: '#000' }}
                     />
@@ -83,7 +93,10 @@ const CompleteRegistrationProfesionalDatosPersonales = () => {
                         type="text"
                         placeholder="Introduce tus apellidos"
                         value={lastName}
-                        onChange={(e) => setLastName(e.target.value)}
+                        onChange={(e) => {
+                            setLastName(e.target.value);
+                            setError("");
+                        }}
                         className="input-field"
                         style={{ backgroundColor: '#f0f0f0', color: '#000' }}
                     />
@@ -95,7 +108,10 @@ const CompleteRegistrationProfesionalDatosPersonales = () => {
                             ref={dateInputRef}
                             type="date"
                             value={dateOfBirth}
-                            onChange={(e) => setDateOfBirth(e.target.value)}
+                            onChange={(e) => {
+                                setDateOfBirth(e.target.value);
+                                setError("");
+                            }}
                             className="input-field"
                             style={{ backgroundColor: '#f0f0f0', color: '#000' }}
                             max={new Date().toISOString().split("T")[0]}
@@ -113,7 +129,10 @@ const CompleteRegistrationProfesionalDatosPersonales = () => {
                     <label>País de residencia</label>
                     <select
                         value={country}
-                        onChange={(e) => setCountry(e.target.value)}
+                        onChange={(e) => {
+                            setCountry(e.target.value);
+                            setError("");
+                        }}
                         className="input-field"
                         style={{ backgroundColor: '#f0f0f0', color: '#000' }}
                     >
@@ -129,11 +148,16 @@ const CompleteRegistrationProfesionalDatosPersonales = () => {
                         type="text"
                         placeholder="Introduce tu ciudad"
                         value={city}
-                        onChange={(e) => setCity(e.target.value)}
+                        onChange={(e) => {
+                            setCity(e.target.value);
+                            setError("");
+                        }}
                         className="input-field"
                         style={{ backgroundColor: '#f0f0f0', color: '#000' }}
                     />
                 </div>
+                {/* Mensaje de error */}
+                {error && <p style={{ color: 'red', marginBottom: '1rem' }}>{error}</p>}
                 <div className="navigation-buttons" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem' }}>
                     <button className="back-button" onClick={handleBack} style={{ background: 'none', border: 'none', color: '#000', cursor: 'pointer' }}>
                         &#8592; Volver atrás

@@ -9,6 +9,7 @@ const CompleteRegistrationProfesionalInstitucion = () => {
     const [foundingYear, setFoundingYear] = useState("");
     const [country, setCountry] = useState("");
     const [city, setCity] = useState("");
+    const [error, setError] = useState(""); // Estado para mensaje de error
 
     const countries = [
         "Estados Unidos", "Reino Unido", "Canadá", "Australia", "Alemania",
@@ -18,10 +19,13 @@ const CompleteRegistrationProfesionalInstitucion = () => {
     ];
 
     const handleNext = async () => {
-        if (!institutionName || !foundingYear || !country || !city) return;
+        if (!institutionName || !foundingYear || !country || !city) {
+            setError("Por favor, completa todos los campos requeridos.");
+            return;
+        }
+        setError("");
         try {
             const token = localStorage.getItem("authToken");
-            // Actualizamos el usuario con los datos de la institución
             const backendUrl = import.meta.env.VITE_BACKEND_URL;
             const response = await fetch(`${backendUrl}/api/users/profile`, {
                 method: 'PUT',
@@ -33,12 +37,13 @@ const CompleteRegistrationProfesionalInstitucion = () => {
             });
             const data = await response.json();
             if (response.ok) {
-                // Luego se comparten las pantallas comunes (foto de perfil, referral, etc.)
                 navigate('/CompleteRegistrationCreativo03');
             } else {
+                setError(data.error || "Ha ocurrido un error.");
                 console.error(data.error);
             }
         } catch (error) {
+            setError("Error en la conexión o en el servidor.");
             console.error(error);
         }
     };
@@ -58,7 +63,10 @@ const CompleteRegistrationProfesionalInstitucion = () => {
                         type="text"
                         placeholder="Introduce el nombre"
                         value={institutionName}
-                        onChange={(e) => setInstitutionName(e.target.value)}
+                        onChange={(e) => {
+                            setInstitutionName(e.target.value);
+                            setError("");
+                        }}
                         className="input-field"
                         style={{ backgroundColor: '#f0f0f0', color: '#000' }}
                     />
@@ -69,7 +77,10 @@ const CompleteRegistrationProfesionalInstitucion = () => {
                         type="text"
                         placeholder="yyyy"
                         value={foundingYear}
-                        onChange={(e) => setFoundingYear(e.target.value)}
+                        onChange={(e) => {
+                            setFoundingYear(e.target.value);
+                            setError("");
+                        }}
                         className="input-field"
                         style={{ backgroundColor: '#f0f0f0', color: '#000' }}
                     />
@@ -78,7 +89,10 @@ const CompleteRegistrationProfesionalInstitucion = () => {
                     <label>País de la sede</label>
                     <select
                         value={country}
-                        onChange={(e) => setCountry(e.target.value)}
+                        onChange={(e) => {
+                            setCountry(e.target.value);
+                            setError("");
+                        }}
                         className="input-field"
                         style={{ backgroundColor: '#f0f0f0', color: '#000' }}
                     >
@@ -94,11 +108,16 @@ const CompleteRegistrationProfesionalInstitucion = () => {
                         type="text"
                         placeholder="Introduce la ciudad"
                         value={city}
-                        onChange={(e) => setCity(e.target.value)}
+                        onChange={(e) => {
+                            setCity(e.target.value);
+                            setError("");
+                        }}
                         className="input-field"
                         style={{ backgroundColor: '#f0f0f0', color: '#000' }}
                     />
                 </div>
+                {/* Mensaje de error */}
+                {error && <p style={{ color: 'red', marginBottom: '1rem' }}>{error}</p>}
                 <div className="navigation-buttons" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem' }}>
                     <button
                         className="back-button"
@@ -115,14 +134,13 @@ const CompleteRegistrationProfesionalInstitucion = () => {
                         Siguiente
                     </button>
                 </div>
-                {/* Paginación: 5 puntos, con el segundo resaltado */}
                 <div className="pagination-dots" style={{ marginTop: '1rem' }}>
                     {[1, 2, 3, 4, 5].map((dot, index) => (
                         <span
                             key={index}
                             style={{
                                 margin: '0 4px',
-                                fontSize: index === 1 ? '1.2rem' : '1rem',
+                                fontSize: index === 1 ? '1rem' : '0.9rem',
                                 color: 'gray'
                             }}
                         >

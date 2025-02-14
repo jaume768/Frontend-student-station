@@ -8,6 +8,8 @@ const CompleteRegistrationProfesionalAgencia05 = () => {
     const [companyName, setCompanyName] = useState("");
     const [agencyServices, setAgencyServices] = useState("");
     const [shareName, setShareName] = useState(true);
+    const [error, setError] = useState(""); // Estado para mensaje de error
+
     const serviceOptions = [
         "Gestión de talentos",
         "Dirección creativa o producción",
@@ -18,10 +20,13 @@ const CompleteRegistrationProfesionalAgencia05 = () => {
     ];
 
     const handleNext = async () => {
-        if (!companyName || !agencyServices) return;
+        if (!companyName || !agencyServices) {
+            setError("Por favor, completa todos los campos requeridos.");
+            return;
+        }
+        setError("");
         try {
             const token = localStorage.getItem("authToken");
-            // Actualizamos el usuario para el caso de agencia/scout
             const backendUrl = import.meta.env.VITE_BACKEND_URL;
             const response = await fetch(`${backendUrl}/api/users/profile`, {
                 method: 'PUT',
@@ -39,9 +44,11 @@ const CompleteRegistrationProfesionalAgencia05 = () => {
             if (response.ok) {
                 navigate('/dashboard');
             } else {
+                setError(data.error || "Ha ocurrido un error.");
                 console.error(data.error);
             }
         } catch (error) {
+            setError("Error en la conexión o en el servidor.");
             console.error(error);
         }
     };
@@ -61,7 +68,10 @@ const CompleteRegistrationProfesionalAgencia05 = () => {
                         type="text"
                         placeholder="Introduce el nombre"
                         value={companyName}
-                        onChange={(e) => setCompanyName(e.target.value)}
+                        onChange={(e) => {
+                            setCompanyName(e.target.value);
+                            setError("");
+                        }}
                         className="input-field"
                         style={{ backgroundColor: '#f0f0f0', color: '#000' }}
                     />
@@ -78,7 +88,10 @@ const CompleteRegistrationProfesionalAgencia05 = () => {
                     <label>¿Servicios que ofrece?</label>
                     <select
                         value={agencyServices}
-                        onChange={(e) => setAgencyServices(e.target.value)}
+                        onChange={(e) => {
+                            setAgencyServices(e.target.value);
+                            setError("");
+                        }}
                         className="input-field"
                         style={{ backgroundColor: '#f0f0f0', color: '#000' }}
                     >
@@ -88,6 +101,8 @@ const CompleteRegistrationProfesionalAgencia05 = () => {
                         ))}
                     </select>
                 </div>
+                {/* Mensaje de error */}
+                {error && <p style={{ color: 'red', marginBottom: '1rem' }}>{error}</p>}
                 <div className="navigation-buttons" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem' }}>
                     <button
                         className="back-button"
@@ -96,25 +111,13 @@ const CompleteRegistrationProfesionalAgencia05 = () => {
                     >
                         &#8592; Volver atrás
                     </button>
-                    <button
-                        className="next-button"
-                        disabled={!companyName || !agencyServices}
-                        onClick={handleNext}
-                    >
+                    <button className="next-button" onClick={handleNext} disabled={!companyName || !agencyServices}>
                         Siguiente
                     </button>
                 </div>
-                {/* Paginación: 5 puntos, con el quinto resaltado */}
                 <div className="pagination-dots" style={{ marginTop: '1rem' }}>
                     {[1, 2, 3, 4, 5].map((dot, index) => (
-                        <span
-                            key={index}
-                            style={{
-                                margin: '0 4px',
-                                fontSize: index === 4 ? '1.2rem' : '1rem',
-                                color: 'gray'
-                            }}
-                        >
+                        <span key={index} style={{ margin: '0 4px', fontSize: index === 4 ? '1rem' : '0.9rem', color: 'gray' }}>
                             &#9679;
                         </span>
                     ))}

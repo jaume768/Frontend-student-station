@@ -31,7 +31,7 @@ const Home = () => {
 
   return (
     <div className="page-wrapper">
-      {!showLogin && !showRegister && !showPasswordReset && (
+      {!showLogin && !showPasswordReset && (
         <>
           <Parallax />
           <Header onLoginClick={() => setShowLogin(true)} onRegisterClick={() => setShowRegister(true)} />

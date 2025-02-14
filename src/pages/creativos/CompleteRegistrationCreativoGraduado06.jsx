@@ -7,6 +7,7 @@ const CompleteRegistrationCreativoGraduado06 = () => {
     const navigate = useNavigate();
     const [institution, setInstitution] = useState("");
     const [graduationYear, setGraduationYear] = useState("");
+    const [error, setError] = useState(""); // Estado para error
 
     const handleYearChange = (e) => {
         setGraduationYear(e.target.value);
@@ -19,10 +20,13 @@ const CompleteRegistrationCreativoGraduado06 = () => {
     };
 
     const handleNext = async () => {
-        if (!institution || !graduationYear) return;
+        if (!institution || !graduationYear) {
+            setError("Por favor, completa todos los campos requeridos.");
+            return;
+        }
+        setError("");
         try {
             const token = localStorage.getItem("authToken");
-            // Actualizamos el campo institution (graduationYear se podría almacenar si fuese necesario)
             const backendUrl = import.meta.env.VITE_BACKEND_URL;
             const response = await fetch(`${backendUrl}/api/users/profile`, {
                 method: 'PUT',
@@ -36,9 +40,11 @@ const CompleteRegistrationCreativoGraduado06 = () => {
             if (response.ok) {
                 navigate('/dashboard');
             } else {
+                setError(data.error || "Ha ocurrido un error.");
                 console.error(data.error);
             }
         } catch (error) {
+            setError("Error en la conexión o en el servidor.");
             console.error(error);
         }
     };
@@ -53,13 +59,20 @@ const CompleteRegistrationCreativoGraduado06 = () => {
                 <p className="paso" style={{ color: 'gray', fontSize: '0.8rem' }}>paso 6</p>
                 <h2 className="titulo">Tu última formación</h2>
                 <p className="question">¿Qué tipo de formación estás cursando actualmente?</p>
+
+                {/* Mensaje de error */}
+                {error && <p style={{ color: 'red', marginBottom: '1rem' }}>{error}</p>}
+
                 <div className="form-group-datos">
                     <label>¿En qué universidad o escuela estudias?</label>
                     <input
                         type="text"
                         placeholder="Introduce tu universidad"
                         value={institution}
-                        onChange={(e) => setInstitution(e.target.value)}
+                        onChange={(e) => {
+                            setInstitution(e.target.value);
+                            setError("");
+                        }}
                         className="input-field"
                         style={{ backgroundColor: '#f0f0f0', color: '#000' }}
                     />
@@ -85,16 +98,27 @@ const CompleteRegistrationCreativoGraduado06 = () => {
                     </div>
                 </div>
                 <div className="navigation-buttons" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem' }}>
-                    <button className="back-button" onClick={handleBack} style={{ background: 'none', border: 'none', color: '#000', cursor: 'pointer' }}>
+                    <button
+                        className="back-button"
+                        onClick={handleBack}
+                        style={{ background: 'none', border: 'none', color: '#000', cursor: 'pointer' }}
+                    >
                         &#8592; Volver atrás
                     </button>
-                    <button className="next-button" disabled={!institution || !graduationYear} onClick={handleNext}>
+                    <button
+                        className="next-button"
+                        onClick={handleNext}
+                        disabled={!institution || !graduationYear}
+                    >
                         Siguiente
                     </button>
                 </div>
                 <div className="pagination-dots" style={{ marginTop: '1rem' }}>
                     {[1, 2, 3, 4, 5, 6].map((dot, index) => (
-                        <span key={index} style={{ margin: '0 4px', fontSize: index === 5 ? '1.2rem' : '1rem', color: 'gray' }}>
+                        <span
+                            key={index}
+                            style={{ margin: '0 4px', fontSize: index === 5 ? '1rem' : '0.9rem', color: 'gray' }}
+                        >
                             &#9679;
                         </span>
                     ))}

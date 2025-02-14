@@ -10,8 +10,8 @@ const CompleteRegistrationCreativo02 = () => {
     const [dateOfBirth, setDateOfBirth] = useState("");
     const [country, setCountry] = useState("");
     const [city, setCity] = useState("");
+    const [error, setError] = useState(""); // Estado para el error
 
-    // Ref para el input de fecha
     const dateInputRef = useRef(null);
 
     const countries = [
@@ -22,12 +22,17 @@ const CompleteRegistrationCreativo02 = () => {
     ];
 
     const handleNext = async () => {
-        if (!firstName || !lastName || !dateOfBirth || !country || !city) return;
+        // Validar que se hayan rellenado todos los campos
+        if (!firstName || !lastName || !dateOfBirth || !country || !city) {
+            setError("Por favor, completa todos los campos requeridos.");
+            return;
+        }
+        setError(""); // Limpia el error si todo está correcto
+
         const fullName = `${firstName} ${lastName}`;
         try {
             const token = localStorage.getItem("authToken");
-            const backendUrl = import.meta.env.VITE_BACKEND_URL;
-            const response = await fetch(`${backendUrl}/api/users/profile`, {
+            const response = await fetch('http://localhost:5000/api/users/profile', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -39,9 +44,11 @@ const CompleteRegistrationCreativo02 = () => {
             if (response.ok) {
                 navigate('/CompleteRegistrationCreativo03');
             } else {
-                console.error(data.error);
+                // Si la respuesta trae error, se puede mostrar también
+                setError(data.error || "Ha ocurrido un error.");
             }
         } catch (error) {
+            setError("Error en la conexión o en el servidor.");
             console.error(error);
         }
     };
@@ -50,7 +57,6 @@ const CompleteRegistrationCreativo02 = () => {
         navigate(-1);
     };
 
-    // Función para abrir el selector de fecha al pulsar el icono
     const openCalendar = () => {
         if (dateInputRef.current) {
             if (dateInputRef.current.showPicker) {
@@ -66,6 +72,10 @@ const CompleteRegistrationCreativo02 = () => {
             <div className="contenedor-registro-objetivo">
                 <p className="paso" style={{ color: 'gray', fontSize: '0.8rem' }}>paso 2</p>
                 <h2 className="titulo-objetivo">Datos personales</h2>
+
+                {/* Mensaje de error */}
+                {error && <p style={{ color: 'red', marginBottom: '1rem' }}>{error}</p>}
+
                 <div className="form-group-datos">
                     <label>Nombre</label>
                     <input
@@ -98,14 +108,14 @@ const CompleteRegistrationCreativo02 = () => {
                             onChange={(e) => setDateOfBirth(e.target.value)}
                             className="input-field"
                             style={{ backgroundColor: '#f0f0f0', color: '#000' }}
-                            max={new Date().toISOString().split("T")[0]}  // No permite fechas futuras
+                            max={new Date().toISOString().split("T")[0]}
                         />
                         <span
                             className="calendar-icon"
                             onClick={openCalendar}
                             style={{
                                 position: 'absolute',
-                                right: '0px',
+                                right: '10px',
                                 top: '50%',
                                 transform: 'translateY(-50%)',
                                 cursor: 'pointer'
@@ -146,7 +156,6 @@ const CompleteRegistrationCreativo02 = () => {
                     </button>
                     <button
                         className="next-button"
-                        disabled={!firstName || !lastName || !dateOfBirth || !country || !city}
                         onClick={handleNext}
                     >
                         Siguiente
@@ -159,7 +168,7 @@ const CompleteRegistrationCreativo02 = () => {
                             className={`dot ${index === 1 ? "active-dot" : ""}`}
                             style={{
                                 margin: '0 4px',
-                                fontSize: index === 1 ? '1.2rem' : '1rem',
+                                fontSize: index === 1 ? '1rem' : '0.9rem',
                                 color: 'gray'
                             }}
                         >

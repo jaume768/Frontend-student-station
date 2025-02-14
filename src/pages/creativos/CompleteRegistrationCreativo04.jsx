@@ -6,6 +6,8 @@ import '../css/complete-registration.css';
 const CompleteRegistrationCreativo04 = () => {
     const navigate = useNavigate();
     const [referralSource, setReferralSource] = useState("");
+    const [error, setError] = useState(""); // Estado para error
+
     const referralOptions = [
         "Redes sociales",
         "Boca a boca",
@@ -17,7 +19,11 @@ const CompleteRegistrationCreativo04 = () => {
     ];
 
     const handleNext = async () => {
-        if (!referralSource) return;
+        if (!referralSource) {
+            setError("Por favor, selecciona una opción.");
+            return;
+        }
+        setError("");
         try {
             const token = localStorage.getItem("authToken");
             const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -67,11 +73,9 @@ const CompleteRegistrationCreativo04 = () => {
                             navigate('/CompleteRegistrationProfesionalAgencia05');
                             break;
                         case "4": // Una institución educativa
-                            // En este flujo, la pantalla de datos de registro ya se realizó, por lo que podrías redirigir directamente al dashboard o a otra pantalla común.
                             navigate('/dashboard');
                             break;
                         case "5": // Otro
-                            // Puedes redirigir a la pantalla que ya uses para "Otro" (incluso reutilizar la de creativos si se ajusta)
                             navigate('/CompleteRegistrationCreativoOtro05');
                             break;
                         default:
@@ -81,9 +85,11 @@ const CompleteRegistrationCreativo04 = () => {
                     navigate('/dashboard');
                 }
             } else {
+                setError(data.error || "Ha ocurrido un error.");
                 console.error(data.error);
             }
         } catch (error) {
+            setError("Error en la conexión o en el servidor.");
             console.error(error);
         }
     };
@@ -101,10 +107,17 @@ const CompleteRegistrationCreativo04 = () => {
                 <p className="question">
                     Nos encanta tenerte aquí. Tu respuesta nos ayuda a mejorar y a llegar a más personas como tú.
                 </p>
+
+                {/* Mensaje de error */}
+                {error && <p style={{ color: 'red', marginBottom: '1rem' }}>{error}</p>}
+
                 <div className="form-group-select">
                     <select
                         value={referralSource}
-                        onChange={(e) => setReferralSource(e.target.value)}
+                        onChange={(e) => {
+                            setReferralSource(e.target.value);
+                            setError("");
+                        }}
                         className="input-field-conocido"
                         style={{ backgroundColor: '#f0f0f0', color: '#000' }}
                     >
@@ -122,11 +135,7 @@ const CompleteRegistrationCreativo04 = () => {
                     >
                         &#8592; Volver atrás
                     </button>
-                    <button
-                        className="next-button"
-                        disabled={!referralSource}
-                        onClick={handleNext}
-                    >
+                    <button className="next-button" onClick={handleNext}>
                         Siguiente
                     </button>
                 </div>
@@ -137,7 +146,7 @@ const CompleteRegistrationCreativo04 = () => {
                             key={index}
                             style={{
                                 margin: '0 4px',
-                                fontSize: index === 3 ? '1.2rem' : '1rem',
+                                fontSize: index === 3 ? '1rem' : '0.9rem',
                                 color: 'gray'
                             }}
                         >

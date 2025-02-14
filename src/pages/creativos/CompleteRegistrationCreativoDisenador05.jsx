@@ -6,6 +6,7 @@ import '../css/complete-registration.css';
 const CompleteRegistrationCreativoDisenador05 = () => {
     const navigate = useNavigate();
     const [creativeOther, setCreativeOther] = useState("");
+    const [error, setError] = useState(""); // Estado para error
 
     const options = [
         "Diseñador independiente",
@@ -14,10 +15,13 @@ const CompleteRegistrationCreativoDisenador05 = () => {
     ];
 
     const handleNext = async () => {
-        if (!creativeOther) return;
+        if (!creativeOther) {
+            setError("Por favor, selecciona una opción que describa tu situación.");
+            return;
+        }
+        setError("");
         try {
             const token = localStorage.getItem("authToken");
-            // Actualizamos creativeOther en el usuario
             const backendUrl = import.meta.env.VITE_BACKEND_URL;
             const response = await fetch(`${backendUrl}/api/users/profile`, {
                 method: 'PUT',
@@ -31,9 +35,11 @@ const CompleteRegistrationCreativoDisenador05 = () => {
             if (response.ok) {
                 navigate('/dashboard');
             } else {
+                setError(data.error || "Ha ocurrido un error.");
                 console.error(data.error);
             }
         } catch (error) {
+            setError("Error en la conexión o en el servidor.");
             console.error(error);
         }
     };
@@ -48,12 +54,19 @@ const CompleteRegistrationCreativoDisenador05 = () => {
                 <p className="paso" style={{ color: 'gray', fontSize: '0.8rem' }}>paso 5</p>
                 <p className="question">Vamos a conocer un poco más sobre ti</p>
                 <h2 className="titulo">¿Qué opción describe mejor tu situación actual?</h2>
+
+                {/* Mensaje de error */}
+                {error && <p style={{ color: 'red', marginBottom: '1rem' }}>{error}</p>}
+
                 <div className="objectives-list">
                     {options.map((option, index) => (
                         <button
                             key={index}
                             className={`objective-button ${creativeOther === option ? "selected" : ""}`}
-                            onClick={() => setCreativeOther(option)}
+                            onClick={() => {
+                                setCreativeOther(option);
+                                setError("");
+                            }}
                         >
                             {option}
                         </button>
@@ -63,13 +76,13 @@ const CompleteRegistrationCreativoDisenador05 = () => {
                     <button className="back-button" onClick={handleBack} style={{ background: 'none', border: 'none', color: '#000', cursor: 'pointer' }}>
                         &#8592; Volver atrás
                     </button>
-                    <button className="next-button" disabled={!creativeOther} onClick={handleNext}>
+                    <button className="next-button" onClick={handleNext}>
                         Siguiente
                     </button>
                 </div>
                 <div className="pagination-dots" style={{ marginTop: '1rem' }}>
                     {[1, 2, 3, 4, 5].map((dot, index) => (
-                        <span key={index} style={{ margin: '0 4px', fontSize: index === 4 ? '1.2rem' : '1rem', color: 'gray' }}>
+                        <span key={index} style={{ margin: '0 4px', fontSize: index === 4 ? '1rem' : '0.9rem', color: 'gray' }}>
                             &#9679;
                         </span>
                     ))}

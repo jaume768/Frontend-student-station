@@ -8,27 +8,28 @@ const CompleteRegistrationProfesionalEmpresa05 = () => {
     const [companyName, setCompanyName] = useState("");
     const [foundingYear, setFoundingYear] = useState("");
     const [productServiceType, setProductServiceType] = useState("");
-    // Los siguientes estados controlan los checkboxes.
-    // Si se marcan significa "Prefiero no compartir", de modo que enviaremos false.
-    const [shareName, setShareName] = useState(true);
-    const [shareYear, setShareYear] = useState(true);
+    const [error, setError] = useState(""); // Estado para mensaje de error
+
     const productOptions = [
-        "Diseño",
-        "Retail",
-        "Fabricación",
-        "Distribución",
+        "Confección a medida",
+        "Moda vintage",
         "Accesorios",
-        "Calzado",
-        "Moda sostenible",
-        "Innovación",
+        "Joyería",
+        "Zapatos",
+        "Artículos de cuero",
+        "Arte textil",
+        "Artículos sostenibles",
         "Otro"
     ];
 
     const handleNext = async () => {
-        if (!companyName || !foundingYear || !productServiceType) return;
+        if (!companyName || !foundingYear || !productServiceType) {
+            setError("Por favor, completa todos los campos requeridos.");
+            return;
+        }
+        setError("");
         try {
             const token = localStorage.getItem("authToken");
-            // Actualizamos el usuario con los datos para empresa
             const backendUrl = import.meta.env.VITE_BACKEND_URL;
             const response = await fetch(`${backendUrl}/api/users/profile`, {
                 method: 'PUT',
@@ -39,18 +40,18 @@ const CompleteRegistrationProfesionalEmpresa05 = () => {
                 body: JSON.stringify({
                     companyName,
                     foundingYear,
-                    productServiceType,
-                    showNameCompany: shareName,
-                    showFoundingYearCompany: shareYear
+                    productServiceType
                 })
             });
             const data = await response.json();
             if (response.ok) {
                 navigate('/dashboard');
             } else {
+                setError(data.error || "Ha ocurrido un error.");
                 console.error(data.error);
             }
         } catch (error) {
+            setError("Error en la conexión o en el servidor.");
             console.error(error);
         }
     };
@@ -65,23 +66,18 @@ const CompleteRegistrationProfesionalEmpresa05 = () => {
                 <p className="paso" style={{ color: 'gray', fontSize: '0.8rem' }}>paso 5</p>
                 <h2 className="titulo">Últimos datos...</h2>
                 <div className="form-group-datos">
-                    <label>Nombre de la Empresa</label>
+                    <label>Nombre de la marca</label>
                     <input
                         type="text"
                         placeholder="Introduce el nombre"
                         value={companyName}
-                        onChange={(e) => setCompanyName(e.target.value)}
+                        onChange={(e) => {
+                            setCompanyName(e.target.value);
+                            setError("");
+                        }}
                         className="input-field"
                         style={{ backgroundColor: '#f0f0f0', color: '#000' }}
                     />
-                    <div className="checkbox-wrapper">
-                        <input
-                            type="checkbox"
-                            checked={!shareName}
-                            onChange={(e) => setShareName(!e.target.checked)}
-                        />
-                        <span>Prefiero no compartir esta información</span>
-                    </div>
                 </div>
                 <div className="form-group-datos">
                     <label>Año de la fundación</label>
@@ -89,24 +85,22 @@ const CompleteRegistrationProfesionalEmpresa05 = () => {
                         type="text"
                         placeholder="yyyy"
                         value={foundingYear}
-                        onChange={(e) => setFoundingYear(e.target.value)}
+                        onChange={(e) => {
+                            setFoundingYear(e.target.value);
+                            setError("");
+                        }}
                         className="input-field"
                         style={{ backgroundColor: '#f0f0f0', color: '#000' }}
                     />
-                    <div className="checkbox-wrapper">
-                        <input
-                            type="checkbox"
-                            checked={!shareYear}
-                            onChange={(e) => setShareYear(!e.target.checked)}
-                        />
-                        <span>Prefiero no compartir esta información</span>
-                    </div>
                 </div>
                 <div className="form-group-datos">
-                    <label>¿En qué se enfoca tu empresa?</label>
+                    <label>¿Cuál es tu producto principal?</label>
                     <select
                         value={productServiceType}
-                        onChange={(e) => setProductServiceType(e.target.value)}
+                        onChange={(e) => {
+                            setProductServiceType(e.target.value);
+                            setError("");
+                        }}
                         className="input-field"
                         style={{ backgroundColor: '#f0f0f0', color: '#000' }}
                     >
@@ -116,6 +110,8 @@ const CompleteRegistrationProfesionalEmpresa05 = () => {
                         ))}
                     </select>
                 </div>
+                {/* Mensaje de error */}
+                {error && <p style={{ color: 'red', marginBottom: '1rem' }}>{error}</p>}
                 <div className="navigation-buttons" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem' }}>
                     <button
                         className="back-button"
@@ -126,20 +122,19 @@ const CompleteRegistrationProfesionalEmpresa05 = () => {
                     </button>
                     <button
                         className="next-button"
-                        disabled={!companyName || !foundingYear || !productServiceType}
                         onClick={handleNext}
+                        disabled={!companyName || !foundingYear || !productServiceType}
                     >
                         Siguiente
                     </button>
                 </div>
-                {/* Paginación: 5 puntos, con el quinto resaltado */}
                 <div className="pagination-dots" style={{ marginTop: '1rem' }}>
                     {[1, 2, 3, 4, 5].map((dot, index) => (
                         <span
                             key={index}
                             style={{
                                 margin: '0 4px',
-                                fontSize: index === 4 ? '1.2rem' : '1rem',
+                                fontSize: index === 4 ? '1rem' : '0.9rem',
                                 color: 'gray'
                             }}
                         >

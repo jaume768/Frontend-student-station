@@ -8,6 +8,8 @@ const CompleteRegistrationProfesionalMarca05 = () => {
     const [companyName, setCompanyName] = useState("");
     const [foundingYear, setFoundingYear] = useState("");
     const [productServiceType, setProductServiceType] = useState("");
+    const [error, setError] = useState(""); // Estado para mensaje de error
+
     const productOptions = [
         "Confección a medida",
         "Moda vintage",
@@ -15,17 +17,19 @@ const CompleteRegistrationProfesionalMarca05 = () => {
         "Joyería",
         "Zapatos",
         "Artículos de cuero",
-        "Cerámica",
         "Arte textil",
         "Artículos sostenibles",
         "Otro"
     ];
 
     const handleNext = async () => {
-        if (!companyName || !foundingYear || !productServiceType) return;
+        if (!companyName || !foundingYear || !productServiceType) {
+            setError("Por favor, completa todos los campos requeridos.");
+            return;
+        }
+        setError("");
         try {
             const token = localStorage.getItem("authToken");
-            // Actualizamos el usuario con los datos finales para marca pequeña
             const backendUrl = import.meta.env.VITE_BACKEND_URL;
             const response = await fetch(`${backendUrl}/api/users/profile`, {
                 method: 'PUT',
@@ -39,9 +43,11 @@ const CompleteRegistrationProfesionalMarca05 = () => {
             if (response.ok) {
                 navigate('/dashboard');
             } else {
+                setError(data.error || "Ha ocurrido un error.");
                 console.error(data.error);
             }
         } catch (error) {
+            setError("Error en la conexión o en el servidor.");
             console.error(error);
         }
     };
@@ -61,7 +67,10 @@ const CompleteRegistrationProfesionalMarca05 = () => {
                         type="text"
                         placeholder="Introduce el nombre"
                         value={companyName}
-                        onChange={(e) => setCompanyName(e.target.value)}
+                        onChange={(e) => {
+                            setCompanyName(e.target.value);
+                            setError("");
+                        }}
                         className="input-field"
                         style={{ backgroundColor: '#f0f0f0', color: '#000' }}
                     />
@@ -72,7 +81,10 @@ const CompleteRegistrationProfesionalMarca05 = () => {
                         type="text"
                         placeholder="yyyy"
                         value={foundingYear}
-                        onChange={(e) => setFoundingYear(e.target.value)}
+                        onChange={(e) => {
+                            setFoundingYear(e.target.value);
+                            setError("");
+                        }}
                         className="input-field"
                         style={{ backgroundColor: '#f0f0f0', color: '#000' }}
                     />
@@ -81,7 +93,10 @@ const CompleteRegistrationProfesionalMarca05 = () => {
                     <label>¿Cuál es tu producto principal?</label>
                     <select
                         value={productServiceType}
-                        onChange={(e) => setProductServiceType(e.target.value)}
+                        onChange={(e) => {
+                            setProductServiceType(e.target.value);
+                            setError("");
+                        }}
                         className="input-field"
                         style={{ backgroundColor: '#f0f0f0', color: '#000' }}
                     >
@@ -91,6 +106,8 @@ const CompleteRegistrationProfesionalMarca05 = () => {
                         ))}
                     </select>
                 </div>
+                {/* Mensaje de error */}
+                {error && <p style={{ color: 'red', marginBottom: '1rem' }}>{error}</p>}
                 <div className="navigation-buttons" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem' }}>
                     <button
                         className="back-button"
@@ -101,20 +118,19 @@ const CompleteRegistrationProfesionalMarca05 = () => {
                     </button>
                     <button
                         className="next-button"
-                        disabled={!companyName || !foundingYear || !productServiceType}
                         onClick={handleNext}
+                        disabled={!companyName || !foundingYear || !productServiceType}
                     >
                         Siguiente
                     </button>
                 </div>
-                {/* Paginación: 5 puntos, con el quinto resaltado */}
                 <div className="pagination-dots" style={{ marginTop: '1rem' }}>
                     {[1, 2, 3, 4, 5].map((dot, index) => (
                         <span
                             key={index}
                             style={{
                                 margin: '0 4px',
-                                fontSize: index === 4 ? '1.2rem' : '1rem',
+                                fontSize: index === 4 ? '1rem' : '0.9rem',
                                 color: 'gray'
                             }}
                         >

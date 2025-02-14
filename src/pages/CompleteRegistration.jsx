@@ -1,4 +1,3 @@
-// CompleteRegistration.jsx
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './css/complete-registration.css';
@@ -9,6 +8,8 @@ const CompleteRegistration = () => {
     const { username } = location.state || { username: "Usuario" };
 
     const [selectedObjective, setSelectedObjective] = useState("");
+    const [error, setError] = useState(""); // Estado para el mensaje de error
+
     const objectives = [
         "Crear mi portafolio",
         "Conectar con creativos",
@@ -18,6 +19,11 @@ const CompleteRegistration = () => {
     ];
 
     const handleNext = async () => {
+        if (!selectedObjective) {
+            setError("Por favor, selecciona tu objetivo en la plataforma.");
+            return;
+        }
+        setError("");
         // Determinar el rol según el objetivo seleccionado
         let role = "";
         if (selectedObjective === objectives[0] || selectedObjective === objectives[1]) {
@@ -45,8 +51,7 @@ const CompleteRegistration = () => {
                 } else {
                     navigate('/CompleteRegistrationProfesional');
                 }
-            }
-             else {
+            } else {
                 console.error(data.error);
             }
         } catch (error) {
@@ -56,7 +61,7 @@ const CompleteRegistration = () => {
 
     return (
         <div className="complete-registration-container">
-            <div className='contenedor-registro-objetivo'>
+            <div className="contenedor-registro-objetivo">
                 <h1 className="greeting">Hola,</h1>
                 <h2 className="username">@{username}!</h2>
                 <p className="question">¿Cuál es tu objetivo en la plataforma?</p>
@@ -65,15 +70,19 @@ const CompleteRegistration = () => {
                         <button
                             key={index}
                             className={`objective-button ${selectedObjective === obj ? "selected" : ""}`}
-                            onClick={() => setSelectedObjective(obj)}
+                            onClick={() => {
+                                setSelectedObjective(obj);
+                                setError("");
+                            }}
                         >
                             {obj}
                         </button>
                     ))}
                 </div>
+                {/* Mostrar mensaje de error si existe */}
+                {error && <p className="error-message">{error}</p>}
                 <button
                     className="next-button-primer"
-                    disabled={!selectedObjective}
                     onClick={handleNext}
                 >
                     Siguiente
