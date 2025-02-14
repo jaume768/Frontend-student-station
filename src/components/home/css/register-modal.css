@@ -137,6 +137,7 @@
 
 .checkbox-group input[type="checkbox"] {
     margin-right: 0.5rem;
+    transform: scale(1.5);
 }
 
 .btn {
