@@ -157,16 +157,16 @@ const CompleteRegistrationProfesionalDatosPersonales = () => {
                     />
                 </div>
                 {/* Mensaje de error */}
-                {error && <p style={{ color: 'red', marginBottom: '1rem' }}>{error}</p>}
+                {error && <p className="error-message">{error}</p>}
                 <div className="navigation-buttons" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem' }}>
-                    <button className="back-button" onClick={handleBack} style={{ background: 'none', border: 'none', color: '#000', cursor: 'pointer' }}>
+                    <button
+                        className="back-button"
+                        onClick={handleBack}
+                        style={{ background: 'none', border: 'none', color: '#000', cursor: 'pointer' }}
+                    >
                         &#8592; Volver atrás
                     </button>
-                    <button
-                        className="next-button"
-                        disabled={!firstName || !lastName || !dateOfBirth || !country || !city}
-                        onClick={handleNext}
-                    >
+                    <button className="next-button" onClick={handleNext}>
                         Siguiente
                     </button>
                 </div>

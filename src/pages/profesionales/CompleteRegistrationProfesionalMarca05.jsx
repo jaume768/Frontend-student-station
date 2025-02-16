@@ -1,4 +1,3 @@
-// CompleteRegistrationProfesionalMarca05.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/complete-registration.css';
@@ -107,7 +106,7 @@ const CompleteRegistrationProfesionalMarca05 = () => {
                     </select>
                 </div>
                 {/* Mensaje de error */}
-                {error && <p style={{ color: 'red', marginBottom: '1rem' }}>{error}</p>}
+                {error && <p className="error-message">{error}</p>}
                 <div className="navigation-buttons" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem' }}>
                     <button
                         className="back-button"
@@ -116,11 +115,7 @@ const CompleteRegistrationProfesionalMarca05 = () => {
                     >
                         &#8592; Volver atrás
                     </button>
-                    <button
-                        className="next-button"
-                        onClick={handleNext}
-                        disabled={!companyName || !foundingYear || !productServiceType}
-                    >
+                    <button className="next-button" onClick={handleNext}>
                         Siguiente
                     </button>
                 </div>

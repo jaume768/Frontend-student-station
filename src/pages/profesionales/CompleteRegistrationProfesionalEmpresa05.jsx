@@ -1,4 +1,3 @@
-// CompleteRegistrationProfesionalEmpresa05.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/complete-registration.css';
@@ -37,11 +36,7 @@ const CompleteRegistrationProfesionalEmpresa05 = () => {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({
-                    companyName,
-                    foundingYear,
-                    productServiceType
-                })
+                body: JSON.stringify({ companyName, foundingYear, productServiceType })
             });
             const data = await response.json();
             if (response.ok) {
@@ -111,7 +106,7 @@ const CompleteRegistrationProfesionalEmpresa05 = () => {
                     </select>
                 </div>
                 {/* Mensaje de error */}
-                {error && <p style={{ color: 'red', marginBottom: '1rem' }}>{error}</p>}
+                {error && <p className="error-message">{error}</p>}
                 <div className="navigation-buttons" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem' }}>
                     <button
                         className="back-button"
@@ -120,11 +115,7 @@ const CompleteRegistrationProfesionalEmpresa05 = () => {
                     >
                         &#8592; Volver atrás
                     </button>
-                    <button
-                        className="next-button"
-                        onClick={handleNext}
-                        disabled={!companyName || !foundingYear || !productServiceType}
-                    >
+                    <button className="next-button" onClick={handleNext}>
                         Siguiente
                     </button>
                 </div>

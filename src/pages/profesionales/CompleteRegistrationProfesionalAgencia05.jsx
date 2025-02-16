@@ -102,8 +102,11 @@ const CompleteRegistrationProfesionalAgencia05 = () => {
                     </select>
                 </div>
                 {/* Mensaje de error */}
-                {error && <p style={{ color: 'red', marginBottom: '1rem' }}>{error}</p>}
-                <div className="navigation-buttons" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem' }}>
+                {error && <p className="error-message">{error}</p>}
+                <div
+                    className="navigation-buttons"
+                    style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem' }}
+                >
                     <button
                         className="back-button"
                         onClick={handleBack}
@@ -111,13 +114,20 @@ const CompleteRegistrationProfesionalAgencia05 = () => {
                     >
                         &#8592; Volver atrás
                     </button>
-                    <button className="next-button" onClick={handleNext} disabled={!companyName || !agencyServices}>
+                    <button className="next-button" onClick={handleNext}>
                         Siguiente
                     </button>
                 </div>
                 <div className="pagination-dots" style={{ marginTop: '1rem' }}>
                     {[1, 2, 3, 4, 5].map((dot, index) => (
-                        <span key={index} style={{ margin: '0 4px', fontSize: index === 4 ? '1rem' : '0.9rem', color: 'gray' }}>
+                        <span
+                            key={index}
+                            style={{
+                                margin: '0 4px',
+                                fontSize: index === 4 ? '1rem' : '0.9rem',
+                                color: 'gray'
+                            }}
+                        >
                             &#9679;
                         </span>
                     ))}

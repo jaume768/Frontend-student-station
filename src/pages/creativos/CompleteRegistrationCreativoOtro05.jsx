@@ -49,7 +49,7 @@ const CompleteRegistrationCreativoOtro05 = () => {
                 <h2 className="titulo">¿Qué opción describe mejor tu rol en la industria de la moda?</h2>
 
                 {/* Mensaje de error */}
-                {error && <p style={{ color: 'red', marginBottom: '1rem' }}>{error}</p>}
+                {error && <p className="error-message">{error}</p>}
 
                 <div className="form-group-datos">
                     <input
@@ -64,17 +64,36 @@ const CompleteRegistrationCreativoOtro05 = () => {
                         style={{ backgroundColor: '#f0f0f0', color: '#000' }}
                     />
                 </div>
-                <div className="navigation-buttons" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem' }}>
-                    <button className="back-button" onClick={handleBack} style={{ background: 'none', border: 'none', color: '#000', cursor: 'pointer' }}>
+                <div
+                    className="navigation-buttons"
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        marginTop: '1rem'
+                    }}
+                >
+                    <button
+                        className="back-button"
+                        onClick={handleBack}
+                        style={{ background: 'none', border: 'none', color: '#000', cursor: 'pointer' }}
+                    >
                         &#8592; Volver atrás
                     </button>
-                    <button className="next-button" onClick={handleNext} disabled={!creativeOther}>
+                    <button className="next-button" onClick={handleNext}>
                         Siguiente
                     </button>
                 </div>
                 <div className="pagination-dots" style={{ marginTop: '1rem' }}>
                     {[1, 2, 3, 4, 5].map((dot, index) => (
-                        <span key={index} style={{ margin: '0 4px', fontSize: index === 4 ? '1rem' : '0.9rem', color: 'gray' }}>
+                        <span
+                            key={index}
+                            style={{
+                                margin: '0 4px',
+                                fontSize: index === 4 ? '1rem' : '0.9rem',
+                                color: 'gray'
+                            }}
+                        >
                             &#9679;
                         </span>
                     ))}

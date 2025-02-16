@@ -121,16 +121,24 @@
     margin-top: 1em;
 }
 
+.next-button:hover {
+    background-color: #3E3E3E;
+}
+
 .checkbox-wrapper {
     display: flex;
     margin-left: 10px;
 }
 
 .checkbox-wrapper input {
-    width: 10px;
     transform: scale(1.5);
 }
 
+@media (max-width: 668px) {
+    .checkbox-wrapper input {
+        transform: scale(2);
+    }
+}
 
 .next-button-primer {
     background-color: #000;

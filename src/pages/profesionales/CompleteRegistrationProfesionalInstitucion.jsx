@@ -1,4 +1,3 @@
-// CompleteRegistrationProfesionalInstitucion.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/complete-registration.css';
@@ -117,7 +116,7 @@ const CompleteRegistrationProfesionalInstitucion = () => {
                     />
                 </div>
                 {/* Mensaje de error */}
-                {error && <p style={{ color: 'red', marginBottom: '1rem' }}>{error}</p>}
+                {error && <p className="error-message">{error}</p>}
                 <div className="navigation-buttons" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem' }}>
                     <button
                         className="back-button"
@@ -126,11 +125,7 @@ const CompleteRegistrationProfesionalInstitucion = () => {
                     >
                         &#8592; Volver atrás
                     </button>
-                    <button
-                        className="next-button"
-                        disabled={!institutionName || !foundingYear || !country || !city}
-                        onClick={handleNext}
-                    >
+                    <button className="next-button" onClick={handleNext}>
                         Siguiente
                     </button>
                 </div>
@@ -140,7 +135,7 @@ const CompleteRegistrationProfesionalInstitucion = () => {
                             key={index}
                             style={{
                                 margin: '0 4px',
-                                fontSize: index === 1 ? '1rem' : '0.9rem',
+                                fontSize: index === 1 ? '1.2rem' : '1rem',
                                 color: 'gray'
                             }}
                         >

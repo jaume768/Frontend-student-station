@@ -108,7 +108,7 @@ const CompleteRegistrationCreativoGraduado06 = () => {
                     <button
                         className="next-button"
                         onClick={handleNext}
-                        disabled={!institution || !graduationYear}
+                    // Se ha eliminado el atributo disabled para que al hacer click se muestre el error si faltan datos.
                     >
                         Siguiente
                     </button>

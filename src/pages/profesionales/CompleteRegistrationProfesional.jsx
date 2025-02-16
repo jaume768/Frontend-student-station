@@ -63,7 +63,7 @@ const CompleteRegistrationProfesional = () => {
                 <h2 className="titulo">Soy el representante de...</h2>
 
                 {/* Mensaje de error */}
-                {error && <p style={{ color: 'red', marginBottom: '1rem' }}>{error}</p>}
+                {error && <p className="error-message">{error}</p>}
 
                 <div className="objectives-list">
                     {options.map((option, index) => (
@@ -79,7 +79,10 @@ const CompleteRegistrationProfesional = () => {
                         </button>
                     ))}
                 </div>
-                <div className="navigation-buttons" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem' }}>
+                <div
+                    className="navigation-buttons"
+                    style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem' }}
+                >
                     <button
                         className="back-button"
                         onClick={handleBack}
@@ -87,7 +90,7 @@ const CompleteRegistrationProfesional = () => {
                     >
                         &#8592; Volver atrás
                     </button>
-                    <button className="next-button" onClick={handleNext} disabled={!professionalType}>
+                    <button className="next-button" onClick={handleNext}>
                         Siguiente
                     </button>
                 </div>
