@@ -131,12 +131,14 @@
 }
 
 .checkbox-wrapper input {
-    transform: scale(1.5);
+    width: 100px;
+    transform: scale(0.6);
+    background-color: white;
 }
 
 @media (max-width: 668px) {
     .checkbox-wrapper input {
-        transform: scale(2);
+        transform: scale(0.8);
     }
 }
 
