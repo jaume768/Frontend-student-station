@@ -47,8 +47,9 @@
 .register-modal {
     background-color: #fff;
     border-radius: 30px;
-    width: 800px;
-    max-width: 90%;
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
     display: flex;
     position: relative;
     overflow: visible;
@@ -109,11 +110,10 @@
 
 .modal-form h1 {
     text-align: center;
-    margin-bottom: 1rem;
 }
 
 .input-group {
-    margin-bottom: 1rem;
+    margin-bottom: 0.4rem;
 }
 
 .input-group label {
@@ -146,7 +146,7 @@
     border-radius: 25px;
     width: 100%;
     cursor: pointer;
-    margin-bottom: 1rem;
+    margin-bottom: 0.2rem;
     background-color: black;
     margin-top: 10px;
 }
@@ -189,6 +189,7 @@
 
     .modal-content {
         flex-direction: column;
+        overflow: scroll;
     }
 
     .modal-image {

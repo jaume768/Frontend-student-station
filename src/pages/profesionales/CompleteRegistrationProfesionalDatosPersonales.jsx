@@ -15,6 +15,11 @@ const CompleteRegistrationProfesionalDatosPersonales = () => {
     // Ref para el input de fecha
     const dateInputRef = useRef(null);
 
+    // Definimos la fecha máxima (hoy - 2 días)
+    const todayMinus2Days = new Date();
+    todayMinus2Days.setDate(todayMinus2Days.getDate() - 2);
+    const maxDate = todayMinus2Days.toISOString().split("T")[0];
+
     const countries = [
         "Estados Unidos", "Reino Unido", "Canadá", "Australia", "Alemania",
         "Francia", "Italia", "España", "Brasil", "México",
@@ -114,12 +119,19 @@ const CompleteRegistrationProfesionalDatosPersonales = () => {
                             }}
                             className="input-field"
                             style={{ backgroundColor: '#f0f0f0', color: '#000' }}
-                            max={new Date().toISOString().split("T")[0]}
+                            min="1970-01-01"
+                            max={maxDate}
                         />
                         <span
                             className="calendar-icon"
                             onClick={openCalendar}
-                            style={{ position: 'absolute', right: '0px', top: '50%', transform: 'translateY(-50%)', cursor: 'pointer' }}
+                            style={{
+                                position: 'absolute',
+                                right: '0px',
+                                top: '50%',
+                                transform: 'translateY(-50%)',
+                                cursor: 'pointer'
+                            }}
                         >
                             &#128197;
                         </span>
