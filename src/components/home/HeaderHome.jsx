@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { FaBars, FaTimes, FaUser } from 'react-icons/fa';
 
 const Header = ({ onLoginClick, onRegisterClick }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const toggleMenu = () => {
-        setIsMenuOpen((prev) => !prev);
+        setIsMenuOpen(prev => !prev);
     };
 
     return (
@@ -17,27 +18,59 @@ const Header = ({ onLoginClick, onRegisterClick }) => {
 
                 <nav className={`header-home-nav ${isMenuOpen ? 'open' : ''}`}>
                     <ul>
-                        <li><a href="/ControlPanel">Explorar</a></li>
-                        <li><a href="#">Diseñadores</a></li>
-                        <li><a href="#">Escuelas</a></li>
-                        <li><a href="#">Trabajos</a></li>
-                        <li><a href="#">Revista</a></li>
-                        <li><a href="#">Blog</a></li>
-                        <li><a href="#">About</a></li>
+                        <li>
+                            <Link to="/ControlPanel" state={{ activeMenu: 'explorer' }}>
+                                Explorar
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="/ControlPanel" state={{ activeMenu: 'creatives' }}>
+                                Diseñadores
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="/ControlPanel" state={{ activeMenu: 'fashion' }}>
+                                Escuelas
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="/ControlPanel" state={{ activeMenu: 'offers' }}>
+                                Trabajos
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="/ControlPanel" state={{ activeMenu: 'magazine' }}>
+                                Revista
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="/ControlPanel" state={{ activeMenu: 'blog' }}>
+                                Blog
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="/ControlPanel" state={{ activeMenu: 'info' }}>
+                                About
+                            </Link>
+                        </li>
                     </ul>
                 </nav>
 
                 <div className="user-actions">
-                    <a href="#" className="register"
-                        onClick={(e) => {
+                    <a
+                        href="#"
+                        className="register"
+                        onClick={e => {
                             e.preventDefault();
                             onRegisterClick();
                         }}
                     >
                         Registro
                     </a>
-                    <a href="#" className="login"
-                        onClick={(e) => {
+                    <a
+                        href="#"
+                        className="login"
+                        onClick={e => {
                             e.preventDefault();
                             onLoginClick();
                         }}
@@ -57,9 +90,7 @@ const Header = ({ onLoginClick, onRegisterClick }) => {
                     )}
                 </button>
             </div>
-            {isMenuOpen && (
-                <div className="menu-overlay" onClick={toggleMenu}></div>
-            )}
+            {isMenuOpen && <div className="menu-overlay" onClick={toggleMenu}></div>}
         </header>
     );
 };
