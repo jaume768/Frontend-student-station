@@ -32,7 +32,8 @@ const CompleteRegistrationCreativo02 = () => {
         const fullName = `${firstName} ${lastName}`;
         try {
             const token = localStorage.getItem("authToken");
-            const response = await fetch('http://localhost:5000/api/users/profile', {
+            const backendUrl = import.meta.env.VITE_BACKEND_URL;
+            const response = await fetch(`${backendUrl}/api/users/profile`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
