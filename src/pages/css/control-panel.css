@@ -24,6 +24,14 @@
     margin-bottom: 20px;
 }
 
+.nav-icon {
+    font-size: 1.5rem;
+}
+
+.nav-icon-save {
+    font-size: 1rem;
+}
+
 .nav-icon-container {
     position: relative;
     display: flex;
@@ -58,6 +66,7 @@
     list-style: none;
     padding: 0;
     margin: 0;
+    gap: 35px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -84,19 +93,11 @@
 /* Header superior */
 .dashboard-header {
     display: flex;
+    gap: 5px;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 20px;
+    padding: 20px 20px;
     background-color: rgb(255, 255, 255);
-}
-
-/* Buscador */
-.dashboard-header input[type="text"] {
-    padding: 5px;
-    border-radius: 4px;
-    width: 100%;
-    background-color: rgb(219, 219, 219);
-    border: none;
 }
 
 /* Área derecha del header */
@@ -110,6 +111,9 @@
 .dashboard-header .saved {
     display: flex;
     align-items: center;
+    background: rgba(242, 242, 242);
+    padding: 0.4em;
+    border-radius: 40px;
     gap: 5px;
 }
 
@@ -117,11 +121,38 @@
     width: 100%;
 }
 
+.search-input-container {
+    position: relative;
+    width: 100%;
+}
+
+/* Estilo del input ajustando el padding para que no tape el ícono */
+.search-input-container input {
+    width: 100%;
+    padding: 10px 10px 10px 40px; /* Incrementa el padding-left para dar espacio al ícono */
+    border-radius: 40px;
+    border: none;
+    background-color: rgba(242,242,242);
+}
+
+/* Posicionamiento del ícono de la lupa */
+.search-icon {
+    position: absolute;
+    top: 50%;
+    left: 10px; /* Ajusta este valor según lo necesites */
+    transform: translateY(-50%);
+    color: #999; /* Color del ícono */
+}
+
 /* Botón "+ Crear" */
 .dashboard-header button {
-    padding: 5px 10px;
+    padding: 10px 10px;
     border-radius: 4px;
+    background-color: rgba(242,242,242);
+    color: black;
+    font-size: 1em;
     border: none;
+    width: 100px;
 }
 
 /* Desplegable */

@@ -24,14 +24,12 @@ const CompleteRegistrationCreativo03 = () => {
     };
 
     const handleNext = () => {
-        // Si se requiere que el usuario suba una foto, se puede validar aquí.
-        // Por ejemplo:
-        // if (!selectedImage) {
-        //   setError("Por favor, sube una foto de perfil.");
-        //   return;
-        // }
+        if (!selectedImage) {
+          setError("Por favor, sube una foto de perfil.");
+          return;
+        }
         // En este caso se permite avanzar sin imagen (se usará la foto por defecto)
-        setError("");
+        //setError("");
         navigate('/CompleteRegistrationCreativo04');
     };
 
