@@ -1,0 +1,146 @@
+/* Dashboard.css */
+
+/* Contenedor principal */
+.dashboard-container {
+    display: flex;
+    height: 100vh;
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+}
+
+/* Sidebar (Navbar lateral izquierdo) */
+.dashboard-sidebar {
+    width: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    background-color: rgb(255, 255, 255);
+}
+
+/* Logo en la parte superior del sidebar */
+.dashboard-sidebar .logo {
+    margin-bottom: 20px;
+}
+
+.nav-icon-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Tooltip oculto por defecto */
+.nav-tooltip {
+    position: absolute;
+    left: 100%;
+    margin-left: 10px;
+    white-space: nowrap;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease;
+    font-size: 0.85rem;
+}
+
+/* Mostrar tooltip al hacer hover */
+.nav-icon-container:hover .nav-tooltip {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Lista de íconos del menú */
+.dashboard-sidebar nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.dashboard-sidebar nav ul li {
+    margin: 10px 0;
+    cursor: pointer;
+}
+
+/* Ícono de info en la parte inferior */
+.dashboard-sidebar .info-icon {
+    margin-bottom: 10px;
+}
+
+/* Área principal (header y contenido) */
+.dashboard-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(255, 255, 255);
+}
+
+/* Header superior */
+.dashboard-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background-color: rgb(255, 255, 255);
+}
+
+/* Buscador */
+.dashboard-header input[type="text"] {
+    padding: 5px;
+    border-radius: 4px;
+    width: 100%;
+    background-color: rgb(219, 219, 219);
+    border: none;
+}
+
+/* Área derecha del header */
+.dashboard-header .header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Guardados */
+.dashboard-header .saved {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.dahsboard-search{
+    width: 100%;
+}
+
+/* Botón "+ Crear" */
+.dashboard-header button {
+    padding: 5px 10px;
+    border-radius: 4px;
+    border: none;
+}
+
+/* Desplegable */
+.dashboard-header select {
+    padding: 5px;
+    border-radius: 4px;
+    border: none;
+}
+
+/* Imagen de perfil */
+.dashboard-header img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+/* Área de contenido dinámico */
+.dashboard-content {
+    flex: 1;
+    padding: 20px;
+    background-color: rgb(255, 255, 255);
+}

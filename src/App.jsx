@@ -15,7 +15,7 @@ import CompleteRegistrationCreativoEstilista05 from './pages/creativos/CompleteR
 import CompleteRegistrationCreativoEstilista06 from './pages/creativos/CompleteRegistrationCreativoEstilista06';
 import CompleteRegistrationCreativoDisenador05 from './pages/creativos/CompleteRegistrationCreativoDisenador05';
 import CompleteRegistrationCreativoOtro05 from './pages/creativos/CompleteRegistrationCreativoOtro05';
-import Dashboard from './pages/Dashboard';
+import ControlPanel from './pages/ControlPanel';
 
 // Rutas para el registro PROFESIONAL
 import CompleteRegistrationProfesional from './pages/profesionales/CompleteRegistrationProfesional';
@@ -29,9 +29,9 @@ function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/ControlPanel" element={<ControlPanel />} />
         <Route path="/" element={<Home />} />
         <Route path="/complete-registration" element={<CompleteRegistration />} />
-        <Route path="/dashboard" element={<Dashboard />} />
 
         <Route path="/CompleteRegistrationCreativo" element={<CompleteRegistrationCreativo />} />
         <Route path="/CompleteRegistrationCreativo02" element={<CompleteRegistrationCreativo02 />} />

@@ -14,6 +14,8 @@ RUN npm run build
 FROM nginx:alpine
 # Copiamos el build generado en la etapa anterior al directorio que usa Nginx
 COPY --from=build /app/dist /usr/share/nginx/html
+# Copiamos nuestro archivo de configuración personalizado
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Exponemos el puerto 80 (el puerto por defecto de Nginx)
 EXPOSE 80

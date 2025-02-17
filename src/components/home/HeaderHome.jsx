@@ -17,7 +17,7 @@ const Header = ({ onLoginClick, onRegisterClick }) => {
 
                 <nav className={`header-home-nav ${isMenuOpen ? 'open' : ''}`}>
                     <ul>
-                        <li><a href="#">Explorar</a></li>
+                        <li><a href="/ControlPanel">Explorar</a></li>
                         <li><a href="#">Diseñadores</a></li>
                         <li><a href="#">Escuelas</a></li>
                         <li><a href="#">Trabajos</a></li>

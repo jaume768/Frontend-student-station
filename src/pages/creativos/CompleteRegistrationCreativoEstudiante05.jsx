@@ -30,7 +30,7 @@ const CompleteRegistrationCreativoEstudiante05 = () => {
                 if (formationType === "Estudio en una escuela o universidad") {
                     navigate('/CompleteRegistrationCreativoEstudiante06');
                 } else {
-                    navigate('/dashboard');
+                    navigate('/ControlPanel');
                 }
             } else {
                 setError(data.error || "Ha ocurrido un error.");

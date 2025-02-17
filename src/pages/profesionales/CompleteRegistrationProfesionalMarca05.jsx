@@ -40,7 +40,7 @@ const CompleteRegistrationProfesionalMarca05 = () => {
             });
             const data = await response.json();
             if (response.ok) {
-                navigate('/dashboard');
+                navigate('/ControlPanel');
             } else {
                 setError(data.error || "Ha ocurrido un error.");
                 console.error(data.error);

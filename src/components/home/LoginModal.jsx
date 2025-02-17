@@ -30,7 +30,7 @@ const LoginModal = ({ onClose, onSwitchToRegister, onSwitchToReset }) => {
             const data = await response.json();
             if (response.ok) {
                 localStorage.setItem('authToken', data.token);
-                navigate('/dashboard');
+                navigate('/ControlPanel');
             } else {
                 setError(data.message || 'Error en el inicio de sesión');
             }
