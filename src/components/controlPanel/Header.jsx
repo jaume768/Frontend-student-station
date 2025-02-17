@@ -17,7 +17,7 @@ const Header = () => {
                 </div>
                 <button>+ Crear</button>
                 <div>
-                    <img src="profile.jpg" alt="Perfil" />
+                    <img src="/multimedia/usuarioDefault.jpg" alt="Perfil" />
                 </div>
             </div>
         </header>

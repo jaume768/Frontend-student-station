@@ -8,7 +8,7 @@ const CompleteRegistration = () => {
     const { username } = location.state || { username: "Usuario" };
 
     const [selectedObjective, setSelectedObjective] = useState("");
-    const [error, setError] = useState(""); // Estado para el mensaje de error
+    const [error, setError] = useState("");
 
     const objectives = [
         "Crear mi portafolio",
@@ -24,7 +24,6 @@ const CompleteRegistration = () => {
             return;
         }
         setError("");
-        // Determinar el rol según el objetivo seleccionado
         let role = "";
         if (selectedObjective === objectives[0] || selectedObjective === objectives[1]) {
             role = "Creativo";
@@ -79,7 +78,6 @@ const CompleteRegistration = () => {
                         </button>
                     ))}
                 </div>
-                {/* Mostrar mensaje de error si existe */}
                 {error && <p className="error-message">{error}</p>}
                 <button
                     className="next-button-primer"

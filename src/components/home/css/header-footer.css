@@ -94,6 +94,7 @@
     width: 500px;
     margin-left: 60%;
     margin-right: 0;
+    line-height: 2em;
 }
 
 .inicio-sesion {
@@ -111,6 +112,7 @@
 .inicio-sesion p {
     margin-bottom: 0.5em;
     color: #555;
+    line-height: 1.4em;
 }
 
 .botones {
@@ -301,7 +303,7 @@ footer .wrapper {
     }
 }
 
-@media (max-width: 1270px) {
+@media (max-width: 1470px) {
 
     .inicio-sesion {
         margin-top: 1em;
@@ -344,7 +346,7 @@ footer .wrapper {
     }
 
     .inicio-sesion p {
-        margin-bottom: 0.9em;
+        margin-bottom: 0.7em;
         color: #555;
     }
 
@@ -433,11 +435,11 @@ footer .wrapper {
     .boton-inicio-movil a {
         display: block;
         margin-top: 10px;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
     }
 
     .logo-movil img {
-        width: 200px;
+        width: 250px;
         height: 150px;
     }
 

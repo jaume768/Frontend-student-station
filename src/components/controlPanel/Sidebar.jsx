@@ -23,7 +23,7 @@ const Sidebar = () => {
         <aside className="dashboard-sidebar">
             <div>
                 <div className="logo">
-                    <img src="logo.png" alt="Logo" style={{ width: '40px', height: '40px' }} />
+                    <img src="/multimedia/st-isotipo-temporal.png" alt="Logo" style={{ width: '40px', height: '40px' }} />
                 </div>
                 <nav>
                     <ul>
