@@ -15,7 +15,7 @@ const Header = ({ onHamburgerClick }) => {
                     <FaBookmark className="nav-icon-save" title="Guardados" />
                     <span>Guardados</span>
                 </div>
-                <button>+ Crear</button>
+                <button>+ crear</button>
                 <div className="profile-wrapper">
                     <img className="profile-img" src="/multimedia/usuarioDefault.jpg" alt="Perfil" />
                     <FaBars className="hamburger-menu" onClick={onHamburgerClick} />

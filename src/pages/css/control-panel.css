@@ -363,15 +363,18 @@
         margin-bottom: 1em;
         z-index: 1000;
     }
-
+    
     .android-navbar {
-        bottom: 8vh;
+        bottom: 7vh;
     }
-
+    
     .ios-navbar {
-        bottom: 12vh;
+        bottom: 13vh;
     }
-
+    
+    .iphone-16-navbar {
+        bottom: 7vh;
+    }
 
     .mobile-navbar ul {
         display: flex;

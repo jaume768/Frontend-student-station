@@ -16,8 +16,14 @@ const MobileNavbar = () => {
     const [deviceClass, setDeviceClass] = useState('android-navbar');
 
     useEffect(() => {
-        if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
-            setDeviceClass('ios-navbar');
+        const userAgent = navigator.userAgent;
+
+        if (/iPhone|iPad|iPod/.test(userAgent)) {
+            if (window.screen.height >= 900) {
+                setDeviceClass('iphone-16-navbar');
+            } else {
+                setDeviceClass('ios-navbar');
+            }
         }
     }, []);
 
