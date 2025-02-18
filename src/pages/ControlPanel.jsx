@@ -11,10 +11,18 @@ const ControlPanel = () => {
         switch (activeMenu) {
             case 'explorer':
                 return (
-                    <div>
-                        <h1>Contenido de Explorar</h1>
-                        <p>Aquí va el contenido de la sección Explorar.</p>
+                  <div>
+                    <div className="explorer-gallery">
+                      {[...Array(25)].map((_, i) => (
+                        <img
+                          key={i}
+                          src={`/multimedia/mansory/foto${i + 1}.jpg`}
+                          alt={`Foto ${i + 1}`}
+                          className="masonry-item"
+                        />
+                      ))}
                     </div>
+                  </div>
                 );
             case 'creatives':
                 return (

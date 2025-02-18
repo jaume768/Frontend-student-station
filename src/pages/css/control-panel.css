@@ -186,3 +186,28 @@
     padding: 20px;
     background-color: rgb(255, 255, 255);
 }
+
+.explorer-gallery {
+    column-count: 7;
+    column-gap: 16px;
+}
+
+.masonry-item {
+    width: 100%;
+    display: block;
+    margin-bottom: 16px;
+    border-radius: 8px;
+    break-inside: avoid;
+}
+
+@media (max-width: 768px) {
+    .explorer-gallery {
+        column-count: 2;
+    }
+}
+
+@media (max-width: 480px) {
+    .explorer-gallery {
+        column-count: 2;
+    }
+}
