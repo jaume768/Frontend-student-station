@@ -18,7 +18,6 @@ import CompleteRegistrationCreativoOtro05 from './pages/creativos/CompleteRegist
 import ControlPanel from './pages/ControlPanel';
 import TokenHandler from './components/TokenHandler';
 
-// Rutas para el registro PROFESIONAL
 import CompleteRegistrationProfesional from './pages/profesionales/CompleteRegistrationProfesional';
 import CompleteRegistrationProfesionalDatosPersonales from './pages/profesionales/CompleteRegistrationProfesionalDatosPersonales';
 import CompleteRegistrationProfesionalInstitucion from './pages/profesionales/CompleteRegistrationProfesionalInstitucion';
@@ -29,8 +28,8 @@ import CompleteRegistrationProfesionalAgencia05 from './pages/profesionales/Comp
 function App() {
   return (
     <Router>
-      <Route path="/token-handler" element={<TokenHandler />} />
       <Routes>
+        <Route path="/token-handler" element={<TokenHandler />} />
         <Route path="/ControlPanel" element={<ControlPanel />} />
         <Route path="/" element={<Home />} />
         <Route path="/complete-registration" element={<CompleteRegistration />} />
