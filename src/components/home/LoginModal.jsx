@@ -48,7 +48,6 @@ const LoginModal = ({ onClose, onSwitchToRegister, onSwitchToReset }) => {
             <div className={`login-card ${error ? 'with-error' : ''}`}>
                 <h1>Inicio de sesión</h1>
                 {error && <p className="error">{error}</p>}
-                {/* Envolvemos los inputs en un formulario para que al presionar Enter se envíe */}
                 <form onSubmit={handleLogin}>
                     <div className="input-group">
                         <label htmlFor="email">Email</label>
@@ -91,7 +90,7 @@ const LoginModal = ({ onClose, onSwitchToRegister, onSwitchToReset }) => {
                     </button>
                 </form>
 
-                <button className="btn google-btn">
+                <button className="btn google-btn" onClick={handleGoogleLogin}>
                     Continuar con Google
                 </button>
 
