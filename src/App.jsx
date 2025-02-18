@@ -28,6 +28,7 @@ import CompleteRegistrationProfesionalAgencia05 from './pages/profesionales/Comp
 function App() {
   return (
     <Router>
+      <Route path="/token-handler" element={<TokenHandler />} />
       <Routes>
         <Route path="/ControlPanel" element={<ControlPanel />} />
         <Route path="/" element={<Home />} />

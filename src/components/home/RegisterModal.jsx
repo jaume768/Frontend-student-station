@@ -293,7 +293,10 @@ const RegisterModal = ({ onClose, onSwitchToLogin }) => {
                                     <button type="submit" className="btn register-btn">
                                         Registrarse
                                     </button>
-                                    <button type="button" className="btn google-btn">
+                                    <button type="button" className="btn google-btn" onClick={() => {
+                                        const backendUrl = import.meta.env.VITE_BACKEND_URL;
+                                        window.location.href = `${backendUrl}/api/auth/google`;
+                                    }}>
                                         Continuar con Google
                                     </button>
                                 </form>

@@ -15,7 +15,6 @@ const LoginModal = ({ onClose, onSwitchToRegister, onSwitchToReset }) => {
     };
 
     const handleLogin = async (e) => {
-        // Si se invoca mediante onSubmit, evitamos el comportamiento por defecto del formulario.
         if (e) e.preventDefault();
         setError('');
         try {
@@ -37,6 +36,11 @@ const LoginModal = ({ onClose, onSwitchToRegister, onSwitchToReset }) => {
         } catch (err) {
             setError('Error de red, inténtalo nuevamente.');
         }
+    };
+
+    const handleGoogleLogin = () => {
+        const backendUrl = import.meta.env.VITE_BACKEND_URL;
+        window.location.href = `${backendUrl}/api/auth/google`;
     };
 
     return (
