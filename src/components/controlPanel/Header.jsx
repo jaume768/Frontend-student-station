@@ -1,7 +1,7 @@
 import React from 'react';
-import { FaBookmark, FaSearch } from 'react-icons/fa';
+import { FaBookmark, FaSearch, FaBars } from 'react-icons/fa';
 
-const Header = () => {
+const Header = ({ onHamburgerClick }) => {
     return (
         <header className="dashboard-header">
             <div className="dahsboard-search">
@@ -16,8 +16,9 @@ const Header = () => {
                     <span>Guardados</span>
                 </div>
                 <button>+ Crear</button>
-                <div>
-                    <img src="/multimedia/usuarioDefault.jpg" alt="Perfil" />
+                <div className="profile-wrapper">
+                    <img className="profile-img" src="/multimedia/usuarioDefault.jpg" alt="Perfil" />
+                    <FaBars className="hamburger-menu" onClick={onHamburgerClick} />
                 </div>
             </div>
         </header>
