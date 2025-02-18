@@ -193,11 +193,128 @@
 }
 
 .masonry-item {
+    position: relative;
+    margin-bottom: 16px;
+    break-inside: avoid;
+    overflow: hidden;
+    border-radius: 16px;
+}
+
+.masonry-item img {
     width: 100%;
     display: block;
-    margin-bottom: 16px;
-    border-radius: 8px;
-    break-inside: avoid;
+    transition: transform 0.3s ease;
+}
+
+.masonry-item:hover img {
+    transform: scale(1.05);
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.masonry-item:hover .overlay {
+    opacity: 1;
+}
+
+.save-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #08b599;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 40px;
+    font-size: 0.9em;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.masonry-item:hover .save-btn {
+    opacity: 1;
+}
+
+.user-info {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.masonry-item:hover .user-info {
+    opacity: 1;
+}
+
+.user-info img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.user-info span {
+    color: white;
+    font-size: 0.9em;
+}
+
+.location-info {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background-color: #1e8c80;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 40px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.masonry-item:hover .location-info {
+    opacity: 1;
+}
+
+.location-info .location-icon {
+    margin-right: 5px;
+    font-size: 1em;
+}
+
+.tag-label {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 40px;
+    font-size: 0.9em;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.masonry-item:hover .tag-label {
+    opacity: 1;
+}
+
+@media (max-width: 1268px) {
+    .explorer-gallery {
+        column-count: 4;
+    }
 }
 
 @media (max-width: 768px) {

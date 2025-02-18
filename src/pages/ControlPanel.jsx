@@ -11,18 +11,27 @@ const ControlPanel = () => {
         switch (activeMenu) {
             case 'explorer':
                 return (
-                  <div>
-                    <div className="explorer-gallery">
-                      {[...Array(25)].map((_, i) => (
-                        <img
-                          key={i}
-                          src={`/multimedia/mansory/foto${i + 1}.jpg`}
-                          alt={`Foto ${i + 1}`}
-                          className="masonry-item"
-                        />
-                      ))}
+                    <div>
+                        <div className="explorer-gallery">
+                            {[...Array(25)].map((_, i) => (
+                                <div className="masonry-item" key={i}>
+                                    <img src={`/multimedia/mansory/foto${i + 1}.jpg`} alt={`Foto ${i + 1}`} />
+                                    <div className="overlay">
+                                        <button className="save-btn">Guardar</button>
+                                        <div className="user-info">
+                                            <img src="/multimedia/usuarioDefault.jpg" alt="Usuario" />
+                                            <span>Prueba_111</span>
+                                        </div>
+                                        <div className="location-info">
+                                            <i className="location-icon fas fa-map-marker-alt"></i>
+                                            <span>Barcelona</span>
+                                        </div>
+                                        <div className="tag-label">Estilista</div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     </div>
-                  </div>
                 );
             case 'creatives':
                 return (
