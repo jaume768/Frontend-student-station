@@ -16,6 +16,7 @@ import CompleteRegistrationCreativoEstilista06 from './pages/creativos/CompleteR
 import CompleteRegistrationCreativoDisenador05 from './pages/creativos/CompleteRegistrationCreativoDisenador05';
 import CompleteRegistrationCreativoOtro05 from './pages/creativos/CompleteRegistrationCreativoOtro05';
 import ControlPanel from './pages/ControlPanel';
+import TokenHandler from './components/TokenHandler';
 
 // Rutas para el registro PROFESIONAL
 import CompleteRegistrationProfesional from './pages/profesionales/CompleteRegistrationProfesional';
