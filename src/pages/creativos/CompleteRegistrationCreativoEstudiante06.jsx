@@ -26,11 +26,37 @@ const CompleteRegistrationCreativoEstudiante06 = () => {
         }
     };
 
+    // Calcula el mes actual en formato YYYY-MM
+    const currentMonth = (() => {
+        const now = new Date();
+        const month = ("0" + (now.getMonth() + 1)).slice(-2);
+        return `${now.getFullYear()}-${month}`;
+    })();
+
+    // Calcula el mes mínimo (90 años atrás) en formato YYYY-MM
+    const minMonth = (() => {
+        const now = new Date();
+        const month = ("0" + (now.getMonth() + 1)).slice(-2);
+        return `${now.getFullYear() - 90}-${month}`;
+    })();
+
     const handleNext = async () => {
         if (!institution || !graduationDate) {
             setError("Por favor, completa todos los campos requeridos.");
             return;
         }
+
+        // Validación de la fecha:
+        // Convertimos el valor "YYYY-MM" a una fecha (usando el primer día del mes)
+        const enteredDate = new Date(graduationDate + "-01");
+        const currentDate = new Date();
+        const minDate = new Date(minMonth + "-01");
+
+        if (enteredDate < minDate || enteredDate > currentDate) {
+            setError(`Fecha incorrecta: la fecha debe estar entre ${minMonth} y ${currentMonth}.`);
+            return;
+        }
+
         setError("");
         try {
             const token = localStorage.getItem("authToken");
@@ -59,12 +85,6 @@ const CompleteRegistrationCreativoEstudiante06 = () => {
     const handleBack = () => {
         navigate(-1);
     };
-
-    const currentMonth = (() => {
-        const now = new Date();
-        const month = ("0" + (now.getMonth() + 1)).slice(-2);
-        return `${now.getFullYear()}-${month}`;
-    })();
 
     return (
         <div className="complete-registration-container">
@@ -101,7 +121,8 @@ const CompleteRegistrationCreativoEstudiante06 = () => {
                             onChange={handleDateChange}
                             className="input-field"
                             style={{ backgroundColor: '#f0f0f0', color: '#000' }}
-                            max={currentMonth}
+                            min={minMonth}  // Evita fechas menores a 90 años atrás
+                            max={currentMonth}  // Evita fechas futuras
                         />
                         <span
                             className="calendar-icon"
