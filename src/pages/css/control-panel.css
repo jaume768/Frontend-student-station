@@ -355,26 +355,19 @@
 @media (max-width: 480px) {
     .mobile-navbar {
         display: block;
-        position: sticky;
+        position: fixed;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 20px;
         width: 90%;
-        margin: auto;
-        border-radius: 40px;
+        max-width: 500px;
         background: #fff;
+        border-radius: 40px;
         border-top: 1px solid #ccc;
-        margin-bottom: 1em;
         z-index: 1000;
-    }
-    
-    .android-navbar {
-        bottom: 8vh;
-    }
-    
-    .ios-navbar {
-        bottom: 13vh;
-    }
-    
-    .iphone-16-navbar {
-        bottom: 13vh;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+        padding-bottom: env(safe-area-inset-bottom);
     }
 
     .mobile-navbar ul {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { FaCompass, FaUsers, FaBookmark, FaUser } from 'react-icons/fa';
 
@@ -13,22 +13,8 @@ const MobileNavbar = () => {
     const location = useLocation();
     const activeMenu = location.state?.activeMenu || 'explorer';
 
-    const [deviceClass, setDeviceClass] = useState('android-navbar');
-
-    useEffect(() => {
-        const userAgent = navigator.userAgent;
-
-        if (/iPhone|iPad|iPod/.test(userAgent)) {
-            if (window.screen.height >= 900) {
-                setDeviceClass('iphone-16-navbar');
-            } else {
-                setDeviceClass('ios-navbar');
-            }
-        }
-    }, []);
-
     return (
-        <nav className={`mobile-navbar ${deviceClass}`}>
+        <nav className="mobile-navbar">
             <ul>
                 {mobileNavItems.map((item) => (
                     <li key={item.id}>
