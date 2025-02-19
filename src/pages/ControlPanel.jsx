@@ -25,7 +25,7 @@ const ControlPanel = () => {
                 return (
                     <div>
                         <div className="explorer-gallery">
-                            {[...Array(25)].map((_, i) => (
+                            {[...Array(30)].map((_, i) => (
                                 <div className="masonry-item" key={i}>
                                     <img src={`/multimedia/mansory/foto${i + 1}.jpg`} alt={`Foto ${i + 1}`} />
                                     <div className="overlay">
