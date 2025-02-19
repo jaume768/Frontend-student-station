@@ -1,10 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Layout from '../components/controlPanel/Layout';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import './css/control-panel.css';
 
 const ControlPanel = () => {
     const location = useLocation();
+    const navigate = useNavigate();
+
+    // Efecto para remover el token de la URL si está presente
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const token = params.get('token');
+        if (token) {
+            // Remueve el query string dejando solo la ruta base
+            navigate(location.pathname, { replace: true });
+        }
+    }, [location, navigate]);
+
     const activeMenu = location.state?.activeMenu || 'explorer';
 
     const renderContent = () => {

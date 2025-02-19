@@ -15,8 +15,9 @@ const CompleteRegistration = () => {
         const token = params.get('token');
         if (token) {
             localStorage.setItem('authToken', token);
+            navigate(location.pathname, { replace: true });
         }
-    }, [location]);
+    }, [location, navigate]);
 
     const objectives = [
         "Crear mi portafolio",
