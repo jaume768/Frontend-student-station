@@ -1,5 +1,5 @@
 // CompleteRegistrationCreativo02.jsx
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react'; // Añade useEffect
 import { useNavigate } from 'react-router-dom';
 import '../css/complete-registration.css';
 
@@ -10,7 +10,9 @@ const CompleteRegistrationCreativo02 = () => {
     const [dateOfBirth, setDateOfBirth] = useState("");
     const [country, setCountry] = useState("");
     const [city, setCity] = useState("");
-    const [error, setError] = useState(""); // Estado para el error
+    const [error, setError] = useState("");
+    const [minDate, setMinDate] = useState(""); // Nuevo estado para fecha mínima
+    const [maxDate, setMaxDate] = useState(""); // Nuevo estado para fecha máxima
 
     const dateInputRef = useRef(null);
 
@@ -21,30 +23,46 @@ const CompleteRegistrationCreativo02 = () => {
         "Países Bajos", "Suiza", "Suecia", "Noruega", "Argentina"
     ];
 
+    // Calcula las fechas mínima y máxima al montar el componente
+    useEffect(() => {
+        const today = new Date();
+        
+        // Fecha máxima: Hace 1 año
+        const maxDate = new Date(today);
+        maxDate.setFullYear(today.getFullYear() - 1);
+        setMaxDate(maxDate.toISOString().split("T")[0]);
+        
+        // Fecha mínima: Hace 90 años
+        const minDate = new Date(today);
+        minDate.setFullYear(today.getFullYear() - 90);
+        setMinDate(minDate.toISOString().split("T")[0]);
+    }, []);
+
     const handleNext = async () => {
+        // Validar campos vacíos
         if (!firstName || !lastName || !dateOfBirth || !country || !city) {
             setError("Por favor, completa todos los campos requeridos.");
             return;
         }
 
-        // Validación de edad
+        // Validar edad entre 1 y 90 años
         const birthDate = new Date(dateOfBirth);
         const today = new Date();
-        const age = today.getFullYear() - birthDate.getFullYear();
+        let age = today.getFullYear() - birthDate.getFullYear();
         const monthDiff = today.getMonth() - birthDate.getMonth();
         const dayDiff = today.getDate() - birthDate.getDate();
-
-        // Ajustar la edad si el cumpleaños aún no ha pasado este año
+        
+        // Ajustar edad si aún no ha pasado el mes o el día de nacimiento
         if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
             age--;
         }
-
+        
         if (age < 1 || age > 90) {
-            setError("Fecha de nacimiento incorrecta. Debes tener entre 1 y 90 años.");
+            setError("La fecha de nacimiento es incorrecta.");
             return;
         }
 
-        setError(""); // Limpia el error si todo está correcto
+        setError(""); // Limpiar error si todo es válido
 
         const fullName = `${firstName} ${lastName}`;
         try {
