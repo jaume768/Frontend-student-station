@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './css/complete-registration.css';
 
@@ -9,6 +9,14 @@ const CompleteRegistration = () => {
 
     const [selectedObjective, setSelectedObjective] = useState("");
     const [error, setError] = useState("");
+
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const token = params.get('token');
+        if (token) {
+            localStorage.setItem('authToken', token);
+        }
+    }, [location]);
 
     const objectives = [
         "Crear mi portafolio",
