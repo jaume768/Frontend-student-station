@@ -9,6 +9,8 @@ const CompleteRegistration = () => {
 
     const [selectedObjective, setSelectedObjective] = useState("");
     const [error, setError] = useState("");
+    const [userLoaded, setUserLoaded] = useState(false);
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
     useEffect(() => {
         const params = new URLSearchParams(location.search);
@@ -18,6 +20,30 @@ const CompleteRegistration = () => {
             navigate(location.pathname, { replace: true });
         }
     }, [location, navigate]);
+
+    useEffect(() => {
+        const token = localStorage.getItem("authToken");
+        if (!token) return;
+
+        const intervalId = setInterval(async () => {
+            try {
+                const response = await fetch(`${backendUrl}/api/users/profile`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (response.ok) {
+                    setUserLoaded(true);
+                    clearInterval(intervalId);
+                }
+            } catch (err) {
+                // Puede que aún no esté creado, seguimos intentando
+            }
+        }, 500);
+
+        return () => clearInterval(intervalId);
+    }, [backendUrl]);
 
     const objectives = [
         "Crear mi portafolio",
@@ -40,9 +66,13 @@ const CompleteRegistration = () => {
             role = "Profesional";
         }
 
+        if (!userLoaded) {
+            setError("Aún estamos preparando tu cuenta, por favor espera un momento...");
+            return;
+        }
+
         try {
             const token = localStorage.getItem("authToken");
-            const backendUrl = import.meta.env.VITE_BACKEND_URL;
             const response = await fetch(`${backendUrl}/api/users/profile`, {
                 method: 'PUT',
                 headers: {
@@ -91,8 +121,9 @@ const CompleteRegistration = () => {
                 <button
                     className="next-button-primer"
                     onClick={handleNext}
+                    disabled={!userLoaded}
                 >
-                    Siguiente
+                    {userLoaded ? "Siguiente" : "Cargando..."}
                 </button>
             </div>
         </div>
