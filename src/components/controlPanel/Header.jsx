@@ -2,6 +2,9 @@ import React from 'react';
 import { FaBookmark, FaSearch, FaBars } from 'react-icons/fa';
 
 const Header = ({ onHamburgerClick }) => {
+    // Se obtiene la foto de perfil guardada o se usa la foto por defecto
+    const profilePicture = localStorage.getItem("profilePicture") || "/multimedia/usuarioDefault.jpg";
+
     return (
         <header className="dashboard-header">
             <div className="dahsboard-search">
@@ -17,7 +20,7 @@ const Header = ({ onHamburgerClick }) => {
                 </div>
                 <button>+ crear</button>
                 <div className="profile-wrapper">
-                    <img className="profile-img" src="/multimedia/usuarioDefault.jpg" alt="Perfil" />
+                    <img className="profile-img" src={profilePicture} alt="Perfil" />
                     <FaBars className="hamburger-menu" onClick={onHamburgerClick} />
                 </div>
             </div>

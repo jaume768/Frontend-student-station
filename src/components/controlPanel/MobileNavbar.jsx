@@ -1,17 +1,18 @@
 import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { FaCompass, FaUsers, FaBookmark, FaUser } from 'react-icons/fa';
+import { FaCompass, FaUsers, FaBookmark } from 'react-icons/fa';
 
 const mobileNavItems = [
     { id: 'explorer', icon: <FaCompass />, label: 'Explorar' },
     { id: 'creatives', icon: <FaUsers />, label: 'Creativos' },
     { id: 'saved', icon: <FaBookmark />, label: 'Guardados' },
-    { id: 'profile', icon: <FaUser />, label: 'Mi perfil' },
+    { id: 'profile', icon: null, label: 'Mi perfil' },
 ];
 
 const MobileNavbar = () => {
     const location = useLocation();
     const activeMenu = location.state?.activeMenu || 'explorer';
+    const profilePicture = localStorage.getItem("profilePicture") || "/multimedia/usuarioDefault.jpg";
 
     return (
         <nav className="mobile-navbar">
@@ -23,7 +24,11 @@ const MobileNavbar = () => {
                             state={{ activeMenu: item.id }}
                             className={activeMenu === item.id ? 'active' : ''}
                         >
-                            {item.icon}
+                            {item.id === 'profile' ? (
+                                <img src={profilePicture} alt="Perfil" className="mobile-profile-img" />
+                            ) : (
+                                item.icon
+                            )}
                             <span>{item.label}</span>
                         </Link>
                     </li>

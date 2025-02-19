@@ -76,7 +76,7 @@ const CompleteRegistrationCreativo03 = () => {
 
                 <div style={{ textAlign: 'center', margin: '2rem 0' }}>
                     <img
-                        src={selectedImage || 'multimedia/usuarioDefault.jpg'}
+                        src={selectedImage || '/multimedia/usuarioDefault.jpg'}
                         alt="Foto de perfil"
                         style={{ width: '150px', height: '150px', borderRadius: '50%', objectFit: 'cover' }}
                     />

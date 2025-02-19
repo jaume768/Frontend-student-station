@@ -20,6 +20,13 @@
     z-index: 1000;
 }
 
+.mobile-profile-img {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
 .dashboard-sidebar .logo-dashboard {
     margin-bottom: 8em;
 }
