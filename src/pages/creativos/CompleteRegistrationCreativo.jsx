@@ -37,7 +37,7 @@ const CompleteRegistrationCreativo = () => {
             if (response.ok) {
                 // Almacena el creativeType para usarlo en pasos posteriores
                 localStorage.setItem("creativeType", creativeType);
-                navigate('/CompleteRegistrationCreativo02');
+                navigate('/creativo/registro/02');
             } else {
                 setError(data.error || "Ha ocurrido un error.");
                 console.error(data.error);

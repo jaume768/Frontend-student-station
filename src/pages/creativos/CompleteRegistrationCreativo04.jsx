@@ -43,19 +43,19 @@ const CompleteRegistrationCreativo04 = () => {
                     const creativeType = localStorage.getItem("creativeType");
                     switch (creativeType) {
                         case "1": // Estudiante
-                            navigate('/CompleteRegistrationCreativoEstudiante05');
+                            navigate('/creativo/registro/estudiante/05');
                             break;
                         case "2": // Graduado
-                            navigate('/CompleteRegistrationCreativoGraduado06');
+                            navigate('/creativo/registro/graduado/06');
                             break;
                         case "3": // Estilista
-                            navigate('/CompleteRegistrationCreativoEstilista05');
+                            navigate('/creativo/registro/estilista/05');
                             break;
                         case "4": // Diseñador/a activo
-                            navigate('/CompleteRegistrationCreativoDisenador05');
+                            navigate('/creativo/registro/disenador/05');
                             break;
                         case "5": // Otro
-                            navigate('/CompleteRegistrationCreativoOtro05');
+                            navigate('/creativo/registro/otro/05');
                             break;
                         default:
                             navigate('/ControlPanel');
@@ -64,19 +64,19 @@ const CompleteRegistrationCreativo04 = () => {
                     const professionalType = localStorage.getItem("professionalType");
                     switch (professionalType) {
                         case "1": // Una marca pequeña
-                            navigate('/CompleteRegistrationProfesionalMarca05');
+                            navigate('/profesional/registro/marca/05');
                             break;
                         case "2": // Una empresa
-                            navigate('/CompleteRegistrationProfesionalEmpresa05');
+                            navigate('/profesional/registro/empresa/05');
                             break;
                         case "3": // Una agencia/scout
-                            navigate('/CompleteRegistrationProfesionalAgencia05');
+                            navigate('/profesional/registro/agencia/05');
                             break;
                         case "4": // Una institución educativa
                             navigate('/ControlPanel');
                             break;
                         case "5": // Otro
-                            navigate('/CompleteRegistrationCreativoOtro05');
+                            navigate('/creativo/registro/otro/05');
                             break;
                         default:
                             navigate('/ControlPanel');

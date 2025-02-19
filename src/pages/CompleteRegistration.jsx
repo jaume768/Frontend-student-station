@@ -85,9 +85,9 @@ const CompleteRegistration = () => {
             if (response.ok) {
                 localStorage.setItem("role", role);
                 if (role === "Creativo") {
-                    navigate('/CompleteRegistrationCreativo');
+                    navigate('/creativo/registro');
                 } else {
-                    navigate('/CompleteRegistrationProfesional');
+                    navigate('/profesional/registro');
                 }
             } else {
                 console.error(data.error);

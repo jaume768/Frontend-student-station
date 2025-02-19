@@ -37,9 +37,9 @@ const CompleteRegistrationProfesional = () => {
             if (response.ok) {
                 localStorage.setItem("professionalType", professionalType);
                 if (professionalType === "4") {
-                    navigate('/CompleteRegistrationProfesionalInstitucion');
+                    navigate('/profesional/registro/institucion');
                 } else {
-                    navigate('/CompleteRegistrationProfesionalDatosPersonales');
+                    navigate('/profesional/registro/datos-personales');
                 }
             } else {
                 setError(data.error || "Ha ocurrido un error.");

@@ -28,7 +28,7 @@ const CompleteRegistrationCreativoEstudiante05 = () => {
             const data = await response.json();
             if (response.ok) {
                 if (formationType === "Estudio en una escuela o universidad") {
-                    navigate('/CompleteRegistrationCreativoEstudiante06');
+                    navigate('/creativo/registro/estudiante/06');
                 } else {
                     navigate('/ControlPanel');
                 }

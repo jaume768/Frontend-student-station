@@ -30,7 +30,7 @@ const CompleteRegistrationCreativo03 = () => {
         }
         // En este caso se permite avanzar sin imagen (se usará la foto por defecto)
         //setError("");
-        navigate('/CompleteRegistrationCreativo04');
+        navigate('/conocidos/registro/04');
     };
 
     const handleBack = () => {

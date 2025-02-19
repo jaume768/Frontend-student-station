@@ -47,7 +47,7 @@ const CompleteRegistrationProfesionalDatosPersonales = () => {
             });
             const data = await response.json();
             if (response.ok) {
-                navigate('/CompleteRegistrationCreativo03');
+                navigate('/photo/registro/03');
             } else {
                 setError(data.error || "Ha ocurrido un error.");
                 console.error(data.error);

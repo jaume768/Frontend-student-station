@@ -34,24 +34,24 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/complete-registration" element={<CompleteRegistration />} />
 
-        <Route path="/CompleteRegistrationCreativo" element={<CompleteRegistrationCreativo />} />
-        <Route path="/CompleteRegistrationCreativo02" element={<CompleteRegistrationCreativo02 />} />
-        <Route path="/CompleteRegistrationCreativo03" element={<CompleteRegistrationCreativo03 />} />
-        <Route path="/CompleteRegistrationCreativo04" element={<CompleteRegistrationCreativo04 />} />
-        <Route path="/CompleteRegistrationCreativoEstudiante05" element={<CompleteRegistrationCreativoEstudiante05 />} />
-        <Route path="/CompleteRegistrationCreativoEstudiante06" element={<CompleteRegistrationCreativoEstudiante06 />} />
-        <Route path="/CompleteRegistrationCreativoGraduado06" element={<CompleteRegistrationCreativoGraduado06 />} />
-        <Route path="/CompleteRegistrationCreativoEstilista05" element={<CompleteRegistrationCreativoEstilista05 />} />
-        <Route path="/CompleteRegistrationCreativoEstilista06" element={<CompleteRegistrationCreativoEstilista06 />} />
-        <Route path="/CompleteRegistrationCreativoDisenador05" element={<CompleteRegistrationCreativoDisenador05 />} />
-        <Route path="/CompleteRegistrationCreativoOtro05" element={<CompleteRegistrationCreativoOtro05 />} />
+        <Route path="/creativo/registro" element={<CompleteRegistrationCreativo />} />
+        <Route path="/creativo/registro/02" element={<CompleteRegistrationCreativo02 />} />
+        <Route path="/photo/registro/03" element={<CompleteRegistrationCreativo03 />} />
+        <Route path="/conocidos/registro/04" element={<CompleteRegistrationCreativo04 />} />
+        <Route path="/creativo/registro/estudiante/05" element={<CompleteRegistrationCreativoEstudiante05 />} />
+        <Route path="/creativo/registro/estudiante/06" element={<CompleteRegistrationCreativoEstudiante06 />} />
+        <Route path="/creativo/registro/graduado/06" element={<CompleteRegistrationCreativoGraduado06 />} />
+        <Route path="/creativo/registro/estilista/05" element={<CompleteRegistrationCreativoEstilista05 />} />
+        <Route path="/creativo/registro/estilista/06" element={<CompleteRegistrationCreativoEstilista06 />} />
+        <Route path="/creativo/registro/disenador/05" element={<CompleteRegistrationCreativoDisenador05 />} />
+        <Route path="/creativo/registro/otro/05" element={<CompleteRegistrationCreativoOtro05 />} />
 
-        <Route path="/CompleteRegistrationProfesional" element={<CompleteRegistrationProfesional />} />
-        <Route path="/CompleteRegistrationProfesionalDatosPersonales" element={<CompleteRegistrationProfesionalDatosPersonales />} />
-        <Route path="/CompleteRegistrationProfesionalInstitucion" element={<CompleteRegistrationProfesionalInstitucion />} />
-        <Route path="/CompleteRegistrationProfesionalMarca05" element={<CompleteRegistrationProfesionalMarca05 />} />
-        <Route path="/CompleteRegistrationProfesionalEmpresa05" element={<CompleteRegistrationProfesionalEmpresa05 />} />
-        <Route path="/CompleteRegistrationProfesionalAgencia05" element={<CompleteRegistrationProfesionalAgencia05 />} />
+        <Route path="/profesional/registro" element={<CompleteRegistrationProfesional />} />
+        <Route path="/profesional/registro/datos-personales" element={<CompleteRegistrationProfesionalDatosPersonales />} />
+        <Route path="/profesional/registro/institucion" element={<CompleteRegistrationProfesionalInstitucion />} />
+        <Route path="/profesional/registro/marca/05" element={<CompleteRegistrationProfesionalMarca05 />} />
+        <Route path="/profesional/registro/empresa/05" element={<CompleteRegistrationProfesionalEmpresa05 />} />
+        <Route path="/profesional/registro/agencia/05" element={<CompleteRegistrationProfesionalAgencia05 />} />
       </Routes>
     </Router>
   );
