@@ -6,12 +6,15 @@ import '../css/complete-registration.css';
 const CompleteRegistrationCreativo03 = () => {
     const navigate = useNavigate();
     const [selectedImage, setSelectedImage] = useState(null);
-    const [error, setError] = useState(""); // Estado para error
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [error, setError] = useState("");
+    const [uploading, setUploading] = useState(false);
     const fileInputRef = useRef(null);
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
+            setSelectedFile(file);
             setSelectedImage(URL.createObjectURL(file));
             setError("");
         }
@@ -23,14 +26,34 @@ const CompleteRegistrationCreativo03 = () => {
         }
     };
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (!selectedImage) {
-          setError("Por favor, sube una foto de perfil.");
-          return;
+            setError("Por favor, sube una foto de perfil.");
+            return;
         }
-        // En este caso se permite avanzar sin imagen (se usará la foto por defecto)
-        //setError("");
-        navigate('/conocidos/registro/04');
+        setUploading(true);
+        try {
+            const formData = new FormData();
+            formData.append('profilePicture', selectedFile);
+
+            const backendUrl = import.meta.env.VITE_BACKEND_URL;
+            const response = await fetch(`${backendUrl}/api/users/profile`, {
+                method: 'PUT',
+                body: formData,
+                credentials: 'include',
+            });
+
+            if (!response.ok) {
+                const data = await response.json();
+                throw new Error(data.error || 'Error al actualizar la foto.');
+            }
+
+            navigate('/conocidos/registro/04');
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setUploading(false);
+        }
     };
 
     const handleBack = () => {
@@ -44,7 +67,7 @@ const CompleteRegistrationCreativo03 = () => {
                 <h2 className="titulo">Tu foto de perfil</h2>
                 <p className="question">No te preocupes, puedes modificar tu foto en cualquier momento</p>
 
-                {/* Mensaje de error (si se requiere) */}
+                {/* Mensaje de error */}
                 {error && <p style={{ color: 'red', marginBottom: '1rem' }}>{error}</p>}
 
                 <div style={{ textAlign: 'center', margin: '2rem 0' }}>
@@ -54,7 +77,7 @@ const CompleteRegistrationCreativo03 = () => {
                         style={{ width: '150px', height: '150px', borderRadius: '50%', objectFit: 'cover' }}
                     />
                     <div style={{ marginTop: '1rem' }}>
-                        <button className="next-button" onClick={handleUploadClick}>
+                        <button className="next-button" onClick={handleUploadClick} disabled={uploading}>
                             Subir una foto
                         </button>
                         <input
@@ -66,18 +89,24 @@ const CompleteRegistrationCreativo03 = () => {
                         />
                     </div>
                 </div>
-                <div className="navigation-buttons" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+
+                <div
+                    className="navigation-buttons"
+                    style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+                >
                     <button
                         className="back-button"
                         onClick={handleBack}
                         style={{ background: 'none', border: 'none', color: '#000', cursor: 'pointer' }}
+                        disabled={uploading}
                     >
                         &#8592; Volver atrás
                     </button>
-                    <button className="next-button" onClick={handleNext}>
-                        Siguiente
+                    <button className="next-button" onClick={handleNext} disabled={uploading}>
+                        {uploading ? "Actualizando foto..." : "Siguiente"}
                     </button>
                 </div>
+
                 <div className="pagination-dots" style={{ marginTop: '1rem' }}>
                     {[1, 2, 3, 4, 5].map((dot, index) => (
                         <span
