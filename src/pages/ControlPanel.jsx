@@ -7,12 +7,10 @@ const ControlPanel = () => {
     const location = useLocation();
     const navigate = useNavigate();
 
-    // Efecto para remover el token de la URL si está presente
     useEffect(() => {
         const params = new URLSearchParams(location.search);
         const token = params.get('token');
         if (token) {
-            // Remueve el query string dejando solo la ruta base
             navigate(location.pathname, { replace: true });
         }
     }, [location, navigate]);

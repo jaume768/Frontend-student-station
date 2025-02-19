@@ -6,13 +6,18 @@
 }
 
 .dashboard-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 80px;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
     padding: 20px 0;
-    background-color: rgb(255, 255, 255);
+    background-color: #fff;
+    z-index: 1000;
 }
 
 .dashboard-sidebar .logo-dashboard {
@@ -101,19 +106,22 @@
 }
 
 .dashboard-main {
+    margin-left: 80px;
     flex: 1;
     display: flex;
     flex-direction: column;
-    background-color: rgb(255, 255, 255);
 }
 
 .dashboard-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
     display: flex;
     gap: 5px;
     align-items: center;
     justify-content: space-between;
     padding: 20px 20px;
-    background-color: rgb(255, 255, 255);
+    background-color: #fff;
 }
 
 .dashboard-header .header-right {
@@ -327,6 +335,11 @@
 }
 
 @media (max-width: 480px) {
+
+    .dashboard-main {
+        margin-left: 0;
+    }
+    
     .explorer-gallery {
         column-count: 2;
     }

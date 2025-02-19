@@ -13,7 +13,7 @@ const Header = ({ onHamburgerClick }) => {
             <div className="header-right">
                 <div className="saved">
                     <FaBookmark className="nav-icon-save" title="Guardados" />
-                    <span>Guardados</span>
+                    <span>guardados</span>
                 </div>
                 <button>+ crear</button>
                 <div className="profile-wrapper">
