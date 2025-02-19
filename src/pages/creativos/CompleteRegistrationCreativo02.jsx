@@ -22,11 +22,28 @@ const CompleteRegistrationCreativo02 = () => {
     ];
 
     const handleNext = async () => {
-        // Validar que se hayan rellenado todos los campos
         if (!firstName || !lastName || !dateOfBirth || !country || !city) {
             setError("Por favor, completa todos los campos requeridos.");
             return;
         }
+
+        // Validación de edad
+        const birthDate = new Date(dateOfBirth);
+        const today = new Date();
+        const age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+        const dayDiff = today.getDate() - birthDate.getDate();
+
+        // Ajustar la edad si el cumpleaños aún no ha pasado este año
+        if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+            age--;
+        }
+
+        if (age < 1 || age > 90) {
+            setError("Fecha de nacimiento incorrecta. Debes tener entre 1 y 90 años.");
+            return;
+        }
+
         setError(""); // Limpia el error si todo está correcto
 
         const fullName = `${firstName} ${lastName}`;
@@ -45,7 +62,6 @@ const CompleteRegistrationCreativo02 = () => {
             if (response.ok) {
                 navigate('/CompleteRegistrationCreativo03');
             } else {
-                // Si la respuesta trae error, se puede mostrar también
                 setError(data.error || "Ha ocurrido un error.");
             }
         } catch (error) {
@@ -53,6 +69,7 @@ const CompleteRegistrationCreativo02 = () => {
             console.error(error);
         }
     };
+
 
     const handleBack = () => {
         navigate(-1);
