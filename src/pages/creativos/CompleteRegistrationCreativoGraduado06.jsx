@@ -24,6 +24,17 @@ const CompleteRegistrationCreativoGraduado06 = () => {
             setError("Por favor, completa todos los campos requeridos.");
             return;
         }
+
+        // Validación del año de graduación:
+        const currentYear = new Date().getFullYear();
+        const minYear = currentYear - 90;
+        const yearNum = parseInt(graduationYear, 10);
+
+        if (isNaN(yearNum) || yearNum < minYear || yearNum > currentYear) {
+            setError(`Fecha incorrecta: el año debe estar entre ${minYear} y ${currentYear}.`);
+            return;
+        }
+
         setError("");
         try {
             const token = localStorage.getItem("authToken");
@@ -108,7 +119,6 @@ const CompleteRegistrationCreativoGraduado06 = () => {
                     <button
                         className="next-button"
                         onClick={handleNext}
-                    // Se ha eliminado el atributo disabled para que al hacer click se muestre el error si faltan datos.
                     >
                         Siguiente
                     </button>
