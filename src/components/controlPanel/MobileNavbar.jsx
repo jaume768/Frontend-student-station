@@ -10,6 +10,7 @@ const mobileNavItems = [
 ];
 
 const MobileNavbar = ({ profilePicture}) => {
+    const activeMenu = location.state?.activeMenu || 'explorer';
     return (
         <nav className="mobile-navbar">
             <ul>
