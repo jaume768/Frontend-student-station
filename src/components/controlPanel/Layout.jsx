@@ -15,8 +15,9 @@ const Layout = ({ children }) => {
             const backendUrl = import.meta.env.VITE_BACKEND_URL;
             try {
                 const response = await fetch(`${backendUrl}/api/users/profile`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    cache: 'no-store'
+                });                
                 if (response.ok) {
                     const data = await response.json();
                     console.log(data);
