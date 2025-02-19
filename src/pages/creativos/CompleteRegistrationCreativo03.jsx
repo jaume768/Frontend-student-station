@@ -6,16 +6,16 @@ import '../css/complete-registration.css';
 const CompleteRegistrationCreativo03 = () => {
     const navigate = useNavigate();
     const [selectedImage, setSelectedImage] = useState(null);
-    const [selectedFile, setSelectedFile] = useState(null);
+    const [file, setFile] = useState(null);
     const [error, setError] = useState("");
-    const [uploading, setUploading] = useState(false);
+    const [isUploading, setIsUploading] = useState(false);
     const fileInputRef = useRef(null);
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            setSelectedFile(file);
             setSelectedImage(URL.createObjectURL(file));
+            setFile(file);
             setError("");
         }
     };
@@ -27,33 +27,37 @@ const CompleteRegistrationCreativo03 = () => {
     };
 
     const handleNext = async () => {
-        if (!selectedImage) {
+        if (!file) {
             setError("Por favor, sube una foto de perfil.");
             return;
         }
-        setUploading(true);
-        try {
-            const formData = new FormData();
-            formData.append('profilePicture', selectedFile);
+        setIsUploading(true);
 
+        try {
+            const token = localStorage.getItem("authToken");
             const backendUrl = import.meta.env.VITE_BACKEND_URL;
-            const response = await fetch(`${backendUrl}/api/users/profile`, {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const response = await fetch(`${backendUrl}/api/users/profile-picture`, {
                 method: 'PUT',
-                body: formData,
-                credentials: 'include',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                body: formData
             });
 
-            if (!response.ok) {
-                const data = await response.json();
-                throw new Error(data.error || 'Error al actualizar la foto.');
+            const data = await response.json();
+            if (response.ok) {
+                navigate('/conocidos/registro/04');
+            } else {
+                setError(data.error || "Error al actualizar la foto.");
             }
-
-            navigate('/conocidos/registro/04');
         } catch (err) {
-            setError(err.message);
-        } finally {
-            setUploading(false);
+            console.error(err);
+            setError("Error en la conexión o en el servidor.");
         }
+        setIsUploading(false);
     };
 
     const handleBack = () => {
@@ -67,7 +71,7 @@ const CompleteRegistrationCreativo03 = () => {
                 <h2 className="titulo">Tu foto de perfil</h2>
                 <p className="question">No te preocupes, puedes modificar tu foto en cualquier momento</p>
 
-                {/* Mensaje de error */}
+                {/* Mostrar error si lo hay */}
                 {error && <p style={{ color: 'red', marginBottom: '1rem' }}>{error}</p>}
 
                 <div style={{ textAlign: 'center', margin: '2rem 0' }}>
@@ -77,7 +81,7 @@ const CompleteRegistrationCreativo03 = () => {
                         style={{ width: '150px', height: '150px', borderRadius: '50%', objectFit: 'cover' }}
                     />
                     <div style={{ marginTop: '1rem' }}>
-                        <button className="next-button" onClick={handleUploadClick} disabled={uploading}>
+                        <button className="next-button" onClick={handleUploadClick}>
                             Subir una foto
                         </button>
                         <input
@@ -89,24 +93,18 @@ const CompleteRegistrationCreativo03 = () => {
                         />
                     </div>
                 </div>
-
-                <div
-                    className="navigation-buttons"
-                    style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
-                >
+                <div className="navigation-buttons" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <button
                         className="back-button"
                         onClick={handleBack}
                         style={{ background: 'none', border: 'none', color: '#000', cursor: 'pointer' }}
-                        disabled={uploading}
                     >
                         &#8592; Volver atrás
                     </button>
-                    <button className="next-button" onClick={handleNext} disabled={uploading}>
-                        {uploading ? "Actualizando foto..." : "Siguiente"}
+                    <button className="next-button" onClick={handleNext} disabled={isUploading}>
+                        {isUploading ? "Actualizando foto..." : "Siguiente"}
                     </button>
                 </div>
-
                 <div className="pagination-dots" style={{ marginTop: '1rem' }}>
                     {[1, 2, 3, 4, 5].map((dot, index) => (
                         <span
