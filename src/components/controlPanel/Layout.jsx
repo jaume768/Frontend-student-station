@@ -6,6 +6,7 @@ import MobileSideMenu from './MobileSideMenu';
 
 const Layout = ({ children }) => {
     const [sideMenuOpen, setSideMenuOpen] = useState(false);
+    const [profilePicture, setProfilePicture] = useState('/multimedia/usuarioDefault.jpg');
 
     useEffect(() => {
         const fetchProfilePicture = async () => {
@@ -14,16 +15,14 @@ const Layout = ({ children }) => {
             const backendUrl = import.meta.env.VITE_BACKEND_URL;
             try {
                 const response = await fetch(`${backendUrl}/api/users/profile`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
+                    headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (response.ok) {
                     const data = await response.json();
-                    if (data && data.profile && data.profile.profilePicture) {
-                        localStorage.setItem("profilePicture", data.profile.profilePicture);
+                    if (data?.profile?.profilePicture) {
+                        setProfilePicture(data.profile.profilePicture);
                     } else {
-                        localStorage.removeItem("profilePicture");
+                        setProfilePicture('/multimedia/usuarioDefault.jpg');
                     }
                 }
             } catch (error) {
@@ -41,9 +40,9 @@ const Layout = ({ children }) => {
         <div className="dashboard-container">
             <Sidebar />
             <div className="dashboard-main">
-                <Header onHamburgerClick={toggleSideMenu} />
+                <Header profilePicture={profilePicture} onHamburgerClick={toggleSideMenu} />
                 <main className="dashboard-content">{children}</main>
-                <MobileNavbar />
+                <MobileNavbar profilePicture={profilePicture}/>
             </div>
             {sideMenuOpen && <MobileSideMenu onClose={closeSideMenu} />}
         </div>
