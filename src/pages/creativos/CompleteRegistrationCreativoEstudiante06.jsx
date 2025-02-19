@@ -41,7 +41,7 @@ const CompleteRegistrationCreativoEstudiante06 = () => {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({ institution })
+                body: JSON.stringify({ institution, profileCompleted: true })
             });
             const data = await response.json();
             if (response.ok) {

@@ -23,7 +23,7 @@ const CompleteRegistrationCreativoOtro05 = () => {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({ creativeOther })
+                body: JSON.stringify({ creativeOther, profileCompleted: true })
             });
             const data = await response.json();
             if (response.ok) {

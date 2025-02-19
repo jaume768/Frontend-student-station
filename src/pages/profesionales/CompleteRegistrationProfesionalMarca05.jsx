@@ -36,7 +36,7 @@ const CompleteRegistrationProfesionalMarca05 = () => {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({ companyName, foundingYear, productServiceType })
+                body: JSON.stringify({ companyName, foundingYear, productServiceType, profileCompleted: true })
             });
             const data = await response.json();
             if (response.ok) {

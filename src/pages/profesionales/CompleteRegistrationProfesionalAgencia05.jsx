@@ -37,7 +37,8 @@ const CompleteRegistrationProfesionalAgencia05 = () => {
                 body: JSON.stringify({
                     companyName,
                     agencyServices,
-                    showNameCompany: shareName
+                    showNameCompany: shareName, 
+                    profileCompleted: true
                 })
             });
             const data = await response.json();
