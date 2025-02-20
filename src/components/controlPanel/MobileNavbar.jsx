@@ -9,8 +9,10 @@ const mobileNavItems = [
     { id: 'profile', icon: null, label: 'Mi perfil' },
 ];
 
-const MobileNavbar = ({ profilePicture}) => {
+const MobileNavbar = ({ profilePicture }) => {
+    const location = useLocation();
     const activeMenu = location.state?.activeMenu || 'explorer';
+
     return (
         <nav className="mobile-navbar">
             <ul>
