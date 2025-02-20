@@ -5,6 +5,45 @@
     color: rgb(0, 0, 0);
 }
 
+.profile-options-modal {
+    position: absolute;
+    top: -247px;
+    width: 150px;
+    text-align: left;
+    right: -13px;
+    background: #fff;
+    border: 1px solid #ccc;
+    color: #000;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px #00000026;
+    z-index: 9900;
+    padding: 10px;
+}
+
+.profile-options-modal-ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: block;
+}
+
+.profile-options-modal li {
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.profile-options-modal li:hover {
+    background-color: #f0f0f0;
+}
+
+.mobile-profile-link{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.75em;
+}
+
 .dashboard-sidebar {
     position: fixed;
     top: 0;
@@ -494,43 +533,4 @@
     to {
         transform: translateX(0);
     }
-}
-
-.profile-options-modal {
-    position: absolute;
-    top: -247px;
-    width: 150px;
-    text-align: left;
-    right: -13px;
-    background: #fff;
-    border: 1px solid #ccc;
-    color: #000;
-    border-radius: 4px;
-    box-shadow: 0 2px 8px #00000026;
-    z-index: 9900;
-    padding: 10px;
-}
-
-.profile-options-modal-ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: block;
-}
-
-.profile-options-modal li {
-    padding: 5px 10px;
-    cursor: pointer;
-}
-
-.profile-options-modal li:hover {
-    background-color: #f0f0f0;
-}
-
-.mobile-profile-link{
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-size: 0.75em;
 }
