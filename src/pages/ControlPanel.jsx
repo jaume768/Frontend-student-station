@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Layout from '../components/controlPanel/Layout';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './css/control-panel.css';
+import EditProfile from '../components/controlPanel/EditProfile';
 
 const ControlPanel = () => {
     const location = useLocation();
@@ -16,16 +17,13 @@ const ControlPanel = () => {
         }
     }, [location, navigate]);
 
-    // Generamos un array de índices de fotos (0 a 29) y repetimos hasta tener 80 elementos
     useEffect(() => {
         let result = [];
         while (result.length < 80) {
-            // Crea un bloque con 30 índices y desordénalo
             const indices = Array.from({ length: 30 }, (_, i) => i);
             const shuffled = indices.sort(() => Math.random() - 0.5);
             result = result.concat(shuffled);
         }
-        // Recorta el array para que tenga exactamente 80 elementos
         setRandomIndices(result.slice(0, 80));
     }, []);
 
@@ -99,13 +97,15 @@ const ControlPanel = () => {
                         <p>Aquí va el contenido de la sección Información.</p>
                     </div>
                 );
+            case 'editProfile':
+                return <EditProfile />;
             default:
-                return (
-                    <div>
-                        <h1>Contenido por defecto</h1>
-                        <p>Este es el contenido por defecto.</p>
-                    </div>
-                );
+              return (
+                <div>
+                  <h1>Contenido por defecto</h1>
+                  <p>Este es el contenido por defecto.</p>
+                </div>
+              );
         }
     };
 

@@ -16,6 +16,20 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
         }
     };
 
+    const handleOptionSelect = (option) => {
+        setShowProfileOptions(false);
+        switch (option) {
+            case 'editProfile':
+                navigate('/ControlPanel', { state: { activeMenu: 'editProfile' } });
+                break;
+            case 'profile':
+                navigate('/ControlPanel', { state: { activeMenu: 'profile' } });
+                break;
+            default:
+                break;
+        }
+    };
+
     return (
         <header className="dashboard-header">
             <div className="dahsboard-search">
@@ -39,7 +53,10 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
                     />
                     <FaBars className="hamburger-menu" onClick={onHamburgerClick} />
                     {showProfileOptions && (
-                        <ProfileOptionsModal onClose={() => setShowProfileOptions(false)} />
+                        <ProfileOptionsModal
+                            onClose={() => setShowProfileOptions(false)}
+                            onSelectOption={handleOptionSelect}
+                        />
                     )}
                 </div>
             </div>

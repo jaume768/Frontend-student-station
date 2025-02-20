@@ -7,7 +7,7 @@
 
 .profile-options-modal {
     position: absolute;
-    top: 50px;
+    top: 45px;
     right: 0;
     width: 150px;
     text-align: left;
@@ -36,7 +36,7 @@
     background-color: #f0f0f0;
 }
 
-.mobile-profile-link{
+.mobile-profile-link {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -548,4 +548,52 @@
     to {
         transform: translateX(0);
     }
+}
+
+.edit-profile-container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 16px;
+    padding: 1.5rem;
+}
+
+.edit-profile-container h2 {
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+}
+
+button[type="submit"] {
+    background-color: #08b599;
+    color: #fff;
+    border: none;
+    padding: 0.7rem 1.2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+button[type="submit"]:hover {
+    background-color: #069f8a;
 }
