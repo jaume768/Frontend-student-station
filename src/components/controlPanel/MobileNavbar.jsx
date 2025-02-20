@@ -1,6 +1,7 @@
-import React from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { FaCompass, FaUsers, FaBookmark } from 'react-icons/fa';
+import ProfileOptionsModal from './ProfileOptionsModal';
 
 const mobileNavItems = [
     { id: 'explorer', icon: <FaCompass />, label: 'Explorar' },
@@ -11,25 +12,39 @@ const mobileNavItems = [
 
 const MobileNavbar = ({ profilePicture }) => {
     const location = useLocation();
+    const navigate = useNavigate();
+    const [showProfileOptions, setShowProfileOptions] = useState(false);
     const activeMenu = location.state?.activeMenu || 'explorer';
+    const token = localStorage.getItem('authToken');
+
+    const handleProfileClick = (e) => {
+        e.preventDefault();
+        if (!token) {
+            navigate('/', { state: { showRegister: true } });
+        } else {
+            setShowProfileOptions((prev) => !prev);
+        }
+    };
 
     return (
         <nav className="mobile-navbar">
             <ul>
                 {mobileNavItems.map((item) => (
                     <li key={item.id}>
-                        <Link
-                            to="/ControlPanel"
-                            state={{ activeMenu: item.id }}
-                            className={activeMenu === item.id ? 'active' : ''}
-                        >
-                            {item.id === 'profile' ? (
+                        {item.id === 'profile' ? (
+                            <div onClick={handleProfileClick} className="mobile-profile-link" style={{ position: 'relative' }}>
                                 <img src={profilePicture} alt="Perfil" className="mobile-profile-img" />
-                            ) : (
-                                item.icon
-                            )}
-                            <span>{item.label}</span>
-                        </Link>
+                                <span>{item.label}</span>
+                                {showProfileOptions && (
+                                    <ProfileOptionsModal onClose={() => setShowProfileOptions(false)} />
+                                )}
+                            </div>
+                        ) : (
+                            <a href="/ControlPanel" className={activeMenu === item.id ? 'active' : ''}>
+                                {item.icon}
+                                <span>{item.label}</span>
+                            </a>
+                        )}
                     </li>
                 ))}
             </ul>

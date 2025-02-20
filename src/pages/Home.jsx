@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-
+import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import '../components/home/css/header-footer.css';
 import '../components/home/css/efecto-parallex.css';
 
@@ -13,10 +12,18 @@ import RegisterModal from '../components/home/RegisterModal';
 import PasswordResetModal from '../components/home/PasswordResetModal';
 
 const Home = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
   const [showPasswordReset, setShowPasswordReset] = useState(false);
-  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (location.state?.showRegister) {
+      setShowRegister(true);
+      navigate(location.pathname, { replace: true });
+    }
+  }, [location, navigate]);
 
   const handleSwitchToRegister = () => {
     navigate('/');

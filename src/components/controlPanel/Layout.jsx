@@ -20,7 +20,6 @@ const Layout = ({ children }) => {
                 });                
                 if (response.ok) {
                     const data = await response.json();
-                    console.log(data);
                     if (data?.profile?.profilePicture) {
                         setProfilePicture(data.profile.profilePicture);
                     } else {
