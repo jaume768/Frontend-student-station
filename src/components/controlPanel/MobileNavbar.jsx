@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, Link, useNavigate } from 'react-router-dom';
 import { FaCompass, FaUsers, FaBookmark } from 'react-icons/fa';
 import ProfileOptionsModal from './ProfileOptionsModal';
 
@@ -32,18 +32,30 @@ const MobileNavbar = ({ profilePicture }) => {
                 {mobileNavItems.map((item) => (
                     <li key={item.id}>
                         {item.id === 'profile' ? (
-                            <div onClick={handleProfileClick} className="mobile-profile-link" style={{ position: 'relative' }}>
-                                <img src={profilePicture} alt="Perfil" className="mobile-profile-img" />
+                            <div
+                                onClick={handleProfileClick}
+                                className="mobile-profile-link"
+                                style={{ position: 'relative' }}
+                            >
+                                <img
+                                    src={profilePicture}
+                                    alt="Perfil"
+                                    className="mobile-profile-img"
+                                />
                                 <span>{item.label}</span>
                                 {showProfileOptions && (
                                     <ProfileOptionsModal onClose={() => setShowProfileOptions(false)} />
                                 )}
                             </div>
                         ) : (
-                            <a href="/ControlPanel" className={activeMenu === item.id ? 'active' : ''}>
+                            <Link
+                                to="/ControlPanel"
+                                state={{ activeMenu: item.id }}
+                                className={activeMenu === item.id ? 'active' : ''}
+                            >
                                 {item.icon}
                                 <span>{item.label}</span>
-                            </a>
+                            </Link>
                         )}
                     </li>
                 ))}
