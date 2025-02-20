@@ -7,10 +7,9 @@
 
 .profile-options-modal {
     position: absolute;
-    top: -247px;
-    width: 150px;
+    top: 50px;
+    right: 0;
     text-align: left;
-    right: -13px;
     background: #fff;
     border: 1px solid #ccc;
     color: #000;
@@ -24,7 +23,7 @@
     list-style: none;
     margin: 0;
     padding: 0;
-    display: block;
+    display: block !important;
 }
 
 .profile-options-modal li {
@@ -381,6 +380,21 @@
 }
 
 @media (max-width: 480px) {
+
+    .profile-options-modal {
+        position: absolute;
+        top: -247px;
+        width: 150px;
+        text-align: left;
+        right: -13px;
+        background: #fff;
+        border: 1px solid #ccc;
+        color: #000;
+        border-radius: 4px;
+        box-shadow: 0 2px 8px #00000026;
+        z-index: 9900;
+        padding: 10px;
+    }
 
     .dashboard-main {
         margin-left: 0;
