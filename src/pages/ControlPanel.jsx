@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Layout from '../components/controlPanel/Layout';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './css/control-panel.css';
@@ -6,6 +6,7 @@ import './css/control-panel.css';
 const ControlPanel = () => {
     const location = useLocation();
     const navigate = useNavigate();
+    const [randomIndices, setRandomIndices] = useState([]);
 
     useEffect(() => {
         const params = new URLSearchParams(location.search);
@@ -15,6 +16,19 @@ const ControlPanel = () => {
         }
     }, [location, navigate]);
 
+    // Generamos un array de índices de fotos (0 a 29) y repetimos hasta tener 80 elementos
+    useEffect(() => {
+        let result = [];
+        while (result.length < 80) {
+            // Crea un bloque con 30 índices y desordénalo
+            const indices = Array.from({ length: 30 }, (_, i) => i);
+            const shuffled = indices.sort(() => Math.random() - 0.5);
+            result = result.concat(shuffled);
+        }
+        // Recorta el array para que tenga exactamente 80 elementos
+        setRandomIndices(result.slice(0, 80));
+    }, []);
+
     const activeMenu = location.state?.activeMenu || 'explorer';
 
     const renderContent = () => {
@@ -23,8 +37,8 @@ const ControlPanel = () => {
                 return (
                     <div>
                         <div className="explorer-gallery">
-                            {[...Array(30)].map((_, i) => (
-                                <div className="masonry-item" key={i}>
+                            {randomIndices.map((i, index) => (
+                                <div className="masonry-item" key={index}>
                                     <img src={`/multimedia/mansory/foto${i + 1}.jpg`} alt={`Foto ${i + 1}`} />
                                     <div className="overlay">
                                         <button className="save-btn">Guardar</button>
