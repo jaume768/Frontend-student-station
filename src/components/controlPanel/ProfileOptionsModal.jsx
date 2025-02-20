@@ -4,7 +4,7 @@ import React from 'react';
 const ProfileOptionsModal = ({ onClose }) => {
     return (
         <div className="profile-options-modal">
-            <ul>
+            <ul className='profile-options-modal-ul'>
                 <li>Mi perfil</li>
                 <li>Editar perfil</li>
                 <li>Mi comunidad</li>

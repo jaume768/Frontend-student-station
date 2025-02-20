@@ -399,10 +399,6 @@
         list-style: none;
     }
 
-    .mobile-navbar li {
-        text-align: center;
-    }
-
     .mobile-navbar a {
         display: flex;
         flex-direction: column;
@@ -502,21 +498,24 @@
 
 .profile-options-modal {
     position: absolute;
-    top: 50px;
-    right: 0;
-    background: white;
+    top: -247px;
+    width: 150px;
+    text-align: left;
+    right: -13px;
+    background: #fff;
     border: 1px solid #ccc;
-    color: black;
+    color: #000;
     border-radius: 4px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 2px 8px #00000026;
     z-index: 9900;
     padding: 10px;
 }
 
-.profile-options-modal ul {
+.profile-options-modal-ul {
     list-style: none;
     margin: 0;
     padding: 0;
+    display: block;
 }
 
 .profile-options-modal li {
@@ -526,4 +525,12 @@
 
 .profile-options-modal li:hover {
     background-color: #f0f0f0;
+}
+
+.mobile-profile-link{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.75em;
 }
