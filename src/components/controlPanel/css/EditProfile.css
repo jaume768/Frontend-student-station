@@ -255,11 +255,20 @@
 @media (max-width: 768px) {
     .profile-section {
         flex-direction: column;
-        width: 350px;
+        width: 100%;
+    }
+
+    .edit-profile-wrapper {
+        padding: 0.5em;
+        max-width: 400px;
     }
 
     .profile-body {
         flex-direction: column;
+    }
+
+    .option {
+        padding:0.7em;
     }
 
     .profile-info {
