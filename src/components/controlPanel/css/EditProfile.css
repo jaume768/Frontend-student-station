@@ -1,3 +1,5 @@
+/* EditProfile.css */
+
 /* Contenedor principal del EditProfile */
 .edit-profile-wrapper {
     max-width: 1200px;
@@ -117,21 +119,43 @@
     border-radius: 8px;
     cursor: pointer;
     font-weight: 500;
+    background: #fff;
+    /* fondo por defecto */
+    color: #777;
+    /* color de texto por defecto */
 }
 
 .option-icon {
     font-size: 1.2rem;
 }
 
+/* Estilo para “Editar mi perfil” */
 .option-edit {
     background: #e5eeff;
     color: #4c85ff;
 }
 
+/* Estilo para “Mis ofertas” y “Configuración” */
 .option-offers,
 .option-settings {
     background: #fff;
     color: #777;
+}
+
+/* Estilos para la opción activa */
+.left-options .option.active {
+    background: #4c85ff;
+    color: #fff;
+}
+
+.left-options .option.active .option-icon {
+    color: #fff;
+}
+
+/* Hover en opciones (excepto la activa) */
+.left-options .option:hover:not(.active) {
+    background: #e5eeff;
+    color: #4c85ff;
 }
 
 /* Columna derecha: Formularios */
@@ -252,7 +276,7 @@
     color: #3e8a61;
 }
 
-/* Fila para botones en sección educativa (y similares) */
+/* Fila para botones en sección educativa (y secciones similares) */
 .button-row {
     display: flex;
     width: 100%;
