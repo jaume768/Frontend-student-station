@@ -278,7 +278,7 @@ const EditProfile = () => {
                             </section>
 
                             {/* 3.3 Información educativa y Formación autodidacta unificadas */}
-                            <section className="form-section">
+                            <section className="form-section-final">
                                 <h3>Información educativa y formación</h3>
                                 <div className="form-group">
                                     <label>Institución educativa</label>
