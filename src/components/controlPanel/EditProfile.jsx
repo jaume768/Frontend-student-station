@@ -579,9 +579,6 @@ const EditProfile = () => {
                                         <span className="upload-icon">📤</span>
                                     </div>
                                 </div>
-                                <div className="button-container">
-                                    <EditButton onClick={() => { /* Guardar CV y Portfolio */ }} />
-                                </div>
                             </section>
                         </div>
                     </div>

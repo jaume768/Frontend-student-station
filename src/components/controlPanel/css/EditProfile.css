@@ -358,4 +358,8 @@
         display: none;
         margin-top: 10px;
     }
+
+    .form-section-final {
+        margin-bottom: 80px;
+    }
 }
