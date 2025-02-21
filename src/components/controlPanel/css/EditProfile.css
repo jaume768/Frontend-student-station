@@ -24,7 +24,7 @@
     justify-content: space-between;
 }
 
-/* Estilo sticky para banner y left-options en PC */
+/* Sticky en PC para banner y left-options */
 @media (min-width: 769px) {
     .profile-banner {
         position: sticky;
@@ -43,7 +43,7 @@
     }
 }
 
-/* Dentro del banner, división en dos áreas */
+/* Banner interno */
 .banner-left {
     display: flex;
     gap: 1rem;
@@ -82,7 +82,6 @@
     color: #777;
 }
 
-/* Banner derecho */
 .banner-right {
     align-self: flex-end;
 }
@@ -159,23 +158,14 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-.form-section-fina h3 {
+.form-section h3,
+.form-section-final h3 {
     margin-bottom: 0.8rem;
     font-size: 1.2rem;
 }
 
-.form-section-fina h4 {
-    margin-bottom: 0.5rem;
-    font-size: 1rem;
-    color: #555;
-}
-
-.form-section h3 {
-    margin-bottom: 0.8rem;
-    font-size: 1.2rem;
-}
-
-.form-section h4 {
+.form-section h4,
+.form-section-final h4 {
     margin-bottom: 0.5rem;
     font-size: 1rem;
     color: #555;
@@ -262,7 +252,7 @@
     color: #3e8a61;
 }
 
-/* Fila para botones en sección educativa */
+/* Fila para botones en sección educativa (y similares) */
 .button-row {
     display: flex;
     width: 100%;
@@ -271,27 +261,62 @@
     gap: 1rem;
 }
 
-.add-formation {
-    background: #ccc;
+/* Estilos para las etiquetas (tags) */
+.tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.tag {
+    background: #01a8e9;
     color: #fff;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
+    padding: 0.3rem 0.5rem;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.remove-tag {
+    margin-left: 0.3rem;
     cursor: pointer;
 }
 
-/* Botón principal para guardar todo el perfil */
-.submit-profile {
-    background: #08b599;
-    color: #fff;
-    border: none;
-    padding: 0.8rem 1.5rem;
-    border-radius: 8px;
-    font-size: 1rem;
+.popular-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.popular-tag {
+    background: #eee;
+    color: #000;
+    padding: 0.3rem 0.5rem;
+    border-radius: 4px;
     cursor: pointer;
-    margin-top: 1rem;
-    width: 100%;
-    display: block;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+}
+
+.add-tag {
+    margin-left: 0.3rem;
+    color: #01a8e9;
+    font-weight: bold;
+}
+
+/* Estilos para file inputs */
+.file-input {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.upload-icon {
+    font-size: 1.2rem;
 }
 
 /* Responsividad para móvil */
