@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
 import { FaCompass, FaUsers, FaBookmark } from 'react-icons/fa';
+import ProfileOptionsModal from './ProfileOptionsModal';
 
 const mobileNavItems = [
     { id: 'explorer', icon: <FaCompass />, label: 'Explorar' },
@@ -12,8 +13,32 @@ const mobileNavItems = [
 const MobileNavbar = ({ profilePicture }) => {
     const location = useLocation();
     const navigate = useNavigate();
+    const [showProfileOptions, setShowProfileOptions] = useState(false);
     const activeMenu = location.state?.activeMenu || 'explorer';
     const token = localStorage.getItem('authToken');
+
+    const handleProfileClick = (e) => {
+        e.preventDefault();
+        if (!token) {
+            navigate('/', { state: { showRegister: true } });
+        } else {
+            setShowProfileOptions((prev) => !prev);
+        }
+    };
+
+    const handleOptionSelect = (option) => {
+        setShowProfileOptions(false);
+        switch (option) {
+            case 'editProfile':
+                navigate('/ControlPanel', { state: { activeMenu: 'editProfile' } });
+                break;
+            case 'profile':
+                navigate('/ControlPanel', { state: { activeMenu: 'profile' } });
+                break;
+            default:
+                break;
+        }
+    };
 
     return (
         <nav className="mobile-navbar">
@@ -21,33 +46,24 @@ const MobileNavbar = ({ profilePicture }) => {
                 {mobileNavItems.map((item) => (
                     <li key={item.id}>
                         {item.id === 'profile' ? (
-                            token ? (
-                                <Link
-                                    to="/ControlPanel"
-                                    state={{ activeMenu: 'editProfile' }}
-                                    className={`mobile-profile-link ${activeMenu === 'editProfile' ? 'active' : ''}`}
-                                >
-                                    <img
-                                        src={profilePicture}
-                                        alt="Perfil"
-                                        className="mobile-profile-img"
+                            <div
+                                onClick={handleProfileClick}
+                                className="mobile-profile-link"
+                                style={{ position: 'relative' }}
+                            >
+                                <img
+                                    src={profilePicture}
+                                    alt="Perfil"
+                                    className="mobile-profile-img"
+                                />
+                                <span>{item.label}</span>
+                                {showProfileOptions && (
+                                    <ProfileOptionsModal
+                                        onClose={() => setShowProfileOptions(false)}
+                                        onSelectOption={handleOptionSelect}
                                     />
-                                    <span>{item.label}</span>
-                                </Link>
-                            ) : (
-                                <div
-                                    onClick={() => navigate('/', { state: { showRegister: true } })}
-                                    className="mobile-profile-link"
-                                    style={{ position: 'relative' }}
-                                >
-                                    <img
-                                        src={profilePicture}
-                                        alt="Perfil"
-                                        className="mobile-profile-img"
-                                    />
-                                    <span>{item.label}</span>
-                                </div>
-                            )
+                                )}
+                            </div>
                         ) : (
                             <Link
                                 to="/ControlPanel"
