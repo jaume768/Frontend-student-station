@@ -252,7 +252,7 @@
 }
 
 /* Responsividad: Ajustes para pantallas más pequeñas */
-@media (max-width: 768px) {
+@media (max-width: 568px) {
     .profile-section {
         flex-direction: column;
         width: 100%;
@@ -260,7 +260,7 @@
 
     .edit-profile-wrapper {
         padding: 0.5em;
-        max-width: 400px;
+        max-width: 360px;
     }
 
     .profile-body {
@@ -278,6 +278,7 @@
     .left-options {
         width: 100%;
         flex-direction: row;
+        font-size: 0.75em;
         justify-content: space-around;
     }
 
@@ -286,6 +287,7 @@
     }
 
     .banner-right {
+        display: none;
         margin-top: 10px;
     }
 }
