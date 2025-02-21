@@ -549,3 +549,9 @@
         transform: translateX(0);
     }
 }
+
+@media (min-width: 769px) {
+    .overflow-hidden-desktop {
+        overflow: hidden;
+    }
+}

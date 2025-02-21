@@ -4,7 +4,7 @@ import Header from './Header';
 import MobileNavbar from './MobileNavbar';
 import MobileSideMenu from './MobileSideMenu';
 
-const Layout = ({ children }) => {
+const Layout = ({ children, contentClassName }) => {
     const [sideMenuOpen, setSideMenuOpen] = useState(false);
     const [profilePicture, setProfilePicture] = useState('/multimedia/usuarioDefault.jpg');
 
@@ -17,7 +17,7 @@ const Layout = ({ children }) => {
                 const response = await fetch(`${backendUrl}/api/users/profile`, {
                     headers: { 'Authorization': `Bearer ${token}` },
                     cache: 'no-store'
-                });                
+                });
                 if (response.ok) {
                     const data = await response.json();
                     if (data?.profile?.profilePicture) {
@@ -42,8 +42,8 @@ const Layout = ({ children }) => {
             <Sidebar />
             <div className="dashboard-main">
                 <Header profilePicture={profilePicture} onHamburgerClick={toggleSideMenu} />
-                <main className="dashboard-content">{children}</main>
-                <MobileNavbar profilePicture={profilePicture}/>
+                <main className={`dashboard-content ${contentClassName}`}>{children}</main>
+                <MobileNavbar profilePicture={profilePicture} />
             </div>
             {sideMenuOpen && <MobileSideMenu onClose={closeSideMenu} />}
         </div>

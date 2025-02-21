@@ -100,17 +100,17 @@ const ControlPanel = () => {
             case 'editProfile':
                 return <EditProfile />;
             default:
-              return (
-                <div>
-                  <h1>Contenido por defecto</h1>
-                  <p>Este es el contenido por defecto.</p>
-                </div>
-              );
+                return (
+                    <div>
+                        <h1>Contenido por defecto</h1>
+                        <p>Este es el contenido por defecto.</p>
+                    </div>
+                );
         }
     };
 
     return (
-        <Layout>
+        <Layout contentClassName={activeMenu === 'editProfile' ? 'overflow-hidden-desktop' : ''}>
             {renderContent()}
         </Layout>
     );
