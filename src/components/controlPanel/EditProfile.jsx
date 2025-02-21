@@ -62,7 +62,6 @@ const EditProfile = () => {
     });
     const [selfTaught, setSelfTaught] = useState(false);
 
-    // Al montar el componente, se obtiene el perfil del usuario logeado
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
@@ -74,7 +73,6 @@ const EditProfile = () => {
                 });
                 const user = response.data;
 
-                // Actualizamos el estado userData con la información recibida
                 setUserData({
                     profilePicture: user.profile.profilePicture || '/multimedia/usuarioDefault.jpg',
                     fullName: user.fullName,
@@ -88,7 +86,6 @@ const EditProfile = () => {
                     },
                 });
 
-                // Si deseas dividir el nombre completo en nombre y apellidos
                 if (user.fullName) {
                     const names = user.fullName.split(' ');
                     setBasicInfo({
@@ -98,7 +95,6 @@ const EditProfile = () => {
                         city: user.city || '',
                     });
                 }
-                // Puedes usar también el resumen profesional del backend
                 setProfessionalSummary(user.profile.summary || '');
             } catch (error) {
                 console.error('Error al obtener el perfil:', error);
@@ -147,22 +143,18 @@ const EditProfile = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // Combina los datos a enviar según tu modelo y envía el formulario con axios
         console.log({ userData, basicInfo, professionalSummary, education, selfTaught });
         // Aquí podrías realizar un PUT a /api/users/profile con los datos actualizados
     };
 
-    // Para los inputs tipo date, se define el máximo como la fecha actual
     const currentDate = new Date().toISOString().split('T')[0];
 
-    // Opciones para el dropdown de países (15 países)
     const countryOptions = [
         "Estados Unidos", "Reino Unido", "Canadá", "Australia", "Alemania",
         "Francia", "España", "Italia", "China", "Japón", "Brasil", "México",
         "India", "Rusia", "Corea del Sur"
     ];
 
-    // Opciones para el dropdown de instituciones educativas (10 opciones inventadas)
     const institutionOptions = [
         "Universidad de Harvard", "Universidad de Oxford", "Universidad de Stanford",
         "MIT", "Universidad de Cambridge", "Universidad de Tokyo", "Universidad de Salamanca",
@@ -285,15 +277,16 @@ const EditProfile = () => {
                                 </div>
                             </section>
 
-                            {/* 3.3 Información educativa */}
+                            {/* 3.3 Información educativa y Formación autodidacta unificadas */}
                             <section className="form-section">
-                                <h3>Información educativa</h3>
+                                <h3>Información educativa y formación</h3>
                                 <div className="form-group">
                                     <label>Institución educativa</label>
                                     <select
                                         name="institution"
                                         value={education.institution}
                                         onChange={handleEducationChange}
+                                        disabled={selfTaught}
                                     >
                                         <option value="">Selecciona una opción</option>
                                         {institutionOptions.map((inst, index) => (
@@ -309,6 +302,7 @@ const EditProfile = () => {
                                         placeholder="Introduce el nombre de tu escuela o universidad"
                                         value={education.otherInstitution}
                                         onChange={handleEducationChange}
+                                        disabled={selfTaught}
                                     />
                                     <small className="info-text">
                                         Por el momento contamos con un número limitado de escuelas y universidades.
@@ -322,6 +316,7 @@ const EditProfile = () => {
                                         placeholder="Introduce el nombre de la formación"
                                         value={education.formationName}
                                         onChange={handleEducationChange}
+                                        disabled={selfTaught}
                                     />
                                 </div>
                                 <div className="form-group date-group">
@@ -334,6 +329,7 @@ const EditProfile = () => {
                                         onChange={handleEducationChange}
                                         min="1940-01-01"
                                         max={currentDate}
+                                        disabled={selfTaught}
                                     />
                                 </div>
                                 <div className="form-group date-group">
@@ -346,6 +342,7 @@ const EditProfile = () => {
                                         onChange={handleEducationChange}
                                         min="1940-01-01"
                                         max={currentDate}
+                                        disabled={selfTaught || education.currentlyEnrolled}
                                     />
                                 </div>
                                 <div className="form-group checkbox-group">
@@ -361,18 +358,12 @@ const EditProfile = () => {
                                 </div>
                                 <div className="button-row">
                                     <div className="button-container">
-                                        <button type="button" className="add-formation">+ Añadir formación</button>
+                                        <button type="button" className="add-formation">
+                                            + Añadir formación
+                                        </button>
                                         <EditButton onClick={() => { /* Lógica para guardar educación */ }} />
                                     </div>
                                 </div>
-                                <small className="info-text">
-                                    Por el momento puedes añadir hasta un máximo de tres.
-                                </small>
-                            </section>
-
-                            {/* Formación autodidacta */}
-                            <section className="form-section">
-                                <h3>Formación autodidacta</h3>
                                 <div className="form-group checkbox-group">
                                     <label>
                                         <input
@@ -384,6 +375,9 @@ const EditProfile = () => {
                                         He adquirido todos mis conocimientos de forma autodidacta
                                     </label>
                                 </div>
+                                <small className="info-text">
+                                    Por el momento puedes añadir hasta un máximo de tres.
+                                </small>
                             </section>
                         </div>
                     </div>

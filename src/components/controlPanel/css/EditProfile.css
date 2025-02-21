@@ -14,16 +14,33 @@
     gap: 1rem;
 }
 
-/* Banner principal: ocupa la columna izquierda */
+/* Banner principal */
 .profile-banner {
-    flex: 1;
     background: #f9f9f9;
     border-radius: 12px;
     padding: 1rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    /* Para que su alto sea igual al de la columna derecha */
+}
+
+/* Estilo sticky para banner y left-options en PC */
+@media (min-width: 769px) {
+    .profile-banner {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    .left-options {
+        position: sticky;
+        top: 120px;
+    }
+
+    .right-form {
+        overflow-y: auto;
+        max-height: calc(100vh - 120px);
+    }
 }
 
 /* Dentro del banner, división en dos áreas */
@@ -65,7 +82,7 @@
     color: #777;
 }
 
-/* Banner derecho: badge para creativeType */
+/* Banner derecho */
 .banner-right {
     align-self: flex-end;
 }
@@ -78,9 +95,8 @@
     font-weight: 500;
 }
 
-/* Cuerpo del perfil: columna izquierda (opciones) y derecha (formularios) */
+/* Cuerpo del perfil: dos columnas */
 .profile-body {
-    flex: 2;
     display: flex;
     gap: 1rem;
     margin-top: 1rem;
@@ -108,13 +124,11 @@
     font-size: 1.2rem;
 }
 
-/* Estilo para “Editar mi perfil” */
 .option-edit {
     background: #e5eeff;
     color: #4c85ff;
 }
 
-/* Estilo para “Mis ofertas” y “Configuración” */
 .option-offers,
 .option-settings {
     background: #fff;
@@ -172,16 +186,22 @@
 .form-group textarea {
     padding: 0.6rem;
     color: #777;
-    border: 1px solid #cccccc00;
     background-color: white;
+    border: 1px solid transparent;
     border-radius: 8px;
     font-size: 1rem;
+}
+
+.form-group input:disabled,
+.form-group select:disabled,
+.form-group textarea:disabled {
+    background-color: #e0e0e0;
+    cursor: not-allowed;
 }
 
 .form-group textarea {
     resize: vertical;
     min-height: 150px;
-    margin-bottom: 100px;
 }
 
 /* Grupo de fechas */
@@ -197,7 +217,7 @@
     font-size: 0.95rem;
 }
 
-/* Texto de información auxiliar */
+/* Texto auxiliar */
 .info-text {
     font-size: 0.85rem;
     color: #4c85ff;
@@ -221,7 +241,7 @@
     color: #3e8a61;
 }
 
-/* Fila para “+ Añadir formación” y botón de editar al lado */
+/* Fila para botones en sección educativa */
 .button-row {
     display: flex;
     align-items: center;
@@ -251,7 +271,7 @@
     display: block;
 }
 
-/* Responsividad: Ajustes para pantallas más pequeñas */
+/* Responsividad para móvil */
 @media (max-width: 568px) {
     .profile-section {
         flex-direction: column;
@@ -268,7 +288,7 @@
     }
 
     .option {
-        padding:0.7em;
+        padding: 0.7em;
     }
 
     .profile-info {
