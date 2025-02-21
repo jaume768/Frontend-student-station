@@ -198,6 +198,8 @@
     display: flex;
     justify-content: flex-end;
     margin-top: 1rem;
+    gap: 1em;
+    margin-bottom: 20px;
 }
 
 .form-group input,
@@ -263,6 +265,8 @@
 /* Fila para botones en sección educativa */
 .button-row {
     display: flex;
+    width: 100%;
+    justify-content: flex-end;
     align-items: center;
     gap: 1rem;
 }
