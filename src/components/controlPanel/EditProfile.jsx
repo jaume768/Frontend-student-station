@@ -384,7 +384,7 @@ const EditProfile = () => {
                                     <label>Finalización de la formación</label>
                                     <input type="date" name="formationEnd" placeholder="dd / mm / yyyy" value={education.formationEnd} onChange={handleEducationChange} min="1940-01-01" max={currentDate} disabled={selfTaught || education.currentlyEnrolled} />
                                 </div>
-                                <div className="form-group checkbox-group">
+                                <div className="form-group checkbox-group-search">
                                     <label>
                                         <input type="checkbox" name="currentlyEnrolled" checked={education.currentlyEnrolled} onChange={handleEducationChange} />
                                         Actualmente me encuentro en esta formación
@@ -396,7 +396,7 @@ const EditProfile = () => {
                                         <EditButton onClick={() => { /* Guardar educación */ }} />
                                     </div>
                                 </div>
-                                <div className="form-group checkbox-group">
+                                <div className="form-group checkbox-group-search">
                                     <label>
                                         <input type="checkbox" name="selfTaught" checked={selfTaught} onChange={handleSelfTaughtChange} />
                                         He adquirido todos mis conocimientos de forma autodidacta
@@ -487,7 +487,7 @@ const EditProfile = () => {
                             <section className="form-section">
                                 <h3>En busca de...</h3>
                                 <h4>Tipo de contrato</h4>
-                                <div className="form-group checkbox-group">
+                                <div className="form-group checkbox-group-search">
                                     <label>
                                         <input type="checkbox" name="practicas" checked={contract.practicas} onChange={handleContractChange} />
                                         Prácticas
@@ -502,7 +502,7 @@ const EditProfile = () => {
                                     </label>
                                 </div>
                                 <h4>Tipo de ubicación</h4>
-                                <div className="form-group checkbox-group">
+                                <div className="form-group checkbox-group-search">
                                     <label>
                                         <input type="checkbox" name="presencial" checked={locationType.presencial} onChange={handleLocationChange} />
                                         Presencial

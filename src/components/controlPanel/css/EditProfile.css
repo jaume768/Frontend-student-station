@@ -221,9 +221,9 @@
 }
 
 /* Grupo de checkbox */
-.checkbox-group {
+.checkbox-group-search {
     display: flex;
-    align-items: center;
+    align-items: left;
     gap: 0.5rem;
     font-size: 0.95rem;
 }
