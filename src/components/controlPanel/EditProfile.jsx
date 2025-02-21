@@ -3,7 +3,17 @@ import axios from 'axios';
 import { FaPencilAlt, FaBriefcase, FaCog } from 'react-icons/fa';
 import './css/EditProfile.css';
 
-// Botón reutilizable para “Editar datos” que cambia al hacer hover
+const getCreativeTypeText = (type) => {
+    switch (type) {
+        case 1: return "Estudiante";
+        case 2: return "Graduado";
+        case 3: return "Estilista";
+        case 4: return "Diseñador de marca";
+        case 5: return "Otro";
+        default: return "";
+    }
+};
+
 const EditButton = ({ onClick }) => {
     const [hover, setHover] = useState(false);
     return (
@@ -20,7 +30,7 @@ const EditButton = ({ onClick }) => {
 };
 
 const EditProfile = () => {
-    // Datos del banner (simulados o provenientes del backend)
+    // Estado inicial simulado; luego se actualiza con datos reales del backend
     const [userData, setUserData] = useState({
         profilePicture: '/multimedia/usuarioDefault.jpg',
         fullName: 'Nombre Apellido',
@@ -34,18 +44,14 @@ const EditProfile = () => {
         },
     });
 
-    // Estados para la sección “Información básica”
+    // Estados para otras secciones del formulario
     const [basicInfo, setBasicInfo] = useState({
         firstName: '',
         lastName: '',
         country: '',
         city: '',
     });
-
-    // Estado para “Resumen profesional”
     const [professionalSummary, setProfessionalSummary] = useState('');
-
-    // Estado para “Información educativa”
     const [education, setEducation] = useState({
         institution: '',
         otherInstitution: '',
@@ -54,13 +60,52 @@ const EditProfile = () => {
         formationEnd: '',
         currentlyEnrolled: false,
     });
-
-    // Estado para “Formación autodidacta”
     const [selfTaught, setSelfTaught] = useState(false);
 
+    // Al montar el componente, se obtiene el perfil del usuario logeado
     useEffect(() => {
-        // Aquí iría tu llamada a axios para obtener el perfil
-        // Por ejemplo: fetchUserProfile();
+        const fetchUserProfile = async () => {
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) return;
+                const backendUrl = import.meta.env.VITE_BACKEND_URL;
+                const response = await axios.get(`${backendUrl}/api/users/profile`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                const user = response.data;
+
+                // Actualizamos el estado userData con la información recibida
+                setUserData({
+                    profilePicture: user.profile.profilePicture || '/multimedia/usuarioDefault.jpg',
+                    fullName: user.fullName,
+                    username: user.username,
+                    city: user.city,
+                    country: user.country,
+                    email: user.email,
+                    creativeType: getCreativeTypeText(user.creativeType),
+                    profile: {
+                        summary: user.profile.summary || '',
+                    },
+                });
+
+                // Si deseas dividir el nombre completo en nombre y apellidos
+                if (user.fullName) {
+                    const names = user.fullName.split(' ');
+                    setBasicInfo({
+                        firstName: names[0] || '',
+                        lastName: names.slice(1).join(' ') || '',
+                        country: user.country || '',
+                        city: user.city || '',
+                    });
+                }
+                // Puedes usar también el resumen profesional del backend
+                setProfessionalSummary(user.profile.summary || '');
+            } catch (error) {
+                console.error('Error al obtener el perfil:', error);
+            }
+        };
+
+        fetchUserProfile();
     }, []);
 
     const handleUserDataChange = (e) => {
@@ -102,8 +147,9 @@ const EditProfile = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // Aquí combinarías todos los datos y enviarías el formulario mediante axios
+        // Combina los datos a enviar según tu modelo y envía el formulario con axios
         console.log({ userData, basicInfo, professionalSummary, education, selfTaught });
+        // Aquí podrías realizar un PUT a /api/users/profile con los datos actualizados
     };
 
     // Para los inputs tipo date, se define el máximo como la fecha actual
@@ -126,7 +172,6 @@ const EditProfile = () => {
     return (
         <div className="edit-profile-wrapper">
             <form onSubmit={handleSubmit}>
-                {/* Sección del banner y el cuerpo del perfil */}
                 <div className="profile-section">
                     {/* Banner principal */}
                     <div className="profile-banner">
@@ -150,7 +195,6 @@ const EditProfile = () => {
 
                     {/* Cuerpo del perfil: opciones y formulario */}
                     <div className="profile-body">
-                        {/* Columna izquierda: Opciones */}
                         <div className="left-options">
                             <div className="option option-edit">
                                 <FaPencilAlt className="option-icon" />
@@ -166,6 +210,7 @@ const EditProfile = () => {
                             </div>
                         </div>
                         <div className="right-form">
+                            {/* 3.1 Información básica */}
                             <section className="form-section">
                                 <h3>Información básica</h3>
                                 <div className="form-group">
@@ -236,7 +281,7 @@ const EditProfile = () => {
                                     </small>
                                 </div>
                                 <div className="button-container">
-                                    <EditButton onClick={() => { /* Lógica para guardar básicos */ }} />
+                                    <EditButton onClick={() => { /* Lógica para guardar resumen */ }} />
                                 </div>
                             </section>
 
@@ -317,7 +362,7 @@ const EditProfile = () => {
                                 <div className="button-row">
                                     <div className="button-container">
                                         <button type="button" className="add-formation">+ Añadir formación</button>
-                                        <EditButton onClick={() => { /* Lógica para guardar básicos */ }} />
+                                        <EditButton onClick={() => { /* Lógica para guardar educación */ }} />
                                     </div>
                                 </div>
                                 <small className="info-text">
