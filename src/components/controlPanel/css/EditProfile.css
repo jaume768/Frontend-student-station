@@ -255,15 +255,28 @@
 @media (max-width: 768px) {
     .profile-section {
         flex-direction: column;
+        width: 350px;
     }
 
     .profile-body {
         flex-direction: column;
     }
 
+    .profile-info {
+        text-align: center;
+    }
+
     .left-options {
         width: 100%;
         flex-direction: row;
         justify-content: space-around;
+    }
+
+    .banner-left {
+        flex-direction: column;
+    }
+
+    .banner-right {
+        margin-top: 10px;
     }
 }
