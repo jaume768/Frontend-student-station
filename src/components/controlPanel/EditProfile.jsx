@@ -165,9 +165,7 @@ const EditProfile = () => {
                                 <span>Configuración</span>
                             </div>
                         </div>
-                        {/* Columna derecha: Formularios */}
                         <div className="right-form">
-                            {/* 3.1 Información básica */}
                             <section className="form-section">
                                 <h3>Información básica</h3>
                                 <div className="form-group">
@@ -213,7 +211,9 @@ const EditProfile = () => {
                                         onChange={handleBasicInfoChange}
                                     />
                                 </div>
-                                <EditButton onClick={() => { /* Lógica para guardar básicos */ }} />
+                                <div className="button-container">
+                                    <EditButton onClick={() => { /* Lógica para guardar básicos */ }} />
+                                </div>
                             </section>
 
                             {/* 3.2 Resumen profesional */}
@@ -235,7 +235,9 @@ const EditProfile = () => {
                                         {professionalSummary.length === 350 ? "Tu texto supera los 350 caracteres" : "Debe tener un máximo de 350 caracteres"}
                                     </small>
                                 </div>
-                                <EditButton onClick={() => { /* Lógica para guardar resumen */ }} />
+                                <div className="button-container">
+                                    <EditButton onClick={() => { /* Lógica para guardar básicos */ }} />
+                                </div>
                             </section>
 
                             {/* 3.3 Información educativa */}
@@ -313,8 +315,10 @@ const EditProfile = () => {
                                     </label>
                                 </div>
                                 <div className="button-row">
-                                    <button type="button" className="add-formation">+ Añadir formación</button>
-                                    <EditButton onClick={() => { /* Lógica para guardar educación */ }} />
+                                    <div className="button-container">
+                                        <button type="button" className="add-formation">+ Añadir formación</button>
+                                        <EditButton onClick={() => { /* Lógica para guardar básicos */ }} />
+                                    </div>
                                 </div>
                                 <small className="info-text">
                                     Por el momento puedes añadir hasta un máximo de tres.
@@ -339,7 +343,6 @@ const EditProfile = () => {
                         </div>
                     </div>
                 </div>
-                <button type="submit" className="submit-profile">Guardar cambios</button>
             </form>
         </div>
     );

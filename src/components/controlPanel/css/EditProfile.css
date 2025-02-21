@@ -161,12 +161,18 @@
     color: #000;
 }
 
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1rem;
+}
+
 .form-group input,
 .form-group select,
 .form-group textarea {
     padding: 0.6rem;
     color: #777;
-    border: 1px solid #ccc;
+    border: 1px solid #cccccc00;
     background-color: white;
     border-radius: 8px;
     font-size: 1rem;
@@ -175,6 +181,7 @@
 .form-group textarea {
     resize: vertical;
     min-height: 150px;
+    margin-bottom: 100px;
 }
 
 /* Grupo de fechas */
