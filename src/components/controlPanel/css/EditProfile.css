@@ -142,6 +142,10 @@
     color: #777;
 }
 
+.checkbox-group-search input[type="checkbox"] {
+    margin-right: 0.5rem;
+}
+
 /* Estilos para la opción activa */
 .left-options .option.active {
     background: #4c85ff;
