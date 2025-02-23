@@ -25,6 +25,10 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
             case 'profile':
                 navigate('/ControlPanel', { state: { activeMenu: 'profile' } });
                 break;
+            case 'logout':
+                localStorage.removeItem('authToken');
+                navigate('/');
+                break;
             default:
                 break;
         }
