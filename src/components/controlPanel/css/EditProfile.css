@@ -129,12 +129,6 @@
     font-size: 1.2rem;
 }
 
-/* Estilo para “Editar mi perfil” */
-.option-edit {
-    background: #e5eeff;
-    color: #4c85ff;
-}
-
 /* Estilo para “Mis ofertas” y “Configuración” */
 .option-offers,
 .option-settings {

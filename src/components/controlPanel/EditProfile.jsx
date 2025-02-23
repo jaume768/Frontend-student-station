@@ -260,7 +260,7 @@ const EditProfile = () => {
                     <div className="profile-body">
                         <div className="left-options">
                             <div
-                                className={`option option-edit ${activeOption === "editProfile" ? "active" : ""}`}
+                                className={`option ${activeOption === "editProfile" ? "active" : ""}`}
                                 onClick={() => setActiveOption("editProfile")}
                             >
                                 <FaPencilAlt className="option-icon" />
