@@ -89,9 +89,14 @@
     .mycomunity-grid {
         grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
         width: 20em;
+        margin-bottom: 60px;
     }
 
     .mycomunity-container {
-        width: 20em;
+        width: 23em;
+    }
+
+    .mycomunity-tabs {
+        width: 350px;
     }
 }

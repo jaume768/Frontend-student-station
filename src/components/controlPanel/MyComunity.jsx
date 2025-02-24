@@ -25,7 +25,9 @@ const MyComunity = () => {
 
     return (
         <div className="mycomunity-container">
-            <h1 className="mycomunity-title">Mi comunidad &gt; Perfiles que sigues</h1>
+            <h1 className="mycomunity-title">
+                Mi comunidad &gt; {activeTab === 'seguidos' ? 'Perfiles que sigues' : 'Perfiles que te siguen'}
+            </h1>
 
             {/* Contenedor de pestañas centrado */}
             <div className="mycomunity-tabs">
