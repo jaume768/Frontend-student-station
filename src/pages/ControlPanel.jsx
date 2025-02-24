@@ -10,6 +10,7 @@ const ControlPanel = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [randomIndices, setRandomIndices] = useState([]);
+    
 
     useEffect(() => {
         const params = new URLSearchParams(location.search);
