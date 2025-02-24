@@ -93,7 +93,8 @@
     }
 
     .mycomunity-container {
-        width: 23em;
+        width: 22em;
+        padding: 10px;
     }
 
     .mycomunity-tabs {
