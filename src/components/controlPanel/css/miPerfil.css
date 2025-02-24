@@ -185,7 +185,7 @@
 .miPerfil-projects-grid.gallery {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
+    gap: 7px;
 }
 
 .miPerfil-projects-grid.individual {
@@ -197,14 +197,14 @@
 
 .miPerfil-project-placeholder {
     background: #e9ecef;
-    height: 130px;
-    width: 130px;
+    height: 110px;
+    width: 110px;
     border-radius: 8px;
 }
 
 .miPerfil-projects-grid.individual .miPerfil-project-placeholder {
-    height: 400px;
-    width: 400px;
+    height: 380px;
+    width: 380px;
 }
 
 /* Botón para alternar vista de proyectos */
@@ -241,7 +241,7 @@
 /* Estilos para vista móvil */
 @media (max-width: 768px) {
     .miPerfil-container {
-        padding: 15px;
+        padding: 7px;
     }
 
     .miPerfil-mobile-tabs {
