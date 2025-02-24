@@ -14,23 +14,19 @@ const getCreativeTypeText = (type) => {
     }
 };
 
-const EditButton = ({ onClick }) => {
-    const [hover, setHover] = useState(false);
-    return (
-        <button
-            type="button"
-            className="edit-data-button"
-            onMouseEnter={() => setHover(true)}
-            onMouseLeave={() => setHover(false)}
-            onClick={onClick}
-        >
-            {hover ? "Guardar datos" : "Editar datos"}
-        </button>
-    );
-};
+// Componente de botón sin efecto hover, controlado por la prop "isEditing"
+const EditButton = ({ isEditing, onClick }) => (
+    <button
+        type="button"
+        className="edit-data-button"
+        onClick={onClick}
+    >
+        {isEditing ? "Guardar datos" : "Editar datos"}
+    </button>
+);
 
 const EditProfile = () => {
-    // Estado del perfil (banner y demás)
+    // Datos del perfil
     const [userData, setUserData] = useState({
         profilePicture: '/multimedia/usuarioDefault.jpg',
         fullName: 'Nombre Apellido',
@@ -51,7 +47,7 @@ const EditProfile = () => {
     });
     // Resumen profesional
     const [professionalSummary, setProfessionalSummary] = useState('');
-    // Educación y formación autodidacta
+    // Educación y formación
     const [education, setEducation] = useState({
         institution: '',
         otherInstitution: '',
@@ -61,7 +57,7 @@ const EditProfile = () => {
         currentlyEnrolled: false,
     });
     const [selfTaught, setSelfTaught] = useState(false);
-    // Sección Habilidades
+    // Habilidades
     const [skills, setSkills] = useState([]);
     const [newSkill, setNewSkill] = useState("");
     const [popularSkills, setPopularSkills] = useState([
@@ -72,7 +68,7 @@ const EditProfile = () => {
         "Organización de desfiles", "Gestión del tiempo", "Desarrollo de identidad de marca", "Comunicación visual",
         "Redacción y periodismo", "Aplicación textil", "Redacción descripción producto e-commerce"
     ]);
-    // Sección Software
+    // Software
     const [software, setSoftware] = useState([]);
     const [newSoftware, setNewSoftware] = useState("");
     const [popularSoftware, setPopularSoftware] = useState([
@@ -95,8 +91,17 @@ const EditProfile = () => {
         pinterest: ""
     });
 
-    // Estado para controlar la sección activa (por defecto Editar mi perfil)
+    // Control de sección activa (Editar perfil, Mis ofertas, Configuración)
     const [activeOption, setActiveOption] = useState("editProfile");
+
+    // Estados para controlar el modo edición de cada sección
+    const [isBasicEditing, setIsBasicEditing] = useState(false);
+    const [isSummaryEditing, setIsSummaryEditing] = useState(false);
+    const [isEducationEditing, setIsEducationEditing] = useState(false);
+    const [isHabilidadesEditing, setIsHabilidadesEditing] = useState(false);
+    const [isSoftwareEditing, setIsSoftwareEditing] = useState(false);
+    const [isEnBuscaEditing, setIsEnBuscaEditing] = useState(false);
+    const [isContactEditing, setIsContactEditing] = useState(false);
 
     useEffect(() => {
         const fetchUserProfile = async () => {
@@ -220,7 +225,7 @@ const EditProfile = () => {
             userData, basicInfo, professionalSummary, education, selfTaught,
             skills, software, contract, locationType, social
         });
-        // PUT a /api/users/profile con los datos actualizados
+        // Aquí se puede realizar el PUT a /api/users/profile con los datos actualizados
     };
 
     const currentDate = new Date().toISOString().split('T')[0];
@@ -289,15 +294,34 @@ const EditProfile = () => {
                                         <h3>Información básica</h3>
                                         <div className="form-group">
                                             <label>Nombre</label>
-                                            <input type="text" name="firstName" placeholder="Introduce tu nombre" value={basicInfo.firstName} onChange={handleBasicInfoChange} />
+                                            <input
+                                                type="text"
+                                                name="firstName"
+                                                placeholder="Introduce tu nombre"
+                                                value={basicInfo.firstName}
+                                                onChange={handleBasicInfoChange}
+                                                disabled={!isBasicEditing}
+                                            />
                                         </div>
                                         <div className="form-group">
                                             <label>Apellidos</label>
-                                            <input type="text" name="lastName" placeholder="Introduce tus apellidos" value={basicInfo.lastName} onChange={handleBasicInfoChange} />
+                                            <input
+                                                type="text"
+                                                name="lastName"
+                                                placeholder="Introduce tus apellidos"
+                                                value={basicInfo.lastName}
+                                                onChange={handleBasicInfoChange}
+                                                disabled={!isBasicEditing}
+                                            />
                                         </div>
                                         <div className="form-group">
                                             <label>País de residencia</label>
-                                            <select name="country" value={basicInfo.country} onChange={handleBasicInfoChange}>
+                                            <select
+                                                name="country"
+                                                value={basicInfo.country}
+                                                onChange={handleBasicInfoChange}
+                                                disabled={!isBasicEditing}
+                                            >
                                                 <option value="">Selecciona una opción</option>
                                                 {countryOptions.map((country, index) => (
                                                     <option key={index} value={country}>{country}</option>
@@ -306,10 +330,20 @@ const EditProfile = () => {
                                         </div>
                                         <div className="form-group">
                                             <label>Ciudad de residencia</label>
-                                            <input type="text" name="city" placeholder="Introduce tu ciudad" value={basicInfo.city} onChange={handleBasicInfoChange} />
+                                            <input
+                                                type="text"
+                                                name="city"
+                                                placeholder="Introduce tu ciudad"
+                                                value={basicInfo.city}
+                                                onChange={handleBasicInfoChange}
+                                                disabled={!isBasicEditing}
+                                            />
                                         </div>
                                         <div className="button-container">
-                                            <EditButton onClick={() => { /* Guardar básicos */ }} />
+                                            <EditButton
+                                                isEditing={isBasicEditing}
+                                                onClick={() => setIsBasicEditing(!isBasicEditing)}
+                                            />
                                         </div>
                                     </section>
                                     {/* 3.2 Resumen profesional */}
@@ -317,21 +351,36 @@ const EditProfile = () => {
                                         <h3>Resumen profesional</h3>
                                         <h4>Describe tu recorrido profesional</h4>
                                         <div className="form-group">
-                                            <textarea name="professionalSummary" placeholder="Soy estudiante de diseño de moda apasionado por la fusión entre arte y sostenibilidad. Me inspiro en la naturaleza y las formas orgánicas para crear piezas únicas, explorando materiales reciclados y técnicas innovadoras. Mi objetivo es reducir el impacto ambiental en la moda, combinando creatividad y conciencia ecológica para un futuro más sostenible." value={professionalSummary} onChange={handleProfessionalSummaryChange} maxLength={350} />
+                                            <textarea
+                                                name="professionalSummary"
+                                                placeholder="Escribe tu resumen profesional..."
+                                                value={professionalSummary}
+                                                onChange={handleProfessionalSummaryChange}
+                                                maxLength={350}
+                                                disabled={!isSummaryEditing}
+                                            />
                                             <small className="char-count" style={{ color: professionalSummary.length === 350 ? 'red' : '#4c85ff' }}>
                                                 {professionalSummary.length === 350 ? "Tu texto supera los 350 caracteres" : "Debe tener un máximo de 350 caracteres"}
                                             </small>
                                         </div>
                                         <div className="button-container">
-                                            <EditButton onClick={() => { /* Guardar resumen */ }} />
+                                            <EditButton
+                                                isEditing={isSummaryEditing}
+                                                onClick={() => setIsSummaryEditing(!isSummaryEditing)}
+                                            />
                                         </div>
                                     </section>
-                                    {/* 3.3 Información educativa y formación autodidacta */}
+                                    {/* 3.3 Información educativa y formación */}
                                     <section className="form-section">
                                         <h3>Información educativa y formación</h3>
                                         <div className="form-group">
                                             <label>Institución educativa</label>
-                                            <select name="institution" value={education.institution} onChange={handleEducationChange} disabled={selfTaught}>
+                                            <select
+                                                name="institution"
+                                                value={education.institution}
+                                                onChange={handleEducationChange}
+                                                disabled={!isEducationEditing || selfTaught}
+                                            >
                                                 <option value="">Selecciona una opción</option>
                                                 {institutionOptions.map((inst, index) => (
                                                     <option key={index} value={inst}>{inst}</option>
@@ -340,36 +389,83 @@ const EditProfile = () => {
                                         </div>
                                         <div className="form-group">
                                             <label>¿No encuentras tu escuela o universidad?</label>
-                                            <input type="text" name="otherInstitution" placeholder="Introduce el nombre de tu escuela o universidad" value={education.otherInstitution} onChange={handleEducationChange} disabled={selfTaught} />
+                                            <input
+                                                type="text"
+                                                name="otherInstitution"
+                                                placeholder="Introduce el nombre de tu escuela o universidad"
+                                                value={education.otherInstitution}
+                                                onChange={handleEducationChange}
+                                                disabled={!isEducationEditing || selfTaught}
+                                            />
                                             <small className="info-text">Por el momento contamos con un número limitado de escuelas y universidades.</small>
                                         </div>
                                         <div className="form-group">
                                             <label>Nombre de la formación que has cursado</label>
-                                            <input type="text" name="formationName" placeholder="Introduce el nombre de la formación" value={education.formationName} onChange={handleEducationChange} disabled={selfTaught} />
+                                            <input
+                                                type="text"
+                                                name="formationName"
+                                                placeholder="Introduce el nombre de la formación"
+                                                value={education.formationName}
+                                                onChange={handleEducationChange}
+                                                disabled={!isEducationEditing || selfTaught}
+                                            />
                                         </div>
                                         <div className="form-group date-group">
                                             <label>Comienzo de la formación</label>
-                                            <input type="date" name="formationStart" placeholder="dd / mm / yyyy" value={education.formationStart} onChange={handleEducationChange} min="1940-01-01" max={currentDate} disabled={selfTaught} />
+                                            <input
+                                                type="date"
+                                                name="formationStart"
+                                                placeholder="dd / mm / yyyy"
+                                                value={education.formationStart}
+                                                onChange={handleEducationChange}
+                                                min="1940-01-01"
+                                                max={currentDate}
+                                                disabled={!isEducationEditing || selfTaught}
+                                            />
                                         </div>
                                         <div className="form-group date-group">
                                             <label>Finalización de la formación</label>
-                                            <input type="date" name="formationEnd" placeholder="dd / mm / yyyy" value={education.formationEnd} onChange={handleEducationChange} min="1940-01-01" max={currentDate} disabled={selfTaught || education.currentlyEnrolled} />
+                                            <input
+                                                type="date"
+                                                name="formationEnd"
+                                                placeholder="dd / mm / yyyy"
+                                                value={education.formationEnd}
+                                                onChange={handleEducationChange}
+                                                min="1940-01-01"
+                                                max={currentDate}
+                                                disabled={!isEducationEditing || selfTaught || education.currentlyEnrolled}
+                                            />
                                         </div>
                                         <div className="form-group checkbox-group-search">
                                             <label>
-                                                <input type="checkbox" name="currentlyEnrolled" checked={education.currentlyEnrolled} onChange={handleEducationChange} />
+                                                <input
+                                                    type="checkbox"
+                                                    name="currentlyEnrolled"
+                                                    checked={education.currentlyEnrolled}
+                                                    onChange={handleEducationChange}
+                                                    disabled={!isEducationEditing}
+                                                />
                                                 Actualmente me encuentro en esta formación
                                             </label>
                                         </div>
                                         <div className="button-row">
                                             <div className="button-container">
                                                 <button type="button" className="add-formation">+ Añadir formación</button>
-                                                <EditButton onClick={() => { /* Guardar educación */ }} />
+                                                <EditButton
+                                                    isEditing={isEducationEditing}
+                                                    onClick={() => setIsEducationEditing(!isEducationEditing)}
+                                                />
                                             </div>
                                         </div>
                                         <div className="form-group checkbox-group-search">
                                             <label>
-                                                <input type="checkbox" name="selfTaught" checked={selfTaught} onChange={handleSelfTaughtChange} />
+                                                <input
+                                                    type="checkbox"
+                                                    name="selfTaught"
+                                                    checked={selfTaught}
+                                                    onChange={handleSelfTaughtChange}
+                                                    disabled={!isEducationEditing}
+                                                />
                                                 He adquirido todos mis conocimientos de forma autodidacta
                                             </label>
                                         </div>
@@ -383,10 +479,11 @@ const EditProfile = () => {
                                             <input
                                                 type="text"
                                                 name="newSkill"
-                                                placeholder="Escribe tu habilidad aqui.."
+                                                placeholder="Escribe tu habilidad aquí..."
                                                 value={newSkill}
                                                 onChange={(e) => setNewSkill(e.target.value)}
                                                 onKeyDown={handleSkillKeyDown}
+                                                disabled={!isHabilidadesEditing}
                                             />
                                             <small className="info-text">Añade una nueva habilidad presionando “enter”.</small>
                                         </div>
@@ -410,7 +507,10 @@ const EditProfile = () => {
                                         </div>
                                         <small className="info-text">Añade un máximo de 12 habilidades.</small>
                                         <div className="button-container">
-                                            <EditButton onClick={() => { /* Guardar habilidades */ }} />
+                                            <EditButton
+                                                isEditing={isHabilidadesEditing}
+                                                onClick={() => setIsHabilidadesEditing(!isHabilidadesEditing)}
+                                            />
                                         </div>
                                     </section>
                                     {/* 3.5 Software */}
@@ -425,6 +525,7 @@ const EditProfile = () => {
                                                 value={newSoftware}
                                                 onChange={(e) => setNewSoftware(e.target.value)}
                                                 onKeyDown={handleSoftwareKeyDown}
+                                                disabled={!isSoftwareEditing}
                                             />
                                             <small className="info-text">Añade un nuevo software presionando “enter”.</small>
                                         </div>
@@ -448,7 +549,10 @@ const EditProfile = () => {
                                         </div>
                                         <small className="info-text">Añade un máximo de 12 softwares.</small>
                                         <div className="button-container">
-                                            <EditButton onClick={() => { /* Guardar software */ }} />
+                                            <EditButton
+                                                isEditing={isSoftwareEditing}
+                                                onClick={() => setIsSoftwareEditing(!isSoftwareEditing)}
+                                            />
                                         </div>
                                     </section>
                                     {/* 3.6 En busca de... */}
@@ -457,35 +561,74 @@ const EditProfile = () => {
                                         <h4>Tipo de contrato</h4>
                                         <div className="form-group checkbox-group-search">
                                             <label>
-                                                <input type="checkbox" name="practicas" checked={contract.practicas} onChange={handleContractChange} />
+                                                <input
+                                                    type="checkbox"
+                                                    name="practicas"
+                                                    checked={contract.practicas}
+                                                    onChange={handleContractChange}
+                                                    disabled={!isEnBuscaEditing}
+                                                />
                                                 Prácticas
                                             </label>
                                             <label>
-                                                <input type="checkbox" name="tiempoCompleto" checked={contract.tiempoCompleto} onChange={handleContractChange} />
+                                                <input
+                                                    type="checkbox"
+                                                    name="tiempoCompleto"
+                                                    checked={contract.tiempoCompleto}
+                                                    onChange={handleContractChange}
+                                                    disabled={!isEnBuscaEditing}
+                                                />
                                                 Tiempo completo
                                             </label>
                                             <label>
-                                                <input type="checkbox" name="parcial" checked={contract.parcial} onChange={handleContractChange} />
+                                                <input
+                                                    type="checkbox"
+                                                    name="parcial"
+                                                    checked={contract.parcial}
+                                                    onChange={handleContractChange}
+                                                    disabled={!isEnBuscaEditing}
+                                                />
                                                 Parcial
                                             </label>
                                         </div>
                                         <h4>Tipo de ubicación</h4>
                                         <div className="form-group checkbox-group-search">
                                             <label>
-                                                <input type="checkbox" name="presencial" checked={locationType.presencial} onChange={handleLocationChange} />
+                                                <input
+                                                    type="checkbox"
+                                                    name="presencial"
+                                                    checked={locationType.presencial}
+                                                    onChange={handleLocationChange}
+                                                    disabled={!isEnBuscaEditing}
+                                                />
                                                 Presencial
                                             </label>
                                             <label>
-                                                <input type="checkbox" name="remoto" checked={locationType.remoto} onChange={handleLocationChange} />
+                                                <input
+                                                    type="checkbox"
+                                                    name="remoto"
+                                                    checked={locationType.remoto}
+                                                    onChange={handleLocationChange}
+                                                    disabled={!isEnBuscaEditing}
+                                                />
                                                 Remoto
                                             </label>
                                             <label>
-                                                <input type="checkbox" name="hibrido" checked={locationType.hibrido} onChange={handleLocationChange} />
+                                                <input
+                                                    type="checkbox"
+                                                    name="hibrido"
+                                                    checked={locationType.hibrido}
+                                                    onChange={handleLocationChange}
+                                                    disabled={!isEnBuscaEditing}
+                                                />
                                                 Híbrido
                                             </label>
                                         </div>
                                         <div className="button-container">
-                                            <EditButton onClick={() => { /* Guardar En busca de... */ }} />
+                                            <EditButton
+                                                isEditing={isEnBuscaEditing}
+                                                onClick={() => setIsEnBuscaEditing(!isEnBuscaEditing)}
+                                            />
                                         </div>
                                     </section>
                                     {/* 3.7 Contacto y redes sociales */}
@@ -493,38 +636,97 @@ const EditProfile = () => {
                                         <h3>Contacto y redes sociales</h3>
                                         <div className="form-group">
                                             <label>Email de Contacto</label>
-                                            <input type="text" name="emailContacto" placeholder="Introduce el email de Contacto" value={social.emailContacto} onChange={handleSocialChange} />
+                                            <input
+                                                type="text"
+                                                name="emailContacto"
+                                                placeholder="Introduce el email de Contacto"
+                                                value={social.emailContacto}
+                                                onChange={handleSocialChange}
+                                                disabled={!isContactEditing}
+                                            />
                                         </div>
                                         <div className="form-group">
                                             <label>Sitio web</label>
-                                            <input type="text" name="sitioWeb" placeholder="Introduce el Sitio web" value={social.sitioWeb} onChange={handleSocialChange} />
+                                            <input
+                                                type="text"
+                                                name="sitioWeb"
+                                                placeholder="Introduce el Sitio web"
+                                                value={social.sitioWeb}
+                                                onChange={handleSocialChange}
+                                                disabled={!isContactEditing}
+                                            />
                                         </div>
                                         <div className="form-group">
                                             <label>Instagram</label>
-                                            <input type="text" name="instagram" placeholder="Introduce tu Instagram" value={social.instagram} onChange={handleSocialChange} />
+                                            <input
+                                                type="text"
+                                                name="instagram"
+                                                placeholder="Introduce tu Instagram"
+                                                value={social.instagram}
+                                                onChange={handleSocialChange}
+                                                disabled={!isContactEditing}
+                                            />
                                         </div>
                                         <div className="form-group">
                                             <label>Linkedin</label>
-                                            <input type="text" name="linkedin" placeholder="Introduce tu Linkedin" value={social.linkedin} onChange={handleSocialChange} />
+                                            <input
+                                                type="text"
+                                                name="linkedin"
+                                                placeholder="Introduce tu Linkedin"
+                                                value={social.linkedin}
+                                                onChange={handleSocialChange}
+                                                disabled={!isContactEditing}
+                                            />
                                         </div>
                                         <div className="form-group">
                                             <label>Behance</label>
-                                            <input type="text" name="behance" placeholder="Introduce tu Behance" value={social.behance} onChange={handleSocialChange} />
+                                            <input
+                                                type="text"
+                                                name="behance"
+                                                placeholder="Introduce tu Behance"
+                                                value={social.behance}
+                                                onChange={handleSocialChange}
+                                                disabled={!isContactEditing}
+                                            />
                                         </div>
                                         <div className="form-group">
                                             <label>Tumblr</label>
-                                            <input type="text" name="tumblr" placeholder="Introduce tu Tumblr" value={social.tumblr} onChange={handleSocialChange} />
+                                            <input
+                                                type="text"
+                                                name="tumblr"
+                                                placeholder="Introduce tu Tumblr"
+                                                value={social.tumblr}
+                                                onChange={handleSocialChange}
+                                                disabled={!isContactEditing}
+                                            />
                                         </div>
                                         <div className="form-group">
                                             <label>Youtube</label>
-                                            <input type="text" name="youtube" placeholder="Introduce tu Youtube" value={social.youtube} onChange={handleSocialChange} />
+                                            <input
+                                                type="text"
+                                                name="youtube"
+                                                placeholder="Introduce tu Youtube"
+                                                value={social.youtube}
+                                                onChange={handleSocialChange}
+                                                disabled={!isContactEditing}
+                                            />
                                         </div>
                                         <div className="form-group">
                                             <label>Pinterest</label>
-                                            <input type="text" name="pinterest" placeholder="Introduce tu Pinterest" value={social.pinterest} onChange={handleSocialChange} />
+                                            <input
+                                                type="text"
+                                                name="pinterest"
+                                                placeholder="Introduce tu Pinterest"
+                                                value={social.pinterest}
+                                                onChange={handleSocialChange}
+                                                disabled={!isContactEditing}
+                                            />
                                         </div>
                                         <div className="button-container">
-                                            <EditButton onClick={() => { /* Guardar contacto y redes sociales */ }} />
+                                            <EditButton
+                                                isEditing={isContactEditing}
+                                                onClick={() => setIsContactEditing(!isContactEditing)}
+                                            />
                                         </div>
                                     </section>
                                     {/* 3.8 Mi CV y Portfolio PDF */}
@@ -534,19 +736,19 @@ const EditProfile = () => {
                                         <div className="form-group">
                                             <label>CV</label>
                                             <div className="file-input">
-                                                <input type="file" name="cv" accept="application/pdf" />
+                                                <input type="file" name="cv" accept="application/pdf" disabled />
                                                 <span className="upload-icon">📤</span>
                                             </div>
                                         </div>
                                         <div className="form-group">
                                             <label>Portfolio</label>
                                             <div className="file-input">
-                                                <input type="file" name="portfolio" accept="application/pdf" />
+                                                <input type="file" name="portfolio" accept="application/pdf" disabled />
                                                 <span className="upload-icon">📤</span>
                                             </div>
                                         </div>
                                         <div className="button-container">
-                                            <EditButton onClick={() => { /* Guardar CV y Portfolio */ }} />
+                                            <EditButton onClick={() => { /* Guardar CV y Portfolio */ }} isEditing={false} />
                                         </div>
                                     </section>
                                 </>
@@ -555,9 +757,8 @@ const EditProfile = () => {
                                 <section className="form-section">
                                     <h3>Mis ofertas</h3>
                                     <p>Aquí se mostrarán las ofertas guardadas o publicadas por el usuario.</p>
-                                    {/* Aquí iría la lógica o componente que liste las ofertas */}
                                     <div className="button-container">
-                                        <EditButton onClick={() => { /* Guardar cambios en ofertas, si aplica */ }} />
+                                        <EditButton onClick={() => { /* Guardar cambios en ofertas, si aplica */ }} isEditing={false} />
                                     </div>
                                 </section>
                             )}
@@ -565,9 +766,8 @@ const EditProfile = () => {
                                 <section className="form-section">
                                     <h3>Configuración</h3>
                                     <p>Aquí se mostrarán las opciones de configuración del perfil.</p>
-                                    {/* Lógica o componentes para configuración */}
                                     <div className="button-container">
-                                        <EditButton onClick={() => { /* Guardar configuración */ }} />
+                                        <EditButton onClick={() => { /* Guardar configuración */ }} isEditing={false} />
                                     </div>
                                 </section>
                             )}
