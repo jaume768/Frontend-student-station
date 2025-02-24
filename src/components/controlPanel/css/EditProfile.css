@@ -269,11 +269,6 @@
     margin-top: 0.5rem;
 }
 
-.edit-data-button:hover {
-    background: #d7f3e5;
-    color: #3e8a61;
-}
-
 /* Fila para botones en sección educativa (y secciones similares) */
 .button-row {
     display: flex;
