@@ -3,6 +3,7 @@ import Layout from '../components/controlPanel/Layout';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './css/control-panel.css';
 import EditProfile from '../components/controlPanel/EditProfile';
+import MiPerfil from '../components/controlPanel/MiPerfil';
 
 const ControlPanel = () => {
     const location = useLocation();
@@ -99,6 +100,8 @@ const ControlPanel = () => {
                 );
             case 'editProfile':
                 return <EditProfile />;
+            case 'profile':
+                return <MiPerfil />;
             default:
                 return (
                     <div>
