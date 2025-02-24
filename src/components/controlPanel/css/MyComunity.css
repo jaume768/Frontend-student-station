@@ -9,12 +9,13 @@
 .mycomunity-title {
     font-size: 1.75rem;
     margin-bottom: 20px;
-    text-align: center;
+    text-align: left;
 }
 
 /* Contenedor de pestañas centrado a 400px */
 .mycomunity-tabs {
     width: 400px;
+    gap: 10px;
     margin: 0 auto 20px auto;
     display: flex;
     justify-content: center;
@@ -44,9 +45,12 @@
 /* Cuadrícula de perfiles centrada */
 .mycomunity-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    width: 60em;
+    margin: auto;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 20px;
     justify-items: center;
+    justify-content: center;
 }
 
 /* Tarjeta de perfil */
@@ -84,5 +88,10 @@
 @media (max-width: 768px) {
     .mycomunity-grid {
         grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        width: 20em;
+    }
+
+    .mycomunity-container {
+        width: 20em;
     }
 }

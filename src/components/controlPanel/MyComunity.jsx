@@ -6,18 +6,18 @@ const MyComunity = () => {
 
     // Datos simulados para los perfiles
     const seguidos = [
-        { id: 1, name: 'Juan Pérez', role: 'Estilista | Periodista', profilePicture: '/multimedia/profile1.jpg' },
-        { id: 2, name: 'Ana Martínez', role: 'Diseñadora | Creativa', profilePicture: '/multimedia/profile2.jpg' },
-        { id: 3, name: 'Carlos López', role: 'Fotógrafo | Editor', profilePicture: '/multimedia/profile3.jpg' },
-        { id: 4, name: 'Luisa Gómez', role: 'Modista | Ilustradora', profilePicture: '/multimedia/profile4.jpg' },
-        { id: 5, name: 'María Rodríguez', role: 'Periodista | Crítica de moda', profilePicture: '/multimedia/profile5.jpg' },
-        { id: 6, name: 'Pedro Sánchez', role: 'Estilista | Consultor', profilePicture: '/multimedia/profile6.jpg' },
+        { id: 1, name: 'Juan Pérez', role: 'Estilista | Periodista', profilePicture: '/multimedia/usuarioDefault.jpg' },
+        { id: 2, name: 'Ana Martínez', role: 'Diseñadora | Creativa', profilePicture: '/multimedia/usuarioDefault.jpg' },
+        { id: 3, name: 'Carlos López', role: 'Fotógrafo | Editor', profilePicture: '/multimedia/usuarioDefault.jpg' },
+        { id: 4, name: 'Luisa Gómez', role: 'Modista | Ilustradora', profilePicture: '/multimedia/usuarioDefault.jpg' },
+        { id: 5, name: 'María Rodríguez', role: 'Periodista | Crítica de moda', profilePicture: '/multimedia/usuarioDefault.jpg' },
+        { id: 6, name: 'Pedro Sánchez', role: 'Estilista | Consultor', profilePicture: '/multimedia/usuarioDefault.jpg' },
         // Puedes agregar más perfiles según sea necesario
     ];
 
     const seguidores = [
-        { id: 101, name: 'Sofía Ruiz', role: 'Diseñadora', profilePicture: '/multimedia/profile7.jpg' },
-        { id: 102, name: 'Miguel Torres', role: 'Periodista', profilePicture: '/multimedia/profile8.jpg' },
+        { id: 101, name: 'Sofía Ruiz', role: 'Diseñadora', profilePicture: '/multimedia/usuarioDefault.jpg' },
+        { id: 102, name: 'Miguel Torres', role: 'Periodista', profilePicture: '/multimedia/usuarioDefault.jpg' },
         // Más perfiles para “Mis seguidores”
     ];
 
