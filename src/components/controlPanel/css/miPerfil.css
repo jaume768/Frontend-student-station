@@ -161,17 +161,6 @@
     border-radius: 8px;
 }
 
-/* Línea decorativa (curva en la parte superior derecha) */
-.miPerfil-decorative-line {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 150px;
-    height: 150px;
-    background: rgba(6, 182, 160, 0.2);
-    border-bottom-left-radius: 150px;
-}
-
 /* Responsividad */
 @media (max-width: 768px) {
     .miPerfil-container {
