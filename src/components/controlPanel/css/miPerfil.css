@@ -56,12 +56,14 @@
     border: none;
     background: #e9ecef;
     font-size: 1rem;
+    color: #989898;
+    border-radius: 6px;
     cursor: pointer;
     transition: background 0.3s ease;
 }
 
 .miPerfil-mobile-tabs button.active {
-    background: #38c785;
+    background: #535353;
     color: #fff;
 }
 
@@ -197,7 +199,7 @@
 }
 
 .miPerfil-project-placeholder {
-    background: #e9ecef;
+    background: #cccccc;
     height: 110px;
     width: 110px;
     border-radius: 8px;
@@ -247,6 +249,7 @@
 
     .miPerfil-mobile-tabs {
         display: flex;
+        gap: 10px;
     }
 
     /* En móvil, se muestra solo el contenido correspondiente a la pestaña activa */
