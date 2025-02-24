@@ -15,10 +15,11 @@ const getCreativeTypeText = (type) => {
 };
 
 // Componente de botón sin efecto hover, controlado por la prop "isEditing"
+// Se agrega la clase "save-mode" cuando isEditing es true para aplicar el estilo verde
 const EditButton = ({ isEditing, onClick }) => (
     <button
         type="button"
-        className="edit-data-button"
+        className={`edit-data-button ${isEditing ? "save-mode" : ""}`}
         onClick={onClick}
     >
         {isEditing ? "Guardar datos" : "Editar datos"}
