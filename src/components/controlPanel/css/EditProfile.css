@@ -26,6 +26,12 @@
     justify-content: space-between;
 }
 
+.edit-data-button.save-mode {
+  background: #d7f3e5;
+  color: #3e8a61;
+}
+
+
 /* Sticky en PC para banner y left-options */
 @media (min-width: 769px) {
     .profile-banner {
