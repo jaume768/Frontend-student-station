@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import './css/control-panel.css';
 import EditProfile from '../components/controlPanel/EditProfile';
 import MiPerfil from '../components/controlPanel/MiPerfil';
+import MyComunity from '../components/controlPanel/MyComunity';
 
 const ControlPanel = () => {
     const location = useLocation();
@@ -102,6 +103,8 @@ const ControlPanel = () => {
                 return <EditProfile />;
             case 'profile':
                 return <MiPerfil />;
+            case 'community':
+                return <MyComunity />;    
             default:
                 return (
                     <div>
