@@ -88,6 +88,10 @@
     margin-bottom: 20px;
 }
 
+.miPerfil-section.ultima-seccion{
+    margin-bottom: 20px;
+}
+
 .miPerfil-section h2 {
     margin-bottom: 10px;
     font-size: 1.25rem;
@@ -243,6 +247,12 @@
 
 /* Estilos para vista móvil */
 @media (max-width: 768px) {
+
+    
+    .miPerfil-section.ultima-seccion{
+        margin-bottom: 50px;
+    }
+
     .miPerfil-container {
         padding: 7px;
     }

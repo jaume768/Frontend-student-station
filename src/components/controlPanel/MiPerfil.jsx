@@ -150,7 +150,7 @@ const MiPerfil = () => {
                     </section>
 
                     {/* Archivos descargables */}
-                    <section className="miPerfil-section">
+                    <section className="miPerfil-section ultima-seccion">
                         <h2>Archivos descargables</h2>
                         <div className="miPerfil-downloads">
                             <a href="/ruta/a/CV.pdf" download className="miPerfil-btn">
