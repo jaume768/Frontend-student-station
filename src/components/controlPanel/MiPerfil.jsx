@@ -140,9 +140,6 @@ const MiPerfil = () => {
                     ))}
                 </div>
             </div>
-
-            {/* Línea decorativa en la parte superior derecha */}
-            <div className="miPerfil-decorative-line"></div>
         </div>
     );
 };
