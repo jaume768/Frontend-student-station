@@ -170,7 +170,7 @@ const MiPerfil = () => {
                     {/* Controles para alternar la vista de proyectos */}
                     <div
                         className="miPerfil-projects-controls"
-                        style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}
+                        style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px' }}
                     >
                         <button onClick={toggleView} className="toggle-view-btn">
                             {isGalleryView ? <FaList size={20} /> : <FaTh size={20} />}

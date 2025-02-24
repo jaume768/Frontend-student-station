@@ -184,7 +184,8 @@
 
 .miPerfil-projects-grid.gallery {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    justify-content: center;
+    grid-template-columns: repeat(3, 0.22fr);
     gap: 7px;
 }
 
@@ -203,8 +204,8 @@
 }
 
 .miPerfil-projects-grid.individual .miPerfil-project-placeholder {
-    height: 380px;
-    width: 380px;
+    height: 20em;
+    width: 20em;
 }
 
 /* Botón para alternar vista de proyectos */
