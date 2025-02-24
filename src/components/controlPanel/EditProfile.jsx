@@ -159,7 +159,6 @@ const EditProfile = () => {
         setSelfTaught(e.target.checked);
     };
 
-    // Manejo de habilidades
     const handleSkillKeyDown = (e) => {
         if (e.key === "Enter") {
             e.preventDefault();
@@ -181,7 +180,6 @@ const EditProfile = () => {
         }
     };
 
-    // Manejo de software
     const handleSoftwareKeyDown = (e) => {
         if (e.key === "Enter") {
             e.preventDefault();

@@ -33,7 +33,6 @@ function App() {
         <Route path="/ControlPanel" element={<ControlPanel />} />
         <Route path="/" element={<Home />} />
         <Route path="/complete-registration" element={<CompleteRegistration />} />
-
         <Route path="/creativo/registro" element={<CompleteRegistrationCreativo />} />
         <Route path="/creativo/registro/02" element={<CompleteRegistrationCreativo02 />} />
         <Route path="/photo/registro/03" element={<CompleteRegistrationCreativo03 />} />
