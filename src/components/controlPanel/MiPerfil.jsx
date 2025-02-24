@@ -163,7 +163,7 @@ const MiPerfil = () => {
                 <div
                     className={`miPerfil-projects-grid ${isGalleryView ? 'gallery' : 'individual'}`}
                 >
-                    {[...Array(12)].map((_, index) => (
+                    {[...Array(15)].map((_, index) => (
                         <div key={index} className="miPerfil-project-placeholder">
                             {/* Placeholder para proyecto */}
                         </div>

@@ -64,6 +64,8 @@
 
 .miPerfil-section p {
     font-size: 1rem;
+    margin-top: 5px;
+    margin-left: 10px;
     line-height: 1.5;
 }
 
@@ -181,8 +183,8 @@
 
 /* Aumenta el tamaño de los placeholder en vista individual */
 .miPerfil-projects-grid.individual .miPerfil-project-placeholder {
-    height: 200px;
-    width: 200px;
+    height: 400px;
+    width: 400px;
 }
 
 /* Responsividad */
@@ -197,7 +199,7 @@
     }
 
     .miPerfil-projects-grid.gallery {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(3, 1fr);
     }
 }
 
