@@ -1,0 +1,188 @@
+/* Contenedor principal */
+.miPerfil-container {
+    position: relative;
+    display: flex;
+    padding: 20px;
+    gap: 20px;
+    font-family: 'Inter', sans-serif;
+    color: #000;
+}
+
+/* Columna izquierda (información) */
+.miPerfil-left {
+    flex: 1;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Encabezado: foto y datos personales */
+.miPerfil-header {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.miPerfil-photo {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.miPerfil-personal-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.miPerfil-name {
+    font-size: 2rem;
+    margin: 0;
+}
+
+.miPerfil-occupations,
+.miPerfil-location {
+    font-size: 1rem;
+    color: #555;
+}
+
+/* Secciones (Descripción, Experiencia, etc.) */
+.miPerfil-section {
+    background: #fdfdfd;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.miPerfil-section h2 {
+    margin-bottom: 10px;
+    font-size: 1.25rem;
+}
+
+.miPerfil-section p {
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+/* Listas para experiencia y educación */
+.miPerfil-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.miPerfil-list li {
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+}
+
+/* Chips para habilidades y software */
+.miPerfil-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.miPerfil-chip {
+    background: #e9ecef;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
+
+/* Redes sociales */
+.miPerfil-social-links {
+    display: flex;
+    gap: 15px;
+    font-size: 1.5rem;
+}
+
+.miPerfil-social-links a {
+    color: #000;
+    transition: color 0.3s ease;
+}
+
+.miPerfil-social-links a:hover {
+    color: rgba(6, 182, 160, 1);
+}
+
+/* Botones de descarga */
+.miPerfil-downloads {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.miPerfil-btn {
+    background: #38c785;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 30px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+    display: inline-block;
+}
+
+.miPerfil-btn:hover {
+    background: #292929;
+}
+
+/* Botón adicional para visualizar PDF */
+.miPerfil-view-btn {
+    background: transparent;
+    color: #38c785;
+    border: 2px solid #38c785;
+}
+
+.miPerfil-view-btn:hover {
+    background: #38c785;
+    color: #fff;
+}
+
+/* Columna derecha: grid de proyectos */
+.miPerfil-right {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+}
+
+.miPerfil-projects-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.miPerfil-project-placeholder {
+    background: #e9ecef;
+    height: 120px;
+    border-radius: 8px;
+}
+
+/* Línea decorativa (curva en la parte superior derecha) */
+.miPerfil-decorative-line {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 150px;
+    height: 150px;
+    background: rgba(6, 182, 160, 0.2);
+    border-bottom-left-radius: 150px;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+    .miPerfil-container {
+        flex-direction: column;
+        padding: 15px;
+    }
+
+    .miPerfil-right {
+        order: -1;
+    }
+
+    .miPerfil-projects-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
