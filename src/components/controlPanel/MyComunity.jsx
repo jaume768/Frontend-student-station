@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './MyComunity.css';
+import './css/MyComunity.css';
 
 const MyComunity = () => {
     const [activeTab, setActiveTab] = useState('seguidos'); // 'seguidos' o 'seguidores'
