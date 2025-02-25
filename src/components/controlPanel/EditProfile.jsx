@@ -840,7 +840,7 @@ const EditProfile = () => {
                                         )}
                                     </section>
                                     {/* Sección para cambiar contraseña */}
-                                    <section className="form-section">
+                                    <section className="form-section-final">
                                         <h3>Cambiar contraseña</h3>
                                         {!isPasswordEditing ? (
                                             <>
