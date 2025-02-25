@@ -92,9 +92,6 @@ const EditProfile = () => {
         pinterest: ""
     });
 
-    // Control de sección activa (Editar perfil, Mis ofertas, Configuración)
-    const [activeOption, setActiveOption] = useState("editProfile");
-
     // Estados para controlar el modo edición de cada sección
     const [isBasicEditing, setIsBasicEditing] = useState(false);
     const [isSummaryEditing, setIsSummaryEditing] = useState(false);
@@ -103,6 +100,16 @@ const EditProfile = () => {
     const [isSoftwareEditing, setIsSoftwareEditing] = useState(false);
     const [isEnBuscaEditing, setIsEnBuscaEditing] = useState(false);
     const [isContactEditing, setIsContactEditing] = useState(false);
+
+    // Estados para configuración
+    const [isEmailEditing, setIsEmailEditing] = useState(false);
+    const [emailInput, setEmailInput] = useState("");
+    const [newEmail, setNewEmail] = useState("");
+    const [confirmEmail, setConfirmEmail] = useState("");
+
+    const [isPasswordEditing, setIsPasswordEditing] = useState(false);
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
 
     useEffect(() => {
         const fetchUserProfile = async () => {
@@ -140,6 +147,11 @@ const EditProfile = () => {
         };
         fetchUserProfile();
     }, []);
+
+    // Actualizamos emailInput cuando userData.email cambie
+    useEffect(() => {
+        setEmailInput(userData.email);
+    }, [userData.email]);
 
     const handleBasicInfoChange = (e) => {
         const { name, value } = e.target;
@@ -240,6 +252,9 @@ const EditProfile = () => {
         "MIT", "Universidad de Cambridge", "Universidad de Tokyo", "Universidad de Salamanca",
         "Universidad de Buenos Aires", "Universidad de Sydney", "Universidad de Pekín"
     ];
+
+    // Control de sección activa (Editar perfil, Mis ofertas, Configuración)
+    const [activeOption, setActiveOption] = useState("editProfile");
 
     return (
         <div className="edit-profile-wrapper">
@@ -762,13 +777,150 @@ const EditProfile = () => {
                                 </section>
                             )}
                             {activeOption === "configuracion" && (
-                                <section className="form-section">
-                                    <h3>Configuración</h3>
-                                    <p>Aquí se mostrarán las opciones de configuración del perfil.</p>
-                                    <div className="button-container">
-                                        <EditButton onClick={() => { /* Guardar configuración */ }} isEditing={false} />
-                                    </div>
-                                </section>
+                                <>
+                                    {/* Sección para modificar email */}
+                                    <section className="form-section">
+                                        <h3>Modifica tu email</h3>
+                                        {!isEmailEditing ? (
+                                            <>
+                                                <div className="form-group">
+                                                    <label>Email de contacto</label>
+                                                    <input
+                                                        type="email"
+                                                        placeholder="emailderegistro@gmail.com"
+                                                        value={emailInput}
+                                                        onChange={(e) => setEmailInput(e.target.value)}
+                                                        disabled
+                                                    />
+                                                </div>
+                                                <div className="button-container">
+                                                    <button
+                                                        type="button"
+                                                        className="edit-data-button"
+                                                        onClick={() => setIsEmailEditing(true)}
+                                                    >
+                                                        Modificar email
+                                                    </button>
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <div className="form-group">
+                                                    <label>Nueva email de contacto</label>
+                                                    <input
+                                                        type="email"
+                                                        placeholder="Introduce tu nuevo email"
+                                                        value={newEmail}
+                                                        onChange={(e) => setNewEmail(e.target.value)}
+                                                    />
+                                                </div>
+                                                <div className="form-group">
+                                                    <label>Confirma tu email</label>
+                                                    <input
+                                                        type="email"
+                                                        placeholder="Confirma tu nuevo email"
+                                                        value={confirmEmail}
+                                                        onChange={(e) => setConfirmEmail(e.target.value)}
+                                                    />
+                                                </div>
+                                                <div className="button-container">
+                                                    <button
+                                                        type="button"
+                                                        className="edit-data-button"
+                                                        style={{ background: 'green', color: 'white' }}
+                                                        onClick={() => {
+                                                            // Aquí se confirmaría el cambio de email (validar que newEmail y confirmEmail coincidan)
+                                                            setIsEmailEditing(false);
+                                                        }}
+                                                    >
+                                                        Confirmar el cambio de email
+                                                    </button>
+                                                </div>
+                                            </>
+                                        )}
+                                    </section>
+                                    {/* Sección para cambiar contraseña */}
+                                    <section className="form-section">
+                                        <h3>Cambiar contraseña</h3>
+                                        {!isPasswordEditing ? (
+                                            <>
+                                                <div className="form-group">
+                                                    <label>Tu contraseña</label>
+                                                    <input
+                                                        type="password"
+                                                        placeholder="*************"
+                                                        value={""}
+                                                        disabled
+                                                    />
+                                                </div>
+                                                <div className="button-container">
+                                                    <button
+                                                        type="button"
+                                                        className="edit-data-button"
+                                                        onClick={() => setIsPasswordEditing(true)}
+                                                    >
+                                                        Cambiar mi contraseña
+                                                    </button>
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <div className="form-group">
+                                                    <label>Nueva contraseña</label>
+                                                    <input
+                                                        type="password"
+                                                        placeholder="Introduce tu nueva contraseña"
+                                                        value={newPassword}
+                                                        onChange={(e) => setNewPassword(e.target.value)}
+                                                    />
+                                                </div>
+                                                <div className="form-group">
+                                                    <label>Confirma tu contraseña</label>
+                                                    <input
+                                                        type="password"
+                                                        placeholder="Confirma tu nueva contraseña"
+                                                        value={confirmPassword}
+                                                        onChange={(e) => setConfirmPassword(e.target.value)}
+                                                    />
+                                                </div>
+                                                <div className="button-container">
+                                                    <button
+                                                        type="button"
+                                                        className="edit-data-button"
+                                                        style={{ background: 'green', color: 'white' }}
+                                                        onClick={() => {
+                                                            // Aquí se confirmaría el cambio de contraseña (validar que newPassword y confirmPassword coincidan)
+                                                            setIsPasswordEditing(false);
+                                                        }}
+                                                    >
+                                                        Confirmar el cambio de contraseña
+                                                    </button>
+                                                </div>
+                                            </>
+                                        )}
+                                    </section>
+                                    {/* Sección para eliminar perfil */}
+                                    <section className="form-section">
+                                        <h3>Elimina tu perfil</h3>
+                                        <div className="form-group">
+                                            <label>Borrar cuenta</label>
+                                            <p style={{ color: '#4c85ff' }}>
+                                                Eliminar tu cuenta significa que perderás el acceso a todos tus datos y servicios asociados. Si tienes alguna duda o inquietud, te recomendamos contactar con nuestro soporte antes de proceder: studentstationspain@gmail.com
+                                            </p>
+                                        </div>
+                                        <div className="button-container">
+                                            <button
+                                                type="button"
+                                                className="edit-data-button"
+                                                onClick={() => {
+                                                    // Aquí se activaría el proceso de borrado de la cuenta
+                                                }}
+                                            >
+                                                Borrar mi cuenta
+                                            </button>
+                                        </div>
+                                    </section>
+                                </>
                             )}
                         </div>
                     </div>
