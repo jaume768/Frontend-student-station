@@ -840,7 +840,7 @@ const EditProfile = () => {
                                         )}
                                     </section>
                                     {/* Sección para cambiar contraseña */}
-                                    <section className="form-section-final">
+                                    <section className="form-section">
                                         <h3>Cambiar contraseña</h3>
                                         {!isPasswordEditing ? (
                                             <>
@@ -900,7 +900,7 @@ const EditProfile = () => {
                                         )}
                                     </section>
                                     {/* Sección para eliminar perfil */}
-                                    <section className="form-section">
+                                    <section className="form-section-final">
                                         <h3>Elimina tu perfil</h3>
                                         <div className="form-group">
                                             <label>Borrar cuenta</label>
