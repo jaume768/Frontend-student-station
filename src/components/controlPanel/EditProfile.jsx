@@ -25,6 +25,7 @@ const EditButton = ({ isEditing, onClick }) => (
 );
 
 const EditProfile = () => {
+    // Datos generales del usuario
     const [userData, setUserData] = useState({
         profilePicture: '/multimedia/usuarioDefault.jpg',
         fullName: 'Nombre Apellido',
@@ -42,18 +43,14 @@ const EditProfile = () => {
         country: '',
         city: '',
     });
-    // Usamos professionalSummary para el campo biography
     const [professionalSummary, setProfessionalSummary] = useState('');
-    // ... otros estados (educación, habilidades, etc.) se mantienen sin cambios
-    const [education, setEducation] = useState({
-        institution: '',
-        otherInstitution: '',
-        formationName: '',
-        formationStart: '',
-        formationEnd: '',
-        currentlyEnrolled: false,
-    });
+
+    // Estado para manejar múltiples formaciones educativas
+    const [educationList, setEducationList] = useState([]);
+    // Estado para indicar si se adquirieron los conocimientos de forma autodidacta (opcional)
     const [selfTaught, setSelfTaught] = useState(false);
+
+    // Otros estados (habilidades, software, etc.) se mantienen sin cambios...
     const [skills, setSkills] = useState([]);
     const [newSkill, setNewSkill] = useState("");
     const [popularSkills, setPopularSkills] = useState([
@@ -84,6 +81,7 @@ const EditProfile = () => {
         pinterest: ""
     });
 
+    // Estados para controlar modos edición de secciones
     const [isBasicEditing, setIsBasicEditing] = useState(false);
     const [isSummaryEditing, setIsSummaryEditing] = useState(false);
     const [isEducationEditing, setIsEducationEditing] = useState(false);
@@ -101,6 +99,7 @@ const EditProfile = () => {
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
+    // Al cargar el perfil, se actualizan los estados correspondientes
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
@@ -112,7 +111,7 @@ const EditProfile = () => {
                 });
                 const user = response.data;
                 setUserData({
-                    profilePicture: user.profile.profilePicture || '/multimedia/usuarioDefault.jpg',
+                    profilePicture: user.profile?.profilePicture || '/multimedia/usuarioDefault.jpg',
                     fullName: user.fullName,
                     username: user.username,
                     city: user.city,
@@ -131,6 +130,10 @@ const EditProfile = () => {
                     });
                 }
                 setProfessionalSummary(user.biography || '');
+                // Si el usuario tiene formaciones educativas, se cargan en educationList
+                if (user.education && Array.isArray(user.education)) {
+                    setEducationList(user.education);
+                }
             } catch (error) {
                 console.error('Error al obtener el perfil:', error);
             }
@@ -151,9 +154,13 @@ const EditProfile = () => {
         setProfessionalSummary(e.target.value);
     };
 
-    const handleEducationChange = (e) => {
+    // Función para actualizar un elemento específico de educationList
+    const handleEducationListChange = (index, e) => {
         const { name, value, type, checked } = e.target;
-        setEducation((prev) => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
+        const updatedList = educationList.map((edu, i) =>
+            i === index ? { ...edu, [name]: type === 'checkbox' ? checked : value } : edu
+        );
+        setEducationList(updatedList);
     };
 
     const handleSelfTaughtChange = (e) => {
@@ -217,7 +224,20 @@ const EditProfile = () => {
         setSocial((prev) => ({ ...prev, [name]: value }));
     };
 
-    // Función para actualizar la información del perfil (usando 'biography' en lugar de 'profile.summary')
+    // Función para agregar una nueva formación educativa
+    const addEducation = () => {
+        const emptyEducation = {
+            institution: '',
+            otherInstitution: '',
+            formationName: '',
+            formationStart: '',
+            formationEnd: '',
+            currentlyEnrolled: false
+        };
+        setEducationList([...educationList, emptyEducation]);
+    };
+
+    // Función para actualizar el perfil incluyendo la educación
     const updateProfileData = async () => {
         try {
             const token = localStorage.getItem('authToken');
@@ -226,7 +246,8 @@ const EditProfile = () => {
                 fullName: `${basicInfo.firstName} ${basicInfo.lastName}`,
                 city: basicInfo.city,
                 country: basicInfo.country,
-                biography: professionalSummary
+                biography: professionalSummary,
+                education: educationList
             };
             const response = await axios.put(`${backendUrl}/api/users/profile`, updates, {
                 headers: { Authorization: `Bearer ${token}` },
@@ -239,6 +260,10 @@ const EditProfile = () => {
                 country: updatedUser.country,
                 biography: updatedUser.biography,
             });
+            // Actualizar también educationList en caso de que el servidor devuelva datos modificados
+            if (updatedUser.education) {
+                setEducationList(updatedUser.education);
+            }
         } catch (error) {
             console.error('Error al actualizar el perfil:', error);
         }
@@ -247,7 +272,7 @@ const EditProfile = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log({
-            userData, basicInfo, professionalSummary, education, selfTaught,
+            userData, basicInfo, professionalSummary, educationList, selfTaught,
             skills, software, contract, locationType, social
         });
     };
@@ -407,84 +432,94 @@ const EditProfile = () => {
                                     {/* 3.3 Información educativa y formación */}
                                     <section className="form-section">
                                         <h3>Información educativa y formación</h3>
-                                        <div className="form-group">
-                                            <label>Institución educativa</label>
-                                            <select
-                                                name="institution"
-                                                value={education.institution}
-                                                onChange={handleEducationChange}
-                                                disabled={!isEducationEditing || selfTaught}
-                                            >
-                                                <option value="">Selecciona una opción</option>
-                                                {institutionOptions.map((inst, index) => (
-                                                    <option key={index} value={inst}>{inst}</option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                        <div className="form-group">
-                                            <label>¿No encuentras tu escuela o universidad?</label>
-                                            <input
-                                                type="text"
-                                                name="otherInstitution"
-                                                placeholder="Introduce el nombre de tu escuela o universidad"
-                                                value={education.otherInstitution}
-                                                onChange={handleEducationChange}
-                                                disabled={!isEducationEditing || selfTaught}
-                                            />
-                                            <small className="info-text">Por el momento contamos con un número limitado de escuelas y universidades.</small>
-                                        </div>
-                                        <div className="form-group">
-                                            <label>Nombre de la formación que has cursado</label>
-                                            <input
-                                                type="text"
-                                                name="formationName"
-                                                placeholder="Introduce el nombre de la formación"
-                                                value={education.formationName}
-                                                onChange={handleEducationChange}
-                                                disabled={!isEducationEditing || selfTaught}
-                                            />
-                                        </div>
-                                        <div className="form-group date-group">
-                                            <label>Comienzo de la formación</label>
-                                            <input
-                                                type="date"
-                                                name="formationStart"
-                                                placeholder="dd / mm / yyyy"
-                                                value={education.formationStart}
-                                                onChange={handleEducationChange}
-                                                min="1940-01-01"
-                                                max={currentDate}
-                                                disabled={!isEducationEditing || selfTaught}
-                                            />
-                                        </div>
-                                        <div className="form-group date-group">
-                                            <label>Finalización de la formación</label>
-                                            <input
-                                                type="date"
-                                                name="formationEnd"
-                                                placeholder="dd / mm / yyyy"
-                                                value={education.formationEnd}
-                                                onChange={handleEducationChange}
-                                                min="1940-01-01"
-                                                max={currentDate}
-                                                disabled={!isEducationEditing || selfTaught || education.currentlyEnrolled}
-                                            />
-                                        </div>
-                                        <div className="form-group checkbox-group-search">
-                                            <label>
-                                                <input
-                                                    type="checkbox"
-                                                    name="currentlyEnrolled"
-                                                    checked={education.currentlyEnrolled}
-                                                    onChange={handleEducationChange}
-                                                    disabled={!isEducationEditing}
-                                                />
-                                                Actualmente me encuentro en esta formación
-                                            </label>
-                                        </div>
+                                        {educationList.map((edu, index) => (
+                                            <div key={index} className="education-entry">
+                                                <div className="form-group">
+                                                    <label>Institución educativa</label>
+                                                    <select
+                                                        name="institution"
+                                                        value={edu.institution}
+                                                        onChange={(e) => handleEducationListChange(index, e)}
+                                                        disabled={!isEducationEditing || selfTaught}
+                                                    >
+                                                        <option value="">Selecciona una opción</option>
+                                                        {institutionOptions.map((inst, idx) => (
+                                                            <option key={idx} value={inst}>{inst}</option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                                <div className="form-group">
+                                                    <label>¿No encuentras tu escuela o universidad?</label>
+                                                    <input
+                                                        type="text"
+                                                        name="otherInstitution"
+                                                        placeholder="Introduce el nombre de tu escuela o universidad"
+                                                        value={edu.otherInstitution}
+                                                        onChange={(e) => handleEducationListChange(index, e)}
+                                                        disabled={!isEducationEditing || selfTaught}
+                                                    />
+                                                    <small className="info-text">Por el momento contamos con un número limitado de escuelas y universidades.</small>
+                                                </div>
+                                                <div className="form-group">
+                                                    <label>Nombre de la formación que has cursado</label>
+                                                    <input
+                                                        type="text"
+                                                        name="formationName"
+                                                        placeholder="Introduce el nombre de la formación"
+                                                        value={edu.formationName}
+                                                        onChange={(e) => handleEducationListChange(index, e)}
+                                                        disabled={!isEducationEditing || selfTaught}
+                                                    />
+                                                </div>
+                                                <div className="form-group date-group">
+                                                    <label>Comienzo de la formación</label>
+                                                    <input
+                                                        type="date"
+                                                        name="formationStart"
+                                                        value={edu.formationStart}
+                                                        onChange={(e) => handleEducationListChange(index, e)}
+                                                        min="1940-01-01"
+                                                        max={currentDate}
+                                                        disabled={!isEducationEditing || selfTaught}
+                                                    />
+                                                </div>
+                                                <div className="form-group date-group">
+                                                    <label>Finalización de la formación</label>
+                                                    <input
+                                                        type="date"
+                                                        name="formationEnd"
+                                                        value={edu.formationEnd}
+                                                        onChange={(e) => handleEducationListChange(index, e)}
+                                                        min="1940-01-01"
+                                                        max={currentDate}
+                                                        disabled={!isEducationEditing || selfTaught || edu.currentlyEnrolled}
+                                                    />
+                                                </div>
+                                                <div className="form-group checkbox-group-search">
+                                                    <label>
+                                                        <input
+                                                            type="checkbox"
+                                                            name="currentlyEnrolled"
+                                                            checked={edu.currentlyEnrolled}
+                                                            onChange={(e) => handleEducationListChange(index, e)}
+                                                            disabled={!isEducationEditing}
+                                                        />
+                                                        Actualmente me encuentro en esta formación
+                                                    </label>
+                                                </div>
+                                                <hr />
+                                            </div>
+                                        ))}
                                         <div className="button-row">
                                             <div className="button-container">
-                                                <button type="button" className="add-formation">+ Añadir formación</button>
+                                                <button 
+                                                    type="button" 
+                                                    className="add-formation" 
+                                                    onClick={addEducation}
+                                                    disabled={!isEducationEditing}
+                                                >
+                                                    + Añadir formación
+                                                </button>
                                                 <EditButton
                                                     isEditing={isEducationEditing}
                                                     onClick={() => setIsEducationEditing(!isEducationEditing)}
@@ -503,7 +538,7 @@ const EditProfile = () => {
                                                 He adquirido todos mis conocimientos de forma autodidacta
                                             </label>
                                         </div>
-                                        <small className="info-text">Por el momento puedes añadir hasta un máximo de tres.</small>
+                                        <small className="info-text">Puedes añadir tantas formaciones como desees.</small>
                                     </section>
                                     {/* 3.4 Habilidades */}
                                     <section className="form-section">
@@ -849,7 +884,7 @@ const EditProfile = () => {
                                                         className="edit-data-button"
                                                         style={{ background: 'green', color: 'white' }}
                                                         onClick={() => {
-                                                            // Aquí se confirmaría el cambio de email (validar que newEmail y confirmEmail coincidan)
+                                                            // Validar que newEmail y confirmEmail coincidan
                                                             setIsEmailEditing(false);
                                                         }}
                                                     >
@@ -909,7 +944,7 @@ const EditProfile = () => {
                                                         className="edit-data-button"
                                                         style={{ background: 'green', color: 'white' }}
                                                         onClick={() => {
-                                                            // Aquí se confirmaría el cambio de contraseña (validar que newPassword y confirmPassword coincidan)
+                                                            // Validar y confirmar el cambio de contraseña
                                                             setIsPasswordEditing(false);
                                                         }}
                                                     >
@@ -933,7 +968,7 @@ const EditProfile = () => {
                                                 type="button"
                                                 className="edit-data-button"
                                                 onClick={() => {
-                                                    // Aquí se activaría el proceso de borrado de la cuenta
+                                                    // Activar proceso de borrado de cuenta
                                                 }}
                                             >
                                                 Borrar mi cuenta
