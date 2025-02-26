@@ -14,8 +14,6 @@ const getCreativeTypeText = (type) => {
     }
 };
 
-// Componente de botón sin efecto hover, controlado por la prop "isEditing"
-// Se agrega la clase "save-mode" cuando isEditing es true para aplicar el estilo verde
 const EditButton = ({ isEditing, onClick }) => (
     <button
         type="button"
@@ -27,7 +25,6 @@ const EditButton = ({ isEditing, onClick }) => (
 );
 
 const EditProfile = () => {
-    // Datos del perfil
     const [userData, setUserData] = useState({
         profilePicture: '/multimedia/usuarioDefault.jpg',
         fullName: 'Nombre Apellido',
@@ -36,19 +33,18 @@ const EditProfile = () => {
         country: 'País',
         email: 'correo@ejemplo.com',
         creativeType: 'Estudiante',
-        profile: { summary: '' },
+        biography: '', // se usará para el resumen profesional
     });
 
-    // Sección Información básica
     const [basicInfo, setBasicInfo] = useState({
         firstName: '',
         lastName: '',
         country: '',
         city: '',
     });
-    // Resumen profesional
+    // Usamos professionalSummary para el campo biography
     const [professionalSummary, setProfessionalSummary] = useState('');
-    // Educación y formación
+    // ... otros estados (educación, habilidades, etc.) se mantienen sin cambios
     const [education, setEducation] = useState({
         institution: '',
         otherInstitution: '',
@@ -58,7 +54,6 @@ const EditProfile = () => {
         currentlyEnrolled: false,
     });
     const [selfTaught, setSelfTaught] = useState(false);
-    // Habilidades
     const [skills, setSkills] = useState([]);
     const [newSkill, setNewSkill] = useState("");
     const [popularSkills, setPopularSkills] = useState([
@@ -69,7 +64,6 @@ const EditProfile = () => {
         "Organización de desfiles", "Gestión del tiempo", "Desarrollo de identidad de marca", "Comunicación visual",
         "Redacción y periodismo", "Aplicación textil", "Redacción descripción producto e-commerce"
     ]);
-    // Software
     const [software, setSoftware] = useState([]);
     const [newSoftware, setNewSoftware] = useState("");
     const [popularSoftware, setPopularSoftware] = useState([
@@ -77,10 +71,8 @@ const EditProfile = () => {
         "Procreate", "Gerber AccuMark", "Lectra", "Optitex", "Blender", "Asana", "Trello", "SewArt",
         "Tailornova", "Shopify", "ZBrush"
     ]);
-    // En busca de...
     const [contract, setContract] = useState({ practicas: false, tiempoCompleto: false, parcial: false });
     const [locationType, setLocationType] = useState({ presencial: false, remoto: false, hibrido: false });
-    // Contacto y redes sociales
     const [social, setSocial] = useState({
         emailContacto: "",
         sitioWeb: "",
@@ -92,7 +84,6 @@ const EditProfile = () => {
         pinterest: ""
     });
 
-    // Estados para controlar el modo edición de cada sección
     const [isBasicEditing, setIsBasicEditing] = useState(false);
     const [isSummaryEditing, setIsSummaryEditing] = useState(false);
     const [isEducationEditing, setIsEducationEditing] = useState(false);
@@ -101,7 +92,6 @@ const EditProfile = () => {
     const [isEnBuscaEditing, setIsEnBuscaEditing] = useState(false);
     const [isContactEditing, setIsContactEditing] = useState(false);
 
-    // Estados para configuración
     const [isEmailEditing, setIsEmailEditing] = useState(false);
     const [emailInput, setEmailInput] = useState("");
     const [newEmail, setNewEmail] = useState("");
@@ -129,7 +119,7 @@ const EditProfile = () => {
                     country: user.country,
                     email: user.email,
                     creativeType: getCreativeTypeText(user.creativeType),
-                    profile: { summary: user.profile.summary || '' },
+                    biography: user.biography || '',
                 });
                 if (user.fullName) {
                     const names = user.fullName.split(' ');
@@ -140,7 +130,7 @@ const EditProfile = () => {
                         city: user.city || '',
                     });
                 }
-                setProfessionalSummary(user.profile.summary || '');
+                setProfessionalSummary(user.biography || '');
             } catch (error) {
                 console.error('Error al obtener el perfil:', error);
             }
@@ -148,7 +138,6 @@ const EditProfile = () => {
         fetchUserProfile();
     }, []);
 
-    // Actualizamos emailInput cuando userData.email cambie
     useEffect(() => {
         setEmailInput(userData.email);
     }, [userData.email]);
@@ -213,7 +202,6 @@ const EditProfile = () => {
         }
     };
 
-    // En busca de...
     const handleContractChange = (e) => {
         const { name, checked } = e.target;
         setContract((prev) => ({ ...prev, [name]: checked }));
@@ -224,10 +212,36 @@ const EditProfile = () => {
         setLocationType((prev) => ({ ...prev, [name]: checked }));
     };
 
-    // Contacto y redes sociales
     const handleSocialChange = (e) => {
         const { name, value } = e.target;
         setSocial((prev) => ({ ...prev, [name]: value }));
+    };
+
+    // Función para actualizar la información del perfil (usando 'biography' en lugar de 'profile.summary')
+    const updateProfileData = async () => {
+        try {
+            const token = localStorage.getItem('authToken');
+            const backendUrl = import.meta.env.VITE_BACKEND_URL;
+            const updates = {
+                fullName: `${basicInfo.firstName} ${basicInfo.lastName}`,
+                city: basicInfo.city,
+                country: basicInfo.country,
+                biography: professionalSummary
+            };
+            const response = await axios.put(`${backendUrl}/api/users/profile`, updates, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            const updatedUser = response.data.user;
+            setUserData({
+                ...userData,
+                fullName: updatedUser.fullName,
+                city: updatedUser.city,
+                country: updatedUser.country,
+                biography: updatedUser.biography,
+            });
+        } catch (error) {
+            console.error('Error al actualizar el perfil:', error);
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -236,7 +250,6 @@ const EditProfile = () => {
             userData, basicInfo, professionalSummary, education, selfTaught,
             skills, software, contract, locationType, social
         });
-        // Aquí se puede realizar el PUT a /api/users/profile con los datos actualizados
     };
 
     const currentDate = new Date().toISOString().split('T')[0];
@@ -253,14 +266,12 @@ const EditProfile = () => {
         "Universidad de Buenos Aires", "Universidad de Sydney", "Universidad de Pekín"
     ];
 
-    // Control de sección activa (Editar perfil, Mis ofertas, Configuración)
     const [activeOption, setActiveOption] = useState("editProfile");
 
     return (
         <div className="edit-profile-wrapper">
             <form onSubmit={handleSubmit}>
                 <div className="profile-section">
-                    {/* Banner principal */}
                     <div className="profile-banner">
                         <div className="banner-left">
                             <img src={userData.profilePicture} alt="Perfil" className="profile-picture" />
@@ -275,7 +286,6 @@ const EditProfile = () => {
                             <span className="creative-type">{userData.creativeType}</span>
                         </div>
                     </div>
-                    {/* Cuerpo del perfil */}
                     <div className="profile-body">
                         <div className="left-options">
                             <div
@@ -356,11 +366,16 @@ const EditProfile = () => {
                                         <div className="button-container">
                                             <EditButton
                                                 isEditing={isBasicEditing}
-                                                onClick={() => setIsBasicEditing(!isBasicEditing)}
+                                                onClick={() => {
+                                                    if (isBasicEditing) {
+                                                        updateProfileData();
+                                                    }
+                                                    setIsBasicEditing(!isBasicEditing);
+                                                }}
                                             />
                                         </div>
                                     </section>
-                                    {/* 3.2 Resumen profesional */}
+                                    {/* 3.2 Resumen profesional (almacenado en 'biography') */}
                                     <section className="form-section">
                                         <h3>Resumen profesional</h3>
                                         <h4>Describe tu recorrido profesional</h4>
@@ -380,7 +395,12 @@ const EditProfile = () => {
                                         <div className="button-container">
                                             <EditButton
                                                 isEditing={isSummaryEditing}
-                                                onClick={() => setIsSummaryEditing(!isSummaryEditing)}
+                                                onClick={() => {
+                                                    if (isSummaryEditing) {
+                                                        updateProfileData();
+                                                    }
+                                                    setIsSummaryEditing(!isSummaryEditing);
+                                                }}
                                             />
                                         </div>
                                     </section>
