@@ -1,15 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { FaTh, FaList, FaLinkedin, FaInstagram } from 'react-icons/fa';
 import './css/miPerfil.css';
 
 const MiPerfil = () => {
-    // Estado para alternar la vista de proyectos (galería/individual)
+    const [profile, setProfile] = useState(null);
     const [isGalleryView, setIsGalleryView] = useState(true);
-    // Estado para controlar la pestaña activa en vista móvil ('perfil' o 'publicaciones')
     const [activeTab, setActiveTab] = useState('perfil');
 
+    // Cargar datos del usuario al montar el componente
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) return;
+                const backendUrl = import.meta.env.VITE_BACKEND_URL;
+                const res = await axios.get(`${backendUrl}/api/users/profile`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                setProfile(res.data);
+            } catch (error) {
+                console.error("Error al cargar el perfil", error);
+            }
+        };
+        fetchProfile();
+    }, []);
+
     const toggleView = () => {
-        setIsGalleryView((prev) => !prev);
+        setIsGalleryView(prev => !prev);
     };
 
     return (
@@ -18,16 +36,22 @@ const MiPerfil = () => {
             <div className="miPerfil-header-container">
                 <header className="miPerfil-header">
                     <img
-                        src="/multimedia/usuarioDefault.jpg"
+                        src={profile?.profile?.profilePicture || "/multimedia/usuarioDefault.jpg"}
                         alt="Perfil"
                         className="miPerfil-photo"
                     />
                     <div className="miPerfil-personal-info">
-                        <h1 className="miPerfil-name">Daniela Gómez</h1>
+                        <h1 className="miPerfil-name">
+                            {profile?.fullName || "Nombre Apellido"}
+                        </h1>
                         <p className="miPerfil-occupations">
-                            Periodista | Estilista | Dirección creativa
+                            {profile?.biography || "Ocupación no especificada"}
                         </p>
-                        <p className="miPerfil-location">Valencia, España</p>
+                        <p className="miPerfil-location">
+                            {profile?.city && profile?.country
+                                ? `${profile.city}, ${profile.country}`
+                                : "Ubicación no especificada"}
+                        </p>
                     </div>
                 </header>
                 {/* Pestañas solo para vista móvil */}
@@ -42,7 +66,7 @@ const MiPerfil = () => {
                         className={activeTab === 'publicaciones' ? 'active' : ''}
                         onClick={() => setActiveTab('publicaciones')}
                     >
-                        Mis publicaciónes
+                        Mis publicaciones
                     </button>
                 </div>
             </div>
@@ -54,28 +78,24 @@ const MiPerfil = () => {
                     <section className="miPerfil-section">
                         <h2>Descripción</h2>
                         <p>
-                            Con amplia experiencia en diseño de moda, sostenibilidad, tendencias
-                            y creatividad. Apasionada por fusionar el periodismo con la dirección
-                            creativa para generar propuestas innovadoras y responsables.
+                            {profile?.biography || "No hay descripción disponible."}
                         </p>
                     </section>
 
-                    {/* Experiencia profesional */}
+                    {/* Experiencia profesional (se deja estática o se adapta según tu modelo) */}
                     <section className="miPerfil-section">
                         <h2>Experiencia profesional</h2>
                         <ul className="miPerfil-list">
                             <li>
                                 <strong>Feb 2023 – Abr 2024</strong>
                                 <p>
-                                    Prácticas como asistente de diseño en “Marca X” (participación en
-                                    colecciones primavera-verano y contacto con proveedores).
+                                    Prácticas como asistente de diseño en “Marca X” (participación en colecciones primavera-verano y contacto con proveedores).
                                 </p>
                             </li>
                             <li>
                                 <strong>Feb 2021 – Ene 2024</strong>
                                 <p>
-                                    Proyecto propio “Marca personal” (desarrollo de una colección
-                                    cápsula sostenible).
+                                    Proyecto propio “Marca personal” (desarrollo de una colección cápsula sostenible).
                                 </p>
                             </li>
                         </ul>
@@ -85,13 +105,13 @@ const MiPerfil = () => {
                     <section className="miPerfil-section">
                         <h2>Habilidades</h2>
                         <div className="miPerfil-chips">
-                            <span className="miPerfil-chip">Colección cápsula</span>
-                            <span className="miPerfil-chip">Ilustración de moda</span>
-                            <span className="miPerfil-chip">Branding</span>
-                            <span className="miPerfil-chip">Marketing</span>
-                            <span className="miPerfil-chip">Diseño gráfico</span>
-                            <span className="miPerfil-chip">Patronaje industrial</span>
-                            <span className="miPerfil-chip">Maquillaje</span>
+                            {profile?.skills && profile.skills.length > 0 ? (
+                                profile.skills.map((skill, index) => (
+                                    <span key={index} className="miPerfil-chip">{skill}</span>
+                                ))
+                            ) : (
+                                <span>No se han agregado habilidades.</span>
+                            )}
                         </div>
                     </section>
 
@@ -99,13 +119,13 @@ const MiPerfil = () => {
                     <section className="miPerfil-section">
                         <h2>Software</h2>
                         <div className="miPerfil-chips">
-                            <span className="miPerfil-chip">InDesign</span>
-                            <span className="miPerfil-chip">Photoshop</span>
-                            <span className="miPerfil-chip">Illustrator</span>
-                            <span className="miPerfil-chip">Canva</span>
-                            <span className="miPerfil-chip">Lectra</span>
-                            <span className="miPerfil-chip">Gerber</span>
-                            <span className="miPerfil-chip">Procreate</span>
+                            {profile?.software && profile.software.length > 0 ? (
+                                profile.software.map((sw, index) => (
+                                    <span key={index} className="miPerfil-chip">{sw}</span>
+                                ))
+                            ) : (
+                                <span>No se ha agregado software.</span>
+                            )}
                         </div>
                     </section>
 
@@ -113,18 +133,26 @@ const MiPerfil = () => {
                     <section className="miPerfil-section">
                         <h2>Formación educativa</h2>
                         <ul className="miPerfil-list">
-                            <li>
-                                <strong>Feb 2023 – Ene 2024</strong>
-                                <p>
-                                    Grado Superior Patronaje y diseño de moda en “Barrio Arte + Diseño”.
-                                </p>
-                            </li>
-                            <li>
-                                <strong>Sept 2021 – 2023</strong>
-                                <p>
-                                    Máster en estilismo y dirección creativa en “Escuela Arts San Telmo”.
-                                </p>
-                            </li>
+                            {profile?.education && profile.education.length > 0 ? (
+                                profile.education.map((edu, index) => (
+                                    <li key={index}>
+                                        <strong>
+                                            {edu.formationStart
+                                                ? new Date(edu.formationStart).toLocaleDateString()
+                                                : ""}
+                                            {" - "}
+                                            {edu.formationEnd
+                                                ? new Date(edu.formationEnd).toLocaleDateString()
+                                                : "Actual"}
+                                        </strong>
+                                        <p>
+                                            {edu.formationName} en {edu.institution || edu.otherInstitution}
+                                        </p>
+                                    </li>
+                                ))
+                            ) : (
+                                <li>No se ha agregado formación educativa.</li>
+                            )}
                         </ul>
                     </section>
 
@@ -132,20 +160,24 @@ const MiPerfil = () => {
                     <section className="miPerfil-section miPerfil-social">
                         <h2>Redes sociales</h2>
                         <div className="miPerfil-social-links">
-                            <a
-                                href="https://www.linkedin.com/in/daniela-gomez"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                <FaLinkedin size={24} />
-                            </a>
-                            <a
-                                href="https://www.instagram.com/daniela_gomez"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                <FaInstagram size={24} />
-                            </a>
+                            {profile?.social?.linkedin && (
+                                <a
+                                    href={profile.social.linkedin}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <FaLinkedin size={24} />
+                                </a>
+                            )}
+                            {profile?.social?.instagram && (
+                                <a
+                                    href={profile.social.instagram}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <FaInstagram size={24} />
+                                </a>
+                            )}
                         </div>
                     </section>
 
@@ -167,7 +199,6 @@ const MiPerfil = () => {
                 </div>
 
                 <div className={`miPerfil-right ${activeTab === 'publicaciones' ? 'active' : ''}`}>
-                    {/* Controles para alternar la vista de proyectos */}
                     <div
                         className="miPerfil-projects-controls"
                         style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px' }}
@@ -176,8 +207,6 @@ const MiPerfil = () => {
                             {isGalleryView ? <FaList size={20} /> : <FaTh size={20} />}
                         </button>
                     </div>
-
-                    {/* Contenedor de proyectos: se aplican clases según el estado */}
                     <div
                         className={`miPerfil-projects-grid ${isGalleryView ? 'gallery' : 'individual'}`}
                     >

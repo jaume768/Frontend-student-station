@@ -131,6 +131,17 @@
     /* color de texto por defecto */
 }
 
+.section-header-edit{
+    display: flex;
+    justify-content: space-between;
+}
+
+.collapse-toggle{
+    border: none;
+    color: black;
+    background: white;
+}
+
 .option-icon {
     font-size: 1.2rem;
 }

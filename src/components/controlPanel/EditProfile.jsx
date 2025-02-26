@@ -137,7 +137,11 @@ const EditProfile = () => {
                 setProfessionalSummary(user.biography || '');
                 setEducationList(
                     user.education && Array.isArray(user.education) && user.education.length > 0
-                        ? user.education
+                        ? user.education.map(edu => ({
+                            ...edu,
+                            formationStart: edu.formationStart ? edu.formationStart.split("T")[0] : "",
+                            formationEnd: edu.formationEnd ? edu.formationEnd.split("T")[0] : ""
+                        }))
                         : [{
                             institution: '',
                             otherInstitution: '',
@@ -390,7 +394,7 @@ const EditProfile = () => {
                                 <>
                                     {/* 3.1 Información básica */}
                                     <section className="form-section">
-                                        <div className="section-header">
+                                        <div className="section-header-edit">
                                             <h3>Información básica</h3>
                                             <button type="button" className="collapse-toggle" onClick={() => setIsBasicCollapsed(!isBasicCollapsed)}>
                                                 {isBasicCollapsed ? <FaChevronDown /> : <FaChevronUp />}
@@ -461,7 +465,7 @@ const EditProfile = () => {
                                     </section>
                                     {/* 3.2 Resumen profesional */}
                                     <section className="form-section">
-                                        <div className="section-header">
+                                        <div className="section-header-edit">
                                             <h3>Resumen profesional</h3>
                                             <button type="button" className="collapse-toggle" onClick={() => setIsSummaryCollapsed(!isSummaryCollapsed)}>
                                                 {isSummaryCollapsed ? <FaChevronDown /> : <FaChevronUp />}
@@ -499,7 +503,7 @@ const EditProfile = () => {
                                     </section>
                                     {/* 3.3 Información educativa y formación */}
                                     <section className="form-section">
-                                        <div className="section-header">
+                                        <div className="section-header-edit">
                                             <h3>Información educativa y formación</h3>
                                             <button type="button" className="collapse-toggle" onClick={() => setIsEducationCollapsed(!isEducationCollapsed)}>
                                                 {isEducationCollapsed ? <FaChevronDown /> : <FaChevronUp />}
@@ -631,7 +635,7 @@ const EditProfile = () => {
                                     </section>
                                     {/* 3.4 Habilidades */}
                                     <section className="form-section">
-                                        <div className="section-header">
+                                        <div className="section-header-edit">
                                             <h3>Habilidades</h3>
                                             <button type="button" className="collapse-toggle" onClick={() => setIsHabilidadesCollapsed(!isHabilidadesCollapsed)}>
                                                 {isHabilidadesCollapsed ? <FaChevronDown /> : <FaChevronUp />}
@@ -692,7 +696,7 @@ const EditProfile = () => {
                                     </section>
                                     {/* 3.5 Software */}
                                     <section className="form-section">
-                                        <div className="section-header">
+                                        <div className="section-header-edit">
                                             <h3>Software</h3>
                                             <button type="button" className="collapse-toggle" onClick={() => setIsSoftwareCollapsed(!isSoftwareCollapsed)}>
                                                 {isSoftwareCollapsed ? <FaChevronDown /> : <FaChevronUp />}
@@ -753,7 +757,7 @@ const EditProfile = () => {
                                     </section>
                                     {/* 3.6 En busca de... */}
                                     <section className="form-section">
-                                        <div className="section-header">
+                                        <div className="section-header-edit">
                                             <h3>En busca de...</h3>
                                             <button type="button" className="collapse-toggle" onClick={() => setIsEnBuscaCollapsed(!isEnBuscaCollapsed)}>
                                                 {isEnBuscaCollapsed ? <FaChevronDown /> : <FaChevronUp />}
@@ -843,7 +847,7 @@ const EditProfile = () => {
                                     </section>
                                     {/* 3.7 Contacto y redes sociales */}
                                     <section className="form-section">
-                                        <div className="section-header">
+                                        <div className="section-header-edit">
                                             <h3>Contacto y redes sociales</h3>
                                             <button type="button" className="collapse-toggle" onClick={() => setIsContactCollapsed(!isContactCollapsed)}>
                                                 {isContactCollapsed ? <FaChevronDown /> : <FaChevronUp />}
