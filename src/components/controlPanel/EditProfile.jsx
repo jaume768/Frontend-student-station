@@ -621,7 +621,11 @@ const EditProfile = () => {
                                         <div className="button-container">
                                             <EditButton
                                                 isEditing={isHabilidadesEditing}
-                                                onClick={() => setIsHabilidadesEditing(!isHabilidadesEditing)}
+                                                onClick={() => {
+                                                    if (isHabilidadesEditing) {
+                                                        updateProfileData();
+                                                    } setIsHabilidadesEditing(!isHabilidadesEditing)
+                                                }}
                                             />
                                         </div>
                                     </section>
@@ -663,7 +667,11 @@ const EditProfile = () => {
                                         <div className="button-container">
                                             <EditButton
                                                 isEditing={isSoftwareEditing}
-                                                onClick={() => setIsSoftwareEditing(!isSoftwareEditing)}
+                                                onClick={() => {
+                                                    if (isSoftwareEditing) {
+                                                        updateProfileData();
+                                                    } setIsSoftwareEditing(!isSoftwareEditing)
+                                                }}
                                             />
                                         </div>
                                     </section>
@@ -739,7 +747,11 @@ const EditProfile = () => {
                                         <div className="button-container">
                                             <EditButton
                                                 isEditing={isEnBuscaEditing}
-                                                onClick={() => setIsEnBuscaEditing(!isEnBuscaEditing)}
+                                                onClick={() => {
+                                                    if (isEnBuscaEditing) {
+                                                        updateProfileData();
+                                                    } setIsEnBuscaEditing(!isEnBuscaEditing)
+                                                }}
                                             />
                                         </div>
                                     </section>
@@ -837,7 +849,11 @@ const EditProfile = () => {
                                         <div className="button-container">
                                             <EditButton
                                                 isEditing={isContactEditing}
-                                                onClick={() => setIsContactEditing(!isContactEditing)}
+                                                onClick={() => {
+                                                    if (isContactEditing) {
+                                                        updateProfileData();
+                                                    } setIsContactEditing(!isContactEditing)
+                                                }}
                                             />
                                         </div>
                                     </section>
