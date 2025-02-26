@@ -45,12 +45,11 @@ const EditProfile = () => {
     });
     const [professionalSummary, setProfessionalSummary] = useState('');
 
-    // Estado para manejar múltiples formaciones educativas
+    // Múltiples formaciones educativas
     const [educationList, setEducationList] = useState([]);
-    // Estado para indicar si se adquirieron los conocimientos de forma autodidacta (opcional)
     const [selfTaught, setSelfTaught] = useState(false);
 
-    // Otros estados (habilidades, software, etc.) se mantienen sin cambios...
+    // Otros estados (habilidades, software, etc.)
     const [skills, setSkills] = useState([]);
     const [newSkill, setNewSkill] = useState("");
     const [popularSkills, setPopularSkills] = useState([
@@ -81,7 +80,7 @@ const EditProfile = () => {
         pinterest: ""
     });
 
-    // Estados para controlar modos edición de secciones
+    // Estados de edición
     const [isBasicEditing, setIsBasicEditing] = useState(false);
     const [isSummaryEditing, setIsSummaryEditing] = useState(false);
     const [isEducationEditing, setIsEducationEditing] = useState(false);
@@ -89,17 +88,14 @@ const EditProfile = () => {
     const [isSoftwareEditing, setIsSoftwareEditing] = useState(false);
     const [isEnBuscaEditing, setIsEnBuscaEditing] = useState(false);
     const [isContactEditing, setIsContactEditing] = useState(false);
-
     const [isEmailEditing, setIsEmailEditing] = useState(false);
     const [emailInput, setEmailInput] = useState("");
     const [newEmail, setNewEmail] = useState("");
     const [confirmEmail, setConfirmEmail] = useState("");
-
     const [isPasswordEditing, setIsPasswordEditing] = useState(false);
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
-    // Al cargar el perfil, se actualizan los estados correspondientes
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
@@ -130,9 +126,18 @@ const EditProfile = () => {
                     });
                 }
                 setProfessionalSummary(user.biography || '');
-                // Si el usuario tiene formaciones educativas, se cargan en educationList
-                if (user.education && Array.isArray(user.education)) {
+                // Si el usuario tiene educación, se usa; de lo contrario se inicia con una entrada vacía
+                if (user.education && Array.isArray(user.education) && user.education.length > 0) {
                     setEducationList(user.education);
+                } else {
+                    setEducationList([{
+                        institution: '',
+                        otherInstitution: '',
+                        formationName: '',
+                        formationStart: '',
+                        formationEnd: '',
+                        currentlyEnrolled: false
+                    }]);
                 }
             } catch (error) {
                 console.error('Error al obtener el perfil:', error);
@@ -147,14 +152,14 @@ const EditProfile = () => {
 
     const handleBasicInfoChange = (e) => {
         const { name, value } = e.target;
-        setBasicInfo((prev) => ({ ...prev, [name]: value }));
+        setBasicInfo(prev => ({ ...prev, [name]: value }));
     };
 
     const handleProfessionalSummaryChange = (e) => {
         setProfessionalSummary(e.target.value);
     };
 
-    // Función para actualizar un elemento específico de educationList
+    // Actualiza un elemento específico de educationList
     const handleEducationListChange = (index, e) => {
         const { name, value, type, checked } = e.target;
         const updatedList = educationList.map((edu, i) =>
@@ -211,20 +216,20 @@ const EditProfile = () => {
 
     const handleContractChange = (e) => {
         const { name, checked } = e.target;
-        setContract((prev) => ({ ...prev, [name]: checked }));
+        setContract(prev => ({ ...prev, [name]: checked }));
     };
 
     const handleLocationChange = (e) => {
         const { name, checked } = e.target;
-        setLocationType((prev) => ({ ...prev, [name]: checked }));
+        setLocationType(prev => ({ ...prev, [name]: checked }));
     };
 
     const handleSocialChange = (e) => {
         const { name, value } = e.target;
-        setSocial((prev) => ({ ...prev, [name]: value }));
+        setSocial(prev => ({ ...prev, [name]: value }));
     };
 
-    // Función para agregar una nueva formación educativa
+    // Agrega una nueva entrada vacía a educationList
     const addEducation = () => {
         const emptyEducation = {
             institution: '',
@@ -237,7 +242,7 @@ const EditProfile = () => {
         setEducationList([...educationList, emptyEducation]);
     };
 
-    // Función para actualizar el perfil incluyendo la educación
+    // Envía la actualización del perfil al servidor, incluyendo educationList
     const updateProfileData = async () => {
         try {
             const token = localStorage.getItem('authToken');
@@ -260,7 +265,6 @@ const EditProfile = () => {
                 country: updatedUser.country,
                 biography: updatedUser.biography,
             });
-            // Actualizar también educationList en caso de que el servidor devuelva datos modificados
             if (updatedUser.education) {
                 setEducationList(updatedUser.education);
             }
@@ -400,7 +404,7 @@ const EditProfile = () => {
                                             />
                                         </div>
                                     </section>
-                                    {/* 3.2 Resumen profesional (almacenado en 'biography') */}
+                                    {/* 3.2 Resumen profesional */}
                                     <section className="form-section">
                                         <h3>Resumen profesional</h3>
                                         <h4>Describe tu recorrido profesional</h4>
