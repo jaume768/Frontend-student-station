@@ -126,19 +126,33 @@ const EditProfile = () => {
                     });
                 }
                 setProfessionalSummary(user.biography || '');
-                // Si el usuario tiene educación, se usa; de lo contrario se inicia con una entrada vacía
-                if (user.education && Array.isArray(user.education) && user.education.length > 0) {
-                    setEducationList(user.education);
-                } else {
-                    setEducationList([{
-                        institution: '',
-                        otherInstitution: '',
-                        formationName: '',
-                        formationStart: '',
-                        formationEnd: '',
-                        currentlyEnrolled: false
-                    }]);
-                }
+                setEducationList(
+                    user.education && Array.isArray(user.education) && user.education.length > 0
+                        ? user.education
+                        : [{
+                            institution: '',
+                            otherInstitution: '',
+                            formationName: '',
+                            formationStart: '',
+                            formationEnd: '',
+                            currentlyEnrolled: false
+                        }]
+                );
+                setSkills(user.skills || []);
+                setSoftware(user.software || []);
+                // Nuevos campos:
+                setContract(user.contract || { practicas: false, tiempoCompleto: false, parcial: false });
+                setLocationType(user.locationType || { presencial: false, remoto: false, hibrido: false });
+                setSocial(user.social || {
+                    emailContacto: "",
+                    sitioWeb: "",
+                    instagram: "",
+                    linkedin: "",
+                    behance: "",
+                    tumblr: "",
+                    youtube: "",
+                    pinterest: ""
+                });
             } catch (error) {
                 console.error('Error al obtener el perfil:', error);
             }
@@ -229,7 +243,6 @@ const EditProfile = () => {
         setSocial(prev => ({ ...prev, [name]: value }));
     };
 
-    // Agrega una nueva entrada vacía a educationList
     const addEducation = () => {
         const emptyEducation = {
             institution: '',
@@ -242,7 +255,6 @@ const EditProfile = () => {
         setEducationList([...educationList, emptyEducation]);
     };
 
-    // Envía la actualización del perfil al servidor, incluyendo educationList
     const updateProfileData = async () => {
         try {
             const token = localStorage.getItem('authToken');
@@ -252,7 +264,12 @@ const EditProfile = () => {
                 city: basicInfo.city,
                 country: basicInfo.country,
                 biography: professionalSummary,
-                education: educationList
+                education: educationList,
+                skills: skills,
+                software: software,
+                contract: contract,
+                locationType: locationType,
+                social: social
             };
             const response = await axios.put(`${backendUrl}/api/users/profile`, updates, {
                 headers: { Authorization: `Bearer ${token}` },
@@ -267,6 +284,21 @@ const EditProfile = () => {
             });
             if (updatedUser.education) {
                 setEducationList(updatedUser.education);
+            }
+            if (updatedUser.skills) {
+                setSkills(updatedUser.skills);
+            }
+            if (updatedUser.software) {
+                setSoftware(updatedUser.software);
+            }
+            if (updatedUser.contract) {
+                setContract(updatedUser.contract);
+            }
+            if (updatedUser.locationType) {
+                setLocationType(updatedUser.locationType);
+            }
+            if (updatedUser.social) {
+                setSocial(updatedUser.social);
             }
         } catch (error) {
             console.error('Error al actualizar el perfil:', error);
@@ -516,17 +548,24 @@ const EditProfile = () => {
                                         ))}
                                         <div className="button-row">
                                             <div className="button-container">
-                                                <button 
-                                                    type="button" 
-                                                    className="add-formation" 
-                                                    onClick={addEducation}
-                                                    disabled={!isEducationEditing}
-                                                >
-                                                    + Añadir formación
-                                                </button>
+                                                {isEducationEditing && (
+                                                    <button
+                                                        type="button"
+                                                        className="add-formation"
+                                                        onClick={addEducation}
+                                                        style={{ backgroundColor: "#989898", border: "none" }}
+                                                    >
+                                                        + Añadir formación
+                                                    </button>
+                                                )}
                                                 <EditButton
                                                     isEditing={isEducationEditing}
-                                                    onClick={() => setIsEducationEditing(!isEducationEditing)}
+                                                    onClick={() => {
+                                                        if (isEducationEditing) {
+                                                            updateProfileData();
+                                                        }
+                                                        setIsEducationEditing(!isEducationEditing);
+                                                    }}
                                                 />
                                             </div>
                                         </div>
