@@ -45,8 +45,8 @@ const MyComunity = () => {
                 </button>
             </div>
 
-            {/* Cuadrícula de perfiles centrada */}
-            <div className="mycomunity-grid">
+            {/* Contenedor de perfiles usando flex */}
+            <div className="mycomunity-flex">
                 {profilesToDisplay.map((user) => (
                     <div key={user.id} className="mycomunity-card">
                         <img

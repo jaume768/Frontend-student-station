@@ -140,6 +140,7 @@
     border: none;
     color: black;
     background: white;
+    cursor: pointer;
 }
 
 .option-icon {

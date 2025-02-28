@@ -8,7 +8,6 @@ const MiPerfil = () => {
     const [isGalleryView, setIsGalleryView] = useState(true);
     const [activeTab, setActiveTab] = useState('perfil');
 
-    // Cargar datos del usuario al montar el componente
     useEffect(() => {
         const fetchProfile = async () => {
             try {
@@ -32,7 +31,6 @@ const MiPerfil = () => {
 
     return (
         <div className="miPerfil-container">
-            {/* Encabezado y pestañas para móvil */}
             <div className="miPerfil-header-container">
                 <header className="miPerfil-header">
                     <img
@@ -54,7 +52,6 @@ const MiPerfil = () => {
                         </p>
                     </div>
                 </header>
-                {/* Pestañas solo para vista móvil */}
                 <div className="miPerfil-mobile-tabs">
                     <button
                         className={activeTab === 'perfil' ? 'active' : ''}
@@ -71,10 +68,8 @@ const MiPerfil = () => {
                 </div>
             </div>
 
-            {/* Contenedor de contenidos: en escritorio se muestran ambos; en móvil se muestra el activo */}
             <div className="miPerfil-content">
                 <div className={`miPerfil-left-content ${activeTab === 'perfil' ? 'active' : ''}`}>
-                    {/* Sección Descripción */}
                     <section className="miPerfil-section">
                         <h2>Descripción</h2>
                         <p>
@@ -82,7 +77,6 @@ const MiPerfil = () => {
                         </p>
                     </section>
 
-                    {/* Experiencia profesional (se deja estática o se adapta según tu modelo) */}
                     <section className="miPerfil-section">
                         <h2>Experiencia profesional</h2>
                         <ul className="miPerfil-list">

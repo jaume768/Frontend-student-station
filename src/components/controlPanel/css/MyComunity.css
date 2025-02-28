@@ -30,7 +30,6 @@
     font-size: 0.9rem;
     cursor: pointer;
     background-color: #ccc;
-    /* Inactivo: gris */
     color: #fff;
     transition: background-color 0.3s ease;
     text-align: center;
@@ -42,15 +41,14 @@
     color: #fff;
 }
 
-/* Cuadrícula de perfiles centrada */
-.mycomunity-grid {
-    display: grid;
-    width: 60em;
-    margin: auto;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 20px;
-    justify-items: center;
+/* Contenedor de perfiles utilizando Flex */
+.mycomunity-flex {
+    display: flex;
+    flex-wrap: wrap;
     justify-content: center;
+    gap: 20px;
+    max-width: 60em;
+    margin: auto;
 }
 
 /* Tarjeta de perfil */
@@ -60,6 +58,8 @@
     border-radius: 12px;
     text-align: center;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 150px;
+    /* Puedes ajustar el ancho según sea necesario */
 }
 
 /* Imagen de perfil */
@@ -86,9 +86,10 @@
 
 /* Responsividad */
 @media (max-width: 768px) {
-    .mycomunity-grid {
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-        width: 20em;
+    .mycomunity-flex {
+        justify-content: center;
+        gap: 15px;
+        width: 90%;
         margin-bottom: 60px;
     }
 
