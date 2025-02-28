@@ -22,6 +22,7 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
 
     const handleOptionSelect = (option) => {
         setShowProfileOptions(false);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         switch (option) {
             case 'editProfile':
                 navigate('/ControlPanel', { state: { activeMenu: 'editProfile' } });

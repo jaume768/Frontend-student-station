@@ -32,6 +32,7 @@ const MobileNavbar = ({ profilePicture }) => {
 
     const handleOptionSelect = (option) => {
         setShowProfileOptions(false);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         switch (option) {
             case 'editProfile':
                 navigate('/ControlPanel', { state: { activeMenu: 'editProfile' } });
@@ -44,10 +45,10 @@ const MobileNavbar = ({ profilePicture }) => {
                 break;
             case 'misOfertas':
                 navigate('/ControlPanel', { state: { activeMenu: 'misOfertas' } });
-                break; 
+                break;
             case 'configuracion':
                 navigate('/ControlPanel', { state: { activeMenu: 'configuracion' } });
-                break;    
+                break;
             case 'logout':
                 localStorage.removeItem('authToken');
                 navigate('/');
