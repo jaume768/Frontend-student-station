@@ -38,11 +38,11 @@ const MobileNavbar = ({ profilePicture }) => {
             case 'community':
                 navigate('/ControlPanel', { state: { activeMenu: 'community' } });
                 break;
-            case 'offers':
-                navigate('/ControlPanel', { state: { activeMenu: 'offers' } });
+            case 'misOfertas':
+                navigate('/ControlPanel', { state: { activeMenu: 'misOfertas' } });
                 break; 
-            case 'settings':
-                navigate('/ControlPanel', { state: { activeMenu: 'settings' } });
+            case 'configuracion':
+                navigate('/ControlPanel', { state: { activeMenu: 'configuracion' } });
                 break;    
             case 'logout':
                 localStorage.removeItem('authToken');
