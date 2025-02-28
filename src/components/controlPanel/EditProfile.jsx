@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { FaPencilAlt, FaBriefcase, FaCog, FaChevronDown, FaChevronUp, FaTrash } from 'react-icons/fa';
 import './css/EditProfile.css';
@@ -25,7 +26,15 @@ const EditButton = ({ isEditing, onClick }) => (
 );
 
 const EditProfile = () => {
-    // Datos generales del usuario
+    const location = useLocation();
+    const [activeOption, setActiveOption] = useState(location.state?.activeMenu || "editProfile");
+
+    useEffect(() => {
+        if (location.state?.activeMenu) {
+            setActiveOption(location.state.activeMenu);
+        }
+    }, [location.state]);
+
     const [userData, setUserData] = useState({
         profilePicture: '/multimedia/usuarioDefault.jpg',
         fullName: 'Nombre Apellido',
@@ -344,8 +353,6 @@ const EditProfile = () => {
         "MIT", "Universidad de Cambridge", "Universidad de Tokyo", "Universidad de Salamanca",
         "Universidad de Buenos Aires", "Universidad de Sydney", "Universidad de Pekín"
     ];
-
-    const [activeOption, setActiveOption] = useState("editProfile");
 
     return (
         <div className="edit-profile-wrapper">

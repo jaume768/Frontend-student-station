@@ -10,7 +10,7 @@ const ControlPanel = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [randomIndices, setRandomIndices] = useState([]);
-    
+
 
     useEffect(() => {
         const params = new URLSearchParams(location.search);
@@ -72,13 +72,6 @@ const ControlPanel = () => {
                         <p>Aquí va el contenido de la sección de Moda.</p>
                     </div>
                 );
-            case 'offers':
-                return (
-                    <div>
-                        <h1>Contenido de Ofertas</h1>
-                        <p>Aquí va el contenido de la sección Ofertas.</p>
-                    </div>
-                );
             case 'blog':
                 return (
                     <div>
@@ -101,11 +94,13 @@ const ControlPanel = () => {
                     </div>
                 );
             case 'editProfile':
+            case 'misOfertas':
+            case 'configuracion':
                 return <EditProfile />;
             case 'profile':
                 return <MiPerfil />;
             case 'community':
-                return <MyComunity />;    
+                return <MyComunity />;
             default:
                 return (
                     <div>
