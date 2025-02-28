@@ -28,12 +28,12 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
             case 'community':
                 navigate('/ControlPanel', { state: { activeMenu: 'community' } });
                 break;
-            case 'offers':
-                navigate('/ControlPanel', { state: { activeMenu: 'offers' } });
-                break; 
-            case 'settings':
-                navigate('/ControlPanel', { state: { activeMenu: 'settings' } });
-                break;                    
+            case 'misOfertas':
+                navigate('/ControlPanel', { state: { activeMenu: 'misOfertas' } });
+                break;
+            case 'configuracion':
+                navigate('/ControlPanel', { state: { activeMenu: 'configuracion' } });
+                break;
             case 'logout':
                 localStorage.removeItem('authToken');
                 navigate('/');

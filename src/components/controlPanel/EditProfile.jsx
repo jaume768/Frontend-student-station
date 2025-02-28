@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { FaPencilAlt, FaBriefcase, FaCog, FaChevronDown, FaChevronUp, FaTrash } from 'react-icons/fa';
 import './css/EditProfile.css';
+import MisOfertasSection from './MisOfertasSection';
 
 const getCreativeTypeText = (type) => {
     switch (type) {
@@ -991,10 +992,7 @@ const EditProfile = () => {
                             {activeOption === "misOfertas" && (
                                 <section className="form-section">
                                     <h3>Mis ofertas</h3>
-                                    <p>Aquí se mostrarán las ofertas guardadas o publicadas por el usuario.</p>
-                                    <div className="button-container">
-                                        <EditButton onClick={() => { /* Guardar cambios en ofertas, si aplica */ }} isEditing={false} />
-                                    </div>
+                                    <MisOfertasSection />
                                 </section>
                             )}
                             {activeOption === "configuracion" && (
