@@ -399,7 +399,7 @@
     }
 }
 
-/* Contenedor principal de Mis Ofertas */
+/* Contenedor principal */
 .mis-ofertas-section {
     background: #fdfdfd;
     padding: 1rem;
@@ -447,6 +447,24 @@
     border: 1px solid #e5eeff;
     border-radius: 8px;
     background: #fff;
+    position: relative;
+}
+
+/* Tarjeta caducada (ofertas inactivas) */
+.oferta-caducada {
+    background: #dddddd;
+}
+
+/* Etiqueta "Urgente" posicionada arriba a la derecha */
+.urgent-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: red;
+    color: #fff;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
 }
 
 /* Logo de la empresa */
@@ -487,7 +505,7 @@
     margin: 0.3rem 0;
 }
 
-/* Estado y urgencia */
+/* Estado y botones */
 .oferta-status {
     font-size: 0.9rem;
     display: flex;
@@ -496,20 +514,31 @@
     margin-top: 0.5rem;
 }
 
-.status-sent {
-    color: green;
-    font-weight: 500;
+.status-btn {
+    border: none;
+    padding: 0.4rem 1rem;
+    font-size: 0.9rem;
+    border-radius: 40px;
+    cursor: pointer;
 }
 
-.status-urgent {
-    background: red;
-    color: #fff;
-    padding: 0.2rem 0.5rem;
-    border-radius: 4px;
-    font-size: 0.8rem;
+.aplicadas {
+    background: #d7f3e5;
+    color: #78cda1;
 }
 
-/* Botón al final */
+.guardadas {
+    background: #ffeecc;
+    color: #cc8800;
+}
+
+.caducadas {
+    background: #dddddd;
+    color: #777;
+    cursor: not-allowed;
+}
+
+/* Botón de "Buscar más ofertas" */
 .ofertas-footer {
     margin-top: 1rem;
     text-align: center;
