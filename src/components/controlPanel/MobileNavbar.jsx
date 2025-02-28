@@ -26,6 +26,10 @@ const MobileNavbar = ({ profilePicture }) => {
         }
     };
 
+    useEffect(() => {
+        setShowProfileOptions(false);
+    }, [location]);
+
     const handleOptionSelect = (option) => {
         setShowProfileOptions(false);
         switch (option) {

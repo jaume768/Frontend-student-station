@@ -558,3 +558,22 @@
 .buscar-ofertas-btn:hover {
     background: #3a6fcc;
 }
+
+
+@media (max-width: 568px) {
+    .mis-ofertas-header {
+        display: flex;
+        gap: 0.1rem;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .ofertas-tab.active {
+        font-size: 1.2em;
+    }
+
+    .ofertas-tab {
+        font-size: 1.2em;
+    }
+}

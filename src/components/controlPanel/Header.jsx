@@ -16,6 +16,10 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
         }
     };
 
+    useEffect(() => {
+        setShowProfileOptions(false);
+    }, [location]);
+
     const handleOptionSelect = (option) => {
         setShowProfileOptions(false);
         switch (option) {
