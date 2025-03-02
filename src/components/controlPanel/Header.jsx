@@ -61,7 +61,9 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
                     <FaBookmark className="nav-icon-save" title="Guardados" />
                     <span>guardados</span>
                 </div>
-                <button>+ crear</button>
+                <button onClick={() => navigate('/ControlPanel', { state: { activeMenu: 'createPost' } })}>
+                    + crear
+                </button>
                 <div className="profile-wrapper" style={{ position: 'relative' }}>
                     <img
                         className="profile-img"

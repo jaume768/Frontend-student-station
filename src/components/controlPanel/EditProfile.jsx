@@ -1046,7 +1046,7 @@ const EditProfile = () => {
                                                     <input
                                                         type="text"
                                                         name="instagram"
-                                                        placeholder="Introduce tu Instagram"
+                                                        placeholder="Introduce tu Instagram (url)"
                                                         value={social.instagram}
                                                         onChange={handleSocialChange}
                                                         disabled={!isContactEditing}
@@ -1057,7 +1057,7 @@ const EditProfile = () => {
                                                     <input
                                                         type="text"
                                                         name="linkedin"
-                                                        placeholder="Introduce tu Linkedin"
+                                                        placeholder="Introduce tu Linkedin (url)"
                                                         value={social.linkedin}
                                                         onChange={handleSocialChange}
                                                         disabled={!isContactEditing}
@@ -1068,7 +1068,7 @@ const EditProfile = () => {
                                                     <input
                                                         type="text"
                                                         name="behance"
-                                                        placeholder="Introduce tu Behance"
+                                                        placeholder="Introduce tu Behance (url)"
                                                         value={social.behance}
                                                         onChange={handleSocialChange}
                                                         disabled={!isContactEditing}
@@ -1079,7 +1079,7 @@ const EditProfile = () => {
                                                     <input
                                                         type="text"
                                                         name="tumblr"
-                                                        placeholder="Introduce tu Tumblr"
+                                                        placeholder="Introduce tu Tumblr (url)"
                                                         value={social.tumblr}
                                                         onChange={handleSocialChange}
                                                         disabled={!isContactEditing}
@@ -1090,7 +1090,7 @@ const EditProfile = () => {
                                                     <input
                                                         type="text"
                                                         name="youtube"
-                                                        placeholder="Introduce tu Youtube"
+                                                        placeholder="Introduce tu Youtube (url)"
                                                         value={social.youtube}
                                                         onChange={handleSocialChange}
                                                         disabled={!isContactEditing}
@@ -1101,7 +1101,7 @@ const EditProfile = () => {
                                                     <input
                                                         type="text"
                                                         name="pinterest"
-                                                        placeholder="Introduce tu Pinterest"
+                                                        placeholder="Introduce tu Pinterest (url)"
                                                         value={social.pinterest}
                                                         onChange={handleSocialChange}
                                                         disabled={!isContactEditing}

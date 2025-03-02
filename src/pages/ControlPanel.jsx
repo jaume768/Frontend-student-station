@@ -5,6 +5,7 @@ import './css/control-panel.css';
 import EditProfile from '../components/controlPanel/EditProfile';
 import MiPerfil from '../components/controlPanel/MiPerfil';
 import MyComunity from '../components/controlPanel/MyComunity';
+import CreatePost from '../components/controlPanel/CreatePost';
 
 const ControlPanel = () => {
     const location = useLocation();
@@ -101,6 +102,8 @@ const ControlPanel = () => {
                 return <MiPerfil />;
             case 'community':
                 return <MyComunity />;
+            case 'createPost':
+                return <CreatePost />;    
             default:
                 return (
                     <div>

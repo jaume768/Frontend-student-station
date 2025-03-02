@@ -1,0 +1,176 @@
+/* Contenedor principal: dos paneles en fila */
+.createpost-wrapper {
+    display: flex;
+    height: 100vh;
+}
+
+/* Panel Izquierdo */
+.createpost-left {
+    width: 50%;
+    background-color: #e5eeff;
+    color: blue;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.left-header {
+    margin-bottom: 20px;
+}
+
+.step-label {
+    background-color: #4c85ff;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.left-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.upload-icon {
+    margin-bottom: 10px;
+}
+
+.image-upload-input {
+    margin-bottom: 10px;
+}
+
+.upload-text {
+    font-size: 1.2rem;
+}
+
+/* Panel Derecho */
+.createpost-right {
+    width: 50%;
+    padding: 20px;
+    overflow-y: auto;
+    max-height: 100vh;
+}
+
+.createpost-right form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+/* Etiqueta de paso en el panel derecho (Paso 2, 3, 4) */
+.step-label-dark {
+    background-color: black;
+    color: white;
+    border-radius: 40px;
+    padding: 5px 10px;
+    display: inline-block;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.post-section {
+    margin-bottom: 20px;
+}
+
+.post-section h3 {
+    margin-bottom: 5px;
+}
+
+.post-input,
+.post-textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.post-textarea {
+    height: 100px;
+}
+
+/* Tarjetas para etiquetar personas */
+.people-tag-card {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.remove-card-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: transparent;
+    border: none;
+    color: red;
+    cursor: pointer;
+}
+
+.add-card-btn {
+    background: transparent;
+    border: none;
+    color: #4c85ff;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+/* Sección de etiquetas del post */
+.tags-info p {
+    color: #4c85ff;
+    font-size: 0.9rem;
+    margin: 2px 0;
+}
+
+.tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.tag {
+    background: #01a8e9;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+.save-tags-btn {
+    background: #4c85ff;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 40px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+/* Botón para publicar */
+.publish-btn {
+    background: #4c85ff;
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 40px;
+    font-size: 1rem;
+    cursor: pointer;
+    align-self: center;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.publish-btn:disabled {
+    background: grey;
+    cursor: not-allowed;
+}
