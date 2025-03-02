@@ -55,11 +55,20 @@ const EditProfile = () => {
     });
     const [professionalSummary, setProfessionalSummary] = useState('');
 
-    // Múltiples formaciones educativas
+    // Estados para la sección de formación educativa
     const [educationList, setEducationList] = useState([]);
     const [selfTaught, setSelfTaught] = useState(false);
 
-    // Otros estados (habilidades, software, etc.)
+    // Nuevo estado para la sección de Formación Profesional
+    const [professionalFormationList, setProfessionalFormationList] = useState([{
+        trainingName: '',
+        institution: '',
+        trainingStart: '',
+        trainingEnd: '',
+        currentlyInProgress: false
+    }]);
+
+    // Estados para otras secciones
     const [skills, setSkills] = useState([]);
     const [newSkill, setNewSkill] = useState("");
     const [popularSkills, setPopularSkills] = useState([
@@ -115,6 +124,10 @@ const EditProfile = () => {
     const [isEnBuscaCollapsed, setIsEnBuscaCollapsed] = useState(false);
     const [isContactCollapsed, setIsContactCollapsed] = useState(false);
 
+    // Estados para la nueva sección de Formación Profesional
+    const [isProfessionalFormationEditing, setIsProfessionalFormationEditing] = useState(false);
+    const [isProfessionalFormationCollapsed, setIsProfessionalFormationCollapsed] = useState(false);
+
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
@@ -161,6 +174,16 @@ const EditProfile = () => {
                             currentlyEnrolled: false
                         }]
                 );
+                // Si el usuario tiene formación profesional, se asigna; de lo contrario se usa el valor por defecto.
+                if (user.professionalFormation && Array.isArray(user.professionalFormation) && user.professionalFormation.length > 0) {
+                    setProfessionalFormationList(
+                        user.professionalFormation.map(item => ({
+                            ...item,
+                            trainingStart: item.trainingStart ? item.trainingStart.split("T")[0] : "",
+                            trainingEnd: item.trainingEnd ? item.trainingEnd.split("T")[0] : ""
+                        }))
+                    );
+                }
                 setSkills(user.skills || []);
                 setSoftware(user.software || []);
                 setContract(user.contract || { practicas: false, tiempoCompleto: false, parcial: false });
@@ -264,6 +287,31 @@ const EditProfile = () => {
         setSocial(prev => ({ ...prev, [name]: value }));
     };
 
+    // Handlers para Formación Profesional
+    const handleProfessionalFormationChange = (index, e) => {
+        const { name, value, type, checked } = e.target;
+        const updatedList = professionalFormationList.map((item, i) =>
+            i === index ? { ...item, [name]: type === 'checkbox' ? checked : value } : item
+        );
+        setProfessionalFormationList(updatedList);
+    };
+
+    const addProfessionalFormation = () => {
+        setProfessionalFormationList([...professionalFormationList, {
+            trainingName: '',
+            institution: '',
+            trainingStart: '',
+            trainingEnd: '',
+            currentlyInProgress: false,
+        }]);
+    };
+
+    const removeProfessionalFormation = (index) => {
+        if (professionalFormationList.length > 1) {
+            setProfessionalFormationList(professionalFormationList.filter((_, i) => i !== index));
+        }
+    };
+
     const addEducation = () => {
         const emptyEducation = {
             institution: '',
@@ -293,6 +341,7 @@ const EditProfile = () => {
                 country: basicInfo.country,
                 biography: professionalSummary,
                 education: educationList,
+                professionalFormation: professionalFormationList,
                 skills: skills,
                 software: software,
                 contract: contract,
@@ -312,6 +361,9 @@ const EditProfile = () => {
             });
             if (updatedUser.education) {
                 setEducationList(updatedUser.education);
+            }
+            if (updatedUser.professionalFormation) {
+                setProfessionalFormationList(updatedUser.professionalFormation);
             }
             if (updatedUser.skills) {
                 setSkills(updatedUser.skills);
@@ -337,7 +389,7 @@ const EditProfile = () => {
         e.preventDefault();
         console.log({
             userData, basicInfo, professionalSummary, educationList, selfTaught,
-            skills, software, contract, locationType, social
+            professionalFormationList, skills, software, contract, locationType, social
         });
     };
 
@@ -638,6 +690,110 @@ const EditProfile = () => {
                                                     </label>
                                                 </div>
                                                 <small className="info-text">Puedes añadir tantas formaciones como desees.</small>
+                                            </div>
+                                        )}
+                                    </section>
+                                    <section className="form-section">
+                                        <div className="section-header-edit">
+                                            <h3>Formación Profesional</h3>
+                                            <button type="button" className="collapse-toggle" onClick={() => setIsProfessionalFormationCollapsed(!isProfessionalFormationCollapsed)}>
+                                                {isProfessionalFormationCollapsed ? <FaChevronDown /> : <FaChevronUp />}
+                                            </button>
+                                        </div>
+                                        {!isProfessionalFormationCollapsed && (
+                                            <div className="section-content">
+                                                {professionalFormationList.map((item, index) => (
+                                                    <div key={index} className="professional-formation-entry">
+                                                        <div className="form-group">
+                                                            <label>Nombre de la formación</label>
+                                                            <input
+                                                                type="text"
+                                                                name="trainingName"
+                                                                placeholder="Introduce el nombre de la formación"
+                                                                value={item.trainingName}
+                                                                onChange={(e) => handleProfessionalFormationChange(index, e)}
+                                                                disabled={!isProfessionalFormationEditing}
+                                                            />
+                                                        </div>
+                                                        <div className="form-group">
+                                                            <label>Institución</label>
+                                                            <input
+                                                                type="text"
+                                                                name="institution"
+                                                                placeholder="Introduce el nombre de la institución"
+                                                                value={item.institution}
+                                                                onChange={(e) => handleProfessionalFormationChange(index, e)}
+                                                                disabled={!isProfessionalFormationEditing}
+                                                            />
+                                                        </div>
+                                                        <div className="form-group date-group">
+                                                            <label>Inicio</label>
+                                                            <input
+                                                                type="date"
+                                                                name="trainingStart"
+                                                                value={item.trainingStart}
+                                                                onChange={(e) => handleProfessionalFormationChange(index, e)}
+                                                                min="1940-01-01"
+                                                                max={currentDate}
+                                                                disabled={!isProfessionalFormationEditing}
+                                                            />
+                                                        </div>
+                                                        <div className="form-group date-group">
+                                                            <label>Fin</label>
+                                                            <input
+                                                                type="date"
+                                                                name="trainingEnd"
+                                                                value={item.trainingEnd}
+                                                                onChange={(e) => handleProfessionalFormationChange(index, e)}
+                                                                min="1940-01-01"
+                                                                max={currentDate}
+                                                                disabled={!isProfessionalFormationEditing || item.currentlyInProgress}
+                                                            />
+                                                        </div>
+                                                        <div className="form-group checkbox-group-search">
+                                                            <label>
+                                                                <input
+                                                                    type="checkbox"
+                                                                    name="currentlyInProgress"
+                                                                    checked={item.currentlyInProgress}
+                                                                    onChange={(e) => handleProfessionalFormationChange(index, e)}
+                                                                    disabled={!isProfessionalFormationEditing}
+                                                                />
+                                                                Actualmente en curso
+                                                            </label>
+                                                            {professionalFormationList.length > 1 && isProfessionalFormationEditing && (
+                                                                <button type="button" className="remove-formation" onClick={() => removeProfessionalFormation(index)}>
+                                                                    <FaTrash />
+                                                                </button>
+                                                            )}
+                                                        </div>
+                                                        <hr />
+                                                    </div>
+                                                ))}
+                                                <div className="button-row">
+                                                    <div className="button-container">
+                                                        {isProfessionalFormationEditing && (
+                                                            <button
+                                                                type="button"
+                                                                className="add-formation"
+                                                                onClick={addProfessionalFormation}
+                                                                style={{ backgroundColor: "#989898", border: "none" }}
+                                                            >
+                                                                + Añadir formación profesional
+                                                            </button>
+                                                        )}
+                                                        <EditButton
+                                                            isEditing={isProfessionalFormationEditing}
+                                                            onClick={() => {
+                                                                if (isProfessionalFormationEditing) {
+                                                                    updateProfileData();
+                                                                }
+                                                                setIsProfessionalFormationEditing(!isProfessionalFormationEditing);
+                                                            }}
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <small className="info-text">Puedes añadir tantas formaciones profesionales como desees.</small>
                                             </div>
                                         )}
                                     </section>

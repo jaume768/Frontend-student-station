@@ -80,18 +80,22 @@ const MiPerfil = () => {
                     <section className="miPerfil-section">
                         <h2>Experiencia profesional</h2>
                         <ul className="miPerfil-list">
-                            <li>
-                                <strong>Feb 2023 – Abr 2024</strong>
-                                <p>
-                                    Prácticas como asistente de diseño en “Marca X” (participación en colecciones primavera-verano y contacto con proveedores).
-                                </p>
-                            </li>
-                            <li>
-                                <strong>Feb 2021 – Ene 2024</strong>
-                                <p>
-                                    Proyecto propio “Marca personal” (desarrollo de una colección cápsula sostenible).
-                                </p>
-                            </li>
+                            {profile?.professionalFormation && profile.professionalFormation.length > 0 ? (
+                                profile.professionalFormation.map((exp, index) => (
+                                    <li key={index}>
+                                        <strong>
+                                            {exp.trainingStart ? new Date(exp.trainingStart).toLocaleDateString() : ""}
+                                            {" - "}
+                                            {exp.trainingEnd ? new Date(exp.trainingEnd).toLocaleDateString() : (exp.currentlyInProgress ? "Actual" : "")}
+                                        </strong>
+                                        <p>
+                                            {exp.trainingName} en {exp.institution}
+                                        </p>
+                                    </li>
+                                ))
+                            ) : (
+                                <li>No se ha agregado experiencia profesional.</li>
+                            )}
                         </ul>
                     </section>
 
