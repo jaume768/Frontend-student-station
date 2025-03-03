@@ -150,6 +150,7 @@ const EditProfile = () => {
                     creativeType: getCreativeTypeText(user.creativeType),
                     biography: user.biography || '',
                     googleId: user.googleId,
+                    hasPassword: user.hasPassword,
                 });
                 if (user.fullName) {
                     const names = user.fullName.split(' ');
