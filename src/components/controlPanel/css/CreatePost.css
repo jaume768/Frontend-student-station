@@ -14,6 +14,11 @@
     display: flex;
     flex-direction: column;
     border-radius: 20px;
+    position: relative;
+}
+
+.createpost-left.with-images {
+    background-color: transparent;
 }
 
 .left-content {
@@ -43,35 +48,114 @@
 .main-image-container {
     position: relative;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
     flex: 1;
+}
+
+.main-image-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .main-image {
     max-width: 40em;
     max-height: 40em;
+    display: block;
 }
 
+/* Flechas para cambiar imagenes */
 .arrow {
-    position: absolute;
-    font-size: 2rem;
     cursor: pointer;
-    top: 50%;
-    transform: translateY(-50%);
+    font-size: 2rem;
+    margin: 0 10px;
     color: #4c85ff;
 }
 
-.left-arrow {
-    left: 8em;
-    color: black;
+/* Contador de foto (overlay en la esquina superior derecha) */
+.photo-counter {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.9rem;
 }
 
-.right-arrow {
-    right: 8em;
-    color: black;
+/* Overlay para agregar etiquetas sobre la imagen */
+.tags-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }
 
+.added-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.overlay-tag {
+    background: #fff;
+    color: #000;
+    padding: 3px 7px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+}
+
+.overlay-remove-tag {
+    background: transparent;
+    border: none;
+    color: red;
+    margin-left: 5px;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+.tag-input-wrapper {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.overlay-input {
+    flex: 1;
+    padding: 5px;
+    background-color: #767676;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+}
+
+.overlay-save-btn {
+    background-color: #4c85ff;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.check-icon {
+    font-size: 1rem;
+}
+
+/* Thumbnails */
 .thumbnails {
     display: flex;
     justify-content: center;
@@ -139,7 +223,7 @@
     margin-bottom: 10px;
 }
 
-/* Etiqueta de paso en el panel derecho (Paso 2, 3, 4) */
+/* Etiqueta de paso (Paso 2, 3) en el panel derecho */
 .step-label-dark {
     background-color: #767676;
     color: #fff;
@@ -201,65 +285,6 @@
     border: none;
     color: #4c85ff;
     font-weight: bold;
-    cursor: pointer;
-    margin-top: 10px;
-}
-
-/* Sección de etiquetas del post (Paso 4) */
-.tags-info p {
-    color: #4c85ff;
-    font-size: 0.9rem;
-    margin: 2px 0;
-}
-
-.image-selection {
-    display: flex;
-    gap: 10px;
-    padding: 10px 0;
-}
-
-.selection-thumbnail {
-    width: 60px;
-    height: 60px;
-    object-fit: cover;
-    cursor: pointer;
-    opacity: 0.7;
-    border: 2px solid transparent;
-}
-
-.selection-thumbnail.active {
-    border-color: #4c85ff;
-    opacity: 1;
-}
-
-.tags-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    margin-top: 10px;
-}
-
-.tag {
-    background: #01a8e9;
-    color: #fff;
-    padding: 5px 10px;
-    border-radius: 4px;
-}
-
-.remove-tag-btn {
-    background: transparent;
-    border: none;
-    color: #fff;
-    margin-left: 5px;
-    cursor: pointer;
-}
-
-.save-tags-btn {
-    background: #4c85ff;
-    color: #fff;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 40px;
     cursor: pointer;
     margin-top: 10px;
 }

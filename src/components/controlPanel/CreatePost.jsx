@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaUpload, FaArrowLeft, FaArrowRight, FaTrash } from 'react-icons/fa';
+import { FaUpload, FaArrowLeft, FaArrowRight, FaTrash, FaCheck } from 'react-icons/fa';
 import './css/CreatePost.css';
 
 const CreatePost = () => {
@@ -27,7 +27,7 @@ const CreatePost = () => {
         setPeopleTags(updated);
     };
 
-    // Estados para etiquetas por imagen (Paso 4)
+    // Estados para las etiquetas por imagen (overlay en la imagen)
     const [imageTags, setImageTags] = useState({});
     const [newTag, setNewTag] = useState('');
 
@@ -54,7 +54,7 @@ const CreatePost = () => {
         });
     };
 
-    // Actualización de imágenes: se permite agregar imágenes de forma acumulativa hasta 6
+    // Manejo de subida de imágenes (se pueden acumular hasta 6)
     const handleImageUpload = (e) => {
         let files = Array.from(e.target.files);
         const updatedImages = [...images, ...files].slice(0, 6);
@@ -77,7 +77,7 @@ const CreatePost = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Aquí iría la lógica de envío (ejemplo: armar FormData y llamar a la API)
+        // Aquí se puede agregar la lógica de envío (por ejemplo, armar FormData y llamar a la API)
         console.log({
             images,
             postTitle,
@@ -89,7 +89,7 @@ const CreatePost = () => {
 
     return (
         <div className="createpost-wrapper">
-            {/* Input oculto para subir imágenes (disponible en ambos casos) */}
+            {/* Input oculto para subir imágenes */}
             <input
                 id="image-upload"
                 type="file"
@@ -99,7 +99,7 @@ const CreatePost = () => {
                 style={{ display: 'none' }}
             />
             {/* Panel Izquierdo */}
-            <div className="createpost-left">
+            <div className={`createpost-left ${images.length > 0 ? 'with-images' : ''}`}>
                 {images.length === 0 ? (
                     <div className="left-content">
                         <label htmlFor="image-upload" className="upload-icon">
@@ -110,13 +110,47 @@ const CreatePost = () => {
                 ) : (
                     <div className="image-preview">
                         <div className="main-image-container">
-                            <FaArrowLeft onClick={handlePrevImage} className="arrow left-arrow" />
-                            <img
-                                src={URL.createObjectURL(images[mainImageIndex])}
-                                alt="Imagen principal"
-                                className="main-image"
-                            />
-                            <FaArrowRight onClick={handleNextImage} className="arrow right-arrow" />
+                            <div className="main-image-wrapper">
+                                <FaArrowLeft onClick={handlePrevImage} className="arrow" />
+                                <img
+                                    src={URL.createObjectURL(images[mainImageIndex])}
+                                    alt="Imagen principal"
+                                    className="main-image"
+                                />
+                                <FaArrowRight onClick={handleNextImage} className="arrow" />
+                            </div>
+                            <div className="photo-counter">
+                                Foto {mainImageIndex + 1} de {images.length}
+                            </div>
+                            <div className="tags-overlay">
+                                <div className="added-tags">
+                                    {(imageTags[mainImageIndex] || []).map((tag, index) => (
+                                        <span key={index} className="overlay-tag">
+                                            {tag}
+                                            <button
+                                                type="button"
+                                                onClick={() => removeImageTag(index)}
+                                                className="overlay-remove-tag"
+                                            >
+                                                X
+                                            </button>
+                                        </span>
+                                    ))}
+                                </div>
+                                <div className="tag-input-wrapper">
+                                    <input
+                                        type="text"
+                                        placeholder='Escribe una etiqueta y pulsa "Enter"'
+                                        value={newTag}
+                                        onChange={(e) => setNewTag(e.target.value)}
+                                        onKeyDown={handleTagKeyDown}
+                                        className="overlay-input"
+                                    />
+                                    <button type="button" className="overlay-save-btn">
+                                        <FaCheck className="check-icon" /> Guardar tags
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                         <div className="thumbnails">
                             {images.map((img, index) => (
@@ -142,12 +176,10 @@ const CreatePost = () => {
                     </div>
                 )}
             </div>
-
             {/* Panel Derecho */}
             <div className="createpost-right">
                 <form onSubmit={handleSubmit}>
                     <h2 className="section-title">Información del post</h2>
-
                     {/* Paso 2 */}
                     <div className="step-label-dark">Paso 2</div>
                     <section className="post-section">
@@ -169,7 +201,6 @@ const CreatePost = () => {
                             className="post-textarea"
                         />
                     </section>
-
                     {/* Paso 3 */}
                     <div className="step-label-dark">Paso 3</div>
                     <section className="post-section">
@@ -209,67 +240,10 @@ const CreatePost = () => {
                                 )}
                             </div>
                         ))}
-                        <button
-                            type="button"
-                            onClick={addPeopleTagCard}
-                            className="add-card-btn"
-                        >
+                        <button type="button" onClick={addPeopleTagCard} className="add-card-btn">
                             + Añadir tarjeta para etiquetar
                         </button>
                     </section>
-
-                    {/* Paso 4 - Etiquetas por imagen */}
-                    <div className="step-label-dark">Paso 4</div>
-                    <section className="post-section">
-                        <h3>Añade etiquetas por imagen</h3>
-                        <div className="tags-info">
-                            <p>Selecciona la imagen para etiquetar haciendo click en ella.</p>
-                            <p>Añade una nueva etiqueta presionando "Enter".</p>
-                            <p>Máximo 10 etiquetas por imagen.</p>
-                        </div>
-                        <div className="image-selection">
-                            {images.map((img, index) => (
-                                <img
-                                    key={index}
-                                    src={URL.createObjectURL(img)}
-                                    alt={`Miniatura ${index}`}
-                                    className={`selection-thumbnail ${index === mainImageIndex ? 'active' : ''}`}
-                                    onClick={() => setMainImageIndex(index)}
-                                />
-                            ))}
-                            {images.length < 6 && (
-                                <label htmlFor="image-upload" className="selection-thumbnail placeholder">
-                                    <span className="plus-sign">+</span>
-                                </label>
-                            )}
-                        </div>
-                        <div className="tags-container">
-                            {(imageTags[mainImageIndex] || []).map((tag, index) => (
-                                <span key={index} className="tag">
-                                    {tag}
-                                    <button
-                                        type="button"
-                                        onClick={() => removeImageTag(index)}
-                                        className="remove-tag-btn"
-                                    >
-                                        X
-                                    </button>
-                                </span>
-                            ))}
-                        </div>
-                        <input
-                            type="text"
-                            placeholder="Añade etiqueta..."
-                            value={newTag}
-                            onChange={(e) => setNewTag(e.target.value)}
-                            onKeyDown={handleTagKeyDown}
-                            className="post-input"
-                        />
-                        <button type="button" className="save-tags-btn">
-                            Guardar tags
-                        </button>
-                    </section>
-
                     <button type="submit" className="publish-btn" disabled={!isFormComplete}>
                         {isFormComplete ? (
                             <>
