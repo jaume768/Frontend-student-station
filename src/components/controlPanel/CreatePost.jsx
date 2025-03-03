@@ -28,7 +28,6 @@ const CreatePost = () => {
     };
 
     // Estados para las etiquetas por imagen (Paso 4)
-    // Estas etiquetas se usarán tanto en el overlay de la imagen como en la sección de la derecha.
     const [imageTags, setImageTags] = useState({});
     const [newTag, setNewTag] = useState('');
 
@@ -119,39 +118,39 @@ const CreatePost = () => {
                                     className="main-image"
                                 />
                                 <FaArrowRight onClick={handleNextImage} className="arrow" />
-                            </div>
-                            {/* Foto contador dentro de la imagen, en la esquina superior izquierda */}
-                            <div className="photo-counter">
-                                Foto {mainImageIndex + 1} de {images.length}
-                            </div>
-                            {/* Overlay para etiquetas en la parte inferior de la imagen */}
-                            <div className="tags-overlay">
-                                <div className="added-tags">
-                                    {(imageTags[mainImageIndex] || []).map((tag, index) => (
-                                        <span key={index} className="overlay-tag">
-                                            {tag}
-                                            <button
-                                                type="button"
-                                                onClick={() => removeImageTag(index)}
-                                                className="overlay-remove-tag"
-                                            >
-                                                X
-                                            </button>
-                                        </span>
-                                    ))}
+
+                                {/* Contador y Overlay dentro del main-image-wrapper */}
+                                <div className="photo-counter">
+                                    Foto {mainImageIndex + 1} de {images.length}
                                 </div>
-                                <div className="tag-input-wrapper">
-                                    <input
-                                        type="text"
-                                        placeholder='Escribe una etiqueta y pulsa "Enter"'
-                                        value={newTag}
-                                        onChange={(e) => setNewTag(e.target.value)}
-                                        onKeyDown={handleTagKeyDown}
-                                        className="overlay-input"
-                                    />
-                                    <button type="button" className="overlay-save-btn">
-                                        <FaCheck className="check-icon" /> Guardar tags
-                                    </button>
+                                <div className="tags-overlay">
+                                    <div className="added-tags">
+                                        {(imageTags[mainImageIndex] || []).map((tag, index) => (
+                                            <span key={index} className="overlay-tag">
+                                                {tag}
+                                                <button
+                                                    type="button"
+                                                    onClick={() => removeImageTag(index)}
+                                                    className="overlay-remove-tag"
+                                                >
+                                                    X
+                                                </button>
+                                            </span>
+                                        ))}
+                                    </div>
+                                    <div className="tag-input-wrapper">
+                                        <input
+                                            type="text"
+                                            placeholder='Escribe una etiqueta y pulsa "Enter"'
+                                            value={newTag}
+                                            onChange={(e) => setNewTag(e.target.value)}
+                                            onKeyDown={handleTagKeyDown}
+                                            className="overlay-input"
+                                        />
+                                        <button type="button" className="overlay-save-btn">
+                                            <FaCheck className="check-icon" /> Guardar tags
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -251,7 +250,7 @@ const CreatePost = () => {
                             + Añadir tarjeta para etiquetar
                         </button>
                     </section>
-                    {/* Paso 4: Etiquetas de imagen (sección conectada con el overlay izquierdo) */}
+                    {/* Paso 4: Etiquetas de imagen */}
                     <div className="step-label-dark">Paso 4</div>
                     <section className="post-section image-tags-section">
                         <h3>Etiquetas de imagen</h3>

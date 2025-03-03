@@ -54,7 +54,10 @@
     flex: 1;
 }
 
+/* Modificación principal: contenedor de la imagen con posición relativa y overflow oculto */
 .main-image-wrapper {
+    position: relative;
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -66,7 +69,7 @@
     display: block;
 }
 
-/* Flechas para cambiar imagenes */
+/* Flechas para cambiar imágenes */
 .arrow {
     cursor: pointer;
     font-size: 2rem;
