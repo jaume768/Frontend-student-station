@@ -1254,12 +1254,16 @@ const EditProfile = () => {
                                             </>
                                         )}
                                     </section>
-                                    {/* Sección para cambiar contraseña */}
                                     <section className="form-section">
                                         <h3>Cambiar contraseña</h3>
                                         {isPasswordEditing ? (
                                             <>
-                                                {!userData.googleId ? (
+                                                {(userData.googleId && !userData.hasPassword) ? (
+                                                    <p>
+                                                        Tu cuenta ha sido creada a través de Google, prueba a crear una
+                                                        contraseña.
+                                                    </p>
+                                                ) : (
                                                     <div className="form-group">
                                                         <label>Contraseña actual</label>
                                                         <input
@@ -1269,11 +1273,6 @@ const EditProfile = () => {
                                                             onChange={(e) => setCurrentPassword(e.target.value)}
                                                         />
                                                     </div>
-                                                ) : (
-                                                    <p>
-                                                        Tu cuenta ha sido creada a través de Google, prueba a crear una
-                                                        contraseña.
-                                                    </p>
                                                 )}
                                                 <div className="form-group">
                                                     <label>Nueva contraseña</label>
