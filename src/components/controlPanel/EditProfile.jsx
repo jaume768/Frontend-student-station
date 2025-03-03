@@ -70,6 +70,8 @@ const EditProfile = () => {
 
     // Estados para otras secciones
     const [skills, setSkills] = useState([]);
+    const [currentPassword, setCurrentPassword] = useState("");
+    const [error, setError] = useState("");
     const [newSkill, setNewSkill] = useState("");
     const [popularSkills, setPopularSkills] = useState([
         "Patronaje industrial", "Confección básica", "Confección intermedia", "Confección avanzada",
@@ -147,6 +149,7 @@ const EditProfile = () => {
                     email: user.email,
                     creativeType: getCreativeTypeText(user.creativeType),
                     biography: user.biography || '',
+                    googleId: user.googleId,
                 });
                 if (user.fullName) {
                     const names = user.fullName.split(' ');
@@ -213,6 +216,43 @@ const EditProfile = () => {
         const { name, value } = e.target;
         setBasicInfo(prev => ({ ...prev, [name]: value }));
     };
+
+    const handleChangePassword = async () => {
+        setError("");
+        if (newPassword !== confirmPassword) {
+            setError("Las contraseñas nuevas no coinciden.");
+            return;
+        }
+        if (!userData.googleId && !currentPassword) {
+            setError("Debes ingresar tu contraseña actual.");
+            return;
+        }
+        try {
+            const token = localStorage.getItem("authToken");
+            const backendUrl = import.meta.env.VITE_BACKEND_URL;
+            const payload = { newPassword, confirmPassword };
+            if (!userData.googleId) {
+                payload.currentPassword = currentPassword;
+            }
+            const response = await axios.put(
+                `${backendUrl}/api/users/change-password`,
+                payload,
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            alert(response.data.message);
+            setNewPassword("");
+            setConfirmPassword("");
+            setCurrentPassword("");
+            setIsPasswordEditing(false);
+        } catch (err) {
+            if (err.response && err.response.data && err.response.data.error) {
+                setError(err.response.data.error);
+            } else {
+                setError("Error al cambiar la contraseña.");
+            }
+        }
+    };
+
 
     const handleProfessionalSummaryChange = (e) => {
         setProfessionalSummary(e.target.value);
@@ -661,7 +701,7 @@ const EditProfile = () => {
                                                                 type="button"
                                                                 className="add-formation"
                                                                 onClick={addEducation}
-                                                                style={{ backgroundColor: "#989898", border: "none" }}
+                                                                style={{ backgroundColor: "#989898", border: "none", padding: "5px" }}
                                                             >
                                                                 + Añadir formación
                                                             </button>
@@ -1217,29 +1257,24 @@ const EditProfile = () => {
                                     {/* Sección para cambiar contraseña */}
                                     <section className="form-section">
                                         <h3>Cambiar contraseña</h3>
-                                        {!isPasswordEditing ? (
+                                        {isPasswordEditing ? (
                                             <>
-                                                <div className="form-group">
-                                                    <label>Tu contraseña</label>
-                                                    <input
-                                                        type="password"
-                                                        placeholder="*************"
-                                                        value={""}
-                                                        disabled
-                                                    />
-                                                </div>
-                                                <div className="button-container">
-                                                    <button
-                                                        type="button"
-                                                        className="edit-data-button"
-                                                        onClick={() => setIsPasswordEditing(true)}
-                                                    >
-                                                        Cambiar mi contraseña
-                                                    </button>
-                                                </div>
-                                            </>
-                                        ) : (
-                                            <>
+                                                {!userData.googleId ? (
+                                                    <div className="form-group">
+                                                        <label>Contraseña actual</label>
+                                                        <input
+                                                            type="password"
+                                                            placeholder="Introduce tu contraseña actual"
+                                                            value={currentPassword}
+                                                            onChange={(e) => setCurrentPassword(e.target.value)}
+                                                        />
+                                                    </div>
+                                                ) : (
+                                                    <p>
+                                                        Tu cuenta ha sido creada a través de Google, prueba a crear una
+                                                        contraseña.
+                                                    </p>
+                                                )}
                                                 <div className="form-group">
                                                     <label>Nueva contraseña</label>
                                                     <input
@@ -1258,17 +1293,36 @@ const EditProfile = () => {
                                                         onChange={(e) => setConfirmPassword(e.target.value)}
                                                     />
                                                 </div>
+                                                {error && <p style={{ color: "red" }}>{error}</p>}
                                                 <div className="button-container">
                                                     <button
                                                         type="button"
                                                         className="edit-data-button"
-                                                        style={{ background: 'green', color: 'white' }}
-                                                        onClick={() => {
-                                                            // Validar y confirmar el cambio de contraseña
-                                                            setIsPasswordEditing(false);
-                                                        }}
+                                                        style={{ background: "green", color: "white" }}
+                                                        onClick={handleChangePassword}
                                                     >
                                                         Confirmar el cambio de contraseña
+                                                    </button>
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <div className="form-group">
+                                                    <label>Tu contraseña</label>
+                                                    <input
+                                                        type="password"
+                                                        placeholder="*************"
+                                                        value={userData.googleId ? "" : "*************"}
+                                                        disabled
+                                                    />
+                                                </div>
+                                                <div className="button-container">
+                                                    <button
+                                                        type="button"
+                                                        className="edit-data-button"
+                                                        onClick={() => setIsPasswordEditing(true)}
+                                                    >
+                                                        Cambiar mi contraseña
                                                     </button>
                                                 </div>
                                             </>

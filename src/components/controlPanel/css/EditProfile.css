@@ -35,6 +35,14 @@
     margin-bottom: 1rem;
 }
 
+.remove-formation {
+    width: 100px;
+    padding: 5px;
+    border: none;
+    margin: auto;
+    background: red;
+}
+
 
 /* Sticky en PC para banner y left-options */
 @media (min-width: 769px) {
