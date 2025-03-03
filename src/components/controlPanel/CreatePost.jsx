@@ -116,7 +116,7 @@ const CreatePost = () => {
                         <h3>Etiqueta personas</h3>
                         {peopleTags.map((tag, index) => (
                             <div key={index} className="people-tag-card">
-                                <div className="form-group">
+                                <div className="form-group-create-post">
                                     <label>Nombre</label>
                                     <input
                                         type="text"
@@ -127,7 +127,7 @@ const CreatePost = () => {
                                         className="post-input"
                                     />
                                 </div>
-                                <div className="form-group">
+                                <div className="form-group-create-post">
                                     <label>Rol</label>
                                     <input
                                         type="text"
