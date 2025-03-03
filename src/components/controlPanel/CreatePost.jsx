@@ -11,7 +11,7 @@ const CreatePost = () => {
     const [postTitle, setPostTitle] = useState('');
     const [postDescription, setPostDescription] = useState('');
 
-    // Estados para las etiquetas de personas a etiquetar
+    // Estados para las etiquetas de personas a etiquetar (Paso 3)
     const [peopleTags, setPeopleTags] = useState([{ name: '', role: '' }]);
     const addPeopleTagCard = () => setPeopleTags([...peopleTags, { name: '', role: '' }]);
     const removePeopleTagCard = (index) => {
@@ -27,7 +27,8 @@ const CreatePost = () => {
         setPeopleTags(updated);
     };
 
-    // Estados para las etiquetas por imagen (overlay en la imagen)
+    // Estados para las etiquetas por imagen (Paso 4)
+    // Estas etiquetas se usarán tanto en el overlay de la imagen como en la sección de la derecha.
     const [imageTags, setImageTags] = useState({});
     const [newTag, setNewTag] = useState('');
 
@@ -54,7 +55,7 @@ const CreatePost = () => {
         });
     };
 
-    // Manejo de subida de imágenes (se pueden acumular hasta 6)
+    // Subida de imágenes (acumula hasta 6)
     const handleImageUpload = (e) => {
         let files = Array.from(e.target.files);
         const updatedImages = [...images, ...files].slice(0, 6);
@@ -72,12 +73,12 @@ const CreatePost = () => {
         setMainImageIndex((prev) => (prev - 1 + images.length) % images.length);
     };
 
-    // Validación simple: se requiere al menos una imagen, título y descripción
+    // Validación: se requiere al menos una imagen, título y descripción
     const isFormComplete = images.length > 0 && postTitle.trim() && postDescription.trim();
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Aquí se puede agregar la lógica de envío (por ejemplo, armar FormData y llamar a la API)
+        // Lógica de envío (por ejemplo, armar FormData y llamar a la API)
         console.log({
             images,
             postTitle,
@@ -119,9 +120,11 @@ const CreatePost = () => {
                                 />
                                 <FaArrowRight onClick={handleNextImage} className="arrow" />
                             </div>
+                            {/* Foto contador dentro de la imagen, en la esquina superior izquierda */}
                             <div className="photo-counter">
                                 Foto {mainImageIndex + 1} de {images.length}
                             </div>
+                            {/* Overlay para etiquetas en la parte inferior de la imagen */}
                             <div className="tags-overlay">
                                 <div className="added-tags">
                                     {(imageTags[mainImageIndex] || []).map((tag, index) => (
@@ -180,7 +183,7 @@ const CreatePost = () => {
             <div className="createpost-right">
                 <form onSubmit={handleSubmit}>
                     <h2 className="section-title">Información del post</h2>
-                    {/* Paso 2 */}
+                    {/* Paso 2: Información básica */}
                     <div className="step-label-dark">Paso 2</div>
                     <section className="post-section">
                         <h3>Título</h3>
@@ -201,7 +204,7 @@ const CreatePost = () => {
                             className="post-textarea"
                         />
                     </section>
-                    {/* Paso 3 */}
+                    {/* Paso 3: Etiquetar personas */}
                     <div className="step-label-dark">Paso 3</div>
                     <section className="post-section">
                         <h3>Etiqueta personas</h3>
@@ -240,9 +243,45 @@ const CreatePost = () => {
                                 )}
                             </div>
                         ))}
-                        <button type="button" onClick={addPeopleTagCard} className="add-card-btn">
+                        <button
+                            type="button"
+                            onClick={addPeopleTagCard}
+                            className="add-card-btn"
+                        >
                             + Añadir tarjeta para etiquetar
                         </button>
+                    </section>
+                    {/* Paso 4: Etiquetas de imagen (sección conectada con el overlay izquierdo) */}
+                    <div className="step-label-dark">Paso 4</div>
+                    <section className="post-section image-tags-section">
+                        <h3>Etiquetas de imagen</h3>
+                        <div className="tags-container">
+                            {(imageTags[mainImageIndex] || []).map((tag, index) => (
+                                <span key={index} className="tag">
+                                    {tag}
+                                    <button
+                                        type="button"
+                                        onClick={() => removeImageTag(index)}
+                                        className="remove-tag-btn"
+                                    >
+                                        X
+                                    </button>
+                                </span>
+                            ))}
+                        </div>
+                        <div className="tag-input-wrapper-right">
+                            <input
+                                type="text"
+                                placeholder='Escribe una etiqueta y pulsa "Enter"'
+                                value={newTag}
+                                onChange={(e) => setNewTag(e.target.value)}
+                                onKeyDown={handleTagKeyDown}
+                                className="post-input tag-input"
+                            />
+                            <button type="button" className="save-tags-btn">
+                                <FaCheck className="check-icon" /> Guardar tags
+                            </button>
+                        </div>
                     </section>
                     <button type="submit" className="publish-btn" disabled={!isFormComplete}>
                         {isFormComplete ? (

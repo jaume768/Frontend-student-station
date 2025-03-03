@@ -74,11 +74,11 @@
     color: #4c85ff;
 }
 
-/* Contador de foto (overlay en la esquina superior derecha) */
+/* Foto contador: dentro de la imagen, esquina superior izquierda */
 .photo-counter {
     position: absolute;
     top: 10px;
-    right: 10px;
+    left: 10px;
     background: rgba(0, 0, 0, 0.5);
     color: #fff;
     padding: 5px 10px;
@@ -86,7 +86,7 @@
     font-size: 0.9rem;
 }
 
-/* Overlay para agregar etiquetas sobre la imagen */
+/* Overlay de etiquetas dentro de la imagen, en la parte inferior */
 .tags-overlay {
     position: absolute;
     bottom: 0;
@@ -177,7 +177,6 @@
     opacity: 1;
 }
 
-/* Placeholder para subir más imágenes */
 .thumbnail.placeholder,
 .selection-thumbnail.placeholder {
     display: flex;
@@ -223,7 +222,7 @@
     margin-bottom: 10px;
 }
 
-/* Etiqueta de paso (Paso 2, 3) en el panel derecho */
+/* Paso Labels en el panel derecho (Paso 2, 3, 4) */
 .step-label-dark {
     background-color: #767676;
     color: #fff;
@@ -236,6 +235,7 @@
     font-weight: 700;
 }
 
+/* Secciones de formulario en el panel derecho */
 .post-section {
     margin-bottom: 20px;
     background-color: white;
@@ -287,6 +287,53 @@
     font-weight: bold;
     cursor: pointer;
     margin-top: 10px;
+}
+
+/* Sección de etiquetas de imagen en el panel derecho (Paso 4) */
+.image-tags-section .tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 10px;
+}
+
+.image-tags-section .tag {
+    background: #01a8e9;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+}
+
+.image-tags-section .remove-tag-btn {
+    background: transparent;
+    border: none;
+    color: #fff;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+.tag-input-wrapper-right {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.tag-input {
+    flex: 1;
+}
+
+.save-tags-btn {
+    background: #4c85ff;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
 /* Botón para publicar */
