@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
-import { FaUpload, FaArrowLeft, FaArrowRight } from 'react-icons/fa';
+import { FaUpload, FaArrowLeft, FaArrowRight, FaTrash } from 'react-icons/fa';
 import './css/CreatePost.css';
 
 const CreatePost = () => {
-    // Estados para la parte izquierda
+    // Estados para la parte izquierda (imágenes)
     const [images, setImages] = useState([]);
     const [mainImageIndex, setMainImageIndex] = useState(0);
 
-    // Estados para la parte derecha (post info)
+    // Estados para la parte derecha (info del post)
     const [postTitle, setPostTitle] = useState('');
     const [postDescription, setPostDescription] = useState('');
 
-    // Estados para etiquetas de personas a etiquetar
+    // Estados para las etiquetas de personas a etiquetar
     const [peopleTags, setPeopleTags] = useState([{ name: '', role: '' }]);
     const addPeopleTagCard = () => setPeopleTags([...peopleTags, { name: '', role: '' }]);
     const removePeopleTagCard = (index) => {
@@ -27,27 +27,41 @@ const CreatePost = () => {
         setPeopleTags(updated);
     };
 
-    // Estados para las etiquetas del post
-    const [tags, setTags] = useState([]);
+    // Estados para etiquetas por imagen (Paso 4)
+    const [imageTags, setImageTags] = useState({});
     const [newTag, setNewTag] = useState('');
+
     const handleTagKeyDown = (e) => {
         if (e.key === 'Enter') {
             e.preventDefault();
             const trimmed = newTag.trim();
-            if (trimmed && tags.length < 10 && !tags.includes(trimmed)) {
-                setTags([...tags, trimmed]);
+            const currentTags = imageTags[mainImageIndex] || [];
+            if (trimmed && currentTags.length < 10 && !currentTags.includes(trimmed)) {
+                setImageTags({
+                    ...imageTags,
+                    [mainImageIndex]: [...currentTags, trimmed]
+                });
                 setNewTag('');
             }
         }
     };
 
+    const removeImageTag = (tagIndex) => {
+        const currentTags = imageTags[mainImageIndex] || [];
+        setImageTags({
+            ...imageTags,
+            [mainImageIndex]: currentTags.filter((_, i) => i !== tagIndex)
+        });
+    };
+
+    // Actualización de imágenes: se permite agregar imágenes de forma acumulativa hasta 6
     const handleImageUpload = (e) => {
         let files = Array.from(e.target.files);
-        if (files.length > 6) {
-            files = files.slice(0, 6);
+        const updatedImages = [...images, ...files].slice(0, 6);
+        setImages(updatedImages);
+        if (updatedImages.length === 1) {
+            setMainImageIndex(0);
         }
-        setImages(files);
-        setMainImageIndex(0);
     };
 
     const handleNextImage = () => {
@@ -58,28 +72,32 @@ const CreatePost = () => {
         setMainImageIndex((prev) => (prev - 1 + images.length) % images.length);
     };
 
-    const removeTag = (index) => {
-        setTags(tags.filter((_, i) => i !== index));
-    };
-
-    // Validación simple: requerimos que se suba al menos una imagen, y que se complete título y descripción
+    // Validación simple: se requiere al menos una imagen, título y descripción
     const isFormComplete = images.length > 0 && postTitle.trim() && postDescription.trim();
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Aquí iría la lógica de envío (por ejemplo, armar FormData y llamar a la API)
+        // Aquí iría la lógica de envío (ejemplo: armar FormData y llamar a la API)
         console.log({
             images,
             postTitle,
             postDescription,
             peopleTags,
-            tags,
+            imageTags
         });
     };
 
-
     return (
         <div className="createpost-wrapper">
+            {/* Input oculto para subir imágenes (disponible en ambos casos) */}
+            <input
+                id="image-upload"
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleImageUpload}
+                style={{ display: 'none' }}
+            />
             {/* Panel Izquierdo */}
             <div className="createpost-left">
                 {images.length === 0 ? (
@@ -87,14 +105,6 @@ const CreatePost = () => {
                         <label htmlFor="image-upload" className="upload-icon">
                             <FaUpload size={40} />
                         </label>
-                        <input
-                            id="image-upload"
-                            type="file"
-                            accept="image/*"
-                            multiple
-                            onChange={handleImageUpload}
-                            style={{ display: 'none' }}
-                        />
                         <p className="upload-text">Sube tus imágenes</p>
                     </div>
                 ) : (
@@ -118,10 +128,22 @@ const CreatePost = () => {
                                     onClick={() => setMainImageIndex(index)}
                                 />
                             ))}
+                            {images.length < 6 && (
+                                <label htmlFor="image-upload" className="thumbnail placeholder">
+                                    <span className="plus-sign">+</span>
+                                </label>
+                            )}
                         </div>
                     </div>
                 )}
+                {images.length > 0 && (
+                    <div className="preview-message">
+                        La imagen se ajusta durante la vista previa, una vez publicada se mostrará en su tamaño completo.
+                    </div>
+                )}
             </div>
+
+            {/* Panel Derecho */}
             <div className="createpost-right">
                 <form onSubmit={handleSubmit}>
                     <h2 className="section-title">Información del post</h2>
@@ -196,22 +218,38 @@ const CreatePost = () => {
                         </button>
                     </section>
 
-                    {/* Paso 4 */}
+                    {/* Paso 4 - Etiquetas por imagen */}
                     <div className="step-label-dark">Paso 4</div>
                     <section className="post-section">
-                        <h3>Añade etiquetas</h3>
+                        <h3>Añade etiquetas por imagen</h3>
                         <div className="tags-info">
+                            <p>Selecciona la imagen para etiquetar haciendo click en ella.</p>
                             <p>Añade una nueva etiqueta presionando "Enter".</p>
-                            <p>Añade hasta un máximo de 10 etiquetas.</p>
-                            <p>Una vez que hayas finalizado de escribir tus etiquetas guárdalas.</p>
+                            <p>Máximo 10 etiquetas por imagen.</p>
+                        </div>
+                        <div className="image-selection">
+                            {images.map((img, index) => (
+                                <img
+                                    key={index}
+                                    src={URL.createObjectURL(img)}
+                                    alt={`Miniatura ${index}`}
+                                    className={`selection-thumbnail ${index === mainImageIndex ? 'active' : ''}`}
+                                    onClick={() => setMainImageIndex(index)}
+                                />
+                            ))}
+                            {images.length < 6 && (
+                                <label htmlFor="image-upload" className="selection-thumbnail placeholder">
+                                    <span className="plus-sign">+</span>
+                                </label>
+                            )}
                         </div>
                         <div className="tags-container">
-                            {tags.map((tag, index) => (
+                            {(imageTags[mainImageIndex] || []).map((tag, index) => (
                                 <span key={index} className="tag">
                                     {tag}
                                     <button
                                         type="button"
-                                        onClick={() => removeTag(index)}
+                                        onClick={() => removeImageTag(index)}
                                         className="remove-tag-btn"
                                     >
                                         X
@@ -221,7 +259,7 @@ const CreatePost = () => {
                         </div>
                         <input
                             type="text"
-                            placeholder="Ejemplo: Falda de volantes, rosa, lentejuelas, accesorio metálico, etc."
+                            placeholder="Añade etiqueta..."
                             value={newTag}
                             onChange={(e) => setNewTag(e.target.value)}
                             onKeyDown={handleTagKeyDown}

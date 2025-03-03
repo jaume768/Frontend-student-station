@@ -2,9 +2,38 @@
 .createpost-wrapper {
     display: flex;
     gap: 10px;
-    height: 86vh;
+    height: 84vh;
 }
 
+/* Panel Izquierdo */
+.createpost-left {
+    width: 70%;
+    background-color: #e5eeff;
+    color: blue;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 20px;
+}
+
+.left-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.upload-icon {
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.upload-text {
+    font-size: 1.2rem;
+}
+
+/* Previsualización de imagen */
 .image-preview {
     display: flex;
     flex-direction: column;
@@ -34,13 +63,13 @@
 }
 
 .left-arrow {
-    color: black;
     left: 8em;
+    color: black;
 }
 
 .right-arrow {
-    color: black;
     right: 8em;
+    color: black;
 }
 
 .thumbnails {
@@ -64,66 +93,39 @@
     opacity: 1;
 }
 
-
-/* Panel Izquierdo */
-.createpost-left {
-    width: 70%;
-    background-color: #e5eeff;
-    color: blue;
-    padding: 20px;
+/* Placeholder para subir más imágenes */
+.thumbnail.placeholder,
+.selection-thumbnail.placeholder {
     display: flex;
-    border-radius: 20px;
-    flex-direction: column;
-}
-
-.left-header {
-    margin-bottom: 20px;
-}
-
-.remove-tag-btn {
-    background: transparent;
-    border: none;
-    color: #fff;
-    margin-left: 5px;
-    cursor: pointer;
-}
-
-.step-label {
-    background-color: #4c85ff;
-    color: #fff;
-    padding: 5px 20px;
-    border-radius: 40px;
-    font-weight: bold;
-}
-
-.left-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    border: 2px dashed #4c85ff;
+    cursor: pointer;
+    width: 80px;
+    height: 80px;
 }
 
-.upload-icon {
-    margin-bottom: 10px;
+.plus-sign {
+    font-size: 2rem;
+    color: #4c85ff;
 }
 
-.image-upload-input {
-    margin-bottom: 10px;
-}
-
-.upload-text {
-    font-size: 1.2rem;
+/* Mensaje informativo debajo de la previsualización */
+.preview-message {
+    margin-top: 10px;
+    color: #4c85ff;
+    font-size: 0.9rem;
+    text-align: center;
 }
 
 /* Panel Derecho */
 .createpost-right {
     width: 30%;
-    padding: 20px;
-    overflow-y: auto;
     background-color: #f8f8f8;
     padding: 20px;
     border-radius: 20px;
+    overflow-y: auto;
     max-height: 100vh;
 }
 
@@ -203,11 +205,31 @@
     margin-top: 10px;
 }
 
-/* Sección de etiquetas del post */
+/* Sección de etiquetas del post (Paso 4) */
 .tags-info p {
     color: #4c85ff;
     font-size: 0.9rem;
     margin: 2px 0;
+}
+
+.image-selection {
+    display: flex;
+    gap: 10px;
+    padding: 10px 0;
+}
+
+.selection-thumbnail {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    cursor: pointer;
+    opacity: 0.7;
+    border: 2px solid transparent;
+}
+
+.selection-thumbnail.active {
+    border-color: #4c85ff;
+    opacity: 1;
 }
 
 .tags-container {
@@ -222,6 +244,14 @@
     color: #fff;
     padding: 5px 10px;
     border-radius: 4px;
+}
+
+.remove-tag-btn {
+    background: transparent;
+    border: none;
+    color: #fff;
+    margin-left: 5px;
+    cursor: pointer;
 }
 
 .save-tags-btn {

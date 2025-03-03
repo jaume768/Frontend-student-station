@@ -1,6 +1,4 @@
-/* EditProfile.css */
 
-/* Contenedor principal del EditProfile */
 .edit-profile-wrapper {
     max-width: 1200px;
     margin: 0 auto;
@@ -35,7 +33,8 @@
     margin-bottom: 1rem;
 }
 
-.remove-formation {
+.remove-formation,
+.remove-education {
     width: 100px;
     padding: 5px;
     border: none;
@@ -138,9 +137,7 @@
     cursor: pointer;
     font-weight: 500;
     background: #fff;
-    /* fondo por defecto */
     color: #777;
-    /* color de texto por defecto */
 }
 
 .section-header-edit {
@@ -180,13 +177,11 @@
     color: #fff;
 }
 
-/* Hover en opciones (excepto la activa) */
 .left-options .option:hover:not(.active) {
     background: #e5eeff;
     color: #4c85ff;
 }
 
-/* Columna derecha: Formularios */
 .right-form {
     flex: 1;
     display: flex;
@@ -299,7 +294,6 @@
     margin-top: 0.5rem;
 }
 
-/* Fila para botones en sección educativa (y secciones similares) */
 .button-row {
     display: flex;
     width: 100%;
