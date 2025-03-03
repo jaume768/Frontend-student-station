@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaUpload, FaTrash } from 'react-icons/fa';
+import { FaUpload, FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import './css/CreatePost.css';
 
 const CreatePost = () => {
