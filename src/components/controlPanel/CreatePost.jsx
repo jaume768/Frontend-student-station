@@ -5,6 +5,7 @@ import './css/CreatePost.css';
 const CreatePost = () => {
     // Estados para la parte izquierda
     const [images, setImages] = useState([]);
+    const [mainImageIndex, setMainImageIndex] = useState(0);
 
     // Estados para la parte derecha (post info)
     const [postTitle, setPostTitle] = useState('');
@@ -40,10 +41,21 @@ const CreatePost = () => {
         }
     };
 
-    // Handler para las imágenes (puedes implementar más lógica según tus necesidades)
     const handleImageUpload = (e) => {
-        const files = Array.from(e.target.files);
+        let files = Array.from(e.target.files);
+        if (files.length > 6) {
+            files = files.slice(0, 6);
+        }
         setImages(files);
+        setMainImageIndex(0);
+    };
+
+    const handleNextImage = () => {
+        setMainImageIndex((prev) => (prev + 1) % images.length);
+    };
+
+    const handlePrevImage = () => {
+        setMainImageIndex((prev) => (prev - 1 + images.length) % images.length);
     };
 
     const removeTag = (index) => {
@@ -65,29 +77,51 @@ const CreatePost = () => {
         });
     };
 
+
     return (
         <div className="createpost-wrapper">
             {/* Panel Izquierdo */}
             <div className="createpost-left">
-                <div className="left-header">
-                    <span className="step-label">Paso 1</span>
-                </div>
-                <div className="left-content">
-                    <div className="upload-icon">
-                        <FaUpload size={40} />
+                {images.length === 0 ? (
+                    <div className="left-content">
+                        <label htmlFor="image-upload" className="upload-icon">
+                            <FaUpload size={40} />
+                        </label>
+                        <input
+                            id="image-upload"
+                            type="file"
+                            accept="image/*"
+                            multiple
+                            onChange={handleImageUpload}
+                            style={{ display: 'none' }}
+                        />
+                        <p className="upload-text">Sube tus imágenes</p>
                     </div>
-                    <input
-                        type="file"
-                        accept="image/*"
-                        multiple
-                        onChange={handleImageUpload}
-                        className="image-upload-input"
-                    />
-                    <p className="upload-text">Sube tus imágenes</p>
-                </div>
+                ) : (
+                    <div className="image-preview">
+                        <div className="main-image-container">
+                            <FaArrowLeft onClick={handlePrevImage} className="arrow left-arrow" />
+                            <img
+                                src={URL.createObjectURL(images[mainImageIndex])}
+                                alt="Imagen principal"
+                                className="main-image"
+                            />
+                            <FaArrowRight onClick={handleNextImage} className="arrow right-arrow" />
+                        </div>
+                        <div className="thumbnails">
+                            {images.map((img, index) => (
+                                <img
+                                    key={index}
+                                    src={URL.createObjectURL(img)}
+                                    alt={`Miniatura ${index}`}
+                                    className={`thumbnail ${index === mainImageIndex ? 'active' : ''}`}
+                                    onClick={() => setMainImageIndex(index)}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                )}
             </div>
-
-            {/* Panel Derecho */}
             <div className="createpost-right">
                 <form onSubmit={handleSubmit}>
                     <h2 className="section-title">Información del post</h2>
