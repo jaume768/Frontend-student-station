@@ -20,6 +20,14 @@
     margin-bottom: 20px;
 }
 
+.remove-tag-btn {
+    background: transparent;
+    border: none;
+    color: #fff;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
 .step-label {
     background-color: #4c85ff;
     color: #fff;
@@ -61,7 +69,6 @@
 
 .createpost-right form {
     width: 100%;
-    overflow-y: auto;
     max-height: 100vh;
 }
 

@@ -46,6 +46,10 @@ const CreatePost = () => {
         setImages(files);
     };
 
+    const removeTag = (index) => {
+        setTags(tags.filter((_, i) => i !== index));
+    };
+
     // Validación simple: requerimos que se suba al menos una imagen, y que se complete título y descripción
     const isFormComplete = images.length > 0 && postTitle.trim() && postDescription.trim();
 
@@ -162,6 +166,25 @@ const CreatePost = () => {
                     <div className="step-label-dark">Paso 4</div>
                     <section className="post-section">
                         <h3>Añade etiquetas</h3>
+                        <div className="tags-info">
+                            <p>Añade una nueva etiqueta presionando "Enter".</p>
+                            <p>Añade hasta un máximo de 10 etiquetas.</p>
+                            <p>Una vez que hayas finalizado de escribir tus etiquetas guárdalas.</p>
+                        </div>
+                        <div className="tags-container">
+                            {tags.map((tag, index) => (
+                                <span key={index} className="tag">
+                                    {tag}
+                                    <button
+                                        type="button"
+                                        onClick={() => removeTag(index)}
+                                        className="remove-tag-btn"
+                                    >
+                                        X
+                                    </button>
+                                </span>
+                            ))}
+                        </div>
                         <input
                             type="text"
                             placeholder="Ejemplo: Falda de volantes, rosa, lentejuelas, accesorio metálico, etc."
@@ -170,18 +193,6 @@ const CreatePost = () => {
                             onKeyDown={handleTagKeyDown}
                             className="post-input"
                         />
-                        <div className="tags-info">
-                            <p>Añade una nueva etiqueta presionando "Enter".</p>
-                            <p>Añade hasta un máximo de 10 etiquetas.</p>
-                            <p>Una vez que hayas finalizado de escribir tus etiquetas guárdalas.</p>
-                        </div>
-                        <div className="tags-container">
-                            {tags.map((t, index) => (
-                                <span key={index} className="tag">
-                                    {t}
-                                </span>
-                            ))}
-                        </div>
                         <button type="button" className="save-tags-btn">
                             Guardar tags
                         </button>
