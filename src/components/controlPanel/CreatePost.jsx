@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { FaUpload, FaArrowLeft, FaArrowRight, FaTrash, FaCheck } from 'react-icons/fa';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import './css/CreatePost.css';
 
 const CreatePost = () => {
@@ -56,7 +57,7 @@ const CreatePost = () => {
 
     // Subida de imágenes (acumula hasta 6)
     const handleImageUpload = (e) => {
-        let files = Array.from(e.target.files);
+        const files = Array.from(e.target.files);
         const updatedImages = [...images, ...files].slice(0, 6);
         setImages(updatedImages);
         if (updatedImages.length === 1) {
@@ -72,12 +73,23 @@ const CreatePost = () => {
         setMainImageIndex((prev) => (prev - 1 + images.length) % images.length);
     };
 
+    // Función para reordenar las imágenes mediante drag and drop
+    const handleOnDragEnd = (result) => {
+        if (!result.destination) return;
+        const items = Array.from(images);
+        const [reorderedItem] = items.splice(result.source.index, 1);
+        items.splice(result.destination.index, 0, reorderedItem);
+        setImages(items);
+        // Opcional: asignar la primera imagen como principal tras el reordenamiento
+        setMainImageIndex(0);
+    };
+
     // Validación: se requiere al menos una imagen, título y descripción
     const isFormComplete = images.length > 0 && postTitle.trim() && postDescription.trim();
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Lógica de envío (por ejemplo, armar FormData y llamar a la API)
+        // Aquí podrías armar FormData y realizar la llamada a la API
         console.log({
             images,
             postTitle,
@@ -98,6 +110,7 @@ const CreatePost = () => {
                 onChange={handleImageUpload}
                 style={{ display: 'none' }}
             />
+
             {/* Panel Izquierdo */}
             <div className={`createpost-left ${images.length > 0 ? 'with-images' : ''}`}>
                 {images.length === 0 ? (
@@ -154,16 +167,37 @@ const CreatePost = () => {
                                 </div>
                             </div>
                         </div>
+
+                        {/* Sección de miniaturas con drag and drop */}
                         <div className="thumbnails">
-                            {images.map((img, index) => (
-                                <img
-                                    key={index}
-                                    src={URL.createObjectURL(img)}
-                                    alt={`Miniatura ${index}`}
-                                    className={`thumbnail ${index === mainImageIndex ? 'active' : ''}`}
-                                    onClick={() => setMainImageIndex(index)}
-                                />
-                            ))}
+                            <DragDropContext onDragEnd={handleOnDragEnd}>
+                                <Droppable droppableId="thumbnails" direction="horizontal">
+                                    {(provided) => (
+                                        <div
+                                            {...provided.droppableProps}
+                                            ref={provided.innerRef}
+                                            style={{ display: 'flex', gap: '10px' }}
+                                        >
+                                            {images.map((img, index) => (
+                                                <Draggable key={index} draggableId={index.toString()} index={index}>
+                                                    {(provided) => (
+                                                        <img
+                                                            {...provided.draggableProps}
+                                                            {...provided.dragHandleProps}
+                                                            ref={provided.innerRef}
+                                                            src={URL.createObjectURL(img)}
+                                                            alt={`Miniatura ${index}`}
+                                                            className={`thumbnail ${index === mainImageIndex ? 'active' : ''}`}
+                                                            onClick={() => setMainImageIndex(index)}
+                                                        />
+                                                    )}
+                                                </Draggable>
+                                            ))}
+                                            {provided.placeholder}
+                                        </div>
+                                    )}
+                                </Droppable>
+                            </DragDropContext>
                             {images.length < 6 && (
                                 <label htmlFor="image-upload" className="thumbnail placeholder">
                                     <span className="plus-sign">+</span>
@@ -178,6 +212,7 @@ const CreatePost = () => {
                     </div>
                 )}
             </div>
+
             {/* Panel Derecho */}
             <div className="createpost-right">
                 <form onSubmit={handleSubmit}>
@@ -242,11 +277,7 @@ const CreatePost = () => {
                                 )}
                             </div>
                         ))}
-                        <button
-                            type="button"
-                            onClick={addPeopleTagCard}
-                            className="add-card-btn"
-                        >
+                        <button type="button" onClick={addPeopleTagCard} className="add-card-btn">
                             + Añadir tarjeta para etiquetar
                         </button>
                     </section>
