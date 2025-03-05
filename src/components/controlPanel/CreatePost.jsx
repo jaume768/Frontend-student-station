@@ -290,6 +290,13 @@ const CreatePost = () => {
                         <div className="step-label-dark">Paso 4</div>
                         <section className="post-section image-tags-section">
                             <h3>Etiquetas de imagen</h3>
+                            <div className="image-tags-navigation">
+                                <FaArrowLeft onClick={handlePrevImage} className="arrow" />
+                                <span className="photo-counter">
+                                    Foto {mainImageIndex + 1} de {images.length}
+                                </span>
+                                <FaArrowRight onClick={handleNextImage} className="arrow" />
+                            </div>
                             <div className="tags-container">
                                 {(imageTags[mainImageIndex] || []).map((tag, index) => (
                                     <span key={index} className="tag">
