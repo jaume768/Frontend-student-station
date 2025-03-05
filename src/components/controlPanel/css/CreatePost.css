@@ -458,3 +458,69 @@
     background: grey;
     cursor: not-allowed;
 }
+
+@media (max-width: 768px) {
+
+    /* Apilamos los paneles en columna */
+    .createpost-wrapper {
+        flex-direction: column;
+        height: auto;
+        /* Para que crezca en altura */
+    }
+
+    .createpost-left,
+    .createpost-right {
+        width: 100%;
+    }
+
+    /* Reducimos márgenes/padding si se requiere */
+    .createpost-left {
+        margin-bottom: 20px;
+    }
+
+    /* Ajustamos la imagen principal para que no desborde */
+    .main-image {
+        max-width: 100%;
+        height: auto;
+    }
+
+    /* Las flechas a un tamaño un poco más chico en móvil */
+    .arrow {
+        font-size: 1.5rem;
+        margin: 0 5px;
+    }
+
+    /* Ajustamos tamaño de thumbnails para pantallas pequeñas */
+    .thumbnail,
+    .thumbnail.placeholder {
+        width: 60px;
+        height: 60px;
+    }
+
+    .order-item {
+        width: 60px;
+        height: 60px;
+    }
+
+    /* Ajustamos input del overlay en pantallas pequeñas */
+    .overlay-input {
+        font-size: 0.9rem;
+    }
+
+    /* Ajusta tamaño de botones si deseas */
+    .overlay-save-btn,
+    .save-tags-btn {
+        font-size: 0.85rem;
+        padding: 5px 8px;
+    }
+
+    .publish-btn {
+        font-size: 0.95rem;
+        padding: 10px 15px;
+    }
+
+    /* Si el form es muy largo, dale margen inferior para no taparlo con el teclado móvil */
+    .createpost-right {
+        padding-bottom: 50px;
+    }
+}
