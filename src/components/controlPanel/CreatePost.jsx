@@ -57,7 +57,7 @@ const CreatePost = () => {
 
     // Subida de imágenes (acumula hasta 6)
     const handleImageUpload = (e) => {
-        const files = Array.from(e.target.files);
+        let files = Array.from(e.target.files);
         const updatedImages = [...images, ...files].slice(0, 6);
         setImages(updatedImages);
         if (updatedImages.length === 1) {
@@ -73,23 +73,12 @@ const CreatePost = () => {
         setMainImageIndex((prev) => (prev - 1 + images.length) % images.length);
     };
 
-    // Función para reordenar las imágenes mediante drag and drop
-    const handleOnDragEnd = (result) => {
-        if (!result.destination) return;
-        const items = Array.from(images);
-        const [reorderedItem] = items.splice(result.source.index, 1);
-        items.splice(result.destination.index, 0, reorderedItem);
-        setImages(items);
-        // Opcional: asignar la primera imagen como principal tras el reordenamiento
-        setMainImageIndex(0);
-    };
-
     // Validación: se requiere al menos una imagen, título y descripción
     const isFormComplete = images.length > 0 && postTitle.trim() && postDescription.trim();
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Aquí podrías armar FormData y realizar la llamada a la API
+        // Aquí se enviaría el formulario (por ejemplo, con FormData)
         console.log({
             images,
             postTitle,
@@ -99,97 +88,162 @@ const CreatePost = () => {
         });
     };
 
+    // Función para reordenar el array de imágenes
+    const reorder = (list, startIndex, endIndex) => {
+        const result = Array.from(list);
+        const [removed] = result.splice(startIndex, 1);
+        result.splice(endIndex, 0, removed);
+        return result;
+    };
+
+    // onDragEnd se dispara cuando termina el drag & drop en cualquiera de las secciones
+    const handleDragEnd = (result) => {
+        if (!result.destination) return;
+        if (result.source.index === result.destination.index) return;
+        const newImages = reorder(images, result.source.index, result.destination.index);
+        setImages(newImages);
+        // Se asume que la primera foto (índice 0) es la principal
+        setMainImageIndex(0);
+    };
+
     return (
-        <div className="createpost-wrapper">
-            {/* Input oculto para subir imágenes */}
-            <input
-                id="image-upload"
-                type="file"
-                accept="image/*"
-                multiple
-                onChange={handleImageUpload}
-                style={{ display: 'none' }}
-            />
+        <DragDropContext onDragEnd={handleDragEnd}>
+            <div className="createpost-wrapper">
+                {/* Input oculto para subir imágenes */}
+                <input
+                    id="image-upload"
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={handleImageUpload}
+                    style={{ display: 'none' }}
+                />
+                {/* Panel Izquierdo */}
+                <div className={`createpost-left ${images.length > 0 ? 'with-images' : ''}`}>
+                    {images.length === 0 ? (
+                        <div className="left-content">
+                            <label htmlFor="image-upload" className="upload-icon">
+                                <FaUpload size={40} />
+                            </label>
+                            <p className="upload-text">Sube tus imágenes</p>
+                        </div>
+                    ) : (
+                        <div className="image-preview">
+                            <div className="main-image-container">
+                                <div className="main-image-wrapper">
+                                    <FaArrowLeft onClick={handlePrevImage} className="arrow" />
+                                    <img
+                                        src={URL.createObjectURL(images[mainImageIndex])}
+                                        alt="Imagen principal"
+                                        className="main-image"
+                                    />
+                                    <FaArrowRight onClick={handleNextImage} className="arrow" />
 
-            {/* Panel Izquierdo */}
-            <div className={`createpost-left ${images.length > 0 ? 'with-images' : ''}`}>
-                {images.length === 0 ? (
-                    <div className="left-content">
-                        <label htmlFor="image-upload" className="upload-icon">
-                            <FaUpload size={40} />
-                        </label>
-                        <p className="upload-text">Sube tus imágenes</p>
-                    </div>
-                ) : (
-                    <div className="image-preview">
-                        <div className="main-image-container">
-                            <div className="main-image-wrapper">
-                                <FaArrowLeft onClick={handlePrevImage} className="arrow" />
-                                <img
-                                    src={URL.createObjectURL(images[mainImageIndex])}
-                                    alt="Imagen principal"
-                                    className="main-image"
-                                />
-                                <FaArrowRight onClick={handleNextImage} className="arrow" />
-
-                                {/* Contador y Overlay dentro del main-image-wrapper */}
-                                <div className="photo-counter">
-                                    Foto {mainImageIndex + 1} de {images.length}
-                                </div>
-                                <div className="tags-overlay">
-                                    <div className="added-tags">
-                                        {(imageTags[mainImageIndex] || []).map((tag, index) => (
-                                            <span key={index} className="overlay-tag">
-                                                {tag}
-                                                <button
-                                                    type="button"
-                                                    onClick={() => removeImageTag(index)}
-                                                    className="overlay-remove-tag"
-                                                >
-                                                    X
-                                                </button>
-                                            </span>
-                                        ))}
+                                    {/* Contador y Overlay dentro del main-image-wrapper */}
+                                    <div className="photo-counter">
+                                        Foto {mainImageIndex + 1} de {images.length}
                                     </div>
-                                    <div className="tag-input-wrapper">
-                                        <input
-                                            type="text"
-                                            placeholder='Escribe una etiqueta y pulsa "Enter"'
-                                            value={newTag}
-                                            onChange={(e) => setNewTag(e.target.value)}
-                                            onKeyDown={handleTagKeyDown}
-                                            className="overlay-input"
-                                        />
-                                        <button type="button" className="overlay-save-btn">
-                                            <FaCheck className="check-icon" /> Guardar tags
-                                        </button>
+                                    <div className="tags-overlay">
+                                        <div className="added-tags">
+                                            {(imageTags[mainImageIndex] || []).map((tag, index) => (
+                                                <span key={index} className="overlay-tag">
+                                                    {tag}
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => removeImageTag(index)}
+                                                        className="overlay-remove-tag"
+                                                    >
+                                                        X
+                                                    </button>
+                                                </span>
+                                            ))}
+                                        </div>
+                                        <div className="tag-input-wrapper">
+                                            <input
+                                                type="text"
+                                                placeholder='Escribe una etiqueta y pulsa "Enter"'
+                                                value={newTag}
+                                                onChange={(e) => setNewTag(e.target.value)}
+                                                onKeyDown={handleTagKeyDown}
+                                                className="overlay-input"
+                                            />
+                                            <button type="button" className="overlay-save-btn">
+                                                <FaCheck className="check-icon" /> Guardar tags
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            {/* Thumbnails con drag & drop */}
+                            <Droppable droppableId="thumbnails" direction="horizontal">
+                                {(provided) => (
+                                    <div
+                                        className="thumbnails"
+                                        ref={provided.innerRef}
+                                        {...provided.droppableProps}
+                                    >
+                                        {images.map((img, index) => (
+                                            <Draggable key={`thumb-${index}`} draggableId={`thumb-${index}`} index={index}>
+                                                {(providedDraggable) => (
+                                                    <img
+                                                        ref={providedDraggable.innerRef}
+                                                        {...providedDraggable.draggableProps}
+                                                        {...providedDraggable.dragHandleProps}
+                                                        src={URL.createObjectURL(img)}
+                                                        alt={`Miniatura ${index}`}
+                                                        className={`thumbnail ${index === mainImageIndex ? 'active' : ''}`}
+                                                        onClick={() => setMainImageIndex(index)}
+                                                    />
+                                                )}
+                                            </Draggable>
+                                        ))}
+                                        {provided.placeholder}
+                                        {images.length < 6 && (
+                                            <label htmlFor="image-upload" className="thumbnail placeholder">
+                                                <span className="plus-sign">+</span>
+                                            </label>
+                                        )}
+                                    </div>
+                                )}
+                            </Droppable>
                         </div>
-
-                        {/* Sección de miniaturas con drag and drop */}
-                        <div className="thumbnails">
-                            <DragDropContext onDragEnd={handleOnDragEnd}>
-                                <Droppable droppableId="thumbnails" direction="horizontal">
+                    )}
+                    {images.length > 0 && (
+                        <div className="preview-message">
+                            La imagen se ajusta durante la vista previa, una vez publicada se mostrará en su tamaño completo.
+                        </div>
+                    )}
+                </div>
+                {/* Panel Derecho */}
+                <div className="createpost-right">
+                    <form onSubmit={handleSubmit}>
+                        <h2 className="section-title">Información del post</h2>
+                        {/* Nueva sección para ordenar fotos */}
+                        {images.length > 0 && (
+                            <div className="photo-order-section">
+                                <h3>Orden de fotos</h3>
+                                <Droppable droppableId="orderList" direction="horizontal">
                                     {(provided) => (
                                         <div
-                                            {...provided.droppableProps}
+                                            className="order-list"
                                             ref={provided.innerRef}
-                                            style={{ display: 'flex', gap: '10px' }}
+                                            {...provided.droppableProps}
                                         >
                                             {images.map((img, index) => (
-                                                <Draggable key={index} draggableId={index.toString()} index={index}>
-                                                    {(provided) => (
-                                                        <img
-                                                            {...provided.draggableProps}
-                                                            {...provided.dragHandleProps}
-                                                            ref={provided.innerRef}
-                                                            src={URL.createObjectURL(img)}
-                                                            alt={`Miniatura ${index}`}
-                                                            className={`thumbnail ${index === mainImageIndex ? 'active' : ''}`}
-                                                            onClick={() => setMainImageIndex(index)}
-                                                        />
+                                                <Draggable key={`order-${index}`} draggableId={`order-${index}`} index={index}>
+                                                    {(providedDraggable) => (
+                                                        <div
+                                                            ref={providedDraggable.innerRef}
+                                                            {...providedDraggable.draggableProps}
+                                                            {...providedDraggable.dragHandleProps}
+                                                            className="order-item"
+                                                        >
+                                                            <img
+                                                                src={URL.createObjectURL(img)}
+                                                                alt={`Foto ${index + 1}`}
+                                                                className="order-thumbnail"
+                                                            />
+                                                        </div>
                                                     )}
                                                 </Draggable>
                                             ))}
@@ -197,134 +251,124 @@ const CreatePost = () => {
                                         </div>
                                     )}
                                 </Droppable>
-                            </DragDropContext>
-                            {images.length < 6 && (
-                                <label htmlFor="image-upload" className="thumbnail placeholder">
-                                    <span className="plus-sign">+</span>
-                                </label>
-                            )}
-                        </div>
-                    </div>
-                )}
-                {images.length > 0 && (
-                    <div className="preview-message">
-                        La imagen se ajusta durante la vista previa, una vez publicada se mostrará en su tamaño completo.
-                    </div>
-                )}
-            </div>
-
-            {/* Panel Derecho */}
-            <div className="createpost-right">
-                <form onSubmit={handleSubmit}>
-                    <h2 className="section-title">Información del post</h2>
-                    {/* Paso 2: Información básica */}
-                    <div className="step-label-dark">Paso 2</div>
-                    <section className="post-section">
-                        <h3>Título</h3>
-                        <input
-                            type="text"
-                            placeholder="Introduce el título del post"
-                            value={postTitle}
-                            onChange={(e) => setPostTitle(e.target.value)}
-                            className="post-input"
-                        />
-                    </section>
-                    <section className="post-section">
-                        <h3>Descripción</h3>
-                        <textarea
-                            placeholder="Introduce la descripción del post"
-                            value={postDescription}
-                            onChange={(e) => setPostDescription(e.target.value)}
-                            className="post-textarea"
-                        />
-                    </section>
-                    {/* Paso 3: Etiquetar personas */}
-                    <div className="step-label-dark">Paso 3</div>
-                    <section className="post-section">
-                        <h3>Etiqueta personas</h3>
-                        {peopleTags.map((tag, index) => (
-                            <div key={index} className="people-tag-card">
-                                <div className="form-group-create-post">
-                                    <label>Nombre</label>
-                                    <input
-                                        type="text"
-                                        placeholder="Nombre de usuario a etiquetar"
-                                        name="name"
-                                        value={tag.name}
-                                        onChange={(e) => handlePeopleTagChange(index, e)}
-                                        className="post-input"
-                                    />
-                                </div>
-                                <div className="form-group-create-post">
-                                    <label>Rol</label>
-                                    <input
-                                        type="text"
-                                        placeholder="Ejemplo: Modelo, Dirección de arte, etc."
-                                        name="role"
-                                        value={tag.role}
-                                        onChange={(e) => handlePeopleTagChange(index, e)}
-                                        className="post-input"
-                                    />
-                                </div>
-                                {peopleTags.length > 1 && (
-                                    <button
-                                        type="button"
-                                        onClick={() => removePeopleTagCard(index)}
-                                        className="remove-card-btn"
-                                    >
-                                        <FaTrash />
-                                    </button>
-                                )}
+                                <p className="order-instruction">
+                                    Arrastra y suelta para cambiar el orden. La primera foto será la principal.
+                                </p>
                             </div>
-                        ))}
-                        <button type="button" onClick={addPeopleTagCard} className="add-card-btn">
-                            + Añadir tarjeta para etiquetar
-                        </button>
-                    </section>
-                    {/* Paso 4: Etiquetas de imagen */}
-                    <div className="step-label-dark">Paso 4</div>
-                    <section className="post-section image-tags-section">
-                        <h3>Etiquetas de imagen</h3>
-                        <div className="tags-container">
-                            {(imageTags[mainImageIndex] || []).map((tag, index) => (
-                                <span key={index} className="tag">
-                                    {tag}
-                                    <button
-                                        type="button"
-                                        onClick={() => removeImageTag(index)}
-                                        className="remove-tag-btn"
-                                    >
-                                        X
-                                    </button>
-                                </span>
-                            ))}
-                        </div>
-                        <div className="tag-input-wrapper-right">
+                        )}
+                        {/* Paso 2: Información básica */}
+                        <div className="step-label-dark">Paso 2</div>
+                        <section className="post-section">
+                            <h3>Título</h3>
                             <input
                                 type="text"
-                                placeholder='Escribe una etiqueta y pulsa "Enter"'
-                                value={newTag}
-                                onChange={(e) => setNewTag(e.target.value)}
-                                onKeyDown={handleTagKeyDown}
-                                className="post-input tag-input"
+                                placeholder="Introduce el título del post"
+                                value={postTitle}
+                                onChange={(e) => setPostTitle(e.target.value)}
+                                className="post-input"
                             />
-                            <button type="button" className="save-tags-btn">
-                                <FaCheck className="check-icon" /> Guardar tags
+                        </section>
+                        <section className="post-section">
+                            <h3>Descripción</h3>
+                            <textarea
+                                placeholder="Introduce la descripción del post"
+                                value={postDescription}
+                                onChange={(e) => setPostDescription(e.target.value)}
+                                className="post-textarea"
+                            />
+                        </section>
+                        {/* Paso 3: Etiquetar personas */}
+                        <div className="step-label-dark">Paso 3</div>
+                        <section className="post-section">
+                            <h3>Etiqueta personas</h3>
+                            {peopleTags.map((tag, index) => (
+                                <div key={index} className="people-tag-card">
+                                    <div className="form-group-create-post">
+                                        <label>Nombre</label>
+                                        <input
+                                            type="text"
+                                            placeholder="Nombre de usuario a etiquetar"
+                                            name="name"
+                                            value={tag.name}
+                                            onChange={(e) => handlePeopleTagChange(index, e)}
+                                            className="post-input"
+                                        />
+                                    </div>
+                                    <div className="form-group-create-post">
+                                        <label>Rol</label>
+                                        <input
+                                            type="text"
+                                            placeholder="Ejemplo: Modelo, Dirección de arte, etc."
+                                            name="role"
+                                            value={tag.role}
+                                            onChange={(e) => handlePeopleTagChange(index, e)}
+                                            className="post-input"
+                                        />
+                                    </div>
+                                    {peopleTags.length > 1 && (
+                                        <button
+                                            type="button"
+                                            onClick={() => removePeopleTagCard(index)}
+                                            className="remove-card-btn"
+                                        >
+                                            <FaTrash />
+                                        </button>
+                                    )}
+                                </div>
+                            ))}
+                            <button
+                                type="button"
+                                onClick={addPeopleTagCard}
+                                className="add-card-btn"
+                            >
+                                + Añadir tarjeta para etiquetar
                             </button>
-                        </div>
-                    </section>
-                    <button type="submit" className="publish-btn" disabled={!isFormComplete}>
-                        {isFormComplete ? (
-                            <>
-                                <FaUpload size={16} /> Publicar post
-                            </>
-                        ) : (
-                            "Publicar post"
-                        )}
-                    </button>
-                </form>
+                        </section>
+                        {/* Paso 4: Etiquetas de imagen */}
+                        <div className="step-label-dark">Paso 4</div>
+                        <section className="post-section image-tags-section">
+                            <h3>Etiquetas de imagen</h3>
+                            <div className="tags-container">
+                                {(imageTags[mainImageIndex] || []).map((tag, index) => (
+                                    <span key={index} className="tag">
+                                        {tag}
+                                        <button
+                                            type="button"
+                                            onClick={() => removeImageTag(index)}
+                                            className="remove-tag-btn"
+                                        >
+                                            X
+                                        </button>
+                                    </span>
+                                ))}
+                            </div>
+                            <div className="tag-input-wrapper-right">
+                                <input
+                                    type="text"
+                                    placeholder='Escribe una etiqueta y pulsa "Enter"'
+                                    value={newTag}
+                                    onChange={(e) => setNewTag(e.target.value)}
+                                    onKeyDown={handleTagKeyDown}
+                                    className="post-input tag-input"
+                                />
+                                <button type="button" className="save-tags-btn">
+                                    <FaCheck className="check-icon" /> Guardar tags
+                                </button>
+                            </div>
+                        </section>
+                        <button type="submit" className="publish-btn" disabled={!isFormComplete}>
+                            {isFormComplete ? (
+                                <>
+                                    <FaUpload size={16} /> Publicar post
+                                </>
+                            ) : (
+                                "Publicar post"
+                            )}
+                        </button>
+                    </form>
+                </div>
             </div>
-        </div>
+        </DragDropContext>
     );
 };
 
