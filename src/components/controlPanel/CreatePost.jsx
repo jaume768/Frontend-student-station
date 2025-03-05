@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FaUpload, FaArrowLeft, FaArrowRight, FaTrash, FaCheck } from 'react-icons/fa';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import axios from 'axios';
 import './css/CreatePost.css';
 
 const CreatePost = () => {
@@ -8,7 +9,7 @@ const CreatePost = () => {
     const [images, setImages] = useState([]);
     const [mainImageIndex, setMainImageIndex] = useState(0);
 
-    // Estados para la parte derecha (info del post)
+    // Estados para la parte derecha (información del post)
     const [postTitle, setPostTitle] = useState('');
     const [postDescription, setPostDescription] = useState('');
 
@@ -28,7 +29,7 @@ const CreatePost = () => {
         setPeopleTags(updated);
     };
 
-    // Estados para las etiquetas por imagen (Paso 4)
+    // Estados para las etiquetas de imagen (Paso 4)
     const [imageTags, setImageTags] = useState({});
     const [newTag, setNewTag] = useState('');
 
@@ -55,9 +56,8 @@ const CreatePost = () => {
         });
     };
 
-    // Subida de imágenes (acumula hasta 6)
     const handleImageUpload = (e) => {
-        let files = Array.from(e.target.files);
+        const files = Array.from(e.target.files);
         const updatedImages = [...images, ...files].slice(0, 6);
         setImages(updatedImages);
         if (updatedImages.length === 1) {
@@ -73,22 +73,47 @@ const CreatePost = () => {
         setMainImageIndex((prev) => (prev - 1 + images.length) % images.length);
     };
 
-    // Validación: se requiere al menos una imagen, título y descripción
     const isFormComplete = images.length > 0 && postTitle.trim() && postDescription.trim();
 
-    const handleSubmit = (e) => {
+    const [isLoading, setIsLoading] = useState(false);
+    const [uploadSuccess, setUploadSuccess] = useState(false);
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Aquí se enviaría el formulario (por ejemplo, con FormData)
-        console.log({
-            images,
-            postTitle,
-            postDescription,
-            peopleTags,
-            imageTags
+        if (!isFormComplete) return;
+        setIsLoading(true);
+        const formData = new FormData();
+        formData.append('title', postTitle);
+        formData.append('description', postDescription);
+        images.forEach((img) => {
+            formData.append('images', img);
         });
+        formData.append('peopleTags', JSON.stringify(peopleTags));
+        formData.append('imageTags', JSON.stringify(imageTags));
+
+        try {
+            const token = localStorage.getItem('authToken');
+            const backendUrl = import.meta.env.VITE_BACKEND_URL;
+            await axios.post(`${backendUrl}/api/posts`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+            setUploadSuccess(true);
+            setImages([]);
+            setPostTitle('');
+            setPostDescription('');
+            setPeopleTags([{ name: '', role: '' }]);
+            setImageTags({});
+            setNewTag('');
+        } catch (error) {
+            console.error("Error al publicar el post", error);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
-    // Función para reordenar el array de imágenes
     const reorder = (list, startIndex, endIndex) => {
         const result = Array.from(list);
         const [removed] = result.splice(startIndex, 1);
@@ -96,14 +121,13 @@ const CreatePost = () => {
         return result;
     };
 
-    // onDragEnd se dispara cuando termina el drag & drop en cualquiera de las secciones
+    // onDragEnd para el drag & drop en thumbnails y orden de fotos
     const handleDragEnd = (result) => {
         if (!result.destination) return;
         if (result.source.index === result.destination.index) return;
         const newImages = reorder(images, result.source.index, result.destination.index);
         setImages(newImages);
-        // Se asume que la primera foto (índice 0) es la principal
-        setMainImageIndex(0);
+        setMainImageIndex(0); // La primera foto será la principal
     };
 
     return (
@@ -138,8 +162,6 @@ const CreatePost = () => {
                                         className="main-image"
                                     />
                                     <FaArrowRight onClick={handleNextImage} className="arrow" />
-
-                                    {/* Contador y Overlay dentro del main-image-wrapper */}
                                     <div className="photo-counter">
                                         Foto {mainImageIndex + 1} de {images.length}
                                     </div>
@@ -174,7 +196,6 @@ const CreatePost = () => {
                                     </div>
                                 </div>
                             </div>
-                            {/* Thumbnails con drag & drop */}
                             <Droppable droppableId="thumbnails" direction="horizontal">
                                 {(provided) => (
                                     <div
@@ -218,7 +239,6 @@ const CreatePost = () => {
                 <div className="createpost-right">
                     <form onSubmit={handleSubmit}>
                         <h2 className="section-title">Información del post</h2>
-                        {/* Paso 2: Información básica */}
                         <div className="step-label-dark">Paso 2</div>
                         <section className="post-section">
                             <h3>Título</h3>
@@ -239,7 +259,6 @@ const CreatePost = () => {
                                 className="post-textarea"
                             />
                         </section>
-                        {/* Paso 3: Etiquetar personas */}
                         <div className="step-label-dark">Paso 3</div>
                         <section className="post-section">
                             <h3>Etiqueta personas</h3>
@@ -278,25 +297,13 @@ const CreatePost = () => {
                                     )}
                                 </div>
                             ))}
-                            <button
-                                type="button"
-                                onClick={addPeopleTagCard}
-                                className="add-card-btn"
-                            >
+                            <button type="button" onClick={addPeopleTagCard} className="add-card-btn">
                                 + Añadir tarjeta para etiquetar
                             </button>
                         </section>
-                        {/* Paso 4: Etiquetas de imagen */}
                         <div className="step-label-dark">Paso 4</div>
                         <section className="post-section image-tags-section">
                             <h3>Etiquetas de imagen</h3>
-                            <div className="image-tags-navigation">
-                                <FaArrowLeft onClick={handlePrevImage} className="arrow" />
-                                <span className="photo-counter">
-                                    Foto {mainImageIndex + 1} de {images.length}
-                                </span>
-                                <FaArrowRight onClick={handleNextImage} className="arrow" />
-                            </div>
                             <div className="tags-container">
                                 {(imageTags[mainImageIndex] || []).map((tag, index) => (
                                     <span key={index} className="tag">
@@ -374,6 +381,17 @@ const CreatePost = () => {
                         </button>
                     </form>
                 </div>
+                {isLoading && (
+                    <div className="loading-overlay">
+                        <p>Cargando...</p>
+                    </div>
+                )}
+                {uploadSuccess && (
+                    <div className="success-popup">
+                        <p>¡Post subido correctamente!</p>
+                        <button onClick={() => setUploadSuccess(false)}>Cerrar</button>
+                    </div>
+                )}
             </div>
         </DragDropContext>
     );
