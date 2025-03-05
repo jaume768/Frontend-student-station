@@ -8,6 +8,9 @@ const MiPerfil = () => {
     const [isGalleryView, setIsGalleryView] = useState(true);
     const [activeTab, setActiveTab] = useState('perfil');
 
+    // Nuevo estado para guardar los posts del usuario
+    const [userPosts, setUserPosts] = useState([]);
+
     useEffect(() => {
         const fetchProfile = async () => {
             try {
@@ -25,8 +28,57 @@ const MiPerfil = () => {
         fetchProfile();
     }, []);
 
+    // Efecto para obtener las publicaciones del usuario
+    useEffect(() => {
+        const fetchUserPosts = async () => {
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) return;
+                const backendUrl = import.meta.env.VITE_BACKEND_URL;
+                // Se asume que existe un endpoint para obtener los posts del usuario
+                const res = await axios.get(`${backendUrl}/api/posts/user`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                setUserPosts(res.data.posts); // Se espera que el endpoint retorne { posts: [...] }
+            } catch (error) {
+                console.error("Error al cargar las publicaciones del usuario", error);
+            }
+        };
+        fetchUserPosts();
+    }, []);
+
     const toggleView = () => {
         setIsGalleryView(prev => !prev);
+    };
+
+    // Construir la grid de publicaciones: total 15 items.
+    // Si el usuario tiene al menos un post, se muestra su imagen principal en la primera posición y luego (15-1) placeholders.
+    const totalGridItems = 15;
+    const renderProjectsGrid = () => {
+        if (userPosts.length > 0) {
+            return (
+                <>
+                    <div className="miPerfil-project-placeholder">
+                        <img
+                            src={userPosts[0].mainImage}
+                            alt="Publicación principal"
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        />
+                    </div>
+                    {[...Array(totalGridItems - 1)].map((_, index) => (
+                        <div key={index} className="miPerfil-project-placeholder">
+                            {/* Aquí podrías mostrar más publicaciones o dejarlo como placeholder */}
+                        </div>
+                    ))}
+                </>
+            );
+        } else {
+            return [...Array(totalGridItems)].map((_, index) => (
+                <div key={index} className="miPerfil-project-placeholder">
+                    {/* Placeholder para proyecto */}
+                </div>
+            ));
+        }
     };
 
     return (
@@ -70,13 +122,13 @@ const MiPerfil = () => {
 
             <div className="miPerfil-content">
                 <div className={`miPerfil-left-content ${activeTab === 'perfil' ? 'active' : ''}`}>
+                    {/* Secciones del perfil */}
                     <section className="miPerfil-section">
                         <h2>Descripción</h2>
                         <p>
                             {profile?.biography || "No hay descripción disponible."}
                         </p>
                     </section>
-
                     <section className="miPerfil-section">
                         <h2>Experiencia profesional</h2>
                         <ul className="miPerfil-list">
@@ -98,8 +150,6 @@ const MiPerfil = () => {
                             )}
                         </ul>
                     </section>
-
-                    {/* Habilidades */}
                     <section className="miPerfil-section">
                         <h2>Habilidades</h2>
                         <div className="miPerfil-chips">
@@ -112,8 +162,6 @@ const MiPerfil = () => {
                             )}
                         </div>
                     </section>
-
-                    {/* Software */}
                     <section className="miPerfil-section">
                         <h2>Software</h2>
                         <div className="miPerfil-chips">
@@ -126,8 +174,6 @@ const MiPerfil = () => {
                             )}
                         </div>
                     </section>
-
-                    {/* Formación educativa */}
                     <section className="miPerfil-section">
                         <h2>Formación educativa</h2>
                         <ul className="miPerfil-list">
@@ -135,13 +181,9 @@ const MiPerfil = () => {
                                 profile.education.map((edu, index) => (
                                     <li key={index}>
                                         <strong>
-                                            {edu.formationStart
-                                                ? new Date(edu.formationStart).toLocaleDateString()
-                                                : ""}
+                                            {edu.formationStart ? new Date(edu.formationStart).toLocaleDateString() : ""}
                                             {" - "}
-                                            {edu.formationEnd
-                                                ? new Date(edu.formationEnd).toLocaleDateString()
-                                                : "Actual"}
+                                            {edu.formationEnd ? new Date(edu.formationEnd).toLocaleDateString() : "Actual"}
                                         </strong>
                                         <p>
                                             {edu.formationName} en {edu.institution || edu.otherInstitution}
@@ -153,8 +195,6 @@ const MiPerfil = () => {
                             )}
                         </ul>
                     </section>
-
-                    {/* Redes sociales */}
                     <section className="miPerfil-section miPerfil-social">
                         <h2>Redes sociales</h2>
                         <div className="miPerfil-social-links">
@@ -178,8 +218,6 @@ const MiPerfil = () => {
                             )}
                         </div>
                     </section>
-
-                    {/* Archivos descargables */}
                     <section className="miPerfil-section ultima-seccion">
                         <h2>Archivos descargables</h2>
                         <div className="miPerfil-downloads">
@@ -208,11 +246,7 @@ const MiPerfil = () => {
                     <div
                         className={`miPerfil-projects-grid ${isGalleryView ? 'gallery' : 'individual'}`}
                     >
-                        {[...Array(15)].map((_, index) => (
-                            <div key={index} className="miPerfil-project-placeholder">
-                                {/* Placeholder para proyecto */}
-                            </div>
-                        ))}
+                        {renderProjectsGrid()}
                     </div>
                 </div>
             </div>
