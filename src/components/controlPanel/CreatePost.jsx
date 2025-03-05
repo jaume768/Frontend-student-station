@@ -218,44 +218,6 @@ const CreatePost = () => {
                 <div className="createpost-right">
                     <form onSubmit={handleSubmit}>
                         <h2 className="section-title">Información del post</h2>
-                        {/* Nueva sección para ordenar fotos */}
-                        {images.length > 0 && (
-                            <div className="photo-order-section">
-                                <h3>Orden de fotos</h3>
-                                <Droppable droppableId="orderList" direction="horizontal">
-                                    {(provided) => (
-                                        <div
-                                            className="order-list"
-                                            ref={provided.innerRef}
-                                            {...provided.droppableProps}
-                                        >
-                                            {images.map((img, index) => (
-                                                <Draggable key={`order-${index}`} draggableId={`order-${index}`} index={index}>
-                                                    {(providedDraggable) => (
-                                                        <div
-                                                            ref={providedDraggable.innerRef}
-                                                            {...providedDraggable.draggableProps}
-                                                            {...providedDraggable.dragHandleProps}
-                                                            className="order-item"
-                                                        >
-                                                            <img
-                                                                src={URL.createObjectURL(img)}
-                                                                alt={`Foto ${index + 1}`}
-                                                                className="order-thumbnail"
-                                                            />
-                                                        </div>
-                                                    )}
-                                                </Draggable>
-                                            ))}
-                                            {provided.placeholder}
-                                        </div>
-                                    )}
-                                </Droppable>
-                                <p className="order-instruction">
-                                    Arrastra y suelta para cambiar el orden. La primera foto será la principal.
-                                </p>
-                            </div>
-                        )}
                         {/* Paso 2: Información básica */}
                         <div className="step-label-dark">Paso 2</div>
                         <section className="post-section">
@@ -355,7 +317,45 @@ const CreatePost = () => {
                                     <FaCheck className="check-icon" /> Guardar tags
                                 </button>
                             </div>
+                            <p className="max-tags-info">Máximo de 10 etiquetas por fotografía</p>
                         </section>
+                        {images.length > 0 && (
+                            <div className="photo-order-section">
+                                <h3>Orden de fotos</h3>
+                                <Droppable droppableId="orderList" direction="horizontal">
+                                    {(provided) => (
+                                        <div
+                                            className="order-list"
+                                            ref={provided.innerRef}
+                                            {...provided.droppableProps}
+                                        >
+                                            {images.map((img, index) => (
+                                                <Draggable key={`order-${index}`} draggableId={`order-${index}`} index={index}>
+                                                    {(providedDraggable) => (
+                                                        <div
+                                                            ref={providedDraggable.innerRef}
+                                                            {...providedDraggable.draggableProps}
+                                                            {...providedDraggable.dragHandleProps}
+                                                            className="order-item"
+                                                        >
+                                                            <img
+                                                                src={URL.createObjectURL(img)}
+                                                                alt={`Foto ${index + 1}`}
+                                                                className="order-thumbnail"
+                                                            />
+                                                        </div>
+                                                    )}
+                                                </Draggable>
+                                            ))}
+                                            {provided.placeholder}
+                                        </div>
+                                    )}
+                                </Droppable>
+                                <p className="order-instruction">
+                                    Arrastra y suelta para cambiar el orden. La primera foto será la principal.
+                                </p>
+                            </div>
+                        )}
                         <button type="submit" className="publish-btn" disabled={!isFormComplete}>
                             {isFormComplete ? (
                                 <>

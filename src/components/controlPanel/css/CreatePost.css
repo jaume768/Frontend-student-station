@@ -89,11 +89,17 @@
     font-size: 0.9rem;
 }
 
+.max-tags-info {
+    color: #4c85ff;
+    font-size: 0.9rem;
+    margin-top: 5px;
+}
+
 /* Overlay de etiquetas dentro de la imagen, en la parte inferior */
 .tags-overlay {
     position: absolute;
     bottom: 0;
-    width: 80%;
+    width: 76%;
     padding: 10px;
     display: flex;
     flex-direction: column;
@@ -169,7 +175,7 @@
 .overlay-input {
     flex: 1;
     padding: 5px;
-    background-color: #767676;
+    background-color: #76767686;
     color: #fff;
     height: 50px;
     border: none;
@@ -177,7 +183,7 @@
 }
 
 .overlay-save-btn {
-    background-color: black;
+    background-color: #292929;
     color: #fff;
     border: none;
     padding: 5px 10px;
