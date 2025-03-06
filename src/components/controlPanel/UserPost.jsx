@@ -5,7 +5,7 @@ import './css/UserPost.css';
 
 const UserPost = () => {
     const navigate = useNavigate();
-    const { id } = useParams(); // Obtiene el id de la URL
+    const { id } = useParams();
     const [post, setPost] = useState(null);
     const [loading, setLoading] = useState(true);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
