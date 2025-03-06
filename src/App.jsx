@@ -24,6 +24,7 @@ import CompleteRegistrationProfesionalInstitucion from './pages/profesionales/Co
 import CompleteRegistrationProfesionalMarca05 from './pages/profesionales/CompleteRegistrationProfesionalMarca05';
 import CompleteRegistrationProfesionalEmpresa05 from './pages/profesionales/CompleteRegistrationProfesionalEmpresa05';
 import CompleteRegistrationProfesionalAgencia05 from './pages/profesionales/CompleteRegistrationProfesionalAgencia05';
+import UserPost from './components/controlPanel/UserPost';
 
 function App() {
   return (
