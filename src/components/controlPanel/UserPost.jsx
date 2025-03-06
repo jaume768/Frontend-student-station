@@ -1,11 +1,35 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import axios from 'axios';
 import './css/UserPost.css';
 
-const UserPost = ({ post }) => {
+const UserPost = () => {
     const navigate = useNavigate();
+    const { id } = useParams(); // Obtiene el id de la URL
+    const [post, setPost] = useState(null);
+    const [loading, setLoading] = useState(true);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
+    useEffect(() => {
+        const fetchPost = async () => {
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) return;
+                const backendUrl = import.meta.env.VITE_BACKEND_URL;
+                const response = await axios.get(`${backendUrl}/api/posts/${id}`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                setPost(response.data.post);
+            } catch (error) {
+                console.error("Error al cargar la publicación:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchPost();
+    }, [id]);
+
+    if (loading) return <div>Cargando...</div>;
     if (!post) return <div>No hay datos de la publicación</div>;
 
     const images = post.images || [];
@@ -23,17 +47,17 @@ const UserPost = ({ post }) => {
         setCurrentImageIndex(index);
     };
 
-    // Funciones para las opciones de guardar y compartir (se pueden ampliar)
+    // Opciones para guardar o compartir
     const handleSave = (e) => {
         e.stopPropagation();
         console.log('Guardar post', post._id);
-        // Aquí iría la lógica para guardar el post
+        // Lógica para guardar el post
     };
 
     const handleShare = (e) => {
         e.stopPropagation();
         console.log('Compartir post', post._id);
-        // Aquí iría la lógica para compartir el post
+        // Lógica para compartir el post
     };
 
     return (
