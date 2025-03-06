@@ -6,6 +6,7 @@ import EditProfile from '../components/controlPanel/EditProfile';
 import MiPerfil from '../components/controlPanel/MiPerfil';
 import MyComunity from '../components/controlPanel/MyComunity';
 import CreatePost from '../components/controlPanel/CreatePost';
+import UserPost from '../components/controlPanel/UserPost';
 
 const ControlPanel = () => {
     const location = useLocation();
@@ -34,6 +35,9 @@ const ControlPanel = () => {
     const activeMenu = location.state?.activeMenu || 'explorer';
 
     const renderContent = () => {
+        if (location.pathname.includes('/control-panel/post/')) {
+            return <UserPost />;
+        }
         switch (activeMenu) {
             case 'explorer':
                 return (

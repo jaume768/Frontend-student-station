@@ -62,7 +62,7 @@ const MiPerfil = () => {
                     <div
                         key={index}
                         className="miPerfil-project-placeholder"
-                        onClick={() => navigate(`/post/${post._id}`)}
+                        onClick={() => navigate(`/control-panel/post/${post._id}`)}
                         style={{ cursor: 'pointer' }}
                     >
                         <img
