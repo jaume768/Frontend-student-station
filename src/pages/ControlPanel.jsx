@@ -31,16 +31,13 @@ const ControlPanel = () => {
         setRandomIndices(result.slice(0, 80));
     }, []);
 
-    // Para otros menús, se usa location.state.activeMenu
     const activeMenu = location.state?.activeMenu || 'explorer';
 
-    // Renderizamos rutas anidadas: si la URL es /control-panel/post/:id se muestra UserPost
     const renderContent = () => {
         return (
             <Routes>
                 <Route path="post/:id" element={<UserPost />} />
                 <Route path="*" element={
-                    // Aquí se renderiza el contenido por defecto según activeMenu
                     (() => {
                         switch (activeMenu) {
                             case 'explorer':

@@ -33,8 +33,7 @@ function App() {
         <Route path="/token-handler" element={<TokenHandler />} />
         <Route path="/ControlPanel" element={<ControlPanel />} />
         <Route path="/" element={<Home />} />
-        <Route path="/control-panel/*" element={<ControlPanel />} />
-        <Route path="/control-panel/post/:id" element={<UserPost />} />
+        <Route path="/ControlPanel/*" element={<ControlPanel />} />
         <Route path="/complete-registration" element={<CompleteRegistration />} />
         <Route path="/creativo/registro" element={<CompleteRegistrationCreativo />} />
         <Route path="/creativo/registro/02" element={<CompleteRegistrationCreativo02 />} />
