@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
+import { FaArrowLeft, FaChevronLeft, FaChevronRight, FaBookmark, FaShareAlt, FaUserCircle } from 'react-icons/fa';
 import './css/UserPost.css';
 
 const UserPost = () => {
@@ -47,24 +48,23 @@ const UserPost = () => {
         setCurrentImageIndex(index);
     };
 
-    // Opciones para guardar o compartir
     const handleSave = (e) => {
         e.stopPropagation();
         console.log('Guardar post', post._id);
-        // Lógica para guardar el post
+        // Aquí la lógica para guardar el post
     };
 
     const handleShare = (e) => {
         e.stopPropagation();
         console.log('Compartir post', post._id);
-        // Lógica para compartir el post
+        // Aquí la lógica para compartir el post
     };
 
     return (
         <div className="perfil">
             <header className="perfil__header">
                 <button className="perfil__volver" onClick={() => navigate(-1)}>
-                    <img src="/multimedia/flecha_atras.svg" alt="Volver" />
+                    <FaArrowLeft size={20} />
                     <p>Volver</p>
                 </button>
             </header>
@@ -72,8 +72,9 @@ const UserPost = () => {
                 <div className="perfil__imagenes">
                     <div className="perfil__imagen">
                         <button className="anterior" onClick={handlePrevious}>
-                            <img src="/multimedia/flecha_drc.svg" alt="Anterior" />
+                            <FaChevronLeft size={24} />
                         </button>
+                        {/* Se conserva la imagen principal real del post */}
                         <img
                             src={mainImage}
                             alt="Imagen principal"
@@ -81,14 +82,14 @@ const UserPost = () => {
                         />
                         <div className="options">
                             <button className="save-button" onClick={handleSave}>
-                                <img src="/multimedia/bookmark.svg" alt="Guardar" />
+                                <FaBookmark size={20} />
                             </button>
                             <button className="compartir" onClick={handleShare}>
-                                <img src="/multimedia/doble_flecha_izq.svg" alt="Compartir" />
+                                <FaShareAlt size={20} />
                             </button>
                         </div>
                         <button className="siguiente" onClick={handleNext}>
-                            <img src="/multimedia/flecha_izq.svg" alt="Siguiente" />
+                            <FaChevronRight size={24} />
                         </button>
                     </div>
                     <div className="perfil__galeria">
@@ -105,11 +106,15 @@ const UserPost = () => {
                 </div>
                 <div className="perfil__info">
                     <div className="perfil__usuario">
-                        <img
-                            src={post.user.profile?.profilePicture || "/multimedia/usuarioDefault.jpg"}
-                            alt="Avatar"
-                            className="perfil__avatar"
-                        />
+                        {post.user.profile?.profilePicture ? (
+                            <img
+                                src={post.user.profile.profilePicture}
+                                alt="Avatar"
+                                className="perfil__avatar"
+                            />
+                        ) : (
+                            <FaUserCircle size={50} />
+                        )}
                         <div className="perfil__datos">
                             <h2 className="perfil__nombre">@{post.user.username}</h2>
                             <p className="perfil__ubicacion">
