@@ -304,34 +304,62 @@ const CreatePost = () => {
                         <div className="step-label-dark">Paso 4</div>
                         <section className="post-section image-tags-section">
                             <h3>Etiquetas de imagen</h3>
-                            <div className="tags-container">
-                                {(imageTags[mainImageIndex] || []).map((tag, index) => (
-                                    <span key={index} className="tag">
-                                        {tag}
-                                        <button
-                                            type="button"
-                                            onClick={() => removeImageTag(index)}
-                                            className="remove-tag-btn"
-                                        >
-                                            X
+                            {images.map((img, index) => (
+                                <div key={index} className="image-tag-placeholder">
+                                    <img
+                                        src={URL.createObjectURL(img)}
+                                        alt={`Foto ${index + 1}`}
+                                        className="order-thumbnail"
+                                    />
+                                    <div className="tags-container">
+                                        {(imageTags[index] || []).map((tag, tagIndex) => (
+                                            <span key={tagIndex} className="tag">
+                                                {tag}
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        const currentTags = imageTags[index] || [];
+                                                        setImageTags({
+                                                            ...imageTags,
+                                                            [index]: currentTags.filter((_, i) => i !== tagIndex)
+                                                        });
+                                                    }}
+                                                    className="remove-tag-btn"
+                                                >
+                                                    X
+                                                </button>
+                                            </span>
+                                        ))}
+                                    </div>
+                                    <div className="tag-input-wrapper-right">
+                                        <input
+                                            type="text"
+                                            placeholder='Escribe una etiqueta y pulsa "Enter"'
+                                            value={newTag}
+                                            onChange={(e) => setNewTag(e.target.value)}
+                                            onKeyDown={(e) => {
+                                                if (e.key === "Enter") {
+                                                    e.preventDefault();
+                                                    const trimmed = newTag.trim();
+                                                    const currentTags = imageTags[index] || [];
+                                                    if (trimmed && currentTags.length < 10 && !currentTags.includes(trimmed)) {
+                                                        setImageTags({
+                                                            ...imageTags,
+                                                            [index]: [...currentTags, trimmed]
+                                                        });
+                                                        setNewTag('');
+                                                    }
+                                                }
+                                            }}
+                                            className="post-input tag-input"
+                                        />
+                                        <button type="button" className="save-tags-btn">
+                                            <FaCheck className="check-icon" /> Guardar tags
                                         </button>
-                                    </span>
-                                ))}
-                            </div>
-                            <div className="tag-input-wrapper-right">
-                                <input
-                                    type="text"
-                                    placeholder='Escribe una etiqueta y pulsa "Enter"'
-                                    value={newTag}
-                                    onChange={(e) => setNewTag(e.target.value)}
-                                    onKeyDown={handleTagKeyDown}
-                                    className="post-input tag-input"
-                                />
-                                <button type="button" className="save-tags-btn">
-                                    <FaCheck className="check-icon" /> Guardar tags
-                                </button>
-                            </div>
-                            <p className="max-tags-info">Máximo de 10 etiquetas por fotografía</p>
+                                    </div>
+                                    <p className="max-tags-info">Máximo de 10 etiquetas por fotografía</p>
+                                </div>
+                            ))}
                         </section>
                         {images.length > 0 && (
                             <div className="photo-order-section">

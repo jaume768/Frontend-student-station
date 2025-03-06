@@ -438,7 +438,7 @@
         background: #fff;
         border-radius: 40px;
         border-top: 1px solid #ccc;
-        z-index: 1000;
+        z-index: 900;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 
         padding-bottom: env(safe-area-inset-bottom);

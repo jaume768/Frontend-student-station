@@ -281,7 +281,7 @@
 
 /* Secciones de formulario en el panel derecho */
 .post-section {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     background-color: white;
     padding: 15px;
     margin-left: 10px;
@@ -519,8 +519,7 @@
         padding: 10px 15px;
     }
 
-    /* Si el form es muy largo, dale margen inferior para no taparlo con el teclado móvil */
     .createpost-right {
-        padding-bottom: 50px;
+        margin-bottom: 4em;
     }
 }
