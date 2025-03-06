@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaTh, FaList, FaLinkedin, FaInstagram } from 'react-icons/fa';
 import './css/miPerfil.css';
+import { useNavigate } from 'react-router-dom';
 
 const MiPerfil = () => {
     const [profile, setProfile] = useState(null);
@@ -50,15 +51,22 @@ const MiPerfil = () => {
     const toggleView = () => {
         setIsGalleryView(prev => !prev);
     };
+    const navigate = useNavigate();
 
     const totalGridItems = 15;
     const renderProjectsGrid = () => {
         return [...Array(totalGridItems)].map((_, index) => {
             if (index < userPosts.length) {
+                const post = userPosts[index];
                 return (
-                    <div key={index} className="miPerfil-project-placeholder">
+                    <div
+                        key={index}
+                        className="miPerfil-project-placeholder"
+                        onClick={() => navigate(`/post/${post._id}`)}
+                        style={{ cursor: 'pointer' }}
+                    >
                         <img
-                            src={userPosts[index].mainImage}
+                            src={post.mainImage}
                             alt={`Publicación ${index + 1}`}
                             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                         />
@@ -88,7 +96,7 @@ const MiPerfil = () => {
                             {profile?.fullName || "Nombre Apellido"}
                         </h1>
                         <p className="miPerfil-occupations">
-                            {profile?.biography || "Ocupación no especificada"}
+                            {profile?.professionalTitle || "Título profesional no especificada"}
                         </p>
                         <p className="miPerfil-location">
                             {profile?.city && profile?.country

@@ -125,6 +125,9 @@ const EditProfile = () => {
     const [isSoftwareCollapsed, setIsSoftwareCollapsed] = useState(false);
     const [isEnBuscaCollapsed, setIsEnBuscaCollapsed] = useState(false);
     const [isContactCollapsed, setIsContactCollapsed] = useState(false);
+    const [professionalTitle, setProfessionalTitle] = useState('');
+    const [isProfessionalTitleEditing, setIsProfessionalTitleEditing] = useState(false);
+    const [isProfessionalTitleCollapsed, setIsProfessionalTitleCollapsed] = useState(false);
 
     // Estados para la nueva sección de Formación Profesional
     const [isProfessionalFormationEditing, setIsProfessionalFormationEditing] = useState(false);
@@ -152,6 +155,7 @@ const EditProfile = () => {
                     googleId: user.googleId,
                     hasPassword: user.hasPassword,
                 });
+                setProfessionalTitle(user.professionalTitle || '');
                 if (user.fullName) {
                     const names = user.fullName.split(' ');
                     setBasicInfo({
@@ -387,7 +391,8 @@ const EditProfile = () => {
                 software: software,
                 contract: contract,
                 locationType: locationType,
-                social: social
+                social: social,
+                professionalTitle: professionalTitle,
             };
             const response = await axios.put(`${backendUrl}/api/users/profile`, updates, {
                 headers: { Authorization: `Bearer ${token}` },
@@ -402,6 +407,9 @@ const EditProfile = () => {
             });
             if (updatedUser.education) {
                 setEducationList(updatedUser.education);
+            }
+            if (updatedUser.professionalTitle) {
+                setProfessionalTitle(updatedUser.professionalTitle);
             }
             if (updatedUser.professionalFormation) {
                 setProfessionalFormationList(updatedUser.professionalFormation);
@@ -558,6 +566,44 @@ const EditProfile = () => {
                                                                 updateProfileData();
                                                             }
                                                             setIsBasicEditing(!isBasicEditing);
+                                                        }}
+                                                    />
+                                                </div>
+                                            </div>
+                                        )}
+                                    </section>
+                                    <section className="form-section">
+                                        <div className="section-header-edit">
+                                            <h3>Título profesional</h3>
+                                            <button
+                                                type="button"
+                                                className="collapse-toggle"
+                                                onClick={() => setIsProfessionalTitleCollapsed(!isProfessionalTitleCollapsed)}
+                                            >
+                                                {isProfessionalTitleCollapsed ? <FaChevronDown /> : <FaChevronUp />}
+                                            </button>
+                                        </div>
+                                        {!isProfessionalTitleCollapsed && (
+                                            <div className="section-content">
+                                                <div className="form-group">
+                                                    <label>Título profesional</label>
+                                                    <input
+                                                        type="text"
+                                                        name="professionalTitle"
+                                                        placeholder="Introduce tu título profesional"
+                                                        value={professionalTitle}
+                                                        onChange={(e) => setProfessionalTitle(e.target.value)}
+                                                        disabled={!isProfessionalTitleEditing}
+                                                    />
+                                                </div>
+                                                <div className="button-container">
+                                                    <EditButton
+                                                        isEditing={isProfessionalTitleEditing}
+                                                        onClick={() => {
+                                                            if (isProfessionalTitleEditing) {
+                                                                updateProfileData();
+                                                            }
+                                                            setIsProfessionalTitleEditing(!isProfessionalTitleEditing);
                                                         }}
                                                     />
                                                 </div>

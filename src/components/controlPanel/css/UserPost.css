@@ -1,0 +1,253 @@
+.perfil {
+    max-width: 900px;
+    width: 100%;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+/* Header */
+.perfil__header {
+    padding: 16px 0;
+}
+
+.perfil__volver {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    display: flex;
+    gap: 1em;
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.perfil__volver img {
+    width: 25px;
+    height: 30px;
+    cursor: pointer;
+}
+
+/* Contenido */
+.perfil__contenido {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
+
+/* Imágenes */
+.perfil__imagenes {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.perfil__imagen-principal {
+    width: 300px;
+    height: auto;
+    border-radius: 8px;
+    position: relative;
+}
+
+.perfil__galeria {
+    display: flex;
+    gap: 1em;
+    margin-top: 1em;
+    flex-wrap: nowrap;
+}
+
+.perfil__miniatura {
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* Botones de navegación */
+.anterior,
+.siguiente {
+    position: absolute;
+    top: 40%;
+    transform: translateY(-100%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.anterior {
+    left: -12px;
+}
+
+.siguiente {
+    right: -12px;
+}
+
+.anterior img,
+.siguiente img {
+    width: 32px;
+    height: 32px;
+    filter: invert(50%);
+}
+
+/* Botones de guardar y compartir */
+.options {
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 10;
+}
+
+.save-button,
+.compartir {
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 0.5em;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.save-button img,
+.compartir img {
+    width: 24px;
+    height: 24px;
+}
+
+.save-button {
+    filter: invert(10%);
+    background: #dfdede;
+}
+
+.save-button:hover,
+.compartir:hover {
+    background: #535353;
+}
+
+.save-button img:hover,
+.compartir img:hover {
+    filter: invert(200%) sepia(17%) saturate(96%) hue-rotate(134deg) brightness(92%) contrast(95%);
+}
+
+/* Info */
+.perfil__info {
+    display: flex;
+    flex-direction: column;
+    gap: 3em;
+}
+
+.perfil__usuario {
+    display: flex;
+    gap: 1em;
+    align-items: center;
+    padding: 0.2em 1em;
+    background-color: #ececec;
+    border-radius: 7px;
+}
+
+.perfil__avatar {
+    width: 5em;
+    height: 5em;
+    border-radius: 50%;
+}
+
+/* Presentación: engloba publicación y personas */
+.perfil__presentacion {
+    padding: 2em 1em;
+    background-color: #ececec;
+    border-radius: 7px;
+}
+
+/* Publicación */
+.publicacion__titulo {
+    font-size: 1.5rem;
+    margin: 2em 0 8px;
+}
+
+.publicacion__descripcion {
+    font-size: 1rem;
+    margin-bottom: 2em;
+}
+
+/* Personas */
+.personas__lista {
+    list-style: none;
+    padding: 0;
+}
+
+.personas__item {
+    margin: 4px 0;
+}
+
+.personas__enlace {
+    color: #0073e6;
+    text-decoration: none;
+}
+
+/* Etiquetas */
+.perfil__etiquetas {
+    margin: 0.5em;
+}
+
+.etiquetas__lista {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0.7em 0;
+}
+
+.etiqueta {
+    color: black;
+    padding: 0.5em 1em;
+    background-color: #ececec;
+    border-radius: 7px;
+    font-size: 0.9rem;
+    margin: 0.5em;
+}
+
+/* Responsive */
+@media (min-width: 720px) {
+    .perfil__contenido {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .options {
+        top: 10px;
+        right: 5em;
+    }
+}
+
+@media (min-width: 1200px) {
+    .perfil {
+        max-width: 1200px;
+    }
+
+    .perfil__contenido {
+        grid-template-columns: 4fr 1fr;
+        gap: 12em;
+    }
+
+    .anterior,
+    .siguiente {
+        top: 30%;
+    }
+
+    .anterior {
+        left: 100px;
+    }
+
+    .siguiente {
+        right: 100px;
+    }
+
+    .options {
+        top: 10px;
+        right: 210px;
+    }
+}

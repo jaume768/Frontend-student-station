@@ -24,6 +24,7 @@ import CompleteRegistrationProfesionalInstitucion from './pages/profesionales/Co
 import CompleteRegistrationProfesionalMarca05 from './pages/profesionales/CompleteRegistrationProfesionalMarca05';
 import CompleteRegistrationProfesionalEmpresa05 from './pages/profesionales/CompleteRegistrationProfesionalEmpresa05';
 import CompleteRegistrationProfesionalAgencia05 from './pages/profesionales/CompleteRegistrationProfesionalAgencia05';
+import UserPost from './components/controlPanel/UserPost';
 
 function App() {
   return (
@@ -51,6 +52,7 @@ function App() {
         <Route path="/profesional/registro/marca/05" element={<CompleteRegistrationProfesionalMarca05 />} />
         <Route path="/profesional/registro/empresa/05" element={<CompleteRegistrationProfesionalEmpresa05 />} />
         <Route path="/profesional/registro/agencia/05" element={<CompleteRegistrationProfesionalAgencia05 />} />
+        <Route path="/post/:id" element={<UserPost />} />
       </Routes>
     </Router>
   );

@@ -275,6 +275,7 @@
 
     .miPerfil-left-content.active,
     .miPerfil-right.active {
+        margin-bottom: 4em;
         display: block;
     }
 }
