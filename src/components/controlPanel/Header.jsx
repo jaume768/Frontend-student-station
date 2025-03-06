@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { FaBookmark, FaSearch, FaBars } from 'react-icons/fa';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { FaBookmark, FaSearch, FaBars, FaPlus } from 'react-icons/fa';
 import ProfileOptionsModal from './ProfileOptionsModal';
 
 const Header = ({ profilePicture, onHamburgerClick }) => {
     const [showProfileOptions, setShowProfileOptions] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
 
     const handleProfileClick = () => {
         const token = localStorage.getItem('authToken');
@@ -61,8 +62,13 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
                     <FaBookmark className="nav-icon-save" title="Guardados" />
                     <span>guardados</span>
                 </div>
-                <button onClick={() => navigate('/ControlPanel', { state: { activeMenu: 'createPost' } })}>
-                    + crear
+                <button
+                    className="create-post-btn"
+                    onClick={() =>
+                        navigate('/ControlPanel', { state: { activeMenu: 'createPost' } })
+                    }
+                >
+                    <FaPlus style={{ color: 'white' }} /> crear
                 </button>
                 <div className="profile-wrapper" style={{ position: 'relative' }}>
                     <img

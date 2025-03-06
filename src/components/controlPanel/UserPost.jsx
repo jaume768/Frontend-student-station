@@ -10,6 +10,10 @@ const UserPost = () => {
     const [post, setPost] = useState(null);
     const [loading, setLoading] = useState(true);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [touchStart, setTouchStart] = useState(null);
+    const [touchEnd, setTouchEnd] = useState(null);
+
+    const minSwipeDistance = 50; // Distancia mínima para detectar swipe
 
     useEffect(() => {
         const fetchPost = async () => {
@@ -51,13 +55,34 @@ const UserPost = () => {
     const handleSave = (e) => {
         e.stopPropagation();
         console.log('Guardar post', post._id);
-        // Aquí la lógica para guardar el post
+        // Aquí iría la lógica para guardar el post
     };
 
     const handleShare = (e) => {
         e.stopPropagation();
         console.log('Compartir post', post._id);
-        // Aquí la lógica para compartir el post
+        // Aquí iría la lógica para compartir el post
+    };
+
+    // Eventos para detección de swipe en móviles
+    const onTouchStart = (e) => {
+        setTouchStart(e.targetTouches[0].clientX);
+    };
+
+    const onTouchMove = (e) => {
+        setTouchEnd(e.targetTouches[0].clientX);
+    };
+
+    const onTouchEnd = () => {
+        if (!touchStart || !touchEnd) return;
+        const distance = touchStart - touchEnd;
+        if (distance > minSwipeDistance) {
+            handleNext();
+        } else if (distance < -minSwipeDistance) {
+            handlePrevious();
+        }
+        setTouchStart(null);
+        setTouchEnd(null);
     };
 
     return (
@@ -70,16 +95,30 @@ const UserPost = () => {
             </header>
             <section className="perfil__contenido">
                 <div className="perfil__imagenes">
-                    <div className="perfil__imagen">
+                    <div
+                        className="perfil__imagen"
+                        onTouchStart={onTouchStart}
+                        onTouchMove={onTouchMove}
+                        onTouchEnd={onTouchEnd}
+                    >
                         <button className="anterior" onClick={handlePrevious}>
                             <FaChevronLeft size={24} />
                         </button>
-                        {/* Se conserva la imagen principal real del post */}
                         <img
                             src={mainImage}
                             alt="Imagen principal"
                             className="perfil__imagen-principal"
                         />
+                        {/* Overlay para mostrar etiquetas de imagen (si existen) */}
+                        {post.imageTags && post.imageTags[currentImageIndex] && post.imageTags[currentImageIndex].length > 0 && (
+                            <div className="image-tags-overlay">
+                                {post.imageTags[currentImageIndex].map((tag, idx) => (
+                                    <span key={idx} className="image-tag">
+                                        {tag}
+                                    </span>
+                                ))}
+                            </div>
+                        )}
                         <div className="options">
                             <button className="save-button" onClick={handleSave}>
                                 <FaBookmark size={20} />

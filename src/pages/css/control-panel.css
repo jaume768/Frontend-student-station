@@ -213,7 +213,10 @@
     color: #999;
 }
 
-.dashboard-header button {
+.dashboard-header button.create-post-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
     padding: 10px;
     border-radius: 40px;
     background-color: #535353;
@@ -224,7 +227,7 @@
     cursor: pointer;
 }
 
-.dashboard-header button:hover {
+.dashboard-header button.create-post-btn:hover {
     background-color: black;
 }
 

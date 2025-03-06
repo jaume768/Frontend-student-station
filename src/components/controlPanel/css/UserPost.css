@@ -22,12 +22,6 @@
     cursor: pointer;
 }
 
-.perfil__volver img {
-    width: 25px;
-    height: 30px;
-    cursor: pointer;
-}
-
 /* Contenido */
 .perfil__contenido {
     display: grid;
@@ -44,6 +38,13 @@
     position: relative;
 }
 
+.perfil__imagen {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .perfil__imagen-principal {
     width: 300px;
     height: auto;
@@ -51,48 +52,29 @@
     position: relative;
 }
 
-.perfil__galeria {
-    display: flex;
-    gap: 1em;
-    margin-top: 1em;
-    flex-wrap: nowrap;
-}
-
-.perfil__miniatura {
-    width: 100px;
-    height: 100px;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-/* Botones de navegación */
+/* Flechas de navegación */
 .anterior,
 .siguiente {
     position: absolute;
-    top: 40%;
-    transform: translateY(-100%);
+    top: 50%;
+    transform: translateY(-50%);
     background: none;
     border: none;
     cursor: pointer;
     z-index: 10;
+    color: black;
+    /* Flechas en color negro */
 }
 
 .anterior {
-    left: -12px;
+    left: 10px;
 }
 
 .siguiente {
-    right: -12px;
+    right: 10px;
 }
 
-.anterior img,
-.siguiente img {
-    width: 32px;
-    height: 32px;
-    filter: invert(50%);
-}
-
-/* Botones de guardar y compartir */
+/* Opciones de guardar y compartir */
 .options {
     position: absolute;
     top: 10px;
@@ -100,7 +82,7 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    z-index: 10;
+    z-index: 1;
 }
 
 .save-button,
@@ -115,14 +97,7 @@
     justify-content: center;
 }
 
-.save-button img,
-.compartir img {
-    width: 24px;
-    height: 24px;
-}
-
 .save-button {
-    filter: invert(10%);
     background: #dfdede;
 }
 
@@ -131,12 +106,22 @@
     background: #535353;
 }
 
-.save-button img:hover,
-.compartir img:hover {
-    filter: invert(200%) sepia(17%) saturate(96%) hue-rotate(134deg) brightness(92%) contrast(95%);
+/* Galería de miniaturas */
+.perfil__galeria {
+    display: flex;
+    gap: 1em;
+    margin-top: 1em;
+    flex-wrap: nowrap;
 }
 
-/* Info */
+.perfil__miniatura {
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* Información del post */
 .perfil__info {
     display: flex;
     flex-direction: column;
@@ -158,11 +143,11 @@
     border-radius: 50%;
 }
 
-/* Presentación: engloba publicación y personas */
 .perfil__presentacion {
     padding: 2em 1em;
     background-color: #ececec;
     border-radius: 7px;
+    width: 400px;
 }
 
 /* Publicación */
@@ -174,6 +159,7 @@
 .publicacion__descripcion {
     font-size: 1rem;
     margin-bottom: 2em;
+    max-width: 350px;
 }
 
 /* Personas */
@@ -211,6 +197,28 @@
     margin: 0.5em;
 }
 
+/* Overlay para etiquetas de imagen */
+.image-tags-overlay {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    z-index: 5;
+}
+
+.image-tag {
+    color: #fff;
+    font-size: 0.8rem;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 2px 6px;
+    border-radius: 3px;
+}
+
 /* Responsive */
 @media (min-width: 720px) {
     .perfil__contenido {
@@ -235,7 +243,7 @@
 
     .anterior,
     .siguiente {
-        top: 30%;
+        top: 50%;
     }
 
     .anterior {
@@ -248,6 +256,6 @@
 
     .options {
         top: 10px;
-        right: 210px;
+        right: 230px;
     }
 }
