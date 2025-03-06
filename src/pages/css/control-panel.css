@@ -183,6 +183,7 @@
     padding: 0.4em 0.5em;
     border-radius: 40px;
     gap: 5px;
+    color: #767676;
     cursor: pointer;
 }
 
@@ -215,13 +216,18 @@
 .dashboard-header button {
     padding: 10px;
     border-radius: 40px;
-    background-color: rgba(242, 242, 242);
-    color: black;
+    background-color: #535353;
+    color: white;
     font-size: 1em;
     border: none;
     width: 100px;
     cursor: pointer;
 }
+
+.dashboard-header button:hover {
+    background-color: black;
+}
+
 
 .dashboard-header select {
     padding: 5px;
@@ -323,7 +329,7 @@
 
 .user-info span {
     color: white;
-    font-size: 0.9em;
+    font-size: 0.8em;
 }
 
 .location-info {

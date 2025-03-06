@@ -1,3 +1,4 @@
+// Sidebar.jsx (o MobileSideMenu.jsx si es el menú móvil)
 import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import {
@@ -20,10 +21,9 @@ const navItems = [
     { id: 'magazine', icon: <FaBookOpen className="nav-icon" />, tooltip: 'Revista' },
 ];
 
-const Sidebar = () => {
-    // Obtenemos el state de navegación para saber qué menú está activo.
+const Sidebar = ({ onLinkClick }) => {
     const location = useLocation();
-    const activeMenu = location.state?.activeMenu || 'explorer'; // Valor por defecto
+    const activeMenu = location.state?.activeMenu || 'explorer';
 
     return (
         <aside className="dashboard-sidebar">
@@ -39,6 +39,7 @@ const Sidebar = () => {
                                     to="/ControlPanel"
                                     state={{ activeMenu: item.id }}
                                     className={`nav-icon-container ${activeMenu === item.id ? 'active' : ''}`}
+                                    onClick={onLinkClick}
                                 >
                                     {item.icon}
                                     <span className="nav-tooltip">{item.tooltip}</span>
@@ -49,7 +50,12 @@ const Sidebar = () => {
                 </nav>
             </div>
             <div className="info-icon">
-                <Link to="/ControlPanel" state={{ activeMenu: 'info' }} className="nav-icon-container">
+                <Link
+                    to="/ControlPanel"
+                    state={{ activeMenu: 'info' }}
+                    className="nav-icon-container"
+                    onClick={onLinkClick}
+                >
                     <FaInfoCircle className="nav-icon" title="Información" />
                 </Link>
             </div>

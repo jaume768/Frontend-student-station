@@ -51,34 +51,27 @@ const MiPerfil = () => {
         setIsGalleryView(prev => !prev);
     };
 
-    // Construir la grid de publicaciones: total 15 items.
-    // Si el usuario tiene al menos un post, se muestra su imagen principal en la primera posición y luego (15-1) placeholders.
     const totalGridItems = 15;
     const renderProjectsGrid = () => {
-        if (userPosts.length > 0) {
-            return (
-                <>
-                    <div className="miPerfil-project-placeholder">
+        return [...Array(totalGridItems)].map((_, index) => {
+            if (index < userPosts.length) {
+                return (
+                    <div key={index} className="miPerfil-project-placeholder">
                         <img
-                            src={userPosts[0].mainImage}
-                            alt="Publicación principal"
+                            src={userPosts[index].mainImage}
+                            alt={`Publicación ${index + 1}`}
                             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                         />
                     </div>
-                    {[...Array(totalGridItems - 1)].map((_, index) => (
-                        <div key={index} className="miPerfil-project-placeholder">
-                            {/* Aquí podrías mostrar más publicaciones o dejarlo como placeholder */}
-                        </div>
-                    ))}
-                </>
-            );
-        } else {
-            return [...Array(totalGridItems)].map((_, index) => (
-                <div key={index} className="miPerfil-project-placeholder">
-                    {/* Placeholder para proyecto */}
-                </div>
-            ));
-        }
+                );
+            } else {
+                return (
+                    <div key={index} className="miPerfil-project-placeholder">
+                        {/* Placeholder sin imagen */}
+                    </div>
+                );
+            }
+        });
     };
 
     return (

@@ -1194,67 +1194,6 @@ const EditProfile = () => {
                             )}
                             {activeOption === "configuracion" && (
                                 <>
-                                    {/* Sección para modificar email */}
-                                    <section className="form-section">
-                                        <h3>Modifica tu email</h3>
-                                        {!isEmailEditing ? (
-                                            <>
-                                                <div className="form-group">
-                                                    <label>Email de contacto</label>
-                                                    <input
-                                                        type="email"
-                                                        placeholder="emailderegistro@gmail.com"
-                                                        value={emailInput}
-                                                        onChange={(e) => setEmailInput(e.target.value)}
-                                                        disabled
-                                                    />
-                                                </div>
-                                                <div className="button-container">
-                                                    <button
-                                                        type="button"
-                                                        className="edit-data-button"
-                                                        onClick={() => setIsEmailEditing(true)}
-                                                    >
-                                                        Modificar email
-                                                    </button>
-                                                </div>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <div className="form-group">
-                                                    <label>Nueva email de contacto</label>
-                                                    <input
-                                                        type="email"
-                                                        placeholder="Introduce tu nuevo email"
-                                                        value={newEmail}
-                                                        onChange={(e) => setNewEmail(e.target.value)}
-                                                    />
-                                                </div>
-                                                <div className="form-group">
-                                                    <label>Confirma tu email</label>
-                                                    <input
-                                                        type="email"
-                                                        placeholder="Confirma tu nuevo email"
-                                                        value={confirmEmail}
-                                                        onChange={(e) => setConfirmEmail(e.target.value)}
-                                                    />
-                                                </div>
-                                                <div className="button-container">
-                                                    <button
-                                                        type="button"
-                                                        className="edit-data-button"
-                                                        style={{ background: 'green', color: 'white' }}
-                                                        onClick={() => {
-                                                            // Validar que newEmail y confirmEmail coincidan
-                                                            setIsEmailEditing(false);
-                                                        }}
-                                                    >
-                                                        Confirmar el cambio de email
-                                                    </button>
-                                                </div>
-                                            </>
-                                        )}
-                                    </section>
                                     <section className="form-section">
                                         <h3>Cambiar contraseña</h3>
                                         {isPasswordEditing ? (
