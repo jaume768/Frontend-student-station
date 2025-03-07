@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import { FaArrowLeft, FaChevronLeft, FaChevronRight, FaBookmark, FaShareAlt, FaUserCircle } from 'react-icons/fa';
+import { FaArrowLeft, FaChevronLeft, FaChevronRight, FaBookmark, FaShareAlt } from 'react-icons/fa';
 import './css/UserPost.css';
 
 const UserPost = () => {
@@ -12,8 +12,10 @@ const UserPost = () => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [touchStart, setTouchStart] = useState(null);
     const [touchEnd, setTouchEnd] = useState(null);
-
     const minSwipeDistance = 50;
+
+    const [isSaved, setIsSaved] = useState(false);
+    const [showSavedText, setShowSavedText] = useState(false);
 
     useEffect(() => {
         const fetchPost = async () => {
@@ -52,10 +54,34 @@ const UserPost = () => {
         setCurrentImageIndex(index);
     };
 
-    const handleSave = (e) => {
+    const handleSave = async (e) => {
         e.stopPropagation();
-        console.log('Guardar post', post._id);
-        // Lógica para guardar el post
+        const token = localStorage.getItem('authToken');
+        if (!token) return;
+        const backendUrl = import.meta.env.VITE_BACKEND_URL;
+        try {
+            if (!isSaved) {
+                await axios.post(
+                    `${backendUrl}/api/users/favorites/${post._id}`,
+                    {},
+                    { headers: { Authorization: `Bearer ${token}` } }
+                );
+                setIsSaved(true);
+                setShowSavedText(true);
+                setTimeout(() => {
+                    setShowSavedText(false);
+                }, 2000);
+            } else {
+                await axios.delete(
+                    `${backendUrl}/api/users/favorites/${post._id}`,
+                    { headers: { Authorization: `Bearer ${token}` } }
+                );
+                setIsSaved(false);
+                setShowSavedText(false);
+            }
+        } catch (error) {
+            console.error("Error al actualizar favoritos:", error);
+        }
     };
 
     const handleShare = (e) => {
@@ -64,7 +90,7 @@ const UserPost = () => {
         // Lógica para compartir el post
     };
 
-    // Eventos para detección de swipe en móviles
+    // Eventos para swipe en móviles
     const onTouchStart = (e) => {
         setTouchStart(e.targetTouches[0].clientX);
     };
@@ -110,8 +136,12 @@ const UserPost = () => {
                             className="perfil__imagen-principal"
                         />
                         <div className="options">
-                            <button className="save-button" onClick={handleSave}>
+                            <button
+                                className={`save-button-post ${isSaved ? 'saved' : ''}`}
+                                onClick={handleSave}
+                            >
                                 <FaBookmark size={20} />
+                                {showSavedText && <span className="saved-text">Guardado</span>}
                             </button>
                             <button className="compartir" onClick={handleShare}>
                                 <FaShareAlt size={20} />
@@ -155,6 +185,21 @@ const UserPost = () => {
                         <div className="perfil__publicacion">
                             <h1 className="publicacion__titulo">{post.title}</h1>
                             <p className="publicacion__descripcion">{post.description}</p>
+                            {post.peopleTags && post.peopleTags.length > 0 && (
+                                <div className="perfil__personas">
+                                    <h3 className="personas__titulo">Personas que aparecen</h3>
+                                    <ul className="personas__lista">
+                                        {post.peopleTags.map((person, idx) => (
+                                            <li key={idx} className="personas__item">
+                                                {person.role}:{' '}
+                                                <a href={`/profile/${person.name}`} className="personas__enlace">
+                                                    @{person.name}
+                                                </a>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
                         </div>
                     </div>
                     {post.imageTags &&
@@ -171,21 +216,6 @@ const UserPost = () => {
                                 </div>
                             </div>
                         )}
-                    {post.peopleTags && post.peopleTags.length > 0 && (
-                        <div className="perfil__personas">
-                            <h3 className="personas__titulo">Personas que aparecen</h3>
-                            <ul className="personas__lista">
-                                {post.peopleTags.map((person, idx) => (
-                                    <li key={idx} className="personas__item">
-                                        {person.role}:{' '}
-                                        <a href={`/profile/${person.name}`} className="personas__enlace">
-                                            @{person.name}
-                                        </a>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    )}
                     {post.tags && post.tags.length > 0 && (
                         <div className="perfil__etiquetas">
                             <h3 className="etiquetas__titulo">Etiquetas</h3>
