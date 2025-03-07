@@ -75,10 +75,12 @@ const Guardados = () => {
                 // Navegar al post
                 navigate(`/ControlPanel/post/${post._id}`);
             }
-        } else if (isSelecting && post?._id) {
-            // Si ya estamos en modo selección, cada click/soltar togglea la selección
+        } else if (isSelecting && !longPressTriggered && post?._id) {
+            // Solo alterna la selección si no fue un long press que ya la agregó
             toggleSelectPost(post._id);
         }
+        // Reiniciamos la bandera
+        setLongPressTriggered(false);
     };
 
     // Alterna el ID en la lista de seleccionados
