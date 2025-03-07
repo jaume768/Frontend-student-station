@@ -38,6 +38,14 @@
     position: relative;
 }
 
+/* Contenedor para la imagen principal y el sidebar de etiquetas */
+.image-display {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+/* Imagen principal */
 .perfil__imagen {
     position: relative;
     display: flex;
@@ -52,6 +60,22 @@
     position: relative;
 }
 
+/* Sidebar de etiquetas para la imagen */
+.image-tags-sidebar {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 10px;
+}
+
+.image-tags-sidebar .image-tag {
+    color: #333;
+    font-size: 0.9rem;
+    background-color: #ececec;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
 /* Flechas de navegación */
 .anterior,
 .siguiente {
@@ -63,7 +87,6 @@
     cursor: pointer;
     z-index: 1;
     color: black;
-    /* Flechas en color negro */
 }
 
 .anterior {
@@ -115,10 +138,18 @@
 }
 
 .perfil__miniatura {
-    width: 100px;
-    height: 100px;
-    border-radius: 8px;
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
     cursor: pointer;
+    opacity: 0.7;
+    border: 2px solid transparent;
+    border-radius: 4px;
+}
+
+.perfil__miniatura.active {
+    border-color: #4c85ff;
+    opacity: 1;
 }
 
 /* Información del post */
@@ -196,28 +227,6 @@
     border-radius: 7px;
     font-size: 0.9rem;
     margin: 0.5em;
-}
-
-/* Overlay para etiquetas de imagen */
-.image-tags-overlay {
-    position: absolute;
-    bottom: 10px;
-    left: 10px;
-    background: rgba(0, 0, 0, 0.6);
-    padding: 5px 10px;
-    border-radius: 5px;
-    display: flex;
-    gap: 5px;
-    flex-wrap: wrap;
-    z-index: 5;
-}
-
-.image-tag {
-    color: #fff;
-    font-size: 0.8rem;
-    background: rgba(255, 255, 255, 0.2);
-    padding: 2px 6px;
-    border-radius: 3px;
 }
 
 /* Responsive */

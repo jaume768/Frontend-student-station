@@ -13,7 +13,7 @@ const UserPost = () => {
     const [touchStart, setTouchStart] = useState(null);
     const [touchEnd, setTouchEnd] = useState(null);
 
-    const minSwipeDistance = 50; // Distancia mínima para detectar swipe
+    const minSwipeDistance = 50;
 
     useEffect(() => {
         const fetchPost = async () => {
@@ -95,41 +95,43 @@ const UserPost = () => {
             </header>
             <section className="perfil__contenido">
                 <div className="perfil__imagenes">
-                    <div
-                        className="perfil__imagen"
-                        onTouchStart={onTouchStart}
-                        onTouchMove={onTouchMove}
-                        onTouchEnd={onTouchEnd}
-                    >
-                        <button className="anterior" onClick={handlePrevious}>
-                            <FaChevronLeft size={24} />
-                        </button>
-                        <img
-                            src={mainImage}
-                            alt="Imagen principal"
-                            className="perfil__imagen-principal"
-                        />
-                        {/* Overlay para mostrar etiquetas de imagen (si existen) */}
-                        {post.imageTags && post.imageTags[currentImageIndex] && post.imageTags[currentImageIndex].length > 0 && (
-                            <div className="image-tags-overlay">
-                                {post.imageTags[currentImageIndex].map((tag, idx) => (
+                    <div className="image-display">
+                        <div
+                            className="perfil__imagen"
+                            onTouchStart={onTouchStart}
+                            onTouchMove={onTouchMove}
+                            onTouchEnd={onTouchEnd}
+                        >
+                            <button className="anterior" onClick={handlePrevious}>
+                                <FaChevronLeft size={24} />
+                            </button>
+                            <img
+                                src={mainImage}
+                                alt="Imagen principal"
+                                className="perfil__imagen-principal"
+                            />
+                            <div className="options">
+                                <button className="save-button" onClick={handleSave}>
+                                    <FaBookmark size={20} />
+                                </button>
+                                <button className="compartir" onClick={handleShare}>
+                                    <FaShareAlt size={20} />
+                                </button>
+                            </div>
+                            <button className="siguiente" onClick={handleNext}>
+                                <FaChevronRight size={24} />
+                            </button>
+                        </div>
+                        <div className="image-tags-sidebar">
+                            {post.imageTags &&
+                                post.imageTags[currentImageIndex] &&
+                                post.imageTags[currentImageIndex].length > 0 &&
+                                post.imageTags[currentImageIndex].map((tag, idx) => (
                                     <span key={idx} className="image-tag">
                                         {tag}
                                     </span>
                                 ))}
-                            </div>
-                        )}
-                        <div className="options">
-                            <button className="save-button" onClick={handleSave}>
-                                <FaBookmark size={20} />
-                            </button>
-                            <button className="compartir" onClick={handleShare}>
-                                <FaShareAlt size={20} />
-                            </button>
                         </div>
-                        <button className="siguiente" onClick={handleNext}>
-                            <FaChevronRight size={24} />
-                        </button>
                     </div>
                     <div className="perfil__galeria">
                         {images.map((img, index) => (
@@ -137,7 +139,7 @@ const UserPost = () => {
                                 key={index}
                                 src={img}
                                 alt={`Miniatura ${index + 1}`}
-                                className="perfil__miniatura"
+                                className={`perfil__miniatura ${index === currentImageIndex ? 'active' : ''}`}
                                 onClick={() => handleThumbnailClick(index)}
                             />
                         ))}
@@ -172,7 +174,7 @@ const UserPost = () => {
                                 <ul className="personas__lista">
                                     {post.peopleTags.map((person, idx) => (
                                         <li key={idx} className="personas__item">
-                                            {person.role}:{" "}
+                                            {person.role}:{' '}
                                             <a href={`/profile/${person.name}`} className="personas__enlace">
                                                 @{person.name}
                                             </a>
