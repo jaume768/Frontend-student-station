@@ -38,14 +38,6 @@
     position: relative;
 }
 
-/* Contenedor para la imagen principal y el sidebar de etiquetas */
-.image-display {
-    display: flex;
-    align-items: flex-start;
-    gap: 20px;
-}
-
-/* Imagen principal */
 .perfil__imagen {
     position: relative;
     display: flex;
@@ -58,22 +50,6 @@
     height: auto;
     border-radius: 8px;
     position: relative;
-}
-
-/* Sidebar de etiquetas para la imagen */
-.image-tags-sidebar {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    gap: 10px;
-}
-
-.image-tags-sidebar .image-tag {
-    color: #333;
-    font-size: 0.9rem;
-    background-color: #ececec;
-    padding: 4px 8px;
-    border-radius: 4px;
 }
 
 /* Flechas de navegación */
@@ -179,7 +155,7 @@
     background-color: #ececec;
     border-radius: 7px;
     width: 100%;
-    margin-bottom: 6em;
+    margin-bottom: 1em;
 }
 
 /* Publicación */
@@ -192,6 +168,34 @@
     font-size: 1rem;
     margin-bottom: 2em;
     max-width: 350px;
+}
+
+/* Etiquetas de la imagen (nuevas) */
+.perfil__image-tags {
+    padding: 2em 1em;
+    background-color: #ececec;
+    border-radius: 7px;
+    margin-bottom: 1em;
+}
+
+.image-tags__titulo {
+    color: black;
+    font-size: 1.2rem;
+    margin-bottom: 0.5em;
+}
+
+.image-tags__lista {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.image-tag {
+    color: black;
+    padding: 0.5em 1em;
+    background-color: #ececec;
+    border-radius: 7px;
+    font-size: 0.9rem;
+    margin: 0.5em;
 }
 
 /* Personas */
@@ -209,7 +213,7 @@
     text-decoration: none;
 }
 
-/* Etiquetas */
+/* Etiquetas generales del post */
 .perfil__etiquetas {
     margin: 0.5em;
 }
