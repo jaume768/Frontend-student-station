@@ -55,13 +55,13 @@ const UserPost = () => {
     const handleSave = (e) => {
         e.stopPropagation();
         console.log('Guardar post', post._id);
-        // Aquí iría la lógica para guardar el post
+        // Lógica para guardar el post
     };
 
     const handleShare = (e) => {
         e.stopPropagation();
         console.log('Compartir post', post._id);
-        // Aquí iría la lógica para compartir el post
+        // Lógica para compartir el post
     };
 
     // Eventos para detección de swipe en móviles
@@ -95,43 +95,31 @@ const UserPost = () => {
             </header>
             <section className="perfil__contenido">
                 <div className="perfil__imagenes">
-                    <div className="image-display">
-                        <div
-                            className="perfil__imagen"
-                            onTouchStart={onTouchStart}
-                            onTouchMove={onTouchMove}
-                            onTouchEnd={onTouchEnd}
-                        >
-                            <button className="anterior" onClick={handlePrevious}>
-                                <FaChevronLeft size={24} />
+                    <div
+                        className="perfil__imagen"
+                        onTouchStart={onTouchStart}
+                        onTouchMove={onTouchMove}
+                        onTouchEnd={onTouchEnd}
+                    >
+                        <button className="anterior" onClick={handlePrevious}>
+                            <FaChevronLeft size={24} />
+                        </button>
+                        <img
+                            src={mainImage}
+                            alt="Imagen principal"
+                            className="perfil__imagen-principal"
+                        />
+                        <div className="options">
+                            <button className="save-button" onClick={handleSave}>
+                                <FaBookmark size={20} />
                             </button>
-                            <img
-                                src={mainImage}
-                                alt="Imagen principal"
-                                className="perfil__imagen-principal"
-                            />
-                            <div className="options">
-                                <button className="save-button" onClick={handleSave}>
-                                    <FaBookmark size={20} />
-                                </button>
-                                <button className="compartir" onClick={handleShare}>
-                                    <FaShareAlt size={20} />
-                                </button>
-                            </div>
-                            <button className="siguiente" onClick={handleNext}>
-                                <FaChevronRight size={24} />
+                            <button className="compartir" onClick={handleShare}>
+                                <FaShareAlt size={20} />
                             </button>
                         </div>
-                        <div className="image-tags-sidebar">
-                            {post.imageTags &&
-                                post.imageTags[currentImageIndex] &&
-                                post.imageTags[currentImageIndex].length > 0 &&
-                                post.imageTags[currentImageIndex].map((tag, idx) => (
-                                    <span key={idx} className="image-tag">
-                                        {tag}
-                                    </span>
-                                ))}
-                        </div>
+                        <button className="siguiente" onClick={handleNext}>
+                            <FaChevronRight size={24} />
+                        </button>
                     </div>
                     <div className="perfil__galeria">
                         {images.map((img, index) => (
@@ -168,22 +156,36 @@ const UserPost = () => {
                             <h1 className="publicacion__titulo">{post.title}</h1>
                             <p className="publicacion__descripcion">{post.description}</p>
                         </div>
-                        {post.peopleTags && post.peopleTags.length > 0 && (
-                            <div className="perfil__personas">
-                                <h3 className="personas__titulo">Personas que aparecen</h3>
-                                <ul className="personas__lista">
-                                    {post.peopleTags.map((person, idx) => (
-                                        <li key={idx} className="personas__item">
-                                            {person.role}:{' '}
-                                            <a href={`/profile/${person.name}`} className="personas__enlace">
-                                                @{person.name}
-                                            </a>
-                                        </li>
+                    </div>
+                    {post.imageTags &&
+                        post.imageTags[currentImageIndex] &&
+                        post.imageTags[currentImageIndex].length > 0 && (
+                            <div className="perfil__image-tags">
+                                <h3 className="image-tags__titulo">Etiquetas</h3>
+                                <div className="image-tags__lista">
+                                    {post.imageTags[currentImageIndex].map((tag, idx) => (
+                                        <span key={idx} className="image-tag">
+                                            {tag}
+                                        </span>
                                     ))}
-                                </ul>
+                                </div>
                             </div>
                         )}
-                    </div>
+                    {post.peopleTags && post.peopleTags.length > 0 && (
+                        <div className="perfil__personas">
+                            <h3 className="personas__titulo">Personas que aparecen</h3>
+                            <ul className="personas__lista">
+                                {post.peopleTags.map((person, idx) => (
+                                    <li key={idx} className="personas__item">
+                                        {person.role}:{' '}
+                                        <a href={`/profile/${person.name}`} className="personas__enlace">
+                                            @{person.name}
+                                        </a>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
                     {post.tags && post.tags.length > 0 && (
                         <div className="perfil__etiquetas">
                             <h3 className="etiquetas__titulo">Etiquetas</h3>
