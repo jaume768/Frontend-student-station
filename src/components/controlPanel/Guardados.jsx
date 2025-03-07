@@ -1,36 +1,49 @@
-// src/components/controlPanel/Guardados.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './css/Guardados.css'; // Importa el CSS que crearemos a continuación
+import './css/Guardados.css';
 
 const Guardados = () => {
-    const [folders, setFolders] = useState([]);
-    const [selectedFolder, setSelectedFolder] = useState(null);
-
-    // Ejemplo de posts/fotos guardadas (puedes adaptarlo a tu backend real)
     const [savedPosts, setSavedPosts] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        // Aquí podrías llamar a tu backend para traer las carpetas del usuario
-        // y los posts guardados. Ejemplo:
-        // axios.get('/api/folders')
-        //   .then(res => setFolders(res.data.folders))
-        //   .catch(err => console.error(err));
+        const fetchSavedPosts = async () => {
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) return;
 
-        // axios.get('/api/users/favorites')
-        //   .then(res => setSavedPosts(res.data.favorites))
-        //   .catch(err => console.error(err));
+                const backendUrl = import.meta.env.VITE_BACKEND_URL;
+                const res = await axios.get(`${backendUrl}/api/users/favorites`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+
+                if (res.data.favorites) {
+                    setSavedPosts(res.data.favorites);
+                }
+            } catch (error) {
+                console.error('Error fetching saved posts:', error);
+            }
+        };
+
+        fetchSavedPosts();
     }, []);
+
+    const totalSlots = 15;
+
+    const handleClickPost = (postId) => {
+        navigate(`/ControlPanel/post/${postId}`);
+    };
 
     return (
         <div className="guardados-container">
-            {/* Columna Izquierda */}
             <div className="guardados-left">
                 <h2>Ordena tus fotos</h2>
                 <p>
                     Guarda tus fotos favoritas desde el explorador y organízalas en tus carpetas personalizadas.
                     Selecciona las imágenes y elige las carpetas donde deseas guardarlas.
                 </p>
+
                 <div className="guardados-step">
                     <h3>Paso 1</h3>
                     <p>Selecciona la carpeta donde deseas guardar fotos</p>
@@ -44,11 +57,36 @@ const Guardados = () => {
                 <div className="guardados-step">
                     <h3>Paso 2</h3>
                     <p>Selecciona tus fotos</p>
-                    {/* Grid de placeholders, imitando el estilo de MiPerfil */}
-                    <div className="guardados-photos-grid">
-                        {Array.from({ length: 9 }).map((_, i) => (
-                            <div key={i} className="guardados-photo-placeholder" />
-                        ))}
+
+                    {/* Contenedor con efecto masonry (5 columnas) */}
+                    <div className="guardados-masonry">
+                        {Array.from({ length: totalSlots }).map((_, index) => {
+                            // Si hay un post guardado para este "slot", lo mostramos
+                            if (index < savedPosts.length) {
+                                const post = savedPosts[index];
+                                return (
+                                    <div
+                                        key={index}
+                                        className="guardados-masonry-item"
+                                        onClick={() => handleClickPost(post._id)}
+                                    >
+                                        <img
+                                            src={post.mainImage}
+                                            alt={`Post guardado ${index + 1}`}
+                                            className="guardados-masonry-img"
+                                        />
+                                    </div>
+                                );
+                            } else {
+                                // Si no hay más posts, dejamos un placeholder
+                                return (
+                                    <div
+                                        key={index}
+                                        className="guardados-masonry-item placeholder"
+                                    />
+                                );
+                            }
+                        })}
                     </div>
                 </div>
             </div>
@@ -60,11 +98,10 @@ const Guardados = () => {
                     Personaliza tus carpetas y organiza tu contenido guardado de la forma que más te guste
                 </p>
                 <div className="guardados-main-folder">
-                    {/* Ejemplo de carpeta principal */}
                     <div className="folder-card">
                         <p>Carpeta principal</p>
                     </div>
-                    {/* Podrías mapear tus carpetas reales aquí */}
+                    {/* Aquí podrías mapear tus carpetas reales si lo deseas */}
                     {/* {folders.map(folder => (
               <div key={folder._id} className="folder-card">
                 <p>{folder.name}</p>

@@ -50,20 +50,40 @@
     background: #ccc;
 }
 
-.guardados-photos-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-    gap: 0.5rem;
+/* ----- Masonry ----- */
+.guardados-masonry {
+    column-count: 5;
+    column-gap: 1rem;
 }
 
-.guardados-photo-placeholder {
+.guardados-masonry-item {
+    position: relative;
+    margin-bottom: 1rem;
+    break-inside: avoid;
     width: 100%;
-    padding-top: 100%;
     background-color: #ddd;
     border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    min-height: 100px;
 }
 
-/* Columna Derecha */
+.guardados-masonry-item.placeholder {
+    /* El placeholder no tiene imagen, así que solo un fondo gris */
+}
+
+/* Imagen dentro del item */
+.guardados-masonry-img {
+    width: 100%;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.guardados-masonry-item:hover .guardados-masonry-img {
+    transform: scale(1.05);
+}
+
+/* Columna derecha */
 .guardados-right {
     display: flex;
     flex-direction: column;
@@ -93,7 +113,7 @@
     font-size: 0.9rem;
 }
 
-/* Responsivo */
+/* ----- Responsivo ----- */
 @media (max-width: 768px) {
     .guardados-container {
         flex-direction: column;
@@ -106,16 +126,21 @@
         width: 100%;
     }
 
-    .guardados-folders-options {
-        flex-wrap: wrap;
-    }
-
-    .guardados-photos-grid {
-        grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+    .guardados-masonry {
+        column-count: 3;
+        column-gap: 0.5rem;
     }
 
     .folder-card {
         width: 120px;
         height: 160px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .guardados-masonry {
+        column-count: 2;
+        column-gap: 0.5rem;
     }
 }
