@@ -108,8 +108,8 @@
 
 .saved-text {
     position: absolute;
-    top: -25px;
-    right: 0;
+    top: -15px;
+    right: -10px;
     background-color: #08b599;
     color: white;
     padding: 2px 8px;
