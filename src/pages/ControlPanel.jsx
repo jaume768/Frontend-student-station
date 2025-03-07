@@ -6,6 +6,7 @@ import MiPerfil from '../components/controlPanel/MiPerfil';
 import MyComunity from '../components/controlPanel/MyComunity';
 import CreatePost from '../components/controlPanel/CreatePost';
 import UserPost from '../components/controlPanel/UserPost';
+import Guardados from '../components/controlPanel/Guardados';
 import './css/control-panel.css';
 
 const ControlPanel = () => {
@@ -97,6 +98,8 @@ const ControlPanel = () => {
                                     return <MyComunity />;
                                 case 'createPost':
                                     return <CreatePost />;
+                                case 'guardados':
+                                    return <Guardados />;
                                 default:
                                     return <div><h1>Contenido por defecto</h1></div>;
                             }

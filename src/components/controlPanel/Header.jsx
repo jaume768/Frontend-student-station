@@ -58,7 +58,10 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
                 </div>
             </div>
             <div className="header-right">
-                <div className="saved">
+                <div
+                    className="saved"
+                    onClick={() => navigate('/ControlPanel', { state: { activeMenu: 'guardados' } })}
+                >
                     <FaBookmark className="nav-icon-save" title="Guardados" />
                     <span>guardados</span>
                 </div>

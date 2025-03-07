@@ -87,7 +87,7 @@
 .save-button-post,
 .compartir {
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.8);
+    background: #535353;
     padding: 0.5em;
     border: none;
     cursor: pointer;
@@ -97,7 +97,7 @@
 }
 
 .save-button-post {
-    background: #dfdede;
+    background: #535353;
     transition: background-color 0.3s ease;
     position: relative;
 }
@@ -108,8 +108,8 @@
 
 .saved-text {
     position: absolute;
-    top: -15px;
-    right: -10px;
+    top: -5px;
+    right: 10px;
     background-color: #08b599;
     color: white;
     padding: 2px 8px;
@@ -133,7 +133,7 @@
 
 .save-button-post:hover,
 .compartir:hover {
-    background: #535353;
+    background: #08b599;
 }
 
 /* Galería de miniaturas */

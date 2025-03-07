@@ -218,7 +218,7 @@ const UserPost = () => {
                         )}
                     {post.tags && post.tags.length > 0 && (
                         <div className="perfil__etiquetas">
-                            <h3 className="etiquetas__titulo">Etiquetas</h3>
+                            <h3 className="etiquetas__titulo">Etiquetas de la imagen</h3>
                             <div className="etiquetas__lista">
                                 {post.tags.map((tag, index) => (
                                     <span key={index} className="etiqueta">
