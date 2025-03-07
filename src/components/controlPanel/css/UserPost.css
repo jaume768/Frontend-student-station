@@ -61,7 +61,7 @@
     background: none;
     border: none;
     cursor: pointer;
-    z-index: 10;
+    z-index: 1;
     color: black;
     /* Flechas en color negro */
 }
@@ -147,7 +147,7 @@
     padding: 2em 1em;
     background-color: #ececec;
     border-radius: 7px;
-    width: 400px;
+    width: 100%;
 }
 
 /* Publicación */
@@ -247,15 +247,15 @@
     }
 
     .anterior {
-        left: 100px;
+        left: -30px;
     }
 
     .siguiente {
-        right: 100px;
+        right: -30px;
     }
 
     .options {
         top: 10px;
-        right: 230px;
+        right: 10px;
     }
 }

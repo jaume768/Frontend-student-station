@@ -213,6 +213,10 @@
     color: #999;
 }
 
+.no-padding {
+    padding: 0 !important;
+}
+
 .dashboard-header button.create-post-btn {
     display: flex;
     align-items: center;

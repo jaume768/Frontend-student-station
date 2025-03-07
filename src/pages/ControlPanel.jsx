@@ -33,68 +33,82 @@ const ControlPanel = () => {
 
     const activeMenu = location.state?.activeMenu || 'explorer';
 
+    const isUserPost = location.pathname.includes('/post/');
+    const contentClassName = isUserPost
+        ? 'no-padding'
+        : (activeMenu === 'editProfile' ? 'overflow-hidden-desktop' : '');
+
     const renderContent = () => {
         return (
             <Routes>
                 <Route path="post/:id" element={<UserPost />} />
-                <Route path="*" element={
-                    (() => {
-                        switch (activeMenu) {
-                            case 'explorer':
-                                return (
-                                    <div>
-                                        <div className="explorer-gallery">
-                                            {randomIndices.map((i, index) => (
-                                                <div className="masonry-item" key={index}>
-                                                    <img src={`/multimedia/mansory/foto${i + 1}.jpg`} alt={`Foto ${i + 1}`} />
-                                                    <div className="overlay">
-                                                        <button className="save-btn">Guardar</button>
-                                                        <div className="user-info">
-                                                            <img src="/multimedia/usuarioDefault.jpg" alt="Usuario" />
-                                                            <span>Prueba_111</span>
+                <Route
+                    path="*"
+                    element={
+                        (() => {
+                            switch (activeMenu) {
+                                case 'explorer':
+                                    return (
+                                        <div>
+                                            <div className="explorer-gallery">
+                                                {randomIndices.map((i, index) => (
+                                                    <div className="masonry-item" key={index}>
+                                                        <img
+                                                            src={`/multimedia/mansory/foto${i + 1}.jpg`}
+                                                            alt={`Foto ${i + 1}`}
+                                                        />
+                                                        <div className="overlay">
+                                                            <button className="save-btn">Guardar</button>
+                                                            <div className="user-info">
+                                                                <img
+                                                                    src="/multimedia/usuarioDefault.jpg"
+                                                                    alt="Usuario"
+                                                                />
+                                                                <span>Prueba_111</span>
+                                                            </div>
+                                                            <div className="location-info">
+                                                                <i className="location-icon fas fa-map-marker-alt"></i>
+                                                                <span>Barcelona</span>
+                                                            </div>
+                                                            <div className="tag-label">Estilista</div>
                                                         </div>
-                                                        <div className="location-info">
-                                                            <i className="location-icon fas fa-map-marker-alt"></i>
-                                                            <span>Barcelona</span>
-                                                        </div>
-                                                        <div className="tag-label">Estilista</div>
                                                     </div>
-                                                </div>
-                                            ))}
+                                                ))}
+                                            </div>
                                         </div>
-                                    </div>
-                                );
-                            case 'creatives':
-                                return (<div><h1>Contenido de Creativos</h1></div>);
-                            case 'fashion':
-                                return (<div><h1>Contenido de Estudiar Moda</h1></div>);
-                            case 'blog':
-                                return (<div><h1>Contenido de Blog</h1></div>);
-                            case 'magazine':
-                                return (<div><h1>Contenido de Revista</h1></div>);
-                            case 'info':
-                                return (<div><h1>Información</h1></div>);
-                            case 'editProfile':
-                            case 'misOfertas':
-                            case 'configuracion':
-                                return <EditProfile />;
-                            case 'profile':
-                                return <MiPerfil />;
-                            case 'community':
-                                return <MyComunity />;
-                            case 'createPost':
-                                return <CreatePost />;
-                            default:
-                                return (<div><h1>Contenido por defecto</h1></div>);
-                        }
-                    })()
-                } />
+                                    );
+                                case 'creatives':
+                                    return <div><h1>Contenido de Creativos</h1></div>;
+                                case 'fashion':
+                                    return <div><h1>Contenido de Estudiar Moda</h1></div>;
+                                case 'blog':
+                                    return <div><h1>Contenido de Blog</h1></div>;
+                                case 'magazine':
+                                    return <div><h1>Contenido de Revista</h1></div>;
+                                case 'info':
+                                    return <div><h1>Información</h1></div>;
+                                case 'editProfile':
+                                case 'misOfertas':
+                                case 'configuracion':
+                                    return <EditProfile />;
+                                case 'profile':
+                                    return <MiPerfil />;
+                                case 'community':
+                                    return <MyComunity />;
+                                case 'createPost':
+                                    return <CreatePost />;
+                                default:
+                                    return <div><h1>Contenido por defecto</h1></div>;
+                            }
+                        })()
+                    }
+                />
             </Routes>
         );
     };
 
     return (
-        <Layout contentClassName={activeMenu === 'editProfile' ? 'overflow-hidden-desktop' : ''}>
+        <Layout contentClassName={`dashboard-content ${contentClassName}`}>
             {renderContent()}
         </Layout>
     );
