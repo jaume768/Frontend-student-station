@@ -39,6 +39,12 @@ const Guardados = () => {
         fetchSavedPosts();
     }, []);
 
+    useEffect(() => {
+        if (selectedPosts.length === 0) {
+            setIsSelecting(false);
+        }
+    }, [selectedPosts]);
+
     // Referencia para guardar el timeout del long press
     const pressTimer = useRef(null);
     // Bandera para saber si ya se ejecutó el long press
@@ -167,15 +173,6 @@ const Guardados = () => {
                         <div style={{ marginTop: '1rem' }}>
                             <button onClick={handleMoveToFolder}>
                                 Mover {selectedPosts.length} imágenes a una carpeta
-                            </button>
-                            <button
-                                style={{ marginLeft: '1rem' }}
-                                onClick={() => {
-                                    setIsSelecting(false);
-                                    setSelectedPosts([]);
-                                }}
-                            >
-                                Cancelar selección
                             </button>
                         </div>
                     )}

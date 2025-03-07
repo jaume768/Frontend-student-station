@@ -54,6 +54,7 @@
 .guardados-masonry {
     column-count: 5;
     column-gap: 1rem;
+    margin-top: 10px;
 }
 
 .guardados-masonry-item {
@@ -71,11 +72,6 @@
 
 .guardados-masonry-item.placeholder {
     /* El placeholder no tiene imagen */
-}
-
-/* Cuando el mouse pasa sobre la imagen, hacemos un pequeño zoom */
-.guardados-masonry-item:hover .guardados-masonry-img {
-    transform: scale(1.05);
 }
 
 /* Imagen dentro del item */
