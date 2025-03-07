@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import { FaArrowLeft, FaChevronLeft, FaChevronRight, FaBookmark, FaShareAlt } from 'react-icons/fa';
+import {
+    FaArrowLeft,
+    FaChevronLeft,
+    FaChevronRight,
+    FaBookmark,
+    FaShareAlt,
+    FaUserCircle
+} from 'react-icons/fa';
 import './css/UserPost.css';
 
 const UserPost = () => {
@@ -23,12 +30,23 @@ const UserPost = () => {
                 const token = localStorage.getItem('authToken');
                 if (!token) return;
                 const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+                // 1. Obtenemos el post
                 const response = await axios.get(`${backendUrl}/api/posts/${id}`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 setPost(response.data.post);
+
+                // 2. Obtenemos la lista de favoritos del usuario
+                const favResponse = await axios.get(`${backendUrl}/api/users/favorites`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                const favorites = favResponse.data.favorites || [];
+                // 3. Comprobamos si el post actual está en esa lista
+                const isPostSaved = favorites.some((favPost) => favPost._id === response.data.post._id);
+                setIsSaved(isPostSaved);
             } catch (error) {
-                console.error("Error al cargar la publicación:", error);
+                console.error('Error al cargar la publicación o favoritos:', error);
             } finally {
                 setLoading(false);
             }
@@ -72,15 +90,14 @@ const UserPost = () => {
                     setShowSavedText(false);
                 }, 2000);
             } else {
-                await axios.delete(
-                    `${backendUrl}/api/users/favorites/${post._id}`,
-                    { headers: { Authorization: `Bearer ${token}` } }
-                );
+                await axios.delete(`${backendUrl}/api/users/favorites/${post._id}`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
                 setIsSaved(false);
                 setShowSavedText(false);
             }
         } catch (error) {
-            console.error("Error al actualizar favoritos:", error);
+            console.error('Error al actualizar favoritos:', error);
         }
     };
 
@@ -165,7 +182,7 @@ const UserPost = () => {
                 </div>
                 <div className="perfil__info">
                     <div className="perfil__usuario">
-                        {post.user.profile?.profilePicture ? (
+                        {post.user?.profile?.profilePicture ? (
                             <img
                                 src={post.user.profile.profilePicture}
                                 alt="Avatar"

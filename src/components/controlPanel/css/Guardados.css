@@ -66,10 +66,16 @@
     overflow: hidden;
     cursor: pointer;
     min-height: 100px;
+    transition: transform 0.2s ease;
 }
 
 .guardados-masonry-item.placeholder {
-    /* El placeholder no tiene imagen, así que solo un fondo gris */
+    /* El placeholder no tiene imagen */
+}
+
+/* Cuando el mouse pasa sobre la imagen, hacemos un pequeño zoom */
+.guardados-masonry-item:hover .guardados-masonry-img {
+    transform: scale(1.05);
 }
 
 /* Imagen dentro del item */
@@ -79,8 +85,11 @@
     transition: transform 0.3s ease;
 }
 
-.guardados-masonry-item:hover .guardados-masonry-img {
-    transform: scale(1.05);
+/* Estado seleccionado */
+.guardados-masonry-item.selected {
+    outline: 3px solid #08b599;
+    /* o el color que quieras */
+    outline-offset: -3px;
 }
 
 /* Columna derecha */
@@ -138,7 +147,6 @@
 }
 
 @media (max-width: 480px) {
-
     .guardados-masonry {
         column-count: 2;
         column-gap: 0.5rem;
