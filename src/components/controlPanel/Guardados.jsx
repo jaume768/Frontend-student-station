@@ -9,16 +9,26 @@ const Guardados = () => {
     const [savedPosts, setSavedPosts] = useState([]);
     const [isSelecting, setIsSelecting] = useState(false); // Modo selección activo
     const [selectedPosts, setSelectedPosts] = useState([]); // IDs de posts seleccionados
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
     const navigate = useNavigate();
     const totalSlots = 15;
 
-    // Generamos alturas aleatorias para cada slot (placeholder)  [100..250 px]
+    // Generamos alturas aleatorias para cada slot (placeholder) [100..250 px]
     const randomHeights = useMemo(() => {
         return Array.from({ length: totalSlots }).map(
             () => Math.floor(100 + Math.random() * 150)
         );
     }, [totalSlots]);
+
+    // Detecta cambios en el tamaño de la ventana para determinar si es móvil
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth < 768);
+        };
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     useEffect(() => {
         const fetchSavedPosts = async () => {
@@ -50,36 +60,32 @@ const Guardados = () => {
     // Bandera para saber si ya se ejecutó el long press
     const [longPressTriggered, setLongPressTriggered] = useState(false);
 
-    // Al hacer "mousedown/touchstart" guardamos un timeout que activa el modo selección
+    // Para desktop: activa el modo selección con long press
     const handlePressDown = (post, slotIndex) => {
-        // Si ya estamos en modo selección, no necesitamos long press
         if (isSelecting) return;
-
         setLongPressTriggered(false);
         pressTimer.current = setTimeout(() => {
             setLongPressTriggered(true);
-            setIsSelecting(true); // Activamos el modo selección
-            toggleSelectPost(post?._id); // Seleccionamos el post (si existe)
+            setIsSelecting(true);
+            toggleSelectPost(post?._id);
         }, LONG_PRESS_TIME);
     };
 
-    // Al soltar el click/touch
+    // Para desktop: al soltar el click/touch
     const handlePressUp = (post, slotIndex) => {
         if (pressTimer.current) {
             clearTimeout(pressTimer.current);
             pressTimer.current = null;
         }
-        // Si NO se disparó el long press y no estamos en modo selección => click normal
+        // Si no se disparó el long press y no estamos en modo selección: click normal
         if (!longPressTriggered && !isSelecting) {
             if (post?._id) {
-                // Navegar al post
                 navigate(`/ControlPanel/post/${post._id}`);
             }
         } else if (isSelecting && !longPressTriggered && post?._id) {
-            // Solo alterna la selección si no fue un long press que ya la agregó
+            // Alterna la selección si ya está en modo selección y no fue un long press
             toggleSelectPost(post._id);
         }
-        // Reiniciamos la bandera
         setLongPressTriggered(false);
     };
 
@@ -96,11 +102,18 @@ const Guardados = () => {
     // Ejemplo de handle para “finalizar selección” y mover a carpeta
     const handleMoveToFolder = () => {
         console.log('Mover estos posts a carpeta:', selectedPosts);
-        // Lógica de tu backend para mover a carpeta
-        // ...
-        // Al terminar, limpiamos la selección
+        // Lógica de backend para mover a carpeta...
         setIsSelecting(false);
         setSelectedPosts([]);
+    };
+
+    // Para móviles: usa onClick simple para alternar selección o navegar
+    const handleMobileClick = (post) => {
+        if (isSelecting) {
+            toggleSelectPost(post._id);
+        } else {
+            navigate(`/ControlPanel/post/${post._id}`);
+        }
     };
 
     return (
@@ -125,36 +138,43 @@ const Guardados = () => {
 
                 <div className="guardados-step">
                     <h3>Paso 2</h3>
-                    <p>Selecciona tus fotos (mantén pulsado para selección múltiple)</p>
+                    <p>
+                        Selecciona tus fotos {isMobile ? "(tap para seleccionar)" : "(mantén pulsado para selección múltiple)"}
+                    </p>
 
-                    {/* Contenedor con efecto masonry (5 columnas) */}
+                    {/* Contenedor con efecto masonry (5 columnas en desktop, menos en móvil) */}
                     <div className="guardados-masonry">
                         {Array.from({ length: totalSlots }).map((_, index) => {
-                            // Si hay un post guardado para este "slot", lo mostramos
+                            // Si hay un post guardado para este slot, lo mostramos
                             const post = index < savedPosts.length ? savedPosts[index] : null;
                             const isSelected = post && selectedPosts.includes(post._id);
                             const itemHeight = randomHeights[index];
 
-                            return (
-                                <div
-                                    key={index}
-                                    className={`guardados-masonry-item ${!post ? 'placeholder' : ''
-                                        } ${isSelected ? 'selected' : ''}`}
-                                    style={{
-                                        // Si es placeholder, le damos altura aleatoria
-                                        height: post ? 'auto' : `${itemHeight}px`,
-                                    }}
-                                    onMouseDown={() => handlePressDown(post, index)}
-                                    onMouseUp={() => handlePressUp(post, index)}
-                                    onMouseLeave={() => {
-                                        // Si el ratón sale antes de soltar, cancela el long press
+                            // Selecciona el método de interacción según dispositivo
+                            const eventHandlers = isMobile
+                                ? { onClick: () => handleMobileClick(post) }
+                                : {
+                                    onMouseDown: () => handlePressDown(post, index),
+                                    onMouseUp: () => handlePressUp(post, index),
+                                    onMouseLeave: () => {
                                         if (pressTimer.current) {
                                             clearTimeout(pressTimer.current);
                                             pressTimer.current = null;
                                         }
+                                    },
+                                    onTouchStart: () => handlePressDown(post, index),
+                                    onTouchEnd: () => handlePressUp(post, index)
+                                };
+
+                            return (
+                                <div
+                                    key={index}
+                                    className={`guardados-masonry-item ${!post ? 'placeholder' : ''} ${isSelected ? 'selected' : ''}`}
+                                    style={{
+                                        // Si es placeholder, le damos altura aleatoria
+                                        height: post ? 'auto' : `${itemHeight}px`,
                                     }}
-                                    onTouchStart={() => handlePressDown(post, index)}
-                                    onTouchEnd={() => handlePressUp(post, index)}
+                                    {...eventHandlers}
                                 >
                                     {post ? (
                                         <img
@@ -163,7 +183,6 @@ const Guardados = () => {
                                             className="guardados-masonry-img"
                                         />
                                     ) : (
-                                        // Placeholder vacío
                                         <></>
                                     )}
                                 </div>

@@ -1,5 +1,3 @@
-/* src/components/controlPanel/css/Guardados.css */
-
 .guardados-container {
     display: flex;
     gap: 2rem;
@@ -67,11 +65,7 @@
     overflow: hidden;
     cursor: pointer;
     min-height: 100px;
-    transition: transform 0.2s ease;
-}
-
-.guardados-masonry-item.placeholder {
-    /* El placeholder no tiene imagen */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 /* Imagen dentro del item */
@@ -81,11 +75,21 @@
     transition: transform 0.3s ease;
 }
 
-/* Estado seleccionado */
+/* Estado seleccionado mejorado */
 .guardados-masonry-item.selected {
-    outline: 3px solid #08b599;
-    /* o el color que quieras */
-    outline-offset: -3px;
+    box-shadow: 0 0 0 3px #08b599;
+    transform: scale(0.98);
+}
+
+.guardados-masonry-item.selected::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(8, 181, 153, 0.2);
+    pointer-events: none;
 }
 
 /* Columna derecha */
