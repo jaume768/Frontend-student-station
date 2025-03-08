@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './css/Guardados.css';
 
-const LONG_PRESS_TIME = 600; // milisegundos para considerar "long press"
+const LONG_PRESS_TIME = 500; // milisegundos para considerar "long press"
 
 const Guardados = () => {
     const [savedPosts, setSavedPosts] = useState([]);
@@ -49,42 +49,46 @@ const Guardados = () => {
         }
     }, [selectedPosts]);
 
-    // ----- LÓGICA PARA DETECTAR LONG PRESS -----
+    // -------- LÓGICA DE PULSACIÓN LARGA (para iniciar selección) --------
     const handlePressDown = (post) => {
         // Si ya estamos en modo selección, no necesitamos otro long press
         if (isSelecting) return;
 
-        setLongPressTriggered(false);
-        // Inicia un temporizador para detectar long press
+        setLongPressTriggered(false); // Resetea la bandera
         pressTimer.current = setTimeout(() => {
-            // Si pasan LONG_PRESS_TIME ms sin soltar, activamos modo selección
+            // Si pasan LONG_PRESS_TIME ms sin soltar, se activa modo selección
             setLongPressTriggered(true);
             setIsSelecting(true);
             toggleSelectPost(post?._id);
         }, LONG_PRESS_TIME);
     };
 
-    const handlePressUp = (post) => {
-        // Cancelamos el temporizador
+    const handlePressUp = () => {
+        // Se suelta el ratón/touch => cancelamos el timer
         if (pressTimer.current) {
             clearTimeout(pressTimer.current);
             pressTimer.current = null;
         }
+        // Aquí no hacemos nada más, el short press se maneja en handleClick
+    };
 
-        // Si NO hubo long press => es pulsación corta
-        if (!longPressTriggered) {
-            if (isSelecting) {
-                // Si estamos en modo selección, alternamos la imagen
-                toggleSelectPost(post?._id);
-            } else {
-                // Si NO estamos en modo selección, abrimos el post
-                if (post?._id) {
-                    navigate(`/ControlPanel/post/${post._id}`);
-                }
+    // -------- LÓGICA DE PULSACIÓN CORTA (click) --------
+    const handleClick = (post) => {
+        // Si acaba de dispararse un long press, ignoramos el click para no duplicar acciones
+        if (longPressTriggered) {
+            // Reset para siguientes pulsaciones
+            setLongPressTriggered(false);
+            return;
+        }
+        // Si estamos en modo selección, togglear el post
+        if (isSelecting) {
+            toggleSelectPost(post?._id);
+        } else {
+            // Si NO estamos en modo selección, abrimos el post
+            if (post?._id) {
+                navigate(`/ControlPanel/post/${post._id}`);
             }
         }
-
-        setLongPressTriggered(false);
     };
 
     // Alterna el ID en la lista de seleccionados
@@ -130,8 +134,9 @@ const Guardados = () => {
                 <div className="guardados-step">
                     <h3>Paso 2</h3>
                     <p>
-                        Mantén pulsado para iniciar la selección. Una vez en modo selección, un toque rápido
-                        en cualquier imagen la selecciona o deselecciona.
+                        - Mantén pulsado para iniciar la selección.
+                        <br />
+                        - Una vez en selección, toca/clic en otras imágenes para (de)seleccionarlas.
                     </p>
 
                     {/* Contenedor con efecto masonry (5 columnas en desktop, menos en móvil) */}
@@ -153,7 +158,7 @@ const Guardados = () => {
                                     }}
                                     onContextMenu={(e) => e.preventDefault()} // Evita menú contextual en móviles
                                     onMouseDown={() => handlePressDown(post)}
-                                    onMouseUp={() => handlePressUp(post)}
+                                    onMouseUp={() => handlePressUp()}
                                     onMouseLeave={() => {
                                         // Si el mouse sale, cancelamos el timeout
                                         if (pressTimer.current) {
@@ -162,7 +167,8 @@ const Guardados = () => {
                                         }
                                     }}
                                     onTouchStart={() => handlePressDown(post)}
-                                    onTouchEnd={() => handlePressUp(post)}
+                                    onTouchEnd={() => handlePressUp()}
+                                    onClick={() => handleClick(post)}
                                 >
                                     {post ? (
                                         <img
