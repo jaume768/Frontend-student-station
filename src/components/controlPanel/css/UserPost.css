@@ -171,7 +171,6 @@
 .perfil__usuario {
     display: flex;
     gap: 1em;
-    min-width: 400px;
     align-items: center;
     padding: .7em 1em;
     background-color: #ececec;

@@ -6,7 +6,7 @@ import ProfileOptionsModal from './ProfileOptionsModal';
 const mobileNavItems = [
     { id: 'explorer', icon: <FaCompass />, label: 'Explorar' },
     { id: 'creatives', icon: <FaUsers />, label: 'Creativos' },
-    { id: 'saved', icon: <FaBookmark />, label: 'Guardados' },
+    { id: 'guardados', icon: <FaBookmark />, label: 'Guardados' },
     { id: 'profile', icon: null, label: 'Mi perfil' },
 ];
 
