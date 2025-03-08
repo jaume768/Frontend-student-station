@@ -126,13 +126,17 @@
 @media (max-width: 768px) {
     .guardados-container {
         flex-direction: column;
-        padding: 1rem;
+        padding: 0.3rem;
     }
 
     .guardados-left,
     .guardados-right {
         flex: none;
         width: 100%;
+    }
+
+    .guardados-right {
+        margin-bottom: 5em;
     }
 
     .guardados-masonry {

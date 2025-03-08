@@ -61,7 +61,7 @@ const Guardados = () => {
     const [longPressTriggered, setLongPressTriggered] = useState(false);
 
     // Para desktop: activa el modo selección con long press
-    const handlePressDown = (post, slotIndex) => {
+    const handlePressDown = (post) => {
         if (isSelecting) return;
         setLongPressTriggered(false);
         pressTimer.current = setTimeout(() => {
@@ -72,18 +72,19 @@ const Guardados = () => {
     };
 
     // Para desktop: al soltar el click/touch
-    const handlePressUp = (post, slotIndex) => {
+    const handlePressUp = (post) => {
         if (pressTimer.current) {
             clearTimeout(pressTimer.current);
             pressTimer.current = null;
         }
-        // Si no se disparó el long press y no estamos en modo selección: click normal
+        // Si no se disparó el long press y no estamos en modo selección => click normal
         if (!longPressTriggered && !isSelecting) {
             if (post?._id) {
                 navigate(`/ControlPanel/post/${post._id}`);
             }
-        } else if (isSelecting && !longPressTriggered && post?._id) {
-            // Alterna la selección si ya está en modo selección y no fue un long press
+        }
+        // Si estamos en modo selección y no fue un long press, alterna la selección
+        else if (isSelecting && !longPressTriggered && post?._id) {
             toggleSelectPost(post._id);
         }
         setLongPressTriggered(false);
@@ -102,13 +103,14 @@ const Guardados = () => {
     // Ejemplo de handle para “finalizar selección” y mover a carpeta
     const handleMoveToFolder = () => {
         console.log('Mover estos posts a carpeta:', selectedPosts);
-        // Lógica de backend para mover a carpeta...
+        // Lógica de tu backend para mover a carpeta
         setIsSelecting(false);
         setSelectedPosts([]);
     };
 
     // Para móviles: usa onClick simple para alternar selección o navegar
     const handleMobileClick = (post) => {
+        if (!post) return;
         if (isSelecting) {
             toggleSelectPost(post._id);
         } else {
@@ -154,17 +156,17 @@ const Guardados = () => {
                             const eventHandlers = isMobile
                                 ? { onClick: () => handleMobileClick(post) }
                                 : {
-                                    onMouseDown: () => handlePressDown(post, index),
-                                    onMouseUp: () => handlePressUp(post, index),
-                                    onMouseLeave: () => {
-                                        if (pressTimer.current) {
-                                            clearTimeout(pressTimer.current);
-                                            pressTimer.current = null;
-                                        }
-                                    },
-                                    onTouchStart: () => handlePressDown(post, index),
-                                    onTouchEnd: () => handlePressUp(post, index)
-                                };
+                                      onMouseDown: () => handlePressDown(post),
+                                      onMouseUp: () => handlePressUp(post),
+                                      onMouseLeave: () => {
+                                          if (pressTimer.current) {
+                                              clearTimeout(pressTimer.current);
+                                              pressTimer.current = null;
+                                          }
+                                      },
+                                      onTouchStart: () => handlePressDown(post),
+                                      onTouchEnd: () => handlePressUp(post),
+                                  };
 
                             return (
                                 <div
@@ -174,6 +176,7 @@ const Guardados = () => {
                                         // Si es placeholder, le damos altura aleatoria
                                         height: post ? 'auto' : `${itemHeight}px`,
                                     }}
+                                    onContextMenu={(e) => e.preventDefault()} // <--- Evita el menú contextual en móvil
                                     {...eventHandlers}
                                 >
                                     {post ? (
@@ -182,9 +185,7 @@ const Guardados = () => {
                                             alt={`Post guardado ${index + 1}`}
                                             className="guardados-masonry-img"
                                         />
-                                    ) : (
-                                        <></>
-                                    )}
+                                    ) : null}
                                 </div>
                             );
                         })}

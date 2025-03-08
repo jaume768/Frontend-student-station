@@ -163,6 +163,8 @@
 .perfil__info {
     display: flex;
     flex-direction: column;
+    max-width: 360px;
+    margin: auto;
     gap: 1em;
 }
 
@@ -206,7 +208,7 @@
     padding: 2em 1em;
     background-color: #ececec;
     border-radius: 7px;
-    margin-bottom: 1em;
+    margin-bottom: 6em;
 }
 
 .image-tags__titulo {
@@ -279,6 +281,18 @@
 @media (min-width: 1200px) {
     .perfil {
         max-width: 1200px;
+    }
+
+    .perfil__image-tags {
+        margin-bottom: 1em;
+    }
+
+    .perfil__usuario{
+        min-width: 400px;
+    }
+
+    .perfil__info{
+        max-width: 100%;
     }
 
     .perfil__contenido {
