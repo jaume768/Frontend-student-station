@@ -9,9 +9,11 @@ const Guardados = () => {
     const [savedPosts, setSavedPosts] = useState([]);
     const [isSelecting, setIsSelecting] = useState(false); // Modo selección activo
     const [selectedPosts, setSelectedPosts] = useState([]); // IDs de posts seleccionados
+    const [longPressTriggered, setLongPressTriggered] = useState(false);
 
     const navigate = useNavigate();
     const totalSlots = 15;
+    const pressTimer = useRef(null); // Referencia para el timeout del long press
 
     // Generamos alturas aleatorias para cada slot (placeholder) [100..250 px]
     const randomHeights = useMemo(() => {
@@ -20,6 +22,7 @@ const Guardados = () => {
         );
     }, [totalSlots]);
 
+    // Cargamos los posts guardados
     useEffect(() => {
         const fetchSavedPosts = async () => {
             try {
@@ -46,44 +49,46 @@ const Guardados = () => {
         }
     }, [selectedPosts]);
 
-    // Referencia para guardar el timeout del long press
-    const pressTimer = useRef(null);
-    // Bandera para saber si ya se ejecutó el long press
-    const [longPressTriggered, setLongPressTriggered] = useState(false);
-
-    // Manejo unificado de pulsación (tanto en desktop como en móvil):
-    // 1) onMouseDown / onTouchStart -> iniciar timer para long press
-    // 2) onMouseUp / onTouchEnd -> según si se disparó el long press o no, abrir o seleccionar
+    // -------- LÓGICA DE PULSACIÓN LARGA (para iniciar selección) --------
     const handlePressDown = (post) => {
-        // Si ya estás en modo selección, no necesitas long press para añadir más
+        // Si ya estamos en modo selección, no necesitamos otro long press
         if (isSelecting) return;
 
-        setLongPressTriggered(false);
+        setLongPressTriggered(false); // Resetea la bandera
         pressTimer.current = setTimeout(() => {
-            // Si pasa el LONG_PRESS_TIME sin soltar, se activa modo selección
+            // Si pasan LONG_PRESS_TIME ms sin soltar, se activa modo selección
             setLongPressTriggered(true);
             setIsSelecting(true);
             toggleSelectPost(post?._id);
         }, LONG_PRESS_TIME);
     };
 
-    const handlePressUp = (post) => {
-        // Cancelamos el timer del long press
+    const handlePressUp = () => {
+        // Se suelta el ratón/touch => cancelamos el timer
         if (pressTimer.current) {
             clearTimeout(pressTimer.current);
             pressTimer.current = null;
         }
-        // Si NO hubo long press y no estamos en modo selección => abrir el post
-        if (!longPressTriggered && !isSelecting) {
+        // Aquí no hacemos nada más, el short press se maneja en handleClick
+    };
+
+    // -------- LÓGICA DE PULSACIÓN CORTA (click) --------
+    const handleClick = (post) => {
+        // Si acaba de dispararse un long press, ignoramos el click para no duplicar acciones
+        if (longPressTriggered) {
+            // Reset para siguientes pulsaciones
+            setLongPressTriggered(false);
+            return;
+        }
+        // Si estamos en modo selección, togglear el post
+        if (isSelecting) {
+            toggleSelectPost(post?._id);
+        } else {
+            // Si NO estamos en modo selección, abrimos el post
             if (post?._id) {
                 navigate(`/ControlPanel/post/${post._id}`);
             }
         }
-        // Si SÍ estamos en modo selección y NO fue long press (caso: clic corto en modo selección)
-        else if (isSelecting && !longPressTriggered && post?._id) {
-            toggleSelectPost(post._id);
-        }
-        setLongPressTriggered(false);
     };
 
     // Alterna el ID en la lista de seleccionados
@@ -129,7 +134,9 @@ const Guardados = () => {
                 <div className="guardados-step">
                     <h3>Paso 2</h3>
                     <p>
-                        Mantén pulsado para iniciar la selección (pulsación corta abre el post)
+                        - Mantén pulsado para iniciar la selección.
+                        <br />
+                        - Una vez en selección, toca/clic en otras imágenes para (de)seleccionarlas.
                     </p>
 
                     {/* Contenedor con efecto masonry (5 columnas en desktop, menos en móvil) */}
@@ -142,21 +149,26 @@ const Guardados = () => {
                             return (
                                 <div
                                     key={index}
-                                    className={`guardados-masonry-item ${!post ? 'placeholder' : ''} ${isSelected ? 'selected' : ''}`}
+                                    className={`guardados-masonry-item 
+                                        ${!post ? 'placeholder' : ''} 
+                                        ${isSelected ? 'selected' : ''}`
+                                    }
                                     style={{
                                         height: post ? 'auto' : `${itemHeight}px`,
                                     }}
                                     onContextMenu={(e) => e.preventDefault()} // Evita menú contextual en móviles
                                     onMouseDown={() => handlePressDown(post)}
-                                    onMouseUp={() => handlePressUp(post)}
+                                    onMouseUp={() => handlePressUp()}
                                     onMouseLeave={() => {
+                                        // Si el mouse sale, cancelamos el timeout
                                         if (pressTimer.current) {
                                             clearTimeout(pressTimer.current);
                                             pressTimer.current = null;
                                         }
                                     }}
                                     onTouchStart={() => handlePressDown(post)}
-                                    onTouchEnd={() => handlePressUp(post)}
+                                    onTouchEnd={() => handlePressUp()}
+                                    onClick={() => handleClick(post)}
                                 >
                                     {post ? (
                                         <img
