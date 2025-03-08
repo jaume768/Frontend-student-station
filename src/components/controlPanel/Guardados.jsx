@@ -64,13 +64,14 @@ const Guardados = () => {
     };
 
     const handlePressUp = () => {
-        // Se suelta el ratón/touch => cancelamos el timer
         if (pressTimer.current) {
             clearTimeout(pressTimer.current);
             pressTimer.current = null;
         }
-        // Aquí no hacemos nada más, el short press se maneja en handleClick
+        // Resetea la bandera aquí para que el siguiente click se procese correctamente
+        setLongPressTriggered(false);
     };
+
 
     // -------- LÓGICA DE PULSACIÓN CORTA (click) --------
     const handleClick = (post) => {
