@@ -7,7 +7,8 @@ import {
     FaChevronRight,
     FaBookmark,
     FaShareAlt,
-    FaUserCircle
+    FaUserCircle,
+    FaTrash
 } from 'react-icons/fa';
 import './css/UserPost.css';
 
@@ -23,6 +24,11 @@ const UserPost = () => {
 
     const [isSaved, setIsSaved] = useState(false);
     const [showSavedText, setShowSavedText] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+    // Obtener el ID del usuario autenticado.
+    // Reemplaza la siguiente línea con la forma en que obtienes el ID del usuario actual.
+    const currentUserId = localStorage.getItem('userId');
 
     useEffect(() => {
         const fetchPost = async () => {
@@ -107,6 +113,20 @@ const UserPost = () => {
         // Lógica para compartir el post
     };
 
+    const handleDeletePost = async () => {
+        try {
+            const token = localStorage.getItem('authToken');
+            const backendUrl = import.meta.env.VITE_BACKEND_URL;
+            await axios.delete(`${backendUrl}/api/posts/${post._id}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            // Redirige o actualiza la UI después de eliminar el post
+            navigate(-1);
+        } catch (error) {
+            console.error('Error al eliminar el post:', error);
+        }
+    };
+
     // Eventos para swipe en móviles
     const onTouchStart = (e) => {
         setTouchStart(e.targetTouches[0].clientX);
@@ -163,6 +183,17 @@ const UserPost = () => {
                             <button className="compartir" onClick={handleShare}>
                                 <FaShareAlt size={20} />
                             </button>
+                            {post.user?._id === currentUserId && (
+                                <button
+                                    className="delete-button"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setShowDeleteModal(true);
+                                    }}
+                                >
+                                    <FaTrash size={20} />
+                                </button>
+                            )}
                         </div>
                         <button className="siguiente" onClick={handleNext}>
                             <FaChevronRight size={24} />
@@ -202,7 +233,7 @@ const UserPost = () => {
                         <div className="perfil__publicacion">
                             <h1 className="publicacion__titulo">{post.title}</h1>
                             <p className="publicacion__descripcion">{post.description}</p>
-                            {post.peopleTags && post.peopleTags.length > 0 && (
+                            {Array.isArray(post.peopleTags) && post.peopleTags.length > 0 && (
                                 <div className="perfil__personas">
                                     <h3 className="personas__titulo">Personas que aparecen</h3>
                                     <ul className="personas__lista">
@@ -247,6 +278,19 @@ const UserPost = () => {
                     )}
                 </div>
             </section>
+
+            {/* Modal de confirmación para eliminar el post */}
+            {showDeleteModal && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <p>¿Estás seguro de eliminar esta publicación?</p>
+                        <div className="modal-actions">
+                            <button onClick={handleDeletePost}>Confirmar</button>
+                            <button onClick={() => setShowDeleteModal(false)}>Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
