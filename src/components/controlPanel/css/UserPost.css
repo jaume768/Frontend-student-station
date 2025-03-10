@@ -73,7 +73,7 @@
     right: 10px;
 }
 
-/* Opciones de guardar y compartir */
+/* Opciones de guardar, compartir y eliminar */
 .options {
     position: absolute;
     top: 10px;
@@ -85,7 +85,8 @@
 }
 
 .save-button-post,
-.compartir {
+.compartir,
+.delete-button {
     border-radius: 50%;
     background: #535353;
     padding: 0.5em;
@@ -94,12 +95,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.save-button-post {
-    background: #535353;
     transition: background-color 0.3s ease;
-    position: relative;
 }
 
 .save-button-post.saved {
@@ -124,7 +120,6 @@
         opacity: 0;
         transform: translateY(-5px);
     }
-
     to {
         opacity: 1;
         transform: translateY(0);
@@ -132,7 +127,8 @@
 }
 
 .save-button-post:hover,
-.compartir:hover {
+.compartir:hover,
+.delete-button:hover {
     background: #08b599;
 }
 
@@ -172,7 +168,7 @@
     display: flex;
     gap: 1em;
     align-items: center;
-    padding: .7em 1em;
+    padding: 0.7em 1em;
     background-color: #ececec;
     border-radius: 7px;
 }
@@ -202,7 +198,7 @@
     max-width: 350px;
 }
 
-/* Etiquetas de la imagen (nuevas) */
+/* Etiquetas de la imagen */
 .perfil__image-tags {
     padding: 2em 1em;
     background-color: #ececec;
@@ -223,11 +219,11 @@
 
 .image-tag {
     color: #000;
-    padding: .6em 1em;
+    padding: 0.6em 1em;
     background-color: white;
     border-radius: 30px;
-    font-size: .9rem;
-    margin: .5em;
+    font-size: 0.9rem;
+    margin: 0.5em;
 }
 
 /* Personas */
@@ -270,7 +266,6 @@
     .perfil__contenido {
         grid-template-columns: 1fr 1fr;
     }
-
     .options {
         top: 10px;
         right: 10px;
@@ -281,39 +276,77 @@
     .perfil {
         max-width: 1200px;
     }
-
     .perfil__image-tags {
         margin-bottom: 1em;
     }
-
-    .perfil__usuario{
+    .perfil__usuario {
         min-width: 400px;
     }
-
-    .perfil__info{
+    .perfil__info {
         max-width: 100%;
     }
-
     .perfil__contenido {
         grid-template-columns: 4fr 1fr;
         gap: 12em;
     }
-
     .anterior,
     .siguiente {
         top: 50%;
     }
-
     .anterior {
         left: -30px;
     }
-
     .siguiente {
         right: -30px;
     }
-
     .options {
         top: 10px;
         right: 10px;
     }
+}
+
+/* Estilos para el modal de confirmación */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+}
+
+.modal-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.modal-actions button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.modal-actions button:first-child {
+    background-color: #08b599;
+    color: #fff;
+}
+
+.modal-actions button:last-child {
+    background-color: #ccc;
+    color: #000;
 }
