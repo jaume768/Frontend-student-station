@@ -79,7 +79,7 @@ const CreatePost = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [uploadSuccess, setUploadSuccess] = useState(false);
     const [createdPostId, setCreatedPostId] = useState(null);
-
+    
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -105,7 +105,6 @@ const CreatePost = () => {
                 },
             });
             setUploadSuccess(true);
-            // Guardamos el ID del post creado para poder navegar a él
             if (response.data && response.data.post && response.data.post._id) {
                 setCreatedPostId(response.data.post._id);
             }
@@ -129,16 +128,14 @@ const CreatePost = () => {
         return result;
     };
 
-    // onDragEnd para el drag & drop en thumbnails y orden de fotos
     const handleDragEnd = (result) => {
         if (!result.destination) return;
         if (result.source.index === result.destination.index) return;
         const newImages = reorder(images, result.source.index, result.destination.index);
         setImages(newImages);
-        setMainImageIndex(0); // La primera foto será la principal
+        setMainImageIndex(0); 
     };
-
-    // Navegación al post recién creado
+    
     const handleViewPost = () => {
         if (createdPostId) {
             navigate(`/ControlPanel/post/${createdPostId}`);
@@ -149,7 +146,6 @@ const CreatePost = () => {
     return (
         <DragDropContext onDragEnd={handleDragEnd}>
             <div className="createpost-wrapper">
-                {/* Input oculto para subir imágenes */}
                 <input
                     id="image-upload"
                     type="file"
@@ -158,7 +154,6 @@ const CreatePost = () => {
                     onChange={handleImageUpload}
                     style={{ display: 'none' }}
                 />
-                {/* Panel Izquierdo */}
                 <div className={`createpost-left ${images.length > 0 ? 'with-images' : ''}`}>
                     {images.length === 0 ? (
                         <div className="left-content">
@@ -251,7 +246,6 @@ const CreatePost = () => {
                         </div>
                     )}
                 </div>
-                {/* Panel Derecho */}
                 <div className="createpost-right">
                     <form onSubmit={handleSubmit}>
                         <h2 className="section-title">Información del post</h2>
@@ -389,10 +383,16 @@ const CreatePost = () => {
                         )}
                         <button
                             type="submit"
-                            className={`publish-btn ${isFormComplete ? 'active' : 'inactive'}`}
-                            disabled={!isFormComplete || isLoading}
+                            className="publish-btn"
+                            disabled={!isFormComplete}
                         >
-                            {isLoading ? 'Publicando...' : 'Publicar'}
+                            {isFormComplete ? (
+                                <>
+                                    <FaUpload size={16} /> Publicar post
+                                </>
+                            ) : (
+                                "Publicar post"
+                            )}
                         </button>
                     </form>
                 </div>
@@ -406,7 +406,7 @@ const CreatePost = () => {
                         <div className="success-popup">
                             <div className="success-popup-header">
                                 <h3>¡Post publicado con éxito!</h3>
-                                <button
+                                <button 
                                     className="close-popup-btn"
                                     onClick={() => setUploadSuccess(false)}
                                 >
@@ -415,13 +415,13 @@ const CreatePost = () => {
                             </div>
                             <p>Tu publicación ha sido subida correctamente y ya está disponible para toda la comunidad.</p>
                             <div className="success-popup-actions">
-                                <button
+                                <button 
                                     className="view-post-btn"
                                     onClick={handleViewPost}
                                 >
                                     <FaEye /> Ver publicación
                                 </button>
-                                <button
+                                <button 
                                     className="close-btn"
                                     onClick={() => setUploadSuccess(false)}
                                 >

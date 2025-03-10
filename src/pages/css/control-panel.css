@@ -184,6 +184,7 @@
     border-radius: 40px;
     gap: 5px;
     color: #767676;
+    cursor: pointer;
     transition: all 0.3s ease;
 }
 
