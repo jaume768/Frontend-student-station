@@ -7,6 +7,7 @@ import MyComunity from '../components/controlPanel/MyComunity';
 import CreatePost from '../components/controlPanel/CreatePost';
 import UserPost from '../components/controlPanel/UserPost';
 import Guardados from '../components/controlPanel/Guardados';
+import UserProfile from '../components/controlPanel/UserProfile';
 import './css/control-panel.css';
 
 const ControlPanel = () => {
@@ -43,6 +44,7 @@ const ControlPanel = () => {
         return (
             <Routes>
                 <Route path="post/:id" element={<UserPost />} />
+                <Route path="profile/:username" element={<UserProfile />} />
                 <Route
                     path="*"
                     element={

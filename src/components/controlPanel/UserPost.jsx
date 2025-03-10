@@ -35,12 +35,12 @@ const UserPost = () => {
                 const token = localStorage.getItem('authToken');
                 if (!token) return;
                 const backendUrl = import.meta.env.VITE_BACKEND_URL;
-                
+
                 // Obtener datos del usuario actual
                 const userResponse = await axios.get(`${backendUrl}/api/users/profile`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
-                
+
                 if (userResponse.data && userResponse.data._id) {
                     setCurrentUserId(userResponse.data._id);
                 }
@@ -48,7 +48,7 @@ const UserPost = () => {
                 console.error('Error al obtener datos del usuario:', error);
             }
         };
-        
+
         fetchUserData();
     }, []);
 
@@ -254,25 +254,32 @@ const UserPost = () => {
                     <div className="perfil__publicacion">
                         <h1 className="publicacion__titulo">{post.title}</h1>
                         <p className="publicacion__descripcion">{post.description}</p>
-                        {Array.isArray(post.peopleTags) && 
-                         post.peopleTags.length > 0 && 
-                         post.peopleTags.some(person => person.name && person.name.trim() !== '') && (
-                            <div className="perfil__personas">
-                                <h3 className="personas__titulo">Personas que aparecen</h3>
-                                <ul className="personas__lista">
-                                    {post.peopleTags
-                                        .filter(person => person.name && person.name.trim() !== '')
-                                        .map((person, idx) => (
-                                            <li key={idx} className="personas__item">
-                                                {person.role}:{' '}
-                                                <a href={`/profile/${person.name}`} className="personas__enlace">
-                                                    @{person.name}
-                                                </a>
-                                            </li>
-                                        ))}
-                                </ul>
-                            </div>
-                        )}
+                        {Array.isArray(post.peopleTags) &&
+                            post.peopleTags.length > 0 &&
+                            post.peopleTags.some(person => person.name && person.name.trim() !== '') && (
+                                <div className="perfil__personas">
+                                    <h3 className="personas__titulo">Personas que aparecen</h3>
+                                    <ul className="personas__lista">
+                                        {post.peopleTags
+                                            .filter(person => person.name && person.name.trim() !== '')
+                                            .map((person, idx) => (
+                                                <li key={idx} className="personas__item">
+                                                    {person.role}:{' '}
+                                                    <a
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            navigate(`/ControlPanel/profile/${person.name}`);
+                                                        }}
+                                                        className="personas__enlace"
+                                                        style={{ cursor: 'pointer' }}
+                                                    >
+                                                        @{person.name}
+                                                    </a>
+                                                </li>
+                                            ))}
+                                    </ul>
+                                </div>
+                            )}
                     </div>
                     {post.imageTags &&
                         post.imageTags[currentImageIndex] &&

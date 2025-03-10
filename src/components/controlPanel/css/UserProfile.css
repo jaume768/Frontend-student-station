@@ -1,0 +1,322 @@
+/* Contenedor principal */
+.user-profile-container {
+    position: relative;
+    padding: 20px;
+    margin: 0 auto;
+    max-width: 1200px;
+    font-family: 'Inter', sans-serif;
+    color: #000;
+}
+
+/* Encabezado y pestañas móviles */
+.user-profile-header-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Encabezado: foto y datos personales */
+.user-profile-header {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.user-profile-photo {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.user-profile-personal-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-profile-name {
+    font-size: 2rem;
+    margin: 0;
+}
+
+.user-profile-occupations,
+.user-profile-location {
+    font-size: 1rem;
+    color: #555;
+}
+
+/* Pestañas para vista móvil (se muestran solo en pantallas pequeñas) */
+.user-profile-mobile-tabs {
+    display: none;
+}
+
+.user-profile-mobile-tabs button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    background: #e9ecef;
+    font-size: 1rem;
+    color: #989898;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.user-profile-mobile-tabs button.active {
+    background: #535353;
+    color: #fff;
+}
+
+/* Contenedor de contenidos (perfil y publicaciones) */
+.user-profile-content {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+/* Contenido izquierdo (perfil) */
+.user-profile-left-content {
+    flex: 1;
+}
+
+/* Secciones internas */
+.user-profile-section {
+    background: #fdfdfd;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+.user-profile-section.ultima-seccion{
+    margin-bottom: 20px;
+}
+
+.user-profile-section h2 {
+    margin-bottom: 10px;
+    font-size: 1.25rem;
+}
+
+.user-profile-section p {
+    font-size: 1rem;
+    margin-top: 5px;
+    margin-left: 10px;
+    line-height: 1.5;
+}
+
+.user-profile-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.user-profile-list li {
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+}
+
+.user-profile-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.user-profile-chip {
+    background: #e9ecef;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
+
+.user-profile-social-links {
+    display: flex;
+    gap: 15px;
+    font-size: 1.5rem;
+}
+
+.user-profile-social-links a {
+    color: #000;
+    transition: color 0.3s ease;
+}
+
+.user-profile-social-links a:hover {
+    color: rgba(6, 182, 160, 1);
+}
+
+.user-profile-downloads {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.user-profile-btn {
+    background: #38c785;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 30px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+    display: inline-block;
+}
+
+.user-profile-btn:hover {
+    background: #292929;
+}
+
+.user-profile-view-btn {
+    background: transparent;
+    color: #38c785;
+    border: 2px solid #38c785;
+}
+
+.user-profile-view-btn:hover {
+    background: #38c785;
+    color: #fff;
+}
+
+/* Columna derecha: grid de proyectos */
+.user-profile-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Transición para cambios de vista */
+.user-profile-projects-grid {
+    transition: all 0.3s ease-in-out;
+}
+
+.user-profile-projects-grid.gallery {
+    display: grid;
+    justify-content: center;
+    grid-template-columns: repeat(3, 0.22fr);
+    gap: 7px;
+}
+
+.user-profile-projects-grid.individual {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.user-profile-project-placeholder {
+    position: relative;
+    background: #cccccc;
+    height: 110px;
+    width: 110px;
+    overflow: hidden;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+}
+
+.user-profile-project-placeholder img {
+    object-fit: cover;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+}
+
+.user-profile-project-placeholder:hover {
+    transform: scale(1.05);
+    z-index: 1;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.user-profile-projects-grid.individual .user-profile-project-placeholder {
+    height: 20em;
+    width: 20em;
+}
+
+/* Botón para alternar vista de proyectos */
+.toggle-view-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    transition: color 0.3s ease;
+    color: #000;
+}
+
+.toggle-view-btn:hover {
+    color: #000;
+}
+
+/* Mensajes informativos */
+.user-profile-loading,
+.user-profile-error,
+.user-profile-no-posts {
+    text-align: center;
+    padding: 20px;
+    font-size: 1rem;
+}
+
+.user-profile-error h2 {
+    color: #e74c3c;
+    margin-bottom: 10px;
+}
+
+.user-profile-error button {
+    margin-top: 15px;
+    padding: 8px 16px;
+    background: #38c785;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.user-profile-error button:hover {
+    background: #2aa56f;
+}
+
+/* Estilos para vista de escritorio */
+@media (min-width: 769px) {
+    .user-profile-mobile-tabs {
+        display: none;
+    }
+
+    .user-profile-content {
+        display: flex;
+    }
+
+    /* Se muestran ambos contenidos */
+    .user-profile-left-content,
+    .user-profile-right {
+        display: block;
+    }
+}
+
+/* Estilos para vista móvil */
+@media (max-width: 768px) {
+    
+    .user-profile-section.ultima-seccion{
+        margin-bottom: 50px;
+    }
+
+    .user-profile-container {
+        padding: 7px;
+    }
+
+    .user-profile-mobile-tabs {
+        display: flex;
+        gap: 10px;
+    }
+
+    /* En móvil, se muestra solo el contenido correspondiente a la pestaña activa */
+    .user-profile-content {
+        display: block;
+    }
+
+    .user-profile-left-content,
+    .user-profile-right {
+        display: none;
+    }
+
+    .user-profile-left-content.active,
+    .user-profile-right.active {
+        margin-bottom: 4em;
+        display: block;
+    }
+}

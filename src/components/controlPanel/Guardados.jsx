@@ -16,6 +16,7 @@ const Guardados = () => {
     const [isCreatingFolder, setIsCreatingFolder] = useState(false);
     const [isEditingFolders, setIsEditingFolders] = useState(false);
     const [newFolderName, setNewFolderName] = useState('');
+    const [clickStarted, setClickStarted] = useState(false); // Para controlar el inicio del click
 
     const navigate = useNavigate();
     const totalSlots = 15;
@@ -82,6 +83,11 @@ const Guardados = () => {
 
     // -------- LÓGICA DE PULSACIÓN LARGA (para iniciar selección) --------
     const handlePressDown = (post) => {
+        if (!post) return;
+
+        // Marcamos que el click ha iniciado
+        setClickStarted(true);
+
         // Si ya estamos en modo selección, no necesitamos otro long press
         if (isSelecting) return;
 
@@ -95,28 +101,32 @@ const Guardados = () => {
     };
 
     const handlePressUp = () => {
+        // Marcamos que el click ha terminado
+        setClickStarted(false);
+
         if (pressTimer.current) {
             clearTimeout(pressTimer.current);
             pressTimer.current = null;
         }
-        // Resetea la bandera aquí para que el siguiente click se procese correctamente
-        setLongPressTriggered(false);
     };
 
     // -------- LÓGICA DE PULSACIÓN CORTA (click) --------
     const handleClick = (post) => {
+        if (!post) return;
+
         // Si acaba de dispararse un long press, ignoramos el click para no duplicar acciones
         if (longPressTriggered) {
             // Reset para siguientes pulsaciones
             setLongPressTriggered(false);
             return;
         }
+
         // Si estamos en modo selección, togglear el post
         if (isSelecting) {
             toggleSelectPost(post?._id);
         } else {
-            // Si NO estamos en modo selección, abrimos el post
-            if (post?._id) {
+            // Si NO estamos en modo selección y NO fue un long press, abrimos el post
+            if (post?._id && !longPressTriggered) {
                 navigate(`/ControlPanel/post/${post._id}`);
             }
         }
@@ -281,13 +291,21 @@ const Guardados = () => {
                                     }}
                                     onTouchStart={() => handlePressDown(post)}
                                     onTouchEnd={() => handlePressUp()}
-                                    onClick={() => handleClick(post)}
+                                    onClick={() => {
+                                        // Solo procesamos el click si no estamos en modo selección
+                                        // o si estamos en modo selección pero no viene de un long press
+                                        // Esto evita que se deseleccione en desktop
+                                        if (!isSelecting || !clickStarted) {
+                                            handleClick(post);
+                                        }
+                                    }}
                                 >
                                     {post ? (
                                         <img
                                             src={post.mainImage}
                                             alt={`Post guardado ${index + 1}`}
                                             className="guardados-masonry-img"
+                                            draggable={false} // Evitar arrastrar las imágenes
                                         />
                                     ) : null}
                                 </div>
@@ -301,7 +319,7 @@ const Guardados = () => {
                                 className="save-to-folder-button"
                                 onClick={handleSaveToFolder}
                             >
-                                Guardar en esta carpeta
+                                Guardar {selectedPosts.length} {selectedPosts.length === 1 ? 'imagen' : 'imágenes'} en esta carpeta
                             </button>
                         </div>
                     )}
@@ -340,35 +358,63 @@ const Guardados = () => {
                             placeholder="Nombre de la carpeta"
                         />
                         <div className="new-folder-actions">
-                            <button onClick={handleCreateFolder}>
+                            <button
+                                className="confirm-button"
+                                onClick={handleCreateFolder}
+                                disabled={!newFolderName.trim()}
+                            >
                                 <FaCheck /> Crear
                             </button>
-                            <button onClick={() => {
-                                setIsCreatingFolder(false);
-                                setNewFolderName('');
-                            }}>
+                            <button
+                                className="cancel-button"
+                                onClick={() => {
+                                    setIsCreatingFolder(false);
+                                    setNewFolderName('');
+                                }}
+                            >
                                 <FaTimes /> Cancelar
                             </button>
                         </div>
                     </div>
                 )}
 
-                <div className="guardados-folders">
-                    {folders.map(folder => (
-                        <div key={folder._id} className="folder-card">
-                            <p>{folder.name}</p>
-                            <span className="post-count">{folder.posts?.length || 0} fotos</span>
-                            {isEditingFolders && (
+                <div className="folder-list">
+                    {isEditingFolders ? (
+                        // Modo edición: mostrar botones para eliminar carpetas
+                        folders.map(folder => (
+                            <div key={folder._id} className="folder-card editing">
+                                <p>{folder.name}</p>
                                 <button
                                     className="delete-folder-button"
                                     onClick={() => handleDeleteFolder(folder._id)}
                                 >
                                     <FaTimes />
                                 </button>
-                            )}
-                        </div>
-                    ))}
+                            </div>
+                        ))
+                    ) : (
+                        // Modo normal: mostrar carpetas sin acciones
+                        folders.map(folder => (
+                            <div
+                                key={folder._id}
+                                className={`folder-card ${selectedFolder === folder._id ? 'selected' : ''}`}
+                                onClick={() => setSelectedFolder(folder._id)}
+                            >
+                                <p>{folder.name}</p>
+                                <span className="folder-count">{folder.posts?.length || 0} fotos</span>
+                            </div>
+                        ))
+                    )}
                 </div>
+
+                {isEditingFolders && (
+                    <button
+                        className="done-editing-button"
+                        onClick={() => setIsEditingFolders(false)}
+                    >
+                        <FaCheck /> Finalizar edición
+                    </button>
+                )}
             </div>
         </div>
     );
