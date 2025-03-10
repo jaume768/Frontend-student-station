@@ -88,7 +88,7 @@
     margin-bottom: 20px;
 }
 
-.miPerfil-section.ultima-seccion{
+.miPerfil-section.ultima-seccion {
     margin-bottom: 20px;
 }
 
@@ -203,11 +203,24 @@
 }
 
 .miPerfil-project-placeholder {
-    background: #cccccc;
-    height: 110px;
-    width: 110px;
-    cursor: pointer;
+    position: relative;
+    overflow: hidden;
     border-radius: 8px;
+    transition: transform 0.3s ease;
+}
+
+.miPerfil-project-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+}
+
+.miPerfil-project-placeholder:hover {
+    transform: scale(1.05);
+    z-index: 1;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .miPerfil-projects-grid.individual .miPerfil-project-placeholder {
@@ -249,8 +262,8 @@
 /* Estilos para vista móvil */
 @media (max-width: 768px) {
 
-    
-    .miPerfil-section.ultima-seccion{
+
+    .miPerfil-section.ultima-seccion {
         margin-bottom: 50px;
     }
 
