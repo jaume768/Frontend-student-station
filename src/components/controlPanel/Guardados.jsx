@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { FaPlus, FaPencilAlt, FaTimes, FaCheck } from 'react-icons/fa';
 import './css/Guardados.css';
 
 const LONG_PRESS_TIME = 500; // milisegundos para considerar "long press"
@@ -10,6 +11,11 @@ const Guardados = () => {
     const [isSelecting, setIsSelecting] = useState(false); // Modo selección activo
     const [selectedPosts, setSelectedPosts] = useState([]); // IDs de posts seleccionados
     const [longPressTriggered, setLongPressTriggered] = useState(false);
+    const [folders, setFolders] = useState([]);
+    const [selectedFolder, setSelectedFolder] = useState(null);
+    const [isCreatingFolder, setIsCreatingFolder] = useState(false);
+    const [isEditingFolders, setIsEditingFolders] = useState(false);
+    const [newFolderName, setNewFolderName] = useState('');
 
     const navigate = useNavigate();
     const totalSlots = 15;
@@ -42,6 +48,31 @@ const Guardados = () => {
         fetchSavedPosts();
     }, []);
 
+    // Cargamos las carpetas del usuario
+    useEffect(() => {
+        const fetchFolders = async () => {
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) return;
+                const backendUrl = import.meta.env.VITE_BACKEND_URL;
+                const res = await axios.get(`${backendUrl}/api/folders`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                if (res.data.folders) {
+                    setFolders(res.data.folders);
+                    // Establecer la carpeta "principal" como seleccionada por defecto si existe
+                    const mainFolder = res.data.folders.find(folder => folder.name === 'Carpeta principal');
+                    if (mainFolder) {
+                        setSelectedFolder(mainFolder._id);
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching folders:', error);
+            }
+        };
+        fetchFolders();
+    }, []);
+
     // Si se quitan todas las selecciones, salimos del modo selección
     useEffect(() => {
         if (selectedPosts.length === 0) {
@@ -72,7 +103,6 @@ const Guardados = () => {
         setLongPressTriggered(false);
     };
 
-
     // -------- LÓGICA DE PULSACIÓN CORTA (click) --------
     const handleClick = (post) => {
         // Si acaba de dispararse un long press, ignoramos el click para no duplicar acciones
@@ -102,14 +132,86 @@ const Guardados = () => {
         );
     };
 
-    // Ejemplo de handle para “finalizar selección” y mover a carpeta
-    const handleMoveToFolder = () => {
-        console.log('Mover estos posts a carpeta:', selectedPosts);
-        // Lógica de tu backend para mover a carpeta
-        // ...
-        // Al terminar, limpiamos la selección
-        setIsSelecting(false);
-        setSelectedPosts([]);
+    // Crear nueva carpeta
+    const handleCreateFolder = async () => {
+        if (!newFolderName.trim()) return;
+
+        try {
+            const token = localStorage.getItem('authToken');
+            if (!token) return;
+            const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+            const res = await axios.post(
+                `${backendUrl}/api/folders`,
+                { name: newFolderName },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+
+            if (res.data.folder) {
+                setFolders(prev => [...prev, res.data.folder]);
+                setNewFolderName('');
+                setIsCreatingFolder(false);
+            }
+        } catch (error) {
+            console.error('Error al crear carpeta:', error);
+        }
+    };
+
+    // Eliminar carpeta
+    const handleDeleteFolder = async (folderId) => {
+        try {
+            const token = localStorage.getItem('authToken');
+            if (!token) return;
+            const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+            await axios.delete(`${backendUrl}/api/folders/${folderId}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            setFolders(prev => prev.filter(folder => folder._id !== folderId));
+            if (selectedFolder === folderId) {
+                setSelectedFolder(null);
+            }
+        } catch (error) {
+            console.error('Error al eliminar carpeta:', error);
+        }
+    };
+
+    // Guardar posts seleccionados en la carpeta
+    const handleSaveToFolder = async () => {
+        if (!selectedFolder || selectedPosts.length === 0) return;
+
+        try {
+            const token = localStorage.getItem('authToken');
+            if (!token) return;
+            const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+            // Para cada post seleccionado, llamamos al endpoint para añadirlo a la carpeta
+            const promises = selectedPosts.map(postId =>
+                axios.post(
+                    `${backendUrl}/api/folders/add`,
+                    { folderId: selectedFolder, postId },
+                    { headers: { Authorization: `Bearer ${token}` } }
+                )
+            );
+
+            await Promise.all(promises);
+
+            // Actualizamos la lista de carpetas para reflejar los cambios
+            const res = await axios.get(`${backendUrl}/api/folders`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            if (res.data.folders) {
+                setFolders(res.data.folders);
+            }
+
+            // Limpiamos la selección
+            setSelectedPosts([]);
+            setIsSelecting(false);
+        } catch (error) {
+            console.error('Error al guardar en carpeta:', error);
+        }
     };
 
     return (
@@ -125,10 +227,20 @@ const Guardados = () => {
                 <div className="guardados-step">
                     <h3>Paso 1</h3>
                     <p>Selecciona la carpeta donde deseas guardar fotos</p>
-                    <div className="guardados-folders-options">
-                        <button>Otra carpeta</button>
-                        <button>Añadir otra carpeta</button>
-                        <button>Más carpetas</button>
+                    <div className="guardados-folders-tags">
+                        {folders.length > 0 ? (
+                            folders.map(folder => (
+                                <div
+                                    key={folder._id}
+                                    className={`folder-tag ${selectedFolder === folder._id ? 'selected' : ''}`}
+                                    onClick={() => setSelectedFolder(folder._id)}
+                                >
+                                    {folder.name}
+                                </div>
+                            ))
+                        ) : (
+                            <p className="no-folders-message">No tienes carpetas creadas. Crea una para comenzar.</p>
+                        )}
                     </div>
                 </div>
 
@@ -183,10 +295,13 @@ const Guardados = () => {
                         })}
                     </div>
 
-                    {isSelecting && (
-                        <div style={{ marginTop: '1rem' }}>
-                            <button onClick={handleMoveToFolder}>
-                                Mover {selectedPosts.length} imágenes a una carpeta
+                    {isSelecting && selectedPosts.length > 0 && selectedFolder && (
+                        <div className="save-to-folder-button-container">
+                            <button
+                                className="save-to-folder-button"
+                                onClick={handleSaveToFolder}
+                            >
+                                Guardar en esta carpeta
                             </button>
                         </div>
                     )}
@@ -195,15 +310,64 @@ const Guardados = () => {
 
             {/* Columna Derecha */}
             <div className="guardados-right">
-                <h2>Tus carpetas</h2>
+                <div className="folder-header">
+                    <h2>Tus carpetas</h2>
+                    <div className="folder-actions">
+                        <button
+                            className="folder-action-button"
+                            onClick={() => setIsCreatingFolder(!isCreatingFolder)}
+                        >
+                            <FaPlus /> Nueva carpeta
+                        </button>
+                        <button
+                            className="folder-action-button"
+                            onClick={() => setIsEditingFolders(!isEditingFolders)}
+                        >
+                            <FaPencilAlt /> Editar
+                        </button>
+                    </div>
+                </div>
                 <p>
                     Personaliza tus carpetas y organiza tu contenido guardado de la forma que más te guste
                 </p>
-                <div className="guardados-main-folder">
-                    <div className="folder-card">
-                        <p>Carpeta principal</p>
+
+                {isCreatingFolder && (
+                    <div className="new-folder-form">
+                        <input
+                            type="text"
+                            value={newFolderName}
+                            onChange={(e) => setNewFolderName(e.target.value)}
+                            placeholder="Nombre de la carpeta"
+                        />
+                        <div className="new-folder-actions">
+                            <button onClick={handleCreateFolder}>
+                                <FaCheck /> Crear
+                            </button>
+                            <button onClick={() => {
+                                setIsCreatingFolder(false);
+                                setNewFolderName('');
+                            }}>
+                                <FaTimes /> Cancelar
+                            </button>
+                        </div>
                     </div>
-                    {/* Aquí podrías mapear tus carpetas reales si lo deseas */}
+                )}
+
+                <div className="guardados-folders">
+                    {folders.map(folder => (
+                        <div key={folder._id} className="folder-card">
+                            <p>{folder.name}</p>
+                            <span className="post-count">{folder.posts?.length || 0} fotos</span>
+                            {isEditingFolders && (
+                                <button
+                                    className="delete-folder-button"
+                                    onClick={() => handleDeleteFolder(folder._id)}
+                                >
+                                    <FaTimes />
+                                </button>
+                            )}
+                        </div>
+                    ))}
                 </div>
             </div>
         </div>

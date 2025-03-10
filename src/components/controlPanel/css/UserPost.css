@@ -164,6 +164,11 @@
     gap: 1em;
 }
 
+.perfil__publicacion{
+    padding: .7em 1em;
+    background-color: #ececec;
+}
+
 .perfil__usuario {
     display: flex;
     gap: 1em;

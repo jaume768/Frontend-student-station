@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { FaUpload, FaArrowLeft, FaArrowRight, FaTrash, FaCheck } from 'react-icons/fa';
+import { FaUpload, FaArrowLeft, FaArrowRight, FaTrash, FaCheck, FaEye, FaTimes } from 'react-icons/fa';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import './css/CreatePost.css';
 
 const CreatePost = () => {
@@ -77,6 +78,9 @@ const CreatePost = () => {
 
     const [isLoading, setIsLoading] = useState(false);
     const [uploadSuccess, setUploadSuccess] = useState(false);
+    const [createdPostId, setCreatedPostId] = useState(null);
+
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -94,13 +98,17 @@ const CreatePost = () => {
         try {
             const token = localStorage.getItem('authToken');
             const backendUrl = import.meta.env.VITE_BACKEND_URL;
-            await axios.post(`${backendUrl}/api/posts`, formData, {
+            const response = await axios.post(`${backendUrl}/api/posts`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${token}`,
                 },
             });
             setUploadSuccess(true);
+            // Guardamos el ID del post creado para poder navegar a él
+            if (response.data && response.data.post && response.data.post._id) {
+                setCreatedPostId(response.data.post._id);
+            }
             setImages([]);
             setPostTitle('');
             setPostDescription('');
@@ -128,6 +136,14 @@ const CreatePost = () => {
         const newImages = reorder(images, result.source.index, result.destination.index);
         setImages(newImages);
         setMainImageIndex(0); // La primera foto será la principal
+    };
+
+    // Navegación al post recién creado
+    const handleViewPost = () => {
+        if (createdPostId) {
+            navigate(`/ControlPanel/post/${createdPostId}`);
+        }
+        setUploadSuccess(false);
     };
 
     return (
@@ -357,6 +373,7 @@ const CreatePost = () => {
                                                                 alt={`Foto ${index + 1}`}
                                                                 className="order-thumbnail"
                                                             />
+                                                            <div className="order-number">{index + 1}</div>
                                                         </div>
                                                     )}
                                                 </Draggable>
@@ -365,19 +382,17 @@ const CreatePost = () => {
                                         </div>
                                     )}
                                 </Droppable>
-                                <p className="order-instruction">
-                                    Arrastra y suelta para cambiar el orden. La primera foto será la principal.
+                                <p className="drag-instruction">
+                                    Arrastra para reordenar las fotos. La primera será la imagen principal del post.
                                 </p>
                             </div>
                         )}
-                        <button type="submit" className="publish-btn" disabled={!isFormComplete}>
-                            {isFormComplete ? (
-                                <>
-                                    <FaUpload size={16} /> Publicar post
-                                </>
-                            ) : (
-                                "Publicar post"
-                            )}
+                        <button
+                            type="submit"
+                            className={`publish-btn ${isFormComplete ? 'active' : 'inactive'}`}
+                            disabled={!isFormComplete || isLoading}
+                        >
+                            {isLoading ? 'Publicando...' : 'Publicar'}
                         </button>
                     </form>
                 </div>
@@ -387,9 +402,33 @@ const CreatePost = () => {
                     </div>
                 )}
                 {uploadSuccess && (
-                    <div className="success-popup">
-                        <p>¡Post subido correctamente!</p>
-                        <button onClick={() => setUploadSuccess(false)}>Cerrar</button>
+                    <div className="success-popup-overlay">
+                        <div className="success-popup">
+                            <div className="success-popup-header">
+                                <h3>¡Post publicado con éxito!</h3>
+                                <button
+                                    className="close-popup-btn"
+                                    onClick={() => setUploadSuccess(false)}
+                                >
+                                    <FaTimes />
+                                </button>
+                            </div>
+                            <p>Tu publicación ha sido subida correctamente y ya está disponible para toda la comunidad.</p>
+                            <div className="success-popup-actions">
+                                <button
+                                    className="view-post-btn"
+                                    onClick={handleViewPost}
+                                >
+                                    <FaEye /> Ver publicación
+                                </button>
+                                <button
+                                    className="close-btn"
+                                    onClick={() => setUploadSuccess(false)}
+                                >
+                                    Cerrar
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 )}
             </div>
