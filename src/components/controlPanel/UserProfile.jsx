@@ -13,6 +13,7 @@ const UserProfile = () => {
     const [error, setError] = useState(null);
     const [isFollowing, setIsFollowing] = useState(false);
     const [followLoading, setFollowLoading] = useState(false);
+    const [postsLoading, setPostsLoading] = useState(false);
 
     const { username } = useParams(); // Captura el nombre de usuario de la URL
     const navigate = useNavigate();
@@ -32,6 +33,17 @@ const UserProfile = () => {
                 // Comprobamos si el usuario ya sigue a este perfil
                 if (res.data.isFollowing !== undefined) {
                     setIsFollowing(res.data.isFollowing);
+                } else if (token && res.data._id) {
+                    // Si no viene la información de seguimiento, hacemos una consulta adicional
+                    try {
+                        const followCheckRes = await axios.get(
+                            `${backendUrl}/api/users/check-follow/${res.data._id}`,
+                            { headers }
+                        );
+                        setIsFollowing(followCheckRes.data.isFollowing);
+                    } catch (followErr) {
+                        console.error("Error al verificar estado de seguimiento", followErr);
+                    }
                 }
 
                 setLoading(false);
@@ -47,54 +59,34 @@ const UserProfile = () => {
         }
     }, [username]);
 
-    // Efecto para obtener las publicaciones del usuario externo
+    // Efecto para cargar las publicaciones del usuario
     useEffect(() => {
         const fetchUserPosts = async () => {
+            if (!username || loading) return;
+
             try {
+                setPostsLoading(true);
                 const backendUrl = import.meta.env.VITE_BACKEND_URL;
                 const res = await axios.get(`${backendUrl}/api/posts/user/${username}`);
-                setUserPosts(res.data.posts || []);
+
+                if (res.data && res.data.posts) {
+                    setUserPosts(res.data.posts);
+                } else {
+                    setUserPosts([]);
+                }
+                setPostsLoading(false);
             } catch (error) {
                 console.error("Error al cargar las publicaciones del usuario", error);
+                setUserPosts([]);
+                setPostsLoading(false);
             }
         };
 
-        if (username && !loading && profile) {
-            fetchUserPosts();
-        }
-    }, [username, loading, profile]);
+        fetchUserPosts();
+    }, [username, loading]);
 
     const toggleView = () => {
         setIsGalleryView(prev => !prev);
-    };
-
-    const totalGridItems = 15;
-    const renderProjectsGrid = () => {
-        return [...Array(totalGridItems)].map((_, index) => {
-            if (index < userPosts.length) {
-                const post = userPosts[index];
-                return (
-                    <div
-                        key={index}
-                        className="user-profile-project-placeholder"
-                        onClick={() => navigate(`/ControlPanel/post/${post._id}`)}
-                        style={{ cursor: 'pointer' }}
-                    >
-                        <img
-                            src={post.mainImage}
-                            alt={`Publicación ${index + 1}`}
-                            style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }}
-                        />
-                    </div>
-                );
-            } else {
-                return (
-                    <div key={index} className="user-profile-project-placeholder">
-                        {/* Placeholder sin imagen */}
-                    </div>
-                );
-            }
-        });
     };
 
     // Función para seguir o dejar de seguir a un usuario
@@ -333,23 +325,65 @@ const UserProfile = () => {
                 </div>
 
                 <div className={`user-profile-right ${activeTab === 'publicaciones' ? 'active' : ''}`}>
-                    <div
-                        className="user-profile-projects-controls"
-                        style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px' }}
-                    >
-                        <button onClick={toggleView} className="toggle-view-btn">
-                            {isGalleryView ? <FaList size={20} /> : <FaTh size={20} />}
+                    <div className="user-profile-view-toggle">
+                        <button
+                            className={`user-profile-view-button ${isGalleryView ? 'active' : ''}`}
+                            onClick={() => setIsGalleryView(true)}
+                        >
+                            <FaTh /> Cuadrícula
+                        </button>
+                        <button
+                            className={`user-profile-view-button ${!isGalleryView ? 'active' : ''}`}
+                            onClick={() => setIsGalleryView(false)}
+                        >
+                            <FaList /> Lista
                         </button>
                     </div>
-                    <div
-                        className={`user-profile-projects-grid ${isGalleryView ? 'gallery' : 'individual'}`}
-                    >
-                        {userPosts.length > 0 ? (
-                            renderProjectsGrid()
-                        ) : (
-                            <p className="user-profile-no-posts">Este usuario aún no tiene publicaciones.</p>
-                        )}
-                    </div>
+
+                    {postsLoading ? (
+                        <div className="user-profile-loading">Cargando publicaciones...</div>
+                    ) : userPosts.length === 0 ? (
+                        <div className="user-profile-no-posts">
+                            <p>Este usuario aún no tiene publicaciones.</p>
+                        </div>
+                    ) : isGalleryView ? (
+                        <div className="user-profile-projects-grid">
+                            {userPosts.map((post, index) => (
+                                <div
+                                    key={post._id}
+                                    className="user-profile-project-placeholder"
+                                    onClick={() => navigate(`/ControlPanel/post/${post._id}`)}
+                                    style={{ cursor: 'pointer' }}
+                                >
+                                    <img
+                                        src={post.mainImage}
+                                        alt={`Publicación ${index + 1}`}
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }}
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="user-profile-projects-list">
+                            {userPosts.map((post, index) => (
+                                <div
+                                    key={post._id}
+                                    className="user-profile-project-list-item"
+                                    onClick={() => navigate(`/ControlPanel/post/${post._id}`)}
+                                >
+                                    <img
+                                        src={post.mainImage}
+                                        alt={`Publicación ${index + 1}`}
+                                        className="user-profile-project-list-image"
+                                    />
+                                    <div className="user-profile-project-list-info">
+                                        <h3>{post.title}</h3>
+                                        <p>{post.description}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

@@ -61,7 +61,7 @@ const MyComunity = () => {
 
     // Navegar al perfil de usuario
     const navigateToProfile = (username) => {
-        navigate(`/control-panel/profile/${username}`);
+        navigate(`/ControlPanel/profile/${username}`);
     };
 
     return (
