@@ -9,7 +9,6 @@
 .guardados-left,
 .guardados-right {
     flex: 1;
-    background-color: #f9f9f9;
     border-radius: 8px;
     padding: 1.5rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
@@ -212,10 +211,16 @@
     margin-top: 1rem;
 }
 
+.folder-list{
+    display: flex;
+    gap: 10px;
+}
+
 .folder-card {
     background-color: #f9f9f9;
     border-radius: 10px;
     padding: 15px;
+    width: 200px;
     margin-bottom: 15px;
     cursor: pointer;
     border: 2px solid transparent;
