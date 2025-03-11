@@ -224,6 +224,13 @@ const Guardados = () => {
         }
     };
 
+    // Para ver el contenido completo de la carpeta
+    const openFolderContent = (folderId) => {
+        if (!isEditingFolders) {
+            navigate(`/ControlPanel/guardados/folder/${folderId}`);
+        }
+    };
+
     return (
         <div className="guardados-container">
             {/* Columna Izquierda */}
@@ -393,15 +400,49 @@ const Guardados = () => {
                             </div>
                         ))
                     ) : (
-                        // Modo normal: mostrar carpetas sin acciones
+                        // Modo normal: mostrar carpetas con miniaturas de posts
                         folders.map(folder => (
                             <div
                                 key={folder._id}
                                 className={`folder-card ${selectedFolder === folder._id ? 'selected' : ''}`}
-                                onClick={() => setSelectedFolder(folder._id)}
+                                onClick={() => {
+                                    setSelectedFolder(folder._id);
+                                    openFolderContent(folder._id);
+                                }}
                             >
-                                <p>{folder.name}</p>
-                                <span className="folder-count">{folder.posts?.length || 0} fotos</span>
+                                <div className="folder-thumbnail-container">
+                                    {folder.posts && folder.posts.length > 0 ? (
+                                        <>
+                                            {/* Mostrar hasta 4 miniaturas de posts en un grid */}
+                                            {folder.posts.slice(0, Math.min(4, folder.posts.length)).map((postId, index) => {
+                                                // Buscar el post completo para obtener la imagen principal
+                                                const post = savedPosts.find(p => p._id === postId);
+                                                return (
+                                                    <div
+                                                        key={postId}
+                                                        className={`folder-thumbnail thumbnail-${Math.min(4, folder.posts.length)}`}
+                                                    >
+                                                        {post && post.mainImage && (
+                                                            <img
+                                                                src={post.mainImage}
+                                                                alt=""
+                                                                className="folder-thumbnail-img"
+                                                            />
+                                                        )}
+                                                    </div>
+                                                );
+                                            })}
+                                        </>
+                                    ) : (
+                                        <div className="empty-folder-thumbnail">
+                                            <span>Vacía</span>
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="folder-info">
+                                    <p className="folder-name">{folder.name}</p>
+                                    <span className="folder-count">{folder.posts?.length || 0} fotos</span>
+                                </div>
                             </div>
                         ))
                     )}

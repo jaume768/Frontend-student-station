@@ -8,6 +8,7 @@ import CreatePost from '../components/controlPanel/CreatePost';
 import UserPost from '../components/controlPanel/UserPost';
 import Guardados from '../components/controlPanel/Guardados';
 import UserProfile from '../components/controlPanel/UserProfile';
+import FolderContent from '../components/controlPanel/FolderContent';
 import './css/control-panel.css';
 
 const ControlPanel = () => {
@@ -45,6 +46,7 @@ const ControlPanel = () => {
             <Routes>
                 <Route path="post/:id" element={<UserPost />} />
                 <Route path="profile/:username" element={<UserProfile />} />
+                <Route path="guardados/folder/:folderId" element={<FolderContent />} />
                 <Route
                     path="*"
                     element={

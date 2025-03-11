@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FaTh, FaList, FaLinkedin, FaInstagram } from 'react-icons/fa';
+import { FaTh, FaList, FaLinkedin, FaInstagram, FaUserPlus, FaUserCheck } from 'react-icons/fa';
 import './css/UserProfile.css';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -11,6 +11,8 @@ const UserProfile = () => {
     const [userPosts, setUserPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isFollowing, setIsFollowing] = useState(false);
+    const [followLoading, setFollowLoading] = useState(false);
 
     const { username } = useParams(); // Captura el nombre de usuario de la URL
     const navigate = useNavigate();
@@ -21,8 +23,17 @@ const UserProfile = () => {
             try {
                 setLoading(true);
                 const backendUrl = import.meta.env.VITE_BACKEND_URL;
-                const res = await axios.get(`${backendUrl}/api/users/profile/${username}`);
+                const token = localStorage.getItem('authToken');
+                const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+                const res = await axios.get(`${backendUrl}/api/users/profile/${username}`, { headers });
                 setProfile(res.data);
+
+                // Comprobamos si el usuario ya sigue a este perfil
+                if (res.data.isFollowing !== undefined) {
+                    setIsFollowing(res.data.isFollowing);
+                }
+
                 setLoading(false);
             } catch (error) {
                 console.error("Error al cargar el perfil del usuario", error);
@@ -30,7 +41,7 @@ const UserProfile = () => {
                 setLoading(false);
             }
         };
-        
+
         if (username) {
             fetchUserProfile();
         }
@@ -47,7 +58,7 @@ const UserProfile = () => {
                 console.error("Error al cargar las publicaciones del usuario", error);
             }
         };
-        
+
         if (username && !loading && profile) {
             fetchUserPosts();
         }
@@ -84,6 +95,38 @@ const UserProfile = () => {
                 );
             }
         });
+    };
+
+    // Función para seguir o dejar de seguir a un usuario
+    const handleFollowToggle = async () => {
+        if (!profile || !profile._id) return;
+
+        try {
+            setFollowLoading(true);
+            const backendUrl = import.meta.env.VITE_BACKEND_URL;
+            const token = localStorage.getItem('authToken');
+
+            if (!token) {
+                navigate('/login');
+                return;
+            }
+
+            const headers = { Authorization: `Bearer ${token}` };
+
+            if (isFollowing) {
+                // Dejar de seguir
+                await axios.delete(`${backendUrl}/api/users/follow/${profile._id}`, { headers });
+                setIsFollowing(false);
+            } else {
+                // Seguir
+                await axios.post(`${backendUrl}/api/users/follow/${profile._id}`, {}, { headers });
+                setIsFollowing(true);
+            }
+        } catch (error) {
+            console.error("Error al seguir/dejar de seguir", error);
+        } finally {
+            setFollowLoading(false);
+        }
     };
 
     if (loading) {
@@ -125,6 +168,35 @@ const UserProfile = () => {
                                 ? `${profile.city}, ${profile.country}`
                                 : "Ubicación no especificada"}
                         </p>
+                        <div className="user-profile-stats">
+                            <span className="user-profile-stat">
+                                <strong>{profile?.followersCount || 0}</strong> seguidores
+                            </span>
+                            <span className="user-profile-stat">
+                                <strong>{profile?.followingCount || 0}</strong> seguidos
+                            </span>
+                        </div>
+
+                        {/* Solo mostrar el botón de seguir/dejar de seguir si no es el perfil del usuario actual */}
+                        {profile && profile._id !== localStorage.getItem('userId') && (
+                            <button
+                                className={`follow-button ${isFollowing ? 'following' : ''}`}
+                                onClick={handleFollowToggle}
+                                disabled={followLoading}
+                            >
+                                {followLoading ? (
+                                    'Procesando...'
+                                ) : isFollowing ? (
+                                    <>
+                                        <FaUserCheck /> Siguiendo
+                                    </>
+                                ) : (
+                                    <>
+                                        <FaUserPlus /> Seguir
+                                    </>
+                                )}
+                            </button>
+                        )}
                     </div>
                 </header>
                 <div className="user-profile-mobile-tabs">
