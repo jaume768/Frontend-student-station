@@ -121,6 +121,61 @@ const UserProfile = () => {
         }
     };
 
+    // Función para renderizar la cuadrícula de proyectos, similar a MiPerfil.jsx
+    const renderProjectsGrid = () => {
+        if (userPosts.length === 0) {
+            return (
+                <div className="user-profile-no-posts">
+                    <p>Este usuario aún no tiene publicaciones.</p>
+                </div>
+            );
+        }
+
+        return userPosts.map((post, index) => (
+            <div
+                key={post._id}
+                className="user-profile-project-placeholder"
+                onClick={() => navigate(`/ControlPanel/post/${post._id}`)}
+                style={{ cursor: 'pointer' }}
+            >
+                <img
+                    src={post.mainImage}
+                    alt={`Publicación ${index + 1}`}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }}
+                />
+            </div>
+        ));
+    };
+
+    // Función para renderizar la vista de lista
+    const renderProjectsList = () => {
+        if (userPosts.length === 0) {
+            return (
+                <div className="user-profile-no-posts">
+                    <p>Este usuario aún no tiene publicaciones.</p>
+                </div>
+            );
+        }
+
+        return userPosts.map((post, index) => (
+            <div
+                key={post._id}
+                className="user-profile-project-list-item"
+                onClick={() => navigate(`/ControlPanel/post/${post._id}`)}
+            >
+                <img
+                    src={post.mainImage}
+                    alt={`Publicación ${index + 1}`}
+                    className="user-profile-project-list-image"
+                />
+                <div className="user-profile-project-list-info">
+                    <h3>{post.title}</h3>
+                    <p>{post.description}</p>
+                </div>
+            </div>
+        ));
+    };
+
     if (loading) {
         return (
             <div className="user-profile-loading">
@@ -180,7 +235,7 @@ const UserProfile = () => {
                                     'Procesando...'
                                 ) : isFollowing ? (
                                     <>
-                                        <FaUserCheck /> Siguiendo
+                                        <FaUserCheck /> Dejar de seguir
                                     </>
                                 ) : (
                                     <>
@@ -342,46 +397,13 @@ const UserProfile = () => {
 
                     {postsLoading ? (
                         <div className="user-profile-loading">Cargando publicaciones...</div>
-                    ) : userPosts.length === 0 ? (
-                        <div className="user-profile-no-posts">
-                            <p>Este usuario aún no tiene publicaciones.</p>
-                        </div>
                     ) : isGalleryView ? (
                         <div className="user-profile-projects-grid">
-                            {userPosts.map((post, index) => (
-                                <div
-                                    key={post._id}
-                                    className="user-profile-project-placeholder"
-                                    onClick={() => navigate(`/ControlPanel/post/${post._id}`)}
-                                    style={{ cursor: 'pointer' }}
-                                >
-                                    <img
-                                        src={post.mainImage}
-                                        alt={`Publicación ${index + 1}`}
-                                        style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }}
-                                    />
-                                </div>
-                            ))}
+                            {renderProjectsGrid()}
                         </div>
                     ) : (
                         <div className="user-profile-projects-list">
-                            {userPosts.map((post, index) => (
-                                <div
-                                    key={post._id}
-                                    className="user-profile-project-list-item"
-                                    onClick={() => navigate(`/ControlPanel/post/${post._id}`)}
-                                >
-                                    <img
-                                        src={post.mainImage}
-                                        alt={`Publicación ${index + 1}`}
-                                        className="user-profile-project-list-image"
-                                    />
-                                    <div className="user-profile-project-list-info">
-                                        <h3>{post.title}</h3>
-                                        <p>{post.description}</p>
-                                    </div>
-                                </div>
-                            ))}
+                            {renderProjectsList()}
                         </div>
                     )}
                 </div>

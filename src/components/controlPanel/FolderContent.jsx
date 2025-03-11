@@ -20,31 +20,39 @@ const FolderContent = () => {
                     navigate('/login');
                     return;
                 }
-                
+
                 const backendUrl = import.meta.env.VITE_BACKEND_URL;
-                
+
                 // Obtener información de la carpeta
                 const folderRes = await axios.get(`${backendUrl}/api/folders/${folderId}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
-                
+
                 setFolder(folderRes.data.folder);
-                
-                // Cargar los posts completos para tener acceso a las imágenes principales
+
+                // Si la carpeta tiene posts, cargar los detalles de cada uno
                 if (folderRes.data.folder && folderRes.data.folder.posts && folderRes.data.folder.posts.length > 0) {
-                    const postsWithDetails = await Promise.all(
-                        folderRes.data.folder.posts.map(async (postId) => {
-                            const postRes = await axios.get(`${backendUrl}/api/posts/${postId}`, {
-                                headers: { Authorization: `Bearer ${token}` }
-                            });
-                            return postRes.data.post;
+                    const postsPromises = folderRes.data.folder.posts.map(postId =>
+                        axios.get(`${backendUrl}/api/posts/${postId}`, {
+                            headers: { Authorization: `Bearer ${token}` }
                         })
+                            .then(res => res.data.post)
+                            .catch(err => {
+                                console.error(`Error al cargar post ${postId}:`, err);
+                                return null;
+                            })
                     );
-                    
-                    setPosts(postsWithDetails.filter(post => post !== null));
+
+                    const postsWithDetails = await Promise.all(postsPromises);
+                    // Filtrar posts nulos (que pueden ocurrir si hay errores en la solicitud)
+                    const validPosts = postsWithDetails.filter(post => post !== null);
+                    setPosts(validPosts);
+                } else {
+                    setPosts([]);
                 }
             } catch (error) {
                 console.error('Error fetching folder content:', error);
+                setPosts([]);
             } finally {
                 setLoading(false);
             }
@@ -84,18 +92,34 @@ const FolderContent = () => {
             </div>
 
             {posts.length > 0 ? (
-                <div className="folder-content-masonry">
-                    {posts.map(post => (
-                        <div 
-                            key={post._id} 
+                <div className="explorer-gallery folder-content-masonry">
+                    {posts.map((post) => (
+                        <div
+                            key={post._id}
                             className="masonry-item"
                             onClick={() => openPost(post._id)}
                         >
-                            <img 
-                                src={post.mainImage} 
-                                alt={`Post guardado`}
+                            <img
+                                src={post.mainImage}
+                                alt={post.title || 'Post guardado'}
                                 className="masonry-image"
                             />
+                            <div className="overlay">
+                                <div className="user-info">
+                                    <img
+                                        src={post.author?.profilePicture || "/multimedia/usuarioDefault.jpg"}
+                                        alt={post.author?.username || "Usuario"}
+                                    />
+                                    <span>{post.author?.username || "Usuario"}</span>
+                                </div>
+                                {post.location && (
+                                    <div className="location-info">
+                                        <i className="location-icon fas fa-map-marker-alt"></i>
+                                        <span>{post.location}</span>
+                                    </div>
+                                )}
+                                {post.category && <div className="tag-label">{post.category}</div>}
+                            </div>
                         </div>
                     ))}
                 </div>
