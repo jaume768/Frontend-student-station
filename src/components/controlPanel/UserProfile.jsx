@@ -15,10 +15,10 @@ const UserProfile = () => {
     const [followLoading, setFollowLoading] = useState(false);
     const [postsLoading, setPostsLoading] = useState(false);
 
-    const { username } = useParams(); // Captura el nombre de usuario de la URL
+    const { username } = useParams();
     const navigate = useNavigate();
 
-    // Efecto para cargar el perfil del usuario externo
+    // Cargar perfil del usuario externo
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
@@ -30,11 +30,10 @@ const UserProfile = () => {
                 const res = await axios.get(`${backendUrl}/api/users/profile/${username}`, { headers });
                 setProfile(res.data);
 
-                // Comprobamos si el usuario ya sigue a este perfil
+                // Verificar si ya se sigue este perfil
                 if (res.data.isFollowing !== undefined) {
                     setIsFollowing(res.data.isFollowing);
                 } else if (token && res.data._id) {
-                    // Si no viene la información de seguimiento, hacemos una consulta adicional
                     try {
                         const followCheckRes = await axios.get(
                             `${backendUrl}/api/users/check-follow/${res.data._id}`,
@@ -59,7 +58,7 @@ const UserProfile = () => {
         }
     }, [username]);
 
-    // Efecto para cargar las publicaciones del usuario
+    // Cargar publicaciones del usuario
     useEffect(() => {
         const fetchUserPosts = async () => {
             if (!username || loading) return;
@@ -85,11 +84,12 @@ const UserProfile = () => {
         fetchUserPosts();
     }, [username, loading]);
 
+    // Función para alternar vista de publicaciones (toggle)
     const toggleView = () => {
         setIsGalleryView(prev => !prev);
     };
 
-    // Función para seguir o dejar de seguir a un usuario
+    // Función para seguir/dejar de seguir al usuario
     const handleFollowToggle = async () => {
         if (!profile || !profile._id) return;
 
@@ -106,11 +106,9 @@ const UserProfile = () => {
             const headers = { Authorization: `Bearer ${token}` };
 
             if (isFollowing) {
-                // Dejar de seguir
                 await axios.delete(`${backendUrl}/api/users/follow/${profile._id}`, { headers });
                 setIsFollowing(false);
             } else {
-                // Seguir
                 await axios.post(`${backendUrl}/api/users/follow/${profile._id}`, {}, { headers });
                 setIsFollowing(true);
             }
@@ -121,59 +119,34 @@ const UserProfile = () => {
         }
     };
 
-    // Función para renderizar la cuadrícula de proyectos, similar a MiPerfil.jsx
+    // Se fija un total fijo de elementos (15) para imitar MiPerfil
+    const totalGridItems = 15;
     const renderProjectsGrid = () => {
-        if (userPosts.length === 0) {
-            return (
-                <div className="user-profile-no-posts">
-                    <p>Este usuario aún no tiene publicaciones.</p>
-                </div>
-            );
-        }
-
-        return userPosts.map((post, index) => (
-            <div
-                key={post._id}
-                className="user-profile-project-placeholder"
-                onClick={() => navigate(`/ControlPanel/post/${post._id}`)}
-                style={{ cursor: 'pointer' }}
-            >
-                <img
-                    src={post.mainImage}
-                    alt={`Publicación ${index + 1}`}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }}
-                />
-            </div>
-        ));
-    };
-
-    // Función para renderizar la vista de lista
-    const renderProjectsList = () => {
-        if (userPosts.length === 0) {
-            return (
-                <div className="user-profile-no-posts">
-                    <p>Este usuario aún no tiene publicaciones.</p>
-                </div>
-            );
-        }
-
-        return userPosts.map((post, index) => (
-            <div
-                key={post._id}
-                className="user-profile-project-list-item"
-                onClick={() => navigate(`/ControlPanel/post/${post._id}`)}
-            >
-                <img
-                    src={post.mainImage}
-                    alt={`Publicación ${index + 1}`}
-                    className="user-profile-project-list-image"
-                />
-                <div className="user-profile-project-list-info">
-                    <h3>{post.title}</h3>
-                    <p>{post.description}</p>
-                </div>
-            </div>
-        ));
+        return [...Array(totalGridItems)].map((_, index) => {
+            if (index < userPosts.length) {
+                const post = userPosts[index];
+                return (
+                    <div
+                        key={post._id}
+                        className="user-profile-project-placeholder"
+                        onClick={() => navigate(`/ControlPanel/post/${post._id}`)}
+                        style={{ cursor: 'pointer' }}
+                    >
+                        <img
+                            src={post.mainImage}
+                            alt={`Publicación ${index + 1}`}
+                            style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }}
+                        />
+                    </div>
+                );
+            } else {
+                return (
+                    <div key={index} className="user-profile-project-placeholder">
+                        {/* Placeholder sin imagen */}
+                    </div>
+                );
+            }
+        });
     };
 
     if (loading) {
@@ -224,7 +197,6 @@ const UserProfile = () => {
                             </span>
                         </div>
 
-                        {/* Solo mostrar el botón de seguir/dejar de seguir si no es el perfil del usuario actual */}
                         {profile && profile._id !== localStorage.getItem('userId') && (
                             <button
                                 className={`follow-button ${isFollowing ? 'following' : ''}`}
@@ -380,32 +352,18 @@ const UserProfile = () => {
                 </div>
 
                 <div className={`user-profile-right ${activeTab === 'publicaciones' ? 'active' : ''}`}>
-                    <div className="user-profile-view-toggle">
-                        <button
-                            className={`user-profile-view-button ${isGalleryView ? 'active' : ''}`}
-                            onClick={() => setIsGalleryView(true)}
-                        >
-                            <FaTh /> Cuadrícula
-                        </button>
-                        <button
-                            className={`user-profile-view-button ${!isGalleryView ? 'active' : ''}`}
-                            onClick={() => setIsGalleryView(false)}
-                        >
-                            <FaList /> Lista
+                    <div className="user-profile-projects-controls">
+                        <button onClick={toggleView} className="toggle-view-btn">
+                            {isGalleryView ? <FaList size={20} /> : <FaTh size={20} />}
                         </button>
                     </div>
-
-                    {postsLoading ? (
-                        <div className="user-profile-loading">Cargando publicaciones...</div>
-                    ) : isGalleryView ? (
-                        <div className="user-profile-projects-grid">
-                            {renderProjectsGrid()}
-                        </div>
-                    ) : (
-                        <div className="user-profile-projects-list">
-                            {renderProjectsList()}
-                        </div>
-                    )}
+                    <div className={`user-profile-projects-grid ${isGalleryView ? 'gallery' : 'individual'}`}>
+                        {postsLoading ? (
+                            <div className="user-profile-loading">Cargando publicaciones...</div>
+                        ) : (
+                            renderProjectsGrid()
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
