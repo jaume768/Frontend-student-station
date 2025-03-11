@@ -31,8 +31,14 @@ const FolderContent = () => {
                 setFolder(folderRes.data.folder);
 
                 // Si la carpeta tiene posts, cargar los detalles de cada uno
-                if (folderRes.data.folder && folderRes.data.folder.posts && folderRes.data.folder.posts.length > 0) {
-                    const postsPromises = folderRes.data.folder.posts.map(postId =>
+                if (folderRes.data.folder && Array.isArray(folderRes.data.folder.posts) && folderRes.data.folder.posts.length > 0) {
+                    // Para asegurarnos de que estamos trabajando con IDs (strings) y no objetos
+                    const postIds = folderRes.data.folder.posts.map(post =>
+                        typeof post === 'string' ? post : post._id ? post._id : post.toString()
+                    );
+
+                    // Cargar los detalles de cada post usando los IDs correctos
+                    const postsPromises = postIds.map(postId =>
                         axios.get(`${backendUrl}/api/posts/${postId}`, {
                             headers: { Authorization: `Bearer ${token}` }
                         })
@@ -47,7 +53,9 @@ const FolderContent = () => {
                     // Filtrar posts nulos (que pueden ocurrir si hay errores en la solicitud)
                     const validPosts = postsWithDetails.filter(post => post !== null);
                     setPosts(validPosts);
+                    console.log("Posts cargados correctamente:", validPosts.length);
                 } else {
+                    console.log("No se encontraron posts en la carpeta");
                     setPosts([]);
                 }
             } catch (error) {
