@@ -10,6 +10,7 @@ import UserPost from '../components/controlPanel/UserPost';
 import Guardados from '../components/controlPanel/Guardados';
 import UserProfile from '../components/controlPanel/UserProfile';
 import FolderContent from '../components/controlPanel/FolderContent';
+import Creatives from '../components/controlPanel/Creatives';
 import './css/control-panel.css';
 
 const ControlPanel = () => {
@@ -133,11 +134,11 @@ const ControlPanel = () => {
                                         />
                                         <span>{item.user.username}</span>
                                     </div>
-                                    {(item.user.city || item.user.country) && (
+                                    {(item.user.country) && (
                                         <div className="location-info">
                                             <i className="location-icon fas fa-map-marker-alt"></i>
                                             <span>
-                                                {[item.user.city, item.user.country].filter(Boolean).join(', ')}
+                                                {item.user.country}
                                             </span>
                                         </div>
                                     )}
@@ -174,7 +175,7 @@ const ControlPanel = () => {
                                 case 'explorer':
                                     return renderExplorer();
                                 case 'creatives':
-                                    return <div><h1>Contenido de Creativos</h1></div>;
+                                    return <Creatives />;
                                 case 'fashion':
                                     return <div><h1>Contenido de Estudiar Moda</h1></div>;
                                 case 'blog':
