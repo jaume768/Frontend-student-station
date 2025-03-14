@@ -267,7 +267,7 @@
 }
 
 .explorer-gallery {
-    column-count: 7;
+    column-count: 6;
     column-gap: 16px;
 }
 
@@ -277,6 +277,8 @@
     break-inside: avoid;
     overflow: hidden;
     border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    cursor: pointer;
 }
 
 .masonry-item img {
@@ -289,6 +291,7 @@
     transform: scale(1.05);
 }
 
+/* Overlay con información sobre la imagen */
 .overlay {
     position: absolute;
     top: 0;
@@ -392,6 +395,34 @@
     opacity: 1;
 }
 
+/* Loading indicators and messages */
+.loading-indicator, 
+.error-message, 
+.end-message {
+    text-align: center;
+    padding: 20px;
+    margin: 20px 0;
+    width: 100%;
+}
+
+.loading-indicator {
+    color: #666;
+    font-weight: bold;
+}
+
+.error-message {
+    color: #e74c3c;
+    font-weight: bold;
+    background-color: rgba(231, 76, 60, 0.1);
+    border-radius: 8px;
+}
+
+.end-message {
+    color: #7f8c8d;
+    font-style: italic;
+    border-top: 1px solid #eee;
+}
+
 @media (max-width: 1268px) {
     .explorer-gallery {
         column-count: 4;
@@ -401,6 +432,17 @@
 @media (max-width: 768px) {
     .explorer-gallery {
         column-count: 2;
+        column-gap: 8px;
+    }
+    
+    .save-btn {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
+    
+    .user-info img {
+        width: 24px;
+        height: 24px;
     }
 }
 

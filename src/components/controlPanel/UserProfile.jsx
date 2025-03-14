@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FaTh, FaList, FaLinkedin, FaInstagram, FaUserPlus, FaUserCheck, FaArrowLeft } from 'react-icons/fa';
+import { FaTh, FaList, FaLinkedin, FaInstagram, FaUserPlus, FaUserCheck, FaArrowLeft, FaExclamationCircle, FaCheckCircle } from 'react-icons/fa';
 import './css/UserProfile.css';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -14,9 +14,39 @@ const UserProfile = () => {
     const [isFollowing, setIsFollowing] = useState(false);
     const [followLoading, setFollowLoading] = useState(false);
     const [postsLoading, setPostsLoading] = useState(false);
+    const [notification, setNotification] = useState({ show: false, type: '', message: '' });
 
     const { username } = useParams();
     const navigate = useNavigate();
+
+    // Función para mostrar notificaciones
+    const showNotification = (type, message) => {
+        setNotification({ show: true, type, message });
+        // Esconder la notificación después de 3 segundos
+        setTimeout(() => {
+            setNotification({ show: false, type: '', message: '' });
+        }, 3000);
+    };
+
+    // Función para verificar el estado de seguimiento
+    const checkFollowStatus = async (userId) => {
+        try {
+            const backendUrl = import.meta.env.VITE_BACKEND_URL;
+            const token = localStorage.getItem('authToken');
+            
+            if (!token) return false;
+            
+            const headers = { Authorization: `Bearer ${token}` };
+            const response = await axios.get(
+                `${backendUrl}/api/users/check-follow/${userId}`,
+                { headers }
+            );
+            return response.data.isFollowing;
+        } catch (error) {
+            console.error("Error verificando estado de seguimiento:", error);
+            return false;
+        }
+    };
 
     // Cargar perfil del usuario externo
     useEffect(() => {
@@ -30,19 +60,12 @@ const UserProfile = () => {
                 const res = await axios.get(`${backendUrl}/api/users/profile/${username}`, { headers });
                 setProfile(res.data);
 
-                // Verificar si ya se sigue este perfil
-                if (res.data.isFollowing !== undefined) {
-                    setIsFollowing(res.data.isFollowing);
-                } else if (token && res.data._id) {
-                    try {
-                        const followCheckRes = await axios.get(
-                            `${backendUrl}/api/users/check-follow/${res.data._id}`,
-                            { headers }
-                        );
-                        setIsFollowing(followCheckRes.data.isFollowing);
-                    } catch (followErr) {
-                        console.error("Error al verificar estado de seguimiento", followErr);
-                    }
+                // Verificar el estado de seguimiento siempre usando el endpoint específico
+                if (token && res.data._id) {
+                    const followStatus = await checkFollowStatus(res.data._id);
+                    setIsFollowing(followStatus);
+                } else {
+                    setIsFollowing(false);
                 }
 
                 setLoading(false);
@@ -107,13 +130,52 @@ const UserProfile = () => {
 
             if (isFollowing) {
                 await axios.delete(`${backendUrl}/api/users/follow/${profile._id}`, { headers });
-                setIsFollowing(false);
+                // Actualizar contador de seguidores inmediatamente
+                setProfile(prevProfile => ({
+                    ...prevProfile,
+                    followersCount: Math.max(0, (prevProfile.followersCount || 0) - 1)
+                }));
+                setIsFollowing(false); // Actualizar estado UI inmediatamente
             } else {
                 await axios.post(`${backendUrl}/api/users/follow/${profile._id}`, {}, { headers });
-                setIsFollowing(true);
+                // Actualizar contador de seguidores inmediatamente
+                setProfile(prevProfile => ({
+                    ...prevProfile,
+                    followersCount: (prevProfile.followersCount || 0) + 1
+                }));
+                setIsFollowing(true); // Actualizar estado UI inmediatamente
             }
+            
+            // Mostrar mensaje de éxito al usuario
+            const message = isFollowing 
+                ? 'Has dejado de seguir a este usuario'
+                : 'Ahora sigues a este usuario';
+            
+            // Mostrar notificación visual de éxito
+            showNotification('success', message);
+            
         } catch (error) {
             console.error("Error al seguir/dejar de seguir", error);
+            // Mensaje de error más descriptivo para el usuario
+            let errorMessage = "Ha ocurrido un error. Por favor, inténtalo de nuevo.";
+            
+            if (error.response) {
+                // El servidor respondió con un código de error
+                if (error.response.status === 400) {
+                    errorMessage = error.response.data.error || errorMessage;
+                } else if (error.response.status === 404) {
+                    errorMessage = "Usuario no encontrado.";
+                } else if (error.response.status === 401) {
+                    errorMessage = "Debes iniciar sesión para realizar esta acción.";
+                    navigate('/login');
+                }
+            } else if (error.request) {
+                // La solicitud se realizó pero no se recibió respuesta
+                errorMessage = "No se pudo conectar con el servidor. Verifica tu conexión.";
+            }
+            
+            // Mostrar notificación visual de error
+            showNotification('error', errorMessage);
         } finally {
             setFollowLoading(false);
         }
@@ -169,6 +231,16 @@ const UserProfile = () => {
 
     return (
         <div className="user-profile-container">
+            {notification.show && (
+                <div className={`notification ${notification.type}`}>
+                    {notification.type === 'success' ? (
+                        <FaCheckCircle className="notification-icon" />
+                    ) : (
+                        <FaExclamationCircle className="notification-icon" />
+                    )}
+                    <span>{notification.message}</span>
+                </div>
+            )}
             <header className="user-profile-navigation">
                 <button className="user-profile-back-btn" onClick={() => navigate(-1)}>
                     <FaArrowLeft size={20} />
