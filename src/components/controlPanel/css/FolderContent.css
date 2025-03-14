@@ -38,31 +38,106 @@
     color: #000;
 }
 
+/* Implementación del efecto masonry con columns */
 .folder-content-masonry {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    grid-auto-rows: 10px;
-    grid-gap: 15px;
+    column-count: 5;
+    column-gap: 16px;
+    width: 100%;
 }
 
-.masonry-item {
-    grid-row-end: span 20; /* Será ajustado por JS */
-    cursor: pointer;
-    border-radius: 8px;
+.folder-content-masonry .masonry-item {
+    position: relative;
+    margin-bottom: 16px;
+    break-inside: avoid;
     overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 16px;
+    cursor: pointer;
 }
 
-.masonry-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+.folder-content-masonry .masonry-item img {
+    width: 100%;
+    display: block;
+    transition: transform 0.3s ease;
 }
 
-.masonry-image {
+.folder-content-masonry .masonry-item:hover img {
+    transform: scale(1.05);
+}
+
+.folder-content-masonry .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    display: block;
+    background: rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.folder-content-masonry .masonry-item:hover .overlay {
+    opacity: 1;
+}
+
+.folder-content-masonry .user-info {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.folder-content-masonry .masonry-item:hover .user-info {
+    opacity: 1;
+}
+
+.folder-content-masonry .user-info img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.folder-content-masonry .user-info span {
+    color: white;
+    font-size: 0.8em;
+}
+
+.folder-content-masonry .location-info {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background-color: #1e8c80;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 40px;
+    display: flex;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.folder-content-masonry .masonry-item:hover .location-info {
+    opacity: 1;
+}
+
+.folder-content-masonry .tag-label {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 40px;
+    font-size: 0.9em;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.folder-content-masonry .masonry-item:hover .tag-label {
+    opacity: 1;
 }
 
 .folder-content-loading {
@@ -85,8 +160,20 @@
 }
 
 /* Responsive */
+@media (max-width: 1268px) {
+    .folder-content-masonry {
+        column-count: 4;
+    }
+}
+
 @media (max-width: 768px) {
     .folder-content-masonry {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        column-count: 3;
+    }
+}
+
+@media (max-width: 480px) {
+    .folder-content-masonry {
+        column-count: 2;
     }
 }

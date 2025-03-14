@@ -103,6 +103,22 @@ const MiPerfil = () => {
                                 ? `${profile.city}, ${profile.country}`
                                 : "Ubicación no especificada"}
                         </p>
+                        <div className="miPerfil-stats">
+                            <span 
+                                className="miPerfil-stat" 
+                                onClick={() => navigate('/ControlPanel/community')}
+                                style={{ cursor: 'pointer' }}
+                            >
+                                <strong>{profile?.followers?.length || 0}</strong> seguidores
+                            </span>
+                            <span 
+                                className="miPerfil-stat"
+                                onClick={() => navigate('/ControlPanel/community')}
+                                style={{ cursor: 'pointer' }}
+                            >
+                                <strong>{profile?.following?.length || 0}</strong> seguidos
+                            </span>
+                        </div>
                     </div>
                 </header>
                 <div className="miPerfil-mobile-tabs">

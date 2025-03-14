@@ -72,7 +72,8 @@ const FolderContent = () => {
     }, [folderId, navigate]);
 
     const goBack = () => {
-        navigate('/ControlPanel/guardados');
+        // Usar window.history para volver a la página anterior en lugar de una ruta fija
+        navigate(-1);
     };
 
     const openPost = (postId) => {
@@ -100,7 +101,7 @@ const FolderContent = () => {
             </div>
 
             {posts.length > 0 ? (
-                <div className="explorer-gallery folder-content-masonry">
+                <div className="folder-content-masonry">
                     {posts.map((post) => (
                         <div
                             key={post._id}
@@ -110,7 +111,6 @@ const FolderContent = () => {
                             <img
                                 src={post.mainImage}
                                 alt={post.title || 'Post guardado'}
-                                className="masonry-image"
                             />
                             <div className="overlay">
                                 <div className="user-info">

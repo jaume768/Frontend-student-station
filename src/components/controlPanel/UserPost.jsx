@@ -234,7 +234,11 @@ const UserPost = () => {
                     </div>
                 </div>
                 <div className="perfil__info">
-                    <div className="perfil__usuario">
+                    <div 
+                        className="perfil__usuario" 
+                        onClick={() => navigate(`/ControlPanel/profile/${post.user.username}`)}
+                        style={{ cursor: 'pointer' }}
+                    >
                         {post.user?.profile?.profilePicture ? (
                             <img
                                 src={post.user.profile.profilePicture}

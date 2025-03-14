@@ -11,7 +11,11 @@ const MyComunity = () => {
     // Estado para la paginación
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-    const [totalCount, setTotalCount] = useState(0);
+    
+    // Contador separado para cada tipo
+    const [followingCount, setFollowingCount] = useState(0);
+    const [followersCount, setFollowersCount] = useState(0);
+    
     const limit = 10; // Número de perfiles por página
 
     const navigate = useNavigate();
@@ -37,10 +41,15 @@ const MyComunity = () => {
 
                 const data = response.data;
                 const profilesList = activeTab === 'seguidos' ? data.following : data.followers;
-                const total = activeTab === 'seguidos' ? data.totalFollowing : data.totalFollowers;
-
+                
+                // Actualizar contadores específicos
+                if (activeTab === 'seguidos') {
+                    setFollowingCount(data.totalFollowing || 0);
+                } else {
+                    setFollowersCount(data.totalFollowers || 0);
+                }
+                
                 setProfiles(profilesList);
-                setTotalCount(total);
                 setTotalPages(data.totalPages);
                 setLoading(false);
             } catch (error) {
@@ -52,6 +61,43 @@ const MyComunity = () => {
 
         fetchProfiles();
     }, [activeTab, page, navigate]);
+
+    // Cargar ambos contadores al inicio
+    useEffect(() => {
+        const fetchCounts = async () => {
+            try {
+                const backendUrl = import.meta.env.VITE_BACKEND_URL;
+                const token = localStorage.getItem('authToken');
+
+                if (!token) return;
+
+                // Obtener contador de seguidos
+                const followingResponse = await axios.get(`${backendUrl}/api/users/following`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                    params: { page: 1, limit: 1 } // Solo necesitamos el total
+                });
+                
+                if (followingResponse.data && followingResponse.data.totalFollowing !== undefined) {
+                    setFollowingCount(followingResponse.data.totalFollowing);
+                }
+                
+                // Obtener contador de seguidores
+                const followersResponse = await axios.get(`${backendUrl}/api/users/followers`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                    params: { page: 1, limit: 1 } // Solo necesitamos el total
+                });
+                
+                if (followersResponse.data && followersResponse.data.totalFollowers !== undefined) {
+                    setFollowersCount(followersResponse.data.totalFollowers);
+                }
+                
+            } catch (error) {
+                console.error("Error al cargar contadores:", error);
+            }
+        };
+        
+        fetchCounts();
+    }, []);
 
     // Cambiar pestaña y resetear la página
     const handleTabChange = (tab) => {
@@ -76,13 +122,13 @@ const MyComunity = () => {
                     className={`mycomunity-tab ${activeTab === 'seguidos' ? 'active' : ''}`}
                     onClick={() => handleTabChange('seguidos')}
                 >
-                    Mis seguidos ({totalCount !== null ? totalCount : '...'})
+                    Mis seguidos ({followingCount})
                 </button>
                 <button
                     className={`mycomunity-tab ${activeTab === 'seguidores' ? 'active' : ''}`}
                     onClick={() => handleTabChange('seguidores')}
                 >
-                    Mis seguidores ({totalCount !== null ? totalCount : '...'})
+                    Mis seguidores ({followersCount})
                 </button>
             </div>
 

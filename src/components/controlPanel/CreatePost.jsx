@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { FaUpload, FaArrowLeft, FaArrowRight, FaTrash, FaCheck, FaEye, FaTimes } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
+import { FaUpload, FaArrowLeft, FaArrowRight, FaTrash, FaCheck, FaEye, FaTimes, FaSearch } from 'react-icons/fa';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -16,23 +16,96 @@ const CreatePost = () => {
 
     // Estados para las etiquetas de personas a etiquetar (Paso 3)
     const [peopleTags, setPeopleTags] = useState([{ name: '', role: '' }]);
-    const addPeopleTagCard = () => setPeopleTags([...peopleTags, { name: '', role: '' }]);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [suggestedUsers, setSuggestedUsers] = useState([]);
+    const [activeTagIndex, setActiveTagIndex] = useState(null);
+    const [loadingUsers, setLoadingUsers] = useState(false);
+    
+    // Estados para las etiquetas de imagen (Paso 4)
+    const [imageTags, setImageTags] = useState({});
+    const [newTag, setNewTag] = useState('');
+
+    // Estados para el formulario
+    const [isFormComplete, setIsFormComplete] = useState(false);
+
+    // Función para buscar usuarios mientras el usuario escribe
+    useEffect(() => {
+        const searchUsers = async () => {
+            if (searchTerm.length < 2 || activeTagIndex === null) return;
+            
+            setLoadingUsers(true);
+            try {
+                const token = localStorage.getItem('authToken');
+                const backendUrl = import.meta.env.VITE_BACKEND_URL;
+                
+                const response = await axios.get(
+                    `${backendUrl}/api/users/searchUsers?term=${searchTerm}`, 
+                    { headers: { Authorization: `Bearer ${token}` } }
+                );
+                
+                setSuggestedUsers(response.data.users || []);
+            } catch (error) {
+                console.error('Error buscando usuarios:', error);
+                setSuggestedUsers([]);
+            } finally {
+                setLoadingUsers(false);
+            }
+        };
+        
+        const timeoutId = setTimeout(() => {
+            searchUsers();
+        }, 300);
+        
+        return () => clearTimeout(timeoutId);
+    }, [searchTerm, activeTagIndex]);
+
+    useEffect(() => {
+        // Solo se requiere título y descripción para publicar
+        const isComplete = postTitle.trim() !== '' && postDescription.trim() !== '';
+        setIsFormComplete(isComplete);
+    }, [postTitle, postDescription]);
+
+    const addPeopleTagCard = () => {
+        // Solo añadir si la última tarjeta tiene al menos un nombre
+        const lastTag = peopleTags[peopleTags.length - 1];
+        if (lastTag.name.trim()) {
+            setPeopleTags([...peopleTags, { name: '', role: '' }]);
+        } else {
+            // Mostrar mensaje o feedback visual de que debe completar la tarjeta actual
+            alert("Completa la tarjeta actual antes de añadir una nueva");
+        }
+    };
+    
     const removePeopleTagCard = (index) => {
         if (peopleTags.length > 1) {
             setPeopleTags(peopleTags.filter((_, i) => i !== index));
         }
     };
+    
     const handlePeopleTagChange = (index, e) => {
         const { name, value } = e.target;
         const updated = peopleTags.map((item, i) =>
             i === index ? { ...item, [name]: value } : item
         );
         setPeopleTags(updated);
+        
+        if (name === 'name') {
+            setSearchTerm(value);
+            setActiveTagIndex(index);
+        }
     };
-
-    // Estados para las etiquetas de imagen (Paso 4)
-    const [imageTags, setImageTags] = useState({});
-    const [newTag, setNewTag] = useState('');
+    
+    const selectUser = (username) => {
+        if (activeTagIndex !== null) {
+            const updated = peopleTags.map((item, i) =>
+                i === activeTagIndex ? { ...item, name: username } : item
+            );
+            setPeopleTags(updated);
+            setSearchTerm('');
+            setSuggestedUsers([]);
+            setActiveTagIndex(null);
+        }
+    };
 
     const handleTagKeyDown = (e) => {
         if (e.key === 'Enter') {
@@ -74,8 +147,6 @@ const CreatePost = () => {
         setMainImageIndex((prev) => (prev - 1 + images.length) % images.length);
     };
 
-    const isFormComplete = images.length > 0 && postTitle.trim() && postDescription.trim();
-
     const [isLoading, setIsLoading] = useState(false);
     const [uploadSuccess, setUploadSuccess] = useState(false);
     const [createdPostId, setCreatedPostId] = useState(null);
@@ -84,7 +155,10 @@ const CreatePost = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!isFormComplete) return;
+        if (!isFormComplete) {
+            alert('Por favor completa todos los campos obligatorios.');
+            return;
+        }
         setIsLoading(true);
         const formData = new FormData();
         formData.append('title', postTitle);
@@ -92,7 +166,10 @@ const CreatePost = () => {
         images.forEach((img) => {
             formData.append('images', img);
         });
-        formData.append('peopleTags', JSON.stringify(peopleTags));
+        
+        // Filtrar las etiquetas de personas vacías antes de enviarlas
+        const validPeopleTags = peopleTags.filter(tag => tag.name.trim() !== '');
+        formData.append('peopleTags', JSON.stringify(validPeopleTags));
         formData.append('imageTags', JSON.stringify(imageTags));
 
         try {
@@ -282,14 +359,42 @@ const CreatePost = () => {
                                 <div key={index} className="people-tag-card">
                                     <div className="form-group-create-post">
                                         <label>Nombre</label>
-                                        <input
-                                            type="text"
-                                            placeholder="Nombre de usuario a etiquetar"
-                                            name="name"
-                                            value={tag.name}
-                                            onChange={(e) => handlePeopleTagChange(index, e)}
-                                            className="post-input"
-                                        />
+                                        <div className="autocomplete-wrapper">
+                                            <input
+                                                type="text"
+                                                placeholder="Nombre de usuario a etiquetar"
+                                                name="name"
+                                                value={tag.name}
+                                                onChange={(e) => handlePeopleTagChange(index, e)}
+                                                onFocus={() => {
+                                                    setActiveTagIndex(index);
+                                                    setSearchTerm(tag.name);
+                                                }}
+                                                className="post-input"
+                                            />
+                                            {activeTagIndex === index && suggestedUsers.length > 0 && (
+                                                <div className="autocomplete-dropdown">
+                                                    {loadingUsers ? (
+                                                        <div className="loading-users">Buscando usuarios...</div>
+                                                    ) : (
+                                                        suggestedUsers.map((user) => (
+                                                            <div 
+                                                                key={user._id} 
+                                                                className="autocomplete-item"
+                                                                onClick={() => selectUser(user.username)}
+                                                            >
+                                                                <img 
+                                                                    src={user.profile?.profilePicture || "/multimedia/usuarioDefault.jpg"} 
+                                                                    alt={user.username} 
+                                                                    className="autocomplete-avatar"
+                                                                />
+                                                                <span>{user.username}</span>
+                                                            </div>
+                                                        ))
+                                                    )}
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                     <div className="form-group-create-post">
                                         <label>Rol</label>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FaTh, FaList, FaLinkedin, FaInstagram, FaUserPlus, FaUserCheck } from 'react-icons/fa';
+import { FaTh, FaList, FaLinkedin, FaInstagram, FaUserPlus, FaUserCheck, FaArrowLeft } from 'react-icons/fa';
 import './css/UserProfile.css';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -169,6 +169,12 @@ const UserProfile = () => {
 
     return (
         <div className="user-profile-container">
+            <header className="user-profile-navigation">
+                <button className="user-profile-back-btn" onClick={() => navigate(-1)}>
+                    <FaArrowLeft size={20} />
+                    <span>Volver</span>
+                </button>
+            </header>
             <div className="user-profile-header-container">
                 <header className="user-profile-header">
                     <img
@@ -237,102 +243,121 @@ const UserProfile = () => {
             <div className="user-profile-content">
                 <div className={`user-profile-left-content ${activeTab === 'perfil' ? 'active' : ''}`}>
                     {/* Secciones del perfil */}
-                    <section className="user-profile-section">
-                        <h2>Descripción</h2>
-                        <p>
-                            {profile?.biography || "No hay descripción disponible."}
-                        </p>
-                    </section>
-                    <section className="user-profile-section">
-                        <h2>Experiencia profesional</h2>
-                        <ul className="user-profile-list">
-                            {profile?.professionalFormation && profile.professionalFormation.length > 0 ? (
-                                profile.professionalFormation.map((exp, index) => (
-                                    <li key={index}>
-                                        <strong>
-                                            {exp.trainingStart ? new Date(exp.trainingStart).toLocaleDateString() : ""}
-                                            {" - "}
-                                            {exp.trainingEnd ? new Date(exp.trainingEnd).toLocaleDateString() : (exp.currentlyInProgress ? "Actual" : "")}
-                                        </strong>
-                                        <p>
-                                            {exp.trainingName} en {exp.institution}
-                                        </p>
-                                    </li>
-                                ))
-                            ) : (
-                                <li>No hay experiencia profesional disponible.</li>
-                            )}
-                        </ul>
-                    </section>
-                    <section className="user-profile-section">
-                        <h2>Habilidades</h2>
-                        <div className="user-profile-chips">
-                            {profile?.skills && profile.skills.length > 0 ? (
-                                profile.skills.map((skill, index) => (
-                                    <span key={index} className="user-profile-chip">{skill}</span>
-                                ))
-                            ) : (
-                                <span>No hay habilidades disponibles.</span>
-                            )}
-                        </div>
-                    </section>
-                    <section className="user-profile-section">
-                        <h2>Software</h2>
-                        <div className="user-profile-chips">
-                            {profile?.software && profile.software.length > 0 ? (
-                                profile.software.map((sw, index) => (
-                                    <span key={index} className="user-profile-chip">{sw}</span>
-                                ))
-                            ) : (
-                                <span>No hay software disponible.</span>
-                            )}
-                        </div>
-                    </section>
-                    <section className="user-profile-section">
-                        <h2>Formación educativa</h2>
-                        <ul className="user-profile-list">
-                            {profile?.education && profile.education.length > 0 ? (
-                                profile.education.map((edu, index) => (
-                                    <li key={index}>
-                                        <strong>
-                                            {edu.formationStart ? new Date(edu.formationStart).toLocaleDateString() : ""}
-                                            {" - "}
-                                            {edu.formationEnd ? new Date(edu.formationEnd).toLocaleDateString() : "Actual"}
-                                        </strong>
-                                        <p>
-                                            {edu.formationName} en {edu.institution || edu.otherInstitution}
-                                        </p>
-                                    </li>
-                                ))
-                            ) : (
-                                <li>No hay formación educativa disponible.</li>
-                            )}
-                        </ul>
-                    </section>
-                    <section className="user-profile-section user-profile-social">
-                        <h2>Redes sociales</h2>
-                        <div className="user-profile-social-links">
-                            {profile?.social?.linkedin && (
-                                <a
-                                    href={profile.social.linkedin}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    <FaLinkedin size={24} />
-                                </a>
-                            )}
-                            {profile?.social?.instagram && (
-                                <a
-                                    href={profile.social.instagram}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    <FaInstagram size={24} />
-                                </a>
-                            )}
-                        </div>
-                    </section>
-                    {profile?.cvUrl || profile?.portfolioUrl ? (
+                    {profile?.biography && profile.biography.trim() !== "" && (
+                        <section className="user-profile-section">
+                            <h2>Descripción</h2>
+                            <p>{profile.biography}</p>
+                        </section>
+                    )}
+                    
+                    {profile?.professionalFormation && profile.professionalFormation.some(exp => 
+                        exp.trainingName && exp.trainingName.trim() !== "" && 
+                        exp.institution && exp.institution.trim() !== "") && (
+                        <section className="user-profile-section">
+                            <h2>Experiencia profesional</h2>
+                            <ul className="user-profile-list">
+                                {profile.professionalFormation
+                                    .filter(exp => exp.trainingName && exp.trainingName.trim() !== "" && 
+                                                exp.institution && exp.institution.trim() !== "")
+                                    .map((exp, index) => (
+                                        <li key={index}>
+                                            <strong>
+                                                {exp.trainingStart ? new Date(exp.trainingStart).toLocaleDateString() : ""}
+                                                {" - "}
+                                                {exp.trainingEnd ? new Date(exp.trainingEnd).toLocaleDateString() : (exp.currentlyInProgress ? "Actual" : "")}
+                                            </strong>
+                                            <p>
+                                                {exp.trainingName} en {exp.institution}
+                                            </p>
+                                        </li>
+                                    ))
+                                }
+                            </ul>
+                        </section>
+                    )}
+                    
+                    {profile?.skills && profile.skills.length > 0 && profile.skills.some(skill => skill && skill.trim() !== "") && (
+                        <section className="user-profile-section">
+                            <h2>Habilidades</h2>
+                            <div className="user-profile-chips">
+                                {profile.skills
+                                    .filter(skill => skill && skill.trim() !== "")
+                                    .map((skill, index) => (
+                                        <span key={index} className="user-profile-chip">{skill}</span>
+                                    ))
+                                }
+                            </div>
+                        </section>
+                    )}
+                    
+                    {profile?.software && profile.software.length > 0 && profile.software.some(sw => sw && sw.trim() !== "") && (
+                        <section className="user-profile-section">
+                            <h2>Software</h2>
+                            <div className="user-profile-chips">
+                                {profile.software
+                                    .filter(sw => sw && sw.trim() !== "")
+                                    .map((sw, index) => (
+                                        <span key={index} className="user-profile-chip">{sw}</span>
+                                    ))
+                                }
+                            </div>
+                        </section>
+                    )}
+                    
+                    {profile?.education && profile.education.some(edu => 
+                        edu.formationName && edu.formationName.trim() !== "" && 
+                        (edu.institution || edu.otherInstitution)) && (
+                        <section className="user-profile-section">
+                            <h2>Formación educativa</h2>
+                            <ul className="user-profile-list">
+                                {profile.education
+                                    .filter(edu => edu.formationName && edu.formationName.trim() !== "" && 
+                                             (edu.institution || edu.otherInstitution))
+                                    .map((edu, index) => (
+                                        <li key={index}>
+                                            <strong>
+                                                {edu.formationStart ? new Date(edu.formationStart).toLocaleDateString() : ""}
+                                                {" - "}
+                                                {edu.formationEnd ? new Date(edu.formationEnd).toLocaleDateString() : "Actual"}
+                                            </strong>
+                                            <p>
+                                                {edu.formationName} en {edu.institution || edu.otherInstitution}
+                                            </p>
+                                        </li>
+                                    ))
+                                }
+                            </ul>
+                        </section>
+                    )}
+                    
+                    {((profile?.social?.linkedin && profile.social.linkedin.trim() !== "") || 
+                      (profile?.social?.instagram && profile.social.instagram.trim() !== "")) && (
+                        <section className="user-profile-section user-profile-social">
+                            <h2>Redes sociales</h2>
+                            <div className="user-profile-social-links">
+                                {profile?.social?.linkedin && profile.social.linkedin.trim() !== "" && (
+                                    <a
+                                        href={profile.social.linkedin}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <FaLinkedin size={24} />
+                                    </a>
+                                )}
+                                {profile?.social?.instagram && profile.social.instagram.trim() !== "" && (
+                                    <a
+                                        href={profile.social.instagram}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <FaInstagram size={24} />
+                                    </a>
+                                )}
+                            </div>
+                        </section>
+                    )}
+                    
+                    {(profile?.cvUrl || profile?.portfolioUrl) && (
                         <section className="user-profile-section ultima-seccion">
                             <h2>Archivos descargables</h2>
                             <div className="user-profile-downloads">
@@ -348,7 +373,7 @@ const UserProfile = () => {
                                 )}
                             </div>
                         </section>
-                    ) : null}
+                    )}
                 </div>
 
                 <div className={`user-profile-right ${activeTab === 'publicaciones' ? 'active' : ''}`}>

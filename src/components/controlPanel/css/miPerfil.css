@@ -45,6 +45,29 @@
     color: #555;
 }
 
+/* Estadísticas de followers/following */
+.miPerfil-stats {
+    display: flex;
+    gap: 20px;
+    margin-top: 10px;
+}
+
+.miPerfil-stat {
+    font-size: 0.9rem;
+    color: #555;
+    transition: color 0.2s ease;
+}
+
+.miPerfil-stat:hover {
+    color: #000;
+    text-decoration: underline;
+}
+
+.miPerfil-stat strong {
+    color: #000;
+    font-weight: 600;
+}
+
 /* Pestañas para vista móvil (se muestran solo en pantallas pequeñas) */
 .miPerfil-mobile-tabs {
     display: none;
@@ -262,8 +285,6 @@
 
 /* Estilos para vista móvil */
 @media (max-width: 768px) {
-
-
     .miPerfil-section.ultima-seccion {
         margin-bottom: 50px;
     }

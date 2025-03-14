@@ -8,6 +8,32 @@
     color: #000;
 }
 
+/* Navegación y botón de volver */
+.user-profile-navigation {
+    margin-bottom: 20px;
+}
+
+.user-profile-back-btn {
+    display: flex;
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #333;
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+}
+
+.user-profile-back-btn:hover {
+    background-color: #f0f0f0;
+}
+
+.user-profile-back-btn span {
+    margin-left: 8px;
+    font-size: 16px;
+}
+
 /* Encabezado y pestañas móviles */
 .user-profile-header-container {
     display: flex;
