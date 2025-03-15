@@ -266,7 +266,61 @@
     margin: 0.5em;
 }
 
+/* Animación de carga moderna */
+.modern-loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100%;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top: 3px solid #06b6a0;
+    animation: spin 1s ease-in-out infinite;
+    margin-bottom: 15px;
+}
+
+.loading-text {
+    font-size: 16px;
+    color: #333;
+    font-weight: 500;
+    position: relative;
+    display: inline-block;
+}
+
+.loading-text:after {
+    content: '...';
+    position: absolute;
+    animation: dots 1.5s infinite;
+    width: 20px;
+    text-align: left;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes dots {
+    0%, 20% { content: '.'; }
+    40% { content: '..'; }
+    60%, 100% { content: '...'; }
+}
+
 /* Responsive */
+@media (max-width: 719px) {
+    /* Añadir margen inferior cuando no hay etiquetas de imagen en móvil */
+    .perfil__publicacion.no-image-tags {
+        margin-bottom: 5em;
+    }
+}
+
 @media (min-width: 720px) {
     .perfil__contenido {
         grid-template-columns: 1fr 1fr;

@@ -4,17 +4,17 @@ import { FaCompass, FaUsers, FaBookmark } from 'react-icons/fa';
 import ProfileOptionsModal from './ProfileOptionsModal';
 
 const mobileNavItems = [
-    { id: 'explorer', icon: <FaCompass />, label: 'Explorar' },
-    { id: 'creatives', icon: <FaUsers />, label: 'Creativos' },
-    { id: 'guardados', icon: <FaBookmark />, label: 'Guardados' },
-    { id: 'profile', icon: null, label: 'Mi perfil' },
+    { id: 'explorer', icon: <FaCompass size={20}/>, label: 'Explorar', route: '/ControlPanel/explorer' },
+    { id: 'creatives', icon: <FaUsers size={20}/>, label: 'Creativos', route: '/ControlPanel/creatives' },
+    { id: 'guardados', icon: <FaBookmark size={20}/>, label: 'Guardados', route: '/ControlPanel/guardados' },
+    { id: 'profile', icon: null, label: 'Mi perfil', route: '/ControlPanel/profile' },
 ];
 
 const MobileNavbar = ({ profilePicture }) => {
     const location = useLocation();
     const navigate = useNavigate();
     const [showProfileOptions, setShowProfileOptions] = useState(false);
-    const activeMenu = location.state?.activeMenu || 'explorer';
+    const currentPath = location.pathname;
     const token = localStorage.getItem('authToken');
 
     const handleProfileClick = (e) => {
@@ -35,19 +35,19 @@ const MobileNavbar = ({ profilePicture }) => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
         switch (option) {
             case 'editProfile':
-                navigate('/ControlPanel', { state: { activeMenu: 'editProfile' } });
+                navigate('/ControlPanel/editProfile');
                 break;
             case 'profile':
-                navigate('/ControlPanel', { state: { activeMenu: 'profile' } });
+                navigate('/ControlPanel/profile');
                 break;
             case 'community':
-                navigate('/ControlPanel', { state: { activeMenu: 'community' } });
+                navigate('/ControlPanel/community');
                 break;
             case 'misOfertas':
-                navigate('/ControlPanel', { state: { activeMenu: 'misOfertas' } });
+                navigate('/ControlPanel/misOfertas');
                 break;
             case 'configuracion':
-                navigate('/ControlPanel', { state: { activeMenu: 'configuracion' } });
+                navigate('/ControlPanel/configuracion');
                 break;
             case 'logout':
                 localStorage.removeItem('authToken');
@@ -56,6 +56,11 @@ const MobileNavbar = ({ profilePicture }) => {
             default:
                 break;
         }
+    };
+
+    // Función para determinar si una ruta está activa
+    const isActive = (itemId) => {
+        return currentPath.includes(`/ControlPanel/${itemId}`);
     };
 
     return (
@@ -84,12 +89,12 @@ const MobileNavbar = ({ profilePicture }) => {
                             </div>
                         ) : (
                             <div 
-                                className={`nav-link-container ${activeMenu === item.id ? 'active' : ''}`}
+                                className={`nav-link-container ${isActive(item.id) ? 'active' : ''}`}
                                 onClick={() => {
                                     if (!token && item.id !== 'explorer' && item.id !== 'creatives') {
                                         navigate('/', { state: { showRegister: true } });
                                     } else {
-                                        navigate('/ControlPanel', { state: { activeMenu: item.id } });
+                                        navigate(item.route);
                                     }
                                 }}
                             >

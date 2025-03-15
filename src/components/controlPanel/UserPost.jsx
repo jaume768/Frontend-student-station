@@ -82,7 +82,12 @@ const UserPost = () => {
         fetchPost();
     }, [id]);
 
-    if (loading) return <div>Cargando...</div>;
+    if (loading) return (
+        <div className="modern-loading-container">
+            <div className="loading-spinner"></div>
+            <p className="loading-text">Cargando publicación</p>
+        </div>
+    );
     if (!post) return <div>No hay datos de la publicación</div>;
 
     const images = post.images || [];
@@ -255,7 +260,15 @@ const UserPost = () => {
                             </p>
                         </div>
                     </div>
-                    <div className="perfil__publicacion">
+                    <div 
+                        className={`perfil__publicacion ${
+                            !post.imageTags || 
+                            !post.imageTags[currentImageIndex] || 
+                            post.imageTags[currentImageIndex].length === 0 
+                                ? 'no-image-tags' 
+                                : ''
+                        }`}
+                    >
                         <h1 className="publicacion__titulo">{post.title}</h1>
                         <p className="publicacion__descripcion">{post.description}</p>
                         {Array.isArray(post.peopleTags) &&
