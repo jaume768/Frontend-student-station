@@ -429,23 +429,69 @@ const UserProfile = () => {
                         </section>
                     )}
                     
-                    {(profile?.cvUrl || profile?.portfolioUrl) && (
-                        <section className="user-profile-section ultima-seccion">
-                            <h2>Archivos descargables</h2>
-                            <div className="user-profile-downloads">
-                                {profile?.cvUrl && (
-                                    <a href={profile.cvUrl} download className="user-profile-btn">
-                                        CV en PDF
-                                    </a>
-                                )}
-                                {profile?.portfolioUrl && (
-                                    <a href={profile.portfolioUrl} download className="user-profile-btn">
-                                        Portfolio en PDF
-                                    </a>
-                                )}
-                            </div>
-                        </section>
-                    )}
+                    {/* Sección de Archivos Descargables */}
+                    <section className="user-profile-section last-section">
+                        <h2>Archivos descargables</h2>
+                        <div className="user-profile-downloads">
+                            {profile?.cvUrl ? (
+                                <a 
+                                    href={profile.cvUrl} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer" 
+                                    className="user-profile-btn"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '8px'}}>
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                        <polyline points="7 10 12 15 17 10"></polyline>
+                                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                                    </svg>
+                                    Ver CV
+                                </a>
+                            ) : (
+                                <button 
+                                    className="user-profile-btn disabled" 
+                                    disabled
+                                    title="Este usuario no ha subido su CV"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '8px'}}>
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                        <polyline points="7 10 12 15 17 10"></polyline>
+                                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                                    </svg>
+                                    Descargar CV
+                                </button>
+                            )}
+                            
+                            {profile?.portfolioUrl ? (
+                                <a 
+                                    href={profile.portfolioUrl} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer" 
+                                    className="user-profile-btn"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '8px'}}>
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                        <polyline points="7 10 12 15 17 10"></polyline>
+                                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                                    </svg>
+                                    Descargar Portfolio
+                                </a>
+                            ) : (
+                                <button 
+                                    className="user-profile-btn disabled" 
+                                    disabled
+                                    title="Este usuario no ha subido su portafolio"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '8px'}}>
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                        <polyline points="7 10 12 15 17 10"></polyline>
+                                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                                    </svg>
+                                    Descargar Portfolio
+                                </button>
+                            )}
+                        </div>
+                    </section>
                 </div>
 
                 <div className={`user-profile-right ${activeTab === 'publicaciones' ? 'active' : ''}`}>

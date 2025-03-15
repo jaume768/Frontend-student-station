@@ -1379,69 +1379,130 @@ const EditProfile = () => {
                                         )}
                                     </section>
                                     {/* 3.8 Mi CV y Portfolio PDF */}
-                                    <section className="form-section-final">
-                                        <h3>Mi CV y Portfolio PDF</h3>
-                                        <div className="form-group">
-                                            <label>CV (PDF)</label>
-                                            <div className="file-input">
-                                                <input 
-                                                    type="file" 
-                                                    name="cv" 
-                                                    accept="application/pdf" 
-                                                    onChange={handleFileChange}
-                                                    disabled={!isPdfEditing}
-                                                />
-                                                <span className="upload-icon">📤</span>
-                                                {cvFileName && (
-                                                    <div className="file-name">
-                                                        {cvFileName}
-                                                        {isPdfEditing && (
-                                                            <button 
-                                                                type="button" 
-                                                                className="clear-file" 
-                                                                onClick={() => {
-                                                                    setCvFile(null);
-                                                                    setCvFileName('');
-                                                                }}
-                                                            >
-                                                                ✕
-                                                            </button>
-                                                        )}
-                                                    </div>
-                                                )}
-                                            </div>
-                                            <small className="info-text">Tamaño máximo: 10MB</small>
+                                    <section className="form-section-final pdf-files-section">
+                                        <div className="pdf-section-header">
+                                            <h3>Mi CV y Portfolio PDF</h3>
+                                            {userData.cvUrl || userData.portfolioUrl ? 
+                                                <div className="pdf-preview-links">
+                                                    {userData.cvUrl && (
+                                                        <a 
+                                                            href={userData.cvUrl} 
+                                                            target="_blank" 
+                                                            rel="noopener noreferrer"
+                                                            className="view-pdf-link"
+                                                        >
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '8px'}}>
+                                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                                                <circle cx="12" cy="12" r="3"></circle>
+                                                            </svg>
+                                                            Ver CV actual
+                                                        </a>
+                                                    )}
+                                                    {userData.portfolioUrl && (
+                                                        <a 
+                                                            href={userData.portfolioUrl} 
+                                                            target="_blank" 
+                                                            rel="noopener noreferrer"
+                                                            className="view-pdf-link"
+                                                        >
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '8px'}}>
+                                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                                                <circle cx="12" cy="12" r="3"></circle>
+                                                            </svg>
+                                                            Ver Portfolio actual
+                                                        </a>
+                                                    )}
+                                                </div> : null
+                                            }
                                         </div>
-                                        <div className="form-group">
-                                            <label>Portfolio (PDF)</label>
-                                            <div className="file-input">
-                                                <input 
-                                                    type="file" 
-                                                    name="portfolio" 
-                                                    accept="application/pdf" 
-                                                    onChange={handleFileChange}
-                                                    disabled={!isPdfEditing}
-                                                />
-                                                <span className="upload-icon">📤</span>
-                                                {portfolioFileName && (
-                                                    <div className="file-name">
-                                                        {portfolioFileName}
-                                                        {isPdfEditing && (
-                                                            <button 
-                                                                type="button" 
-                                                                className="clear-file" 
-                                                                onClick={() => {
-                                                                    setPortfolioFile(null);
-                                                                    setPortfolioFileName('');
-                                                                }}
-                                                            >
-                                                                ✕
-                                                            </button>
-                                                        )}
-                                                    </div>
-                                                )}
+                                        <div className="pdf-upload-container">
+                                            <div className="form-group pdf-upload-group">
+                                                <label>CV (PDF)</label>
+                                                <div className={`pdf-file-input ${isPdfEditing ? 'active' : ''}`}>
+                                                    <input 
+                                                        type="file" 
+                                                        id="cv-file"
+                                                        name="cv" 
+                                                        accept="application/pdf" 
+                                                        onChange={handleFileChange}
+                                                        disabled={!isPdfEditing}
+                                                    />
+                                                    <label htmlFor="cv-file" className="pdf-file-label">
+                                                        <span className="pdf-upload-icon">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v4h3l-4 4-4-4h3z"/>
+                                                            </svg>
+                                                        </span>
+                                                        <span className="pdf-upload-text">
+                                                            {cvFileName ? 'Cambiar archivo' : 'Seleccionar CV'}
+                                                        </span>
+                                                    </label>
+                                                    {cvFileName && (
+                                                        <div className="pdf-file-name">
+                                                            <span className="pdf-file-icon">📄</span>
+                                                            {cvFileName}
+                                                            {isPdfEditing && (
+                                                                <button 
+                                                                    type="button" 
+                                                                    className="pdf-clear-file" 
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        setCvFile(null);
+                                                                        setCvFileName('');
+                                                                    }}
+                                                                >
+                                                                    ✕
+                                                                </button>
+                                                            )}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <small className="info-text">Formato: PDF • Tamaño máximo: 10MB</small>
                                             </div>
-                                            <small className="info-text">Tamaño máximo: 10MB</small>
+
+                                            <div className="form-group pdf-upload-group">
+                                                <label>Portfolio (PDF)</label>
+                                                <div className={`pdf-file-input ${isPdfEditing ? 'active' : ''}`}>
+                                                    <input 
+                                                        type="file" 
+                                                        id="portfolio-file"
+                                                        name="portfolio" 
+                                                        accept="application/pdf" 
+                                                        onChange={handleFileChange}
+                                                        disabled={!isPdfEditing}
+                                                    />
+                                                    <label htmlFor="portfolio-file" className="pdf-file-label">
+                                                        <span className="pdf-upload-icon">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v4h3l-4 4-4-4h3z"/>
+                                                            </svg>
+                                                        </span>
+                                                        <span className="pdf-upload-text">
+                                                            {portfolioFileName ? 'Cambiar archivo' : 'Seleccionar Portfolio'}
+                                                        </span>
+                                                    </label>
+                                                    {portfolioFileName && (
+                                                        <div className="pdf-file-name">
+                                                            <span className="pdf-file-icon">📄</span>
+                                                            {portfolioFileName}
+                                                            {isPdfEditing && (
+                                                                <button 
+                                                                    type="button" 
+                                                                    className="pdf-clear-file" 
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        setPortfolioFile(null);
+                                                                        setPortfolioFileName('');
+                                                                    }}
+                                                                >
+                                                                    ✕
+                                                                </button>
+                                                            )}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <small className="info-text">Formato: PDF • Tamaño máximo: 10MB</small>
+                                            </div>
                                         </div>
                                         <div className="button-container">
                                             {isUploading ? (

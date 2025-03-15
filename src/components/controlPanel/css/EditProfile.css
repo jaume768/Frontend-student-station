@@ -42,11 +42,185 @@
 }
 
 /* Estilos para la sección de CV y Portfolio PDF */
+.pdf-files-section {
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-top: 2rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.pdf-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.pdf-section-header h3 {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.pdf-preview-links {
+    display: flex;
+    gap: 1rem;
+}
+
+.view-pdf-link {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background-color: #f0f0f0;
+    color: #555;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.view-pdf-link:hover {
+    background-color: #e0e0e0;
+    color: #333;
+}
+
+.pdf-upload-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+@media (max-width: 768px) {
+    .pdf-upload-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+.pdf-upload-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: #444;
+}
+
+.pdf-file-input {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0.5rem;
+    border: 2px dashed #ddd;
+    border-radius: 8px;
+    padding: 1rem;
+    transition: all 0.3s ease;
+}
+
+.pdf-file-input.active {
+    border-color: #aaa;
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+.pdf-file-input input[type="file"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+.pdf-file-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    cursor: pointer;
+    text-align: center;
+    transition: transform 0.2s;
+}
+
+.pdf-file-input.active .pdf-file-label:hover {
+    transform: scale(1.02);
+}
+
+.pdf-upload-icon {
+    margin-bottom: 0.75rem;
+    color: #666;
+}
+
+.pdf-upload-icon svg {
+    fill: #888;
+    width: 40px;
+    height: 40px;
+}
+
+.pdf-upload-text {
+    font-size: 1rem;
+    color: #666;
+}
+
+.pdf-file-name {
+    display: flex;
+    align-items: center;
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    color: #555;
+    font-size: 0.9rem;
+    word-break: break-all;
+}
+
+.pdf-file-icon {
+    margin-right: 0.5rem;
+    font-size: 1.2rem;
+}
+
+.pdf-clear-file {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 0.2rem 0.5rem;
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+
+.pdf-clear-file:hover {
+    background-color: #f2f2f2;
+    color: #555;
+}
+
+.miPerfil-btn.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.user-profile-btn.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: #f0f0f0;
+    color: #888;
+}
+
 .file-input {
     position: relative;
     display: flex;
     align-items: center;
     margin-bottom: 0.5rem;
+    border: 2px dashed #ddd;
+    border-radius: 8px;
+    padding: 1rem;
+    transition: all 0.3s ease;
 }
 
 .file-input input[type="file"] {

@@ -299,10 +299,6 @@ const Creatives = () => {
 
     return (
         <div className="creatives-container">
-            <div className="creatives-header">
-                <h1>Creativos</h1>
-                <p>Descubre los creativos de la plataforma</p>
-            </div>
             <div className="creatives-content">
                 <aside className="creatives-sidebar">
                     {renderFilters()}
