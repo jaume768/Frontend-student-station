@@ -21,21 +21,31 @@
     background-color: transparent;
 }
 
-.left-content {
-    flex: 1;
+.clickable-upload-area {
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 }
 
-.upload-icon {
+.upload-icon-wrapper {
     margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.upload-icon {
     cursor: pointer;
+    font-size: 2rem;
 }
 
 .upload-text {
     font-size: 1.2rem;
+    text-align: center;
 }
 
 /* Previsualización de imagen */

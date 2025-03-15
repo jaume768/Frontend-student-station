@@ -238,12 +238,12 @@ const CreatePost = () => {
                 {/* Panel Izquierdo */}
                 <div className={`createpost-left ${images.length > 0 ? 'with-images' : ''}`}>
                     {images.length === 0 ? (
-                        <div className="left-content">
-                            <label htmlFor="image-upload" className="upload-icon">
+                        <label htmlFor="image-upload" className="left-content clickable-upload-area">
+                            <div className="upload-icon-wrapper">
                                 <FaUpload size={40} />
-                            </label>
+                            </div>
                             <p className="upload-text">Sube tus imágenes</p>
-                        </div>
+                        </label>
                     ) : (
                         <div className="image-preview">
                             <div className="main-image-container">

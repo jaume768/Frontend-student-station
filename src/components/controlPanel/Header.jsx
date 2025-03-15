@@ -26,19 +26,19 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
         switch (option) {
             case 'editProfile':
-                navigate('/ControlPanel', { state: { activeMenu: 'editProfile' } });
+                navigate('/ControlPanel/editProfile');
                 break;
             case 'profile':
-                navigate('/ControlPanel', { state: { activeMenu: 'profile' } });
+                navigate('/ControlPanel/profile');
                 break;
             case 'community':
-                navigate('/ControlPanel', { state: { activeMenu: 'community' } });
+                navigate('/ControlPanel/community');
                 break;
             case 'misOfertas':
-                navigate('/ControlPanel', { state: { activeMenu: 'misOfertas' } });
+                navigate('/ControlPanel/misOfertas');
                 break;
             case 'configuracion':
-                navigate('/ControlPanel', { state: { activeMenu: 'configuracion' } });
+                navigate('/ControlPanel/configuracion');
                 break;
             case 'logout':
                 localStorage.removeItem('authToken');
@@ -60,7 +60,7 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
             <div className="header-right">
                 <div
                     className="saved"
-                    onClick={() => navigate('/ControlPanel', { state: { activeMenu: 'guardados' } })}
+                    onClick={() => navigate('/ControlPanel/guardados')}
                 >
                     <FaBookmark className="nav-icon-save" title="Guardados" />
                     <span>guardados</span>
@@ -68,7 +68,7 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
                 <button
                     className="create-post-btn"
                     onClick={() =>
-                        navigate('/ControlPanel', { state: { activeMenu: 'createPost' } })
+                        navigate('/ControlPanel/createPost')
                     }
                 >
                     <FaPlus style={{ color: 'white' }} /> crear

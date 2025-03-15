@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import { Routes, Route, useLocation, useNavigate, Navigate } from 'react-router-dom';
 import axios from 'axios';
 import Layout from '../components/controlPanel/Layout';
 import EditProfile from '../components/controlPanel/EditProfile';
@@ -24,6 +24,7 @@ const ControlPanel = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [savedPosts, setSavedPosts] = useState({});
     const [showSavedTextMap, setShowSavedTextMap] = useState({});
+    const [activeMenu, setActiveMenu] = useState('explorer');
 
     const observer = useRef();
     const lastImageElementRef = useCallback(node => {
@@ -37,10 +38,48 @@ const ControlPanel = () => {
         if (node) observer.current.observe(node);
     }, [loading, hasMore]);
 
+    // Verificar autenticación y cargar activeMenu desde localStorage si está disponible
     useEffect(() => {
         const token = localStorage.getItem('authToken');
         setIsAuthenticated(!!token);
-    }, []);
+        
+        // Si hay un activeMenu en sessionStorage, lo usamos
+        const savedActiveMenu = sessionStorage.getItem('activeMenu');
+        
+        // Si hay un state en location, tiene prioridad
+        if (location.state?.activeMenu) {
+            setActiveMenu(location.state.activeMenu);
+            sessionStorage.setItem('activeMenu', location.state.activeMenu);
+        } else if (savedActiveMenu) {
+            // Si no hay state pero hay un valor guardado, lo usamos
+            setActiveMenu(savedActiveMenu);
+        }
+        
+        // Si estamos en una ruta específica como /post/:id
+        if (location.pathname.includes('/post/')) {
+            // No necesitamos cambiar el activeMenu
+        } else if (location.pathname.includes('/profile/')) {
+            // No necesitamos cambiar el activeMenu
+        }
+        
+    }, [location.pathname, location.state]);
+
+    // Verificación de autenticación para rutas protegidas
+    useEffect(() => {
+        const token = localStorage.getItem('authToken');
+        
+        // Lista de secciones protegidas que requieren autenticación
+        const protectedMenus = [
+            'editProfile', 'misOfertas', 'configuracion', 
+            'profile', 'community', 'createPost', 'guardados'
+        ];
+        
+        // Si estamos en una sección protegida y no hay token, redirigir al home
+        if (protectedMenus.includes(activeMenu) && !token) {
+            navigate('/', { state: { showRegister: true } });
+            return;
+        }
+    }, [activeMenu, navigate]);
 
     useEffect(() => {
         const params = new URLSearchParams(location.search);
@@ -80,14 +119,8 @@ const ControlPanel = () => {
         }
     }, [isAuthenticated]);
 
+    // Cargar imágenes para la sección explorar
     useEffect(() => {
-        if (location.state?.activeMenu !== 'explorer' && location.state?.activeMenu !== 'creatives' && location.state?.activeMenu) {
-            if (!isAuthenticated && location.state?.activeMenu !== 'explorer' && location.state?.activeMenu !== 'creatives') {
-                navigate('/', { state: { showRegister: true } });
-                return;
-            }
-        }
-
         const fetchPostImages = async () => {
             setLoading(true);
             setError(null);
@@ -117,10 +150,10 @@ const ControlPanel = () => {
             }
         };
 
-        fetchPostImages();
-    }, [page, navigate, location.state?.activeMenu, isAuthenticated]);
-
-    const activeMenu = location.state?.activeMenu || 'explorer';
+        if (activeMenu === 'explorer') {
+            fetchPostImages();
+        }
+    }, [page, activeMenu]);
 
     const isUserPost = location.pathname.includes('/post/');
     const contentClassName = isUserPost
@@ -262,50 +295,30 @@ const ControlPanel = () => {
                 <Route path="post/:id" element={<ProtectedRoute><UserPost /></ProtectedRoute>} />
                 <Route path="profile/:username" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
                 <Route path="guardados/folder/:folderId" element={<ProtectedRoute><FolderContent /></ProtectedRoute>} />
-                <Route
-                    path="*"
-                    element={
-                        (() => {
-                            if (activeMenu === 'explorer' || activeMenu === 'creatives') {
-                                if (activeMenu === 'explorer') {
-                                    return renderExplorer();
-                                } else {
-                                    return <Creatives />;
-                                }
-                            }
-
-                            if (!isAuthenticated) {
-                                navigate('/', { state: { showRegister: true } });
-                                return null;
-                            }
-
-                            switch (activeMenu) {
-                                case 'fashion':
-                                    return <div><h1>Contenido de Estudiar Moda</h1></div>;
-                                case 'blog':
-                                    return <div><h1>Contenido de Blog</h1></div>;
-                                case 'magazine':
-                                    return <div><h1>Contenido de Revista</h1></div>;
-                                case 'info':
-                                    return <div><h1>Información</h1></div>;
-                                case 'editProfile':
-                                case 'misOfertas':
-                                case 'configuracion':
-                                    return <ProtectedRoute><EditProfile /></ProtectedRoute>;
-                                case 'profile':
-                                    return <ProtectedRoute><MiPerfil /></ProtectedRoute>;
-                                case 'community':
-                                    return <ProtectedRoute><MyComunity /></ProtectedRoute>;
-                                case 'createPost':
-                                    return <ProtectedRoute><CreatePost /></ProtectedRoute>;
-                                case 'guardados':
-                                    return <ProtectedRoute><Guardados /></ProtectedRoute>;
-                                default:
-                                    return renderExplorer();
-                            }
-                        })()
-                    }
-                />
+                <Route path="explorer" element={renderExplorer()} />
+                <Route path="creatives" element={<Creatives />} />
+                <Route path="fashion" element={
+                    <ProtectedRoute><div><h1>Contenido de Estudiar Moda</h1></div></ProtectedRoute>
+                } />
+                <Route path="blog" element={
+                    <ProtectedRoute><div><h1>Contenido de Blog</h1></div></ProtectedRoute>
+                } />
+                <Route path="magazine" element={
+                    <ProtectedRoute><div><h1>Contenido de Revista</h1></div></ProtectedRoute>
+                } />
+                <Route path="info" element={
+                    <div><h1>Información</h1></div>
+                } />
+                <Route path="editProfile" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
+                <Route path="misOfertas" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
+                <Route path="configuracion" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
+                <Route path="profile" element={<ProtectedRoute><MiPerfil /></ProtectedRoute>} />
+                <Route path="community" element={<ProtectedRoute><MyComunity /></ProtectedRoute>} />
+                <Route path="createPost" element={<ProtectedRoute><CreatePost /></ProtectedRoute>} />
+                <Route path="guardados" element={<ProtectedRoute><Guardados /></ProtectedRoute>} />
+                
+                {/* Ruta por defecto - redirige a explorer */}
+                <Route path="*" element={<Navigate to="/ControlPanel/explorer" replace />} />
             </Routes>
         );
     };

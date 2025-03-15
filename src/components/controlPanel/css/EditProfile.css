@@ -1,4 +1,3 @@
-
 .edit-profile-wrapper {
     max-width: 1200px;
     margin: 0 auto;
@@ -42,24 +41,60 @@
     background: red;
 }
 
+/* Estilos para la sección de CV y Portfolio PDF */
+.file-input {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
 
-/* Sticky en PC para banner y left-options */
-@media (min-width: 769px) {
-    .profile-banner {
-        position: sticky;
-        top: 0;
-        z-index: 0;
-    }
+.file-input input[type="file"] {
+    opacity: 0.7;
+    padding: 0.5rem;
+    width: 100%;
+    cursor: pointer;
+}
 
-    .left-options {
-        position: sticky;
-        top: 120px;
-    }
+.file-input input[type="file"]:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
 
-    .right-form {
-        overflow-y: auto;
-        max-height: calc(100vh - 120px);
-    }
+.upload-icon {
+    position: absolute;
+    right: 10px;
+    font-size: 1.2rem;
+    pointer-events: none;
+}
+
+.file-name {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+    padding: 5px 10px;
+    background: #f0f0f0;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.clear-file {
+    background: transparent;
+    border: none;
+    color: #ff3333;
+    font-weight: bold;
+    cursor: pointer;
+    margin-left: 8px;
+    font-size: 1rem;
+    padding: 0 5px;
+}
+
+.clear-file:hover {
+    color: #ff0000;
 }
 
 /* Banner interno */
@@ -201,7 +236,7 @@
     background: #fdfdfd;
     padding: 1rem;
     border-radius: 12px;
-    margin-bottom: 250px;
+    margin-bottom: 3rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
@@ -278,7 +313,10 @@
 /* Texto auxiliar */
 .info-text {
     font-size: 0.85rem;
-    color: #4c85ff;
+    color: #666;
+    display: block;
+    margin-top: -0.5rem;
+    margin-bottom: 1rem;
 }
 
 /* Botón “Editar datos” */
@@ -581,5 +619,24 @@
 
     .ofertas-tab {
         font-size: 1.2em;
+    }
+}
+
+/* Sticky en PC para banner y left-options */
+@media (min-width: 769px) {
+    .profile-banner {
+        position: sticky;
+        top: 0;
+        z-index: 0;
+    }
+
+    .left-options {
+        position: sticky;
+        top: 120px;
+    }
+
+    .right-form {
+        overflow-y: auto;
+        max-height: calc(100vh - 120px);
     }
 }

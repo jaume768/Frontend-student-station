@@ -133,6 +133,14 @@ const EditProfile = () => {
     const [isProfessionalFormationEditing, setIsProfessionalFormationEditing] = useState(false);
     const [isProfessionalFormationCollapsed, setIsProfessionalFormationCollapsed] = useState(false);
 
+    // Estados para CV y Portfolio
+    const [cvFile, setCvFile] = useState(null);
+    const [portfolioFile, setPortfolioFile] = useState(null);
+    const [isPdfEditing, setIsPdfEditing] = useState(false);
+    const [cvFileName, setCvFileName] = useState('');
+    const [portfolioFileName, setPortfolioFileName] = useState('');
+    const [isUploading, setIsUploading] = useState(false);
+
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
@@ -206,6 +214,13 @@ const EditProfile = () => {
                     youtube: "",
                     pinterest: ""
                 });
+                // Actualizar nombres de archivo si están disponibles
+                if (user.cvUrl) {
+                    setCvFileName(user.cvUrl.split('/').pop());
+                }
+                if (user.portfolioUrl) {
+                    setPortfolioFileName(user.portfolioUrl.split('/').pop());
+                }
             } catch (error) {
                 console.error('Error al obtener el perfil:', error);
             }
@@ -455,6 +470,161 @@ const EditProfile = () => {
         "MIT", "Universidad de Cambridge", "Universidad de Tokyo", "Universidad de Salamanca",
         "Universidad de Buenos Aires", "Universidad de Sydney", "Universidad de Pekín"
     ];
+
+    // Manejador para cambios en los archivos
+    const handleFileChange = (e) => {
+        const { name, files } = e.target;
+        if (files.length > 0) {
+            const file = files[0];
+            if (file.type !== 'application/pdf') {
+                alert('Solo se permiten archivos PDF');
+                return;
+            }
+            
+            // Tamaño máximo: 10MB
+            if (file.size > 10 * 1024 * 1024) {
+                alert('El archivo es demasiado grande. El tamaño máximo es 10MB.');
+                return;
+            }
+            
+            if (name === 'cv') {
+                setCvFile(file);
+                setCvFileName(file.name);
+            } else if (name === 'portfolio') {
+                setPortfolioFile(file);
+                setPortfolioFileName(file.name);
+            }
+        }
+    };
+
+    // Función para subir archivos PDF
+    const uploadPdfFiles = async () => {
+        if (!cvFile && !portfolioFile) {
+            alert('No se ha seleccionado ningún archivo');
+            return;
+        }
+
+        setIsUploading(true);
+        try {
+            const token = localStorage.getItem('authToken');
+            const backendUrl = import.meta.env.VITE_BACKEND_URL;
+            
+            let updatedData = {};
+            
+            // Subir CV si está seleccionado
+            if (cvFile) {
+                const cvFormData = new FormData();
+                cvFormData.append('file', cvFile);
+                cvFormData.append('type', 'cv');
+                
+                const cvResponse = await axios.post(
+                    `${backendUrl}/api/users/upload-pdf`, 
+                    cvFormData, 
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    }
+                );
+                
+                if (cvResponse.data.success) {
+                    updatedData.cvUrl = cvResponse.data.fileUrl;
+                    alert('CV subido con éxito');
+                }
+            }
+            
+            // Subir Portfolio si está seleccionado
+            if (portfolioFile) {
+                const portfolioFormData = new FormData();
+                portfolioFormData.append('file', portfolioFile);
+                portfolioFormData.append('type', 'portfolio');
+                
+                const portfolioResponse = await axios.post(
+                    `${backendUrl}/api/users/upload-pdf`, 
+                    portfolioFormData, 
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    }
+                );
+                
+                if (portfolioResponse.data.success) {
+                    updatedData.portfolioUrl = portfolioResponse.data.fileUrl;
+                    alert('Portfolio subido con éxito');
+                }
+            }
+            
+            // Actualizar el perfil con las nuevas URLs
+            if (Object.keys(updatedData).length > 0) {
+                await axios.put(
+                    `${backendUrl}/api/users/profile`, 
+                    updatedData, 
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
+                );
+                
+                // Refrescar los datos del usuario
+                const fetchUserProfile = async () => {
+                    try {
+                        const token = localStorage.getItem('authToken');
+                        if (!token) return;
+                        const backendUrl = import.meta.env.VITE_BACKEND_URL;
+                        const response = await axios.get(`${backendUrl}/api/users/profile`, {
+                            headers: { Authorization: `Bearer ${token}` },
+                        });
+                        const user = response.data;
+                        setUserData({
+                            profilePicture: user.profile?.profilePicture || '/multimedia/usuarioDefault.jpg',
+                            fullName: user.fullName,
+                            username: user.username,
+                            city: user.city,
+                            country: user.country,
+                            email: user.email,
+                            creativeType: getCreativeTypeText(user.creativeType),
+                            biography: user.biography || '',
+                            googleId: user.googleId,
+                            hasPassword: user.hasPassword,
+                        });
+                        // Actualizar datos del usuario (reusando código existente)
+                        if (user.fullName) {
+                            const names = user.fullName.split(' ');
+                            setBasicInfo({
+                                firstName: names[0] || '',
+                                lastName: names.slice(1).join(' ') || '',
+                                country: user.country || '',
+                                city: user.city || '',
+                            });
+                        }
+                        // Actualizar nombres de archivo si están disponibles
+                        if (user.cvUrl) {
+                            setCvFileName(user.cvUrl.split('/').pop());
+                        }
+                        if (user.portfolioUrl) {
+                            setPortfolioFileName(user.portfolioUrl.split('/').pop());
+                        }
+                    } catch (error) {
+                        console.error('Error al obtener el perfil:', error);
+                    }
+                };
+                fetchUserProfile();
+            }
+            
+            setIsPdfEditing(false);
+            setCvFile(null);
+            setPortfolioFile(null);
+        } catch (error) {
+            console.error('Error al subir archivos PDF:', error);
+            alert('Error al subir los archivos. Inténtalo de nuevo.');
+        } finally {
+            setIsUploading(false);
+        }
+    };
 
     return (
         <div className="edit-profile-wrapper">
@@ -1211,23 +1381,88 @@ const EditProfile = () => {
                                     {/* 3.8 Mi CV y Portfolio PDF */}
                                     <section className="form-section-final">
                                         <h3>Mi CV y Portfolio PDF</h3>
-                                        <small className="info-text">Esta opción todavía no está disponible</small>
                                         <div className="form-group">
-                                            <label>CV</label>
+                                            <label>CV (PDF)</label>
                                             <div className="file-input">
-                                                <input type="file" name="cv" accept="application/pdf" disabled />
+                                                <input 
+                                                    type="file" 
+                                                    name="cv" 
+                                                    accept="application/pdf" 
+                                                    onChange={handleFileChange}
+                                                    disabled={!isPdfEditing}
+                                                />
                                                 <span className="upload-icon">📤</span>
+                                                {cvFileName && (
+                                                    <div className="file-name">
+                                                        {cvFileName}
+                                                        {isPdfEditing && (
+                                                            <button 
+                                                                type="button" 
+                                                                className="clear-file" 
+                                                                onClick={() => {
+                                                                    setCvFile(null);
+                                                                    setCvFileName('');
+                                                                }}
+                                                            >
+                                                                ✕
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                )}
                                             </div>
+                                            <small className="info-text">Tamaño máximo: 10MB</small>
                                         </div>
                                         <div className="form-group">
-                                            <label>Portfolio</label>
+                                            <label>Portfolio (PDF)</label>
                                             <div className="file-input">
-                                                <input type="file" name="portfolio" accept="application/pdf" disabled />
+                                                <input 
+                                                    type="file" 
+                                                    name="portfolio" 
+                                                    accept="application/pdf" 
+                                                    onChange={handleFileChange}
+                                                    disabled={!isPdfEditing}
+                                                />
                                                 <span className="upload-icon">📤</span>
+                                                {portfolioFileName && (
+                                                    <div className="file-name">
+                                                        {portfolioFileName}
+                                                        {isPdfEditing && (
+                                                            <button 
+                                                                type="button" 
+                                                                className="clear-file" 
+                                                                onClick={() => {
+                                                                    setPortfolioFile(null);
+                                                                    setPortfolioFileName('');
+                                                                }}
+                                                            >
+                                                                ✕
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                )}
                                             </div>
+                                            <small className="info-text">Tamaño máximo: 10MB</small>
                                         </div>
                                         <div className="button-container">
-                                            <EditButton onClick={() => { /* Guardar CV y Portfolio */ }} isEditing={false} />
+                                            {isUploading ? (
+                                                <button 
+                                                    type="button" 
+                                                    className="edit-data-button" 
+                                                    disabled
+                                                >
+                                                    Subiendo...
+                                                </button>
+                                            ) : (
+                                                <EditButton 
+                                                    isEditing={isPdfEditing} 
+                                                    onClick={() => {
+                                                        if (isPdfEditing) {
+                                                            uploadPdfFiles();
+                                                        }
+                                                        setIsPdfEditing(!isPdfEditing);
+                                                    }} 
+                                                />
+                                            )}
                                         </div>
                                     </section>
                                 </>

@@ -23,7 +23,9 @@ const navItems = [
 
 const Sidebar = ({ onLinkClick }) => {
     const location = useLocation();
-    const activeMenu = location.state?.activeMenu || 'explorer';
+    // Obtener el activeMenu de la URL actual
+    const currentPath = location.pathname.split('/').pop();
+    const activeMenu = currentPath || 'explorer';
 
     return (
         <aside className="dashboard-sidebar">
@@ -36,8 +38,7 @@ const Sidebar = ({ onLinkClick }) => {
                         {navItems.map((item) => (
                             <li key={item.id}>
                                 <Link
-                                    to="/ControlPanel"
-                                    state={{ activeMenu: item.id }}
+                                    to={`/ControlPanel/${item.id}`}
                                     className={`nav-icon-container ${activeMenu === item.id ? 'active' : ''}`}
                                     onClick={onLinkClick}
                                 >
@@ -51,8 +52,7 @@ const Sidebar = ({ onLinkClick }) => {
             </div>
             <div className="info-icon">
                 <Link
-                    to="/ControlPanel"
-                    state={{ activeMenu: 'info' }}
+                    to="/ControlPanel/info"
                     className="nav-icon-container"
                     onClick={onLinkClick}
                 >

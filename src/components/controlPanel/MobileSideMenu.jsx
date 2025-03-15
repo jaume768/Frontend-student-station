@@ -18,7 +18,9 @@ const menuItems = [
 
 const MobileSideMenu = ({ onClose }) => {
     const location = useLocation();
-    const activeMenu = location.state?.activeMenu || 'explorer';
+    // Obtener el activeMenu de la URL actual
+    const currentPath = location.pathname.split('/').pop();
+    const activeMenu = currentPath || 'explorer';
 
     return (
         <>
@@ -31,8 +33,7 @@ const MobileSideMenu = ({ onClose }) => {
                     {menuItems.map(item => (
                         <Link
                             key={item.id}
-                            to="/ControlPanel"
-                            state={{ activeMenu: item.id }}
+                            to={`/ControlPanel/${item.id}`}
                             onClick={onClose}
                             className={`menu-item ${activeMenu === item.id ? 'active' : ''}`}
                         >
