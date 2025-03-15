@@ -17,6 +17,9 @@ const Guardados = () => {
     const [isEditingFolders, setIsEditingFolders] = useState(false);
     const [newFolderName, setNewFolderName] = useState('');
     const [clickStarted, setClickStarted] = useState(false); // Para controlar el inicio del click
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    const [folderToDelete, setFolderToDelete] = useState(null);
+    const [editingFolderName, setEditingFolderName] = useState({ id: null, name: '' });
 
     const navigate = useNavigate();
     const totalSlots = 15;
@@ -182,9 +185,75 @@ const Guardados = () => {
             if (selectedFolder === folderId) {
                 setSelectedFolder(null);
             }
+            
+            // Resetear estados
+            setShowDeleteConfirm(false);
+            setFolderToDelete(null);
         } catch (error) {
             console.error('Error al eliminar carpeta:', error);
         }
+    };
+
+    // Confirmar eliminación de carpeta
+    const confirmDeleteFolder = (folderId, e) => {
+        e.stopPropagation();
+        setFolderToDelete(folderId);
+        setShowDeleteConfirm(true);
+    };
+
+    // Cancelar eliminación de carpeta
+    const cancelDeleteFolder = () => {
+        setFolderToDelete(null);
+        setShowDeleteConfirm(false);
+    };
+
+    // Iniciar edición de nombre de carpeta
+    const startEditFolderName = (folder, e) => {
+        e.stopPropagation();
+        setEditingFolderName({
+            id: folder._id,
+            name: folder.name
+        });
+    };
+
+    // Actualizar nombre de carpeta
+    const updateFolderName = async (e) => {
+        e.preventDefault();
+        
+        if (!editingFolderName.id || !editingFolderName.name.trim()) {
+            return;
+        }
+        
+        try {
+            const token = localStorage.getItem('authToken');
+            if (!token) return;
+            const backendUrl = import.meta.env.VITE_BACKEND_URL;
+            
+            const res = await axios.put(
+                `${backendUrl}/api/folders/${editingFolderName.id}`,
+                { name: editingFolderName.name },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            
+            if (res.data.folder) {
+                // Actualizar el folder en el estado local
+                setFolders(prev => prev.map(folder => 
+                    folder._id === editingFolderName.id 
+                        ? { ...folder, name: editingFolderName.name } 
+                        : folder
+                ));
+                
+                // Resetear el estado de edición
+                setEditingFolderName({ id: null, name: '' });
+            }
+        } catch (error) {
+            console.error('Error al actualizar nombre de carpeta:', error);
+        }
+    };
+
+    // Cancelar edición de nombre
+    const cancelEditFolderName = () => {
+        setEditingFolderName({ id: null, name: '' });
     };
 
     // Guardar posts seleccionados en la carpeta
@@ -345,10 +414,10 @@ const Guardados = () => {
                             <FaPlus /> Nueva carpeta
                         </button>
                         <button
-                            className="folder-action-button"
+                            className={`folder-action-button ${isEditingFolders ? 'active' : ''}`}
                             onClick={() => setIsEditingFolders(!isEditingFolders)}
                         >
-                            <FaPencilAlt /> Editar
+                            <FaPencilAlt /> {isEditingFolders ? 'Terminar' : 'Editar'}
                         </button>
                     </div>
                 </div>
@@ -357,23 +426,24 @@ const Guardados = () => {
                 </p>
 
                 {isCreatingFolder && (
-                    <div className="new-folder-form">
+                    <div className="folder-form">
                         <input
                             type="text"
                             value={newFolderName}
                             onChange={(e) => setNewFolderName(e.target.value)}
                             placeholder="Nombre de la carpeta"
+                            className="folder-name-input"
                         />
-                        <div className="new-folder-actions">
+                        <div className="folder-form-actions">
                             <button
-                                className="confirm-button"
+                                className="folder-form-button confirm"
                                 onClick={handleCreateFolder}
                                 disabled={!newFolderName.trim()}
                             >
                                 <FaCheck /> Crear
                             </button>
                             <button
-                                className="cancel-button"
+                                className="folder-form-button cancel"
                                 onClick={() => {
                                     setIsCreatingFolder(false);
                                     setNewFolderName('');
@@ -390,13 +460,52 @@ const Guardados = () => {
                         // Modo edición: mostrar botones para eliminar carpetas
                         folders.map(folder => (
                             <div key={folder._id} className="folder-card editing">
-                                <p>{folder.name}</p>
-                                <button
-                                    className="delete-folder-button"
-                                    onClick={() => handleDeleteFolder(folder._id)}
-                                >
-                                    <FaTimes />
-                                </button>
+                                {editingFolderName.id === folder._id ? (
+                                    <form onSubmit={updateFolderName} className="edit-folder-form">
+                                        <input
+                                            type="text"
+                                            value={editingFolderName.name}
+                                            onChange={(e) => setEditingFolderName({
+                                                ...editingFolderName,
+                                                name: e.target.value
+                                            })}
+                                            autoFocus
+                                            className="edit-folder-input"
+                                        />
+                                        <div className="edit-folder-actions">
+                                            <button type="submit" className="edit-folder-button save">
+                                                <FaCheck />
+                                            </button>
+                                            <button 
+                                                type="button" 
+                                                className="edit-folder-button cancel"
+                                                onClick={cancelEditFolderName}
+                                            >
+                                                <FaTimes />
+                                            </button>
+                                        </div>
+                                    </form>
+                                ) : (
+                                    <>
+                                        <p>{folder.name}</p>
+                                        <div className="folder-edit-actions">
+                                            <button
+                                                className="folder-edit-button rename"
+                                                onClick={(e) => startEditFolderName(folder, e)}
+                                                title="Renombrar carpeta"
+                                            >
+                                                <FaPencilAlt />
+                                            </button>
+                                            <button
+                                                className="folder-edit-button delete"
+                                                onClick={(e) => confirmDeleteFolder(folder._id, e)}
+                                                title="Eliminar carpeta"
+                                            >
+                                                <FaTimes />
+                                            </button>
+                                        </div>
+                                    </>
+                                )}
                             </div>
                         ))
                     ) : (
@@ -457,6 +566,30 @@ const Guardados = () => {
                     </button>
                 )}
             </div>
+
+            {/* Diálogo de confirmación para eliminar carpeta */}
+            {showDeleteConfirm && (
+                <div className="delete-confirmation-overlay">
+                    <div className="delete-confirmation-modal">
+                        <h3>¿Eliminar carpeta?</h3>
+                        <p>Esta acción no se puede deshacer. Los posts guardados en esta carpeta no se eliminarán, pero ya no estarán organizados en esta carpeta.</p>
+                        <div className="confirmation-buttons">
+                            <button 
+                                className="confirm-button delete" 
+                                onClick={() => handleDeleteFolder(folderToDelete)}
+                            >
+                                Eliminar
+                            </button>
+                            <button 
+                                className="cancel-button" 
+                                onClick={cancelDeleteFolder}
+                            >
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

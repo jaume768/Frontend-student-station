@@ -143,101 +143,134 @@
     align-items: center;
     gap: 5px;
     cursor: pointer;
-    padding: 0.4rem 0.8rem;
+    padding: 0.6rem 1rem;
     border-radius: 30px;
     transition: all 0.3s ease;
+    font-weight: 500;
 }
 
 .folder-action-button:hover {
     background-color: #f0f0f0;
     color: #333;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
-/* Formulario de nueva carpeta */
-.new-folder-form {
-    background-color: #fff;
-    padding: 1rem;
-    border-radius: 8px;
-    margin: 1rem 0;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.new-folder-form input {
-    width: 100%;
-    padding: 0.8rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 0.9rem;
-    margin-bottom: 1rem;
-}
-
-.new-folder-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.8rem;
-}
-
-.new-folder-actions button {
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 0.85rem;
-    transition: background-color 0.3s ease;
-}
-
-.new-folder-actions button:first-child {
-    background-color: #38c785;
+.folder-action-button.active {
+    background-color: #08b599;
     color: white;
 }
 
-.new-folder-actions button:last-child {
-    background-color: #e0e0e0;
-    color: #333;
+.folder-action-button.active:hover {
+    background-color: #069d85;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
 }
 
-.new-folder-actions button:hover {
-    opacity: 0.9;
+/* Formulario de nueva carpeta */
+.folder-form {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.folder-name-input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.folder-name-input:focus {
+    outline: none;
+    border-color: #08b599;
+    box-shadow: 0 0 0 2px rgba(8, 181, 153, 0.1);
+}
+
+.folder-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.folder-form-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.folder-form-button.confirm {
+    background-color: #08b599;
+    color: white;
+}
+
+.folder-form-button.confirm:hover {
+    background-color: #069d85;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(8, 181, 153, 0.2);
+}
+
+.folder-form-button.confirm:disabled {
+    background-color: #cccccc;
+    color: #888888;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.folder-form-button.cancel {
+    background-color: #f5f5f5;
+    color: #666;
+}
+
+.folder-form-button.cancel:hover {
+    background-color: #e0e0e0;
+    color: #333;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Lista de carpetas */
-.guardados-folders {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-top: 1rem;
-}
-
-.folder-list{
-    display: flex;
-    gap: 10px;
+.folder-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
 }
 
 .folder-card {
     background-color: #f9f9f9;
-    border-radius: 10px;
-    padding: 15px;
-    width: 200px;
-    margin-bottom: 15px;
+    border-radius: 12px;
+    padding: 16px;
     cursor: pointer;
     border: 2px solid transparent;
     transition: all 0.2s ease;
     display: flex;
     flex-direction: column;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .folder-card.selected {
-    border-color: #007bff;
-    background-color: #f0f7ff;
+    border-color: #08b599;
+    background-color: #f0fdfb;
 }
 
 .folder-card:hover {
-    background-color: #f0f0f0;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    background-color: #f5f5f5;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.08);
 }
 
 .folder-card.editing {
@@ -245,100 +278,119 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    padding: 12px 16px;
 }
 
-.folder-thumbnail-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    gap: 4px;
-    height: 150px;
-    margin-bottom: 10px;
-    border-radius: 6px;
-    overflow: hidden;
-    background-color: #eee;
+.folder-card.editing p {
+    margin: 0;
+    font-weight: 500;
 }
 
-/* Estilos según la cantidad de posts en la carpeta */
-.folder-thumbnail {
-    position: relative;
-    overflow: hidden;
-    background-color: #ddd;
-}
-
-/* Cuando solo hay 1 imagen */
-.thumbnail-1 {
-    grid-column: span 2;
-    grid-row: span 2;
-}
-
-/* Cuando hay 2 imágenes */
-.thumbnail-2:first-child {
-    grid-column: span 2;
-}
-
-/* Cuando hay 3 imágenes */
-.thumbnail-3:first-child {
-    grid-column: span 2;
-}
-
-/* Para 4 imágenes, se usa el grid normal 2x2 */
-
-.folder-thumbnail-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-}
-
-.folder-info {
+/* Estilos para edición de carpetas */
+.folder-edit-actions {
     display: flex;
-    flex-direction: column;
+    gap: 8px;
 }
 
-.folder-name {
-    font-weight: 600;
-    margin: 0 0 5px 0;
-}
-
-.folder-count {
-    font-size: 12px;
+.folder-edit-button {
+    background: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.25s ease;
     color: #666;
 }
 
-.empty-folder-thumbnail {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #eee;
-    grid-column: span 2;
-    grid-row: span 2;
-    height: 100%;
-    color: #999;
-    font-size: 14px;
+.folder-edit-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
 }
 
-.delete-folder-button {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    background-color: rgba(255, 255, 255, 0.8);
-    color: #ff4d4f;
-    border: none;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    padding: 0;
-    transition: all 0.2s ease;
+.folder-edit-button.rename {
+    background-color: #f0f0f0;
 }
 
-.delete-folder-button:hover {
-    background-color: #ff4d4f;
+.folder-edit-button.rename:hover {
+    background-color: #e0e0e0;
+    color: #333;
+}
+
+.folder-edit-button.delete {
+    background-color: #ffebee;
+    color: #e53935;
+}
+
+.folder-edit-button.delete:hover {
+    background-color: #e53935;
     color: white;
+}
+
+/* Estilos para el formulario de edición de carpetas */
+.edit-folder-form {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 10px;
+}
+
+.edit-folder-input {
+    flex-grow: 1;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 0.9rem;
+    transition: border-color 0.3s ease;
+}
+
+.edit-folder-input:focus {
+    outline: none;
+    border-color: #08b599;
+    box-shadow: 0 0 0 2px rgba(8, 181, 153, 0.1);
+}
+
+.edit-folder-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.edit-folder-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.edit-folder-button.save {
+    background-color: #08b599;
+    color: white;
+}
+
+.edit-folder-button.save:hover {
+    background-color: #069d85;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 6px rgba(8, 181, 153, 0.2);
+}
+
+.edit-folder-button.cancel {
+    background-color: #f0f0f0;
+    color: #666;
+}
+
+.edit-folder-button.cancel:hover {
+    background-color: #e0e0e0;
+    color: #333;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
 }
 
 /* Botón de guardar en carpeta */
@@ -349,21 +401,104 @@
 }
 
 .save-to-folder-button {
-    background-color: #38c785;
+    background-color: #08b599;
     color: white;
     border: none;
-    padding: 0.7rem 1.5rem;
+    padding: 0.8rem 1.6rem;
     border-radius: 30px;
     font-size: 0.95rem;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(8, 181, 153, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
 .save-to-folder-button:hover {
-    background-color: #2ca972;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    background-color: #069d85;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(8, 181, 153, 0.3);
+}
+
+.save-to-folder-button:active {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 6px rgba(8, 181, 153, 0.2);
+}
+
+.save-to-folder-button::before {
+    content: "✓";
+    font-size: 1.1rem;
+    margin-right: 5px;
+}
+
+/* Diálogo de confirmación */
+.delete-confirmation-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.delete-confirmation-modal {
+    background-color: white;
+    border-radius: 12px;
+    padding: 24px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+}
+
+.delete-confirmation-modal h3 {
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 18px;
+}
+
+.delete-confirmation-modal p {
+    color: #666;
+    margin-bottom: 24px;
+}
+
+.confirmation-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.confirmation-buttons button {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+}
+
+.confirm-button {
+    background-color: #e53935;
+    color: white;
+}
+
+.confirm-button:hover {
+    background-color: #c62828;
+}
+
+.cancel-button {
+    background-color: #f2f2f2;
+    color: #333;
+}
+
+.cancel-button:hover {
+    background-color: #e0e0e0;
 }
 
 /* ----- Responsivo ----- */

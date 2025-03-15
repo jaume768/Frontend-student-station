@@ -52,15 +52,22 @@
     overflow: hidden;
     border-radius: 16px;
     cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.folder-content-masonry .masonry-item img {
+.folder-content-masonry .masonry-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.folder-content-masonry .masonry-img {
     width: 100%;
     display: block;
     transition: transform 0.3s ease;
 }
 
-.folder-content-masonry .masonry-item:hover img {
+.folder-content-masonry .masonry-item:hover .masonry-img {
     transform: scale(1.05);
 }
 
@@ -98,11 +105,13 @@
     height: 30px;
     border-radius: 50%;
     margin-right: 8px;
+    object-fit: cover;
 }
 
 .folder-content-masonry .user-info span {
     color: white;
-    font-size: 0.8em;
+    font-size: 0.9rem;
+    font-weight: 500;
 }
 
 .folder-content-masonry .location-info {
@@ -140,6 +149,143 @@
     opacity: 1;
 }
 
+/* Menú de opciones */
+.post-menu-container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+}
+
+.post-menu-button {
+    background-color: rgba(255, 255, 255, 0.8);
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    color: #555;
+    opacity: 0;
+}
+
+.masonry-item:hover .post-menu-button {
+    opacity: 1;
+}
+
+.post-menu-button:hover {
+    background-color: rgba(255, 255, 255, 1);
+    color: #000;
+}
+
+.post-menu-dropdown {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    width: 180px;
+    overflow: hidden;
+    z-index: 11;
+}
+
+.post-menu-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    text-align: left;
+    padding: 12px 15px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-size: 14px;
+}
+
+.post-menu-option:hover {
+    background-color: #f5f5f5;
+}
+
+.post-menu-option.delete {
+    color: #e53935;
+}
+
+.post-menu-option.delete:hover {
+    background-color: #ffebee;
+}
+
+/* Diálogo de confirmación */
+.delete-confirmation-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.delete-confirmation-modal {
+    background-color: white;
+    border-radius: 12px;
+    padding: 24px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+}
+
+.delete-confirmation-modal h3 {
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 18px;
+}
+
+.delete-confirmation-modal p {
+    color: #666;
+    margin-bottom: 24px;
+}
+
+.confirmation-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.confirmation-buttons button {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+}
+
+.confirm-button {
+    background-color: #e53935;
+    color: white;
+}
+
+.confirm-button:hover {
+    background-color: #c62828;
+}
+
+.cancel-button {
+    background-color: #f2f2f2;
+    color: #333;
+}
+
+.cancel-button:hover {
+    background-color: #e0e0e0;
+}
+
 .folder-content-loading {
     display: flex;
     justify-content: center;
@@ -149,31 +295,38 @@
     color: #666;
 }
 
+/* Mensaje cuando la carpeta está vacía */
 .empty-folder-message {
     text-align: center;
-    padding: 50px 20px;
-    color: #666;
+    padding: 40px;
+    color: #888;
     font-size: 16px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
+    background-color: #f5f5f5;
+    border-radius: 12px;
     margin-top: 20px;
 }
 
-/* Responsive */
+/* Estilos responsivos */
 @media (max-width: 1268px) {
     .folder-content-masonry {
         column-count: 4;
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 992px) {
     .folder-content-masonry {
         column-count: 3;
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
     .folder-content-masonry {
         column-count: 2;
+    }
+}
+
+@media (max-width: 480px) {
+    .folder-content-masonry {
+        column-count: 1;
     }
 }
