@@ -22,6 +22,8 @@ const ControlPanel = () => {
     const [page, setPage] = useState(1);
     const [error, setError] = useState(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [savedPosts, setSavedPosts] = useState({});
+    const [showSavedTextMap, setShowSavedTextMap] = useState({});
 
     const observer = useRef();
     const lastImageElementRef = useCallback(node => {
@@ -48,9 +50,38 @@ const ControlPanel = () => {
         }
     }, [location, navigate]);
 
+    // Obtener los posts guardados del usuario
+    useEffect(() => {
+        const fetchSavedPosts = async () => {
+            const token = localStorage.getItem('authToken');
+            if (!token) return;
+            
+            try {
+                const backendUrl = import.meta.env.VITE_BACKEND_URL;
+                const favResponse = await axios.get(`${backendUrl}/api/users/favorites`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                
+                const favorites = favResponse.data.favorites || [];
+                const savedPostsMap = {};
+                
+                favorites.forEach(post => {
+                    savedPostsMap[post._id] = true;
+                });
+                
+                setSavedPosts(savedPostsMap);
+            } catch (error) {
+                console.error('Error al cargar posts guardados:', error);
+            }
+        };
+
+        if (isAuthenticated) {
+            fetchSavedPosts();
+        }
+    }, [isAuthenticated]);
+
     useEffect(() => {
         if (location.state?.activeMenu !== 'explorer' && location.state?.activeMenu !== 'creatives' && location.state?.activeMenu) {
-            // Si la sección no es el explorador ni creatives y el usuario no está autenticado, redirigir al home
             if (!isAuthenticated && location.state?.activeMenu !== 'explorer' && location.state?.activeMenu !== 'creatives') {
                 navigate('/', { state: { showRegister: true } });
                 return;
@@ -69,7 +100,7 @@ const ControlPanel = () => {
                     const uniqueNewImages = newImages.filter(newImg =>
                         !prev.some(oldImg => oldImg.imageUrl === newImg.imageUrl)
                     );
-                    
+
                     if (page === 1) {
                         return newImages;
                     } else {
@@ -105,16 +136,54 @@ const ControlPanel = () => {
         navigate(`/ControlPanel/post/${postId}`);
     };
 
-    const handleSaveClick = (e, imageId) => {
+    const handleSaveClick = async (e, postId) => {
         e.stopPropagation();
-        
+
         const token = localStorage.getItem('authToken');
         if (!token) {
             navigate('/', { state: { showRegister: true } });
             return;
         }
-        
-        console.log('Guardar imagen:', imageId);
+
+        try {
+            const backendUrl = import.meta.env.VITE_BACKEND_URL;
+            
+            if (!savedPosts[postId]) {
+                // Guardar post
+                await axios.post(
+                    `${backendUrl}/api/users/favorites/${postId}`,
+                    {},
+                    { headers: { Authorization: `Bearer ${token}` } }
+                );
+                
+                setSavedPosts(prev => ({ ...prev, [postId]: true }));
+                
+                // Mostrar texto "Guardado" por 2 segundos
+                setShowSavedTextMap(prev => ({ ...prev, [postId]: true }));
+                setTimeout(() => {
+                    setShowSavedTextMap(prev => ({ ...prev, [postId]: false }));
+                }, 2000);
+            } else {
+                // Eliminar post de guardados
+                await axios.delete(`${backendUrl}/api/users/favorites/${postId}`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                
+                setSavedPosts(prev => {
+                    const newSavedPosts = { ...prev };
+                    delete newSavedPosts[postId];
+                    return newSavedPosts;
+                });
+                
+                setShowSavedTextMap(prev => {
+                    const newMap = { ...prev };
+                    delete newMap[postId];
+                    return newMap;
+                });
+            }
+        } catch (error) {
+            console.error('Error al actualizar favoritos:', error);
+        }
     };
 
     const renderExplorer = () => {
@@ -122,8 +191,10 @@ const ControlPanel = () => {
             <div>
                 <div className="explorer-gallery">
                     {postImages.map((item, index) => {
-                        // Determinar si es el último elemento para observador de intersección
                         const isLastElement = index === postImages.length - 1;
+                        const isPostSaved = savedPosts[item.postId];
+                        const showSavedText = showSavedTextMap[item.postId];
+                        
                         return (
                             <div
                                 className="masonry-item"
@@ -137,10 +208,11 @@ const ControlPanel = () => {
                                 />
                                 <div className="overlay">
                                     <button
-                                        className="save-btn"
+                                        className={`save-btn ${isPostSaved ? 'saved' : ''}`}
                                         onClick={(e) => handleSaveClick(e, item.postId)}
                                     >
                                         Guardar
+                                        {showSavedText && <span className="saved-text">Guardado</span>}
                                     </button>
                                     <div className="user-info">
                                         <img
@@ -177,7 +249,6 @@ const ControlPanel = () => {
     };
 
     const renderContent = () => {
-        // Componente para proteger rutas que requieren autenticación
         const ProtectedRoute = ({ children }) => {
             if (!isAuthenticated) {
                 navigate('/', { state: { showRegister: true } });
@@ -195,7 +266,6 @@ const ControlPanel = () => {
                     path="*"
                     element={
                         (() => {
-                            // Para el explorador y creatives, permitir acceso sin autenticación
                             if (activeMenu === 'explorer' || activeMenu === 'creatives') {
                                 if (activeMenu === 'explorer') {
                                     return renderExplorer();
@@ -203,13 +273,12 @@ const ControlPanel = () => {
                                     return <Creatives />;
                                 }
                             }
-                            
-                            // Para otras secciones, verificar autenticación
+
                             if (!isAuthenticated) {
                                 navigate('/', { state: { showRegister: true } });
                                 return null;
                             }
-                            
+
                             switch (activeMenu) {
                                 case 'fashion':
                                     return <div><h1>Contenido de Estudiar Moda</h1></div>;
