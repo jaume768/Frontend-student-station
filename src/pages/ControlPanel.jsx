@@ -26,45 +26,30 @@ const ControlPanel = () => {
     const [savedPosts, setSavedPosts] = useState({});
     const [showSavedTextMap, setShowSavedTextMap] = useState({});
     const [activeMenu, setActiveMenu] = useState('explorer');
-    const [scrollDebug, setScrollDebug] = useState("Esperando scroll...");
+    // Estado para acumular los IDs de posts ya mostrados
+    const [excludedIds, setExcludedIds] = useState([]);
 
     // Verificar autenticación y cargar activeMenu desde localStorage si está disponible
     useEffect(() => {
         const token = localStorage.getItem('authToken');
         setIsAuthenticated(!!token);
-        
-        // Si hay un activeMenu en sessionStorage, lo usamos
+
         const savedActiveMenu = sessionStorage.getItem('activeMenu');
-        
-        // Si hay un state en location, tiene prioridad
         if (location.state?.activeMenu) {
             setActiveMenu(location.state.activeMenu);
             sessionStorage.setItem('activeMenu', location.state.activeMenu);
         } else if (savedActiveMenu) {
-            // Si no hay state pero hay un valor guardado, lo usamos
             setActiveMenu(savedActiveMenu);
         }
-        
-        // Si estamos en una ruta específica como /post/:id
-        if (location.pathname.includes('/post/')) {
-            // No necesitamos cambiar el activeMenu
-        } else if (location.pathname.includes('/profile/')) {
-            // No necesitamos cambiar el activeMenu
-        }
-        
     }, [location.pathname, location.state]);
 
     // Verificación de autenticación para rutas protegidas
     useEffect(() => {
         const token = localStorage.getItem('authToken');
-        
-        // Lista de secciones protegidas que requieren autenticación
         const protectedMenus = [
-            'editProfile', 'misOfertas', 'configuracion', 
+            'editProfile', 'misOfertas', 'configuracion',
             'profile', 'community', 'createPost', 'guardados'
         ];
-        
-        // Si estamos en una sección protegida y no hay token, redirigir al home
         if (protectedMenus.includes(activeMenu) && !token) {
             navigate('/', { state: { showRegister: true } });
             return;
@@ -84,64 +69,65 @@ const ControlPanel = () => {
         const fetchSavedPosts = async () => {
             const token = localStorage.getItem('authToken');
             if (!token) return;
-            
             try {
                 const backendUrl = import.meta.env.VITE_BACKEND_URL;
                 const favResponse = await axios.get(`${backendUrl}/api/users/favorites`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
-                
                 const favorites = favResponse.data.favorites || [];
                 const savedPostsMap = {};
-                
                 favorites.forEach(post => {
                     savedPostsMap[post._id] = true;
                 });
-                
                 setSavedPosts(savedPostsMap);
             } catch (error) {
                 console.error('Error al cargar posts guardados:', error);
             }
         };
-
         if (isAuthenticated) {
             fetchSavedPosts();
         }
     }, [isAuthenticated]);
 
-    // Cargar imágenes para la sección explorar
+    // Cargar imágenes para la sección explorer (modificado para enviar el parámetro exclude)
     useEffect(() => {
         const fetchPostImages = async () => {
             setLoading(true);
             setError(null);
             try {
                 const backendUrl = import.meta.env.VITE_BACKEND_URL;
-                // Reducir el limit para cargar menos imágenes inicialmente
-                const limit = 8; 
-                const response = await axios.get(`${backendUrl}/api/posts/explorer?page=${page}&limit=${limit}`);
-
+                const limit = 5;
+                // Construir la cadena de IDs a excluir
+                const excludeQuery = excludedIds.length ? `&exclude=${excludedIds.join(",")}` : "";
+                const response = await axios.get(`${backendUrl}/api/posts/explorer?page=${page}&limit=${limit}${excludeQuery}`);
                 const newImages = response.data.images;
-                
-                // Almacenar las imágenes por página
+                // Guardar las imágenes por página
                 setPostImagesByPage(prev => ({
                     ...prev,
                     [page]: newImages
                 }));
-                
-                // También actualizar el array completo para compatibilidad
+                // Actualizar el array completo (evitando duplicados)
                 setPostImages(prev => {
-                    // Si es la primera página, reemplazar todas las imágenes
                     if (page === 1) {
                         return newImages;
                     } else {
-                        // Eliminar duplicados antes de agregar las nuevas imágenes
                         const uniqueNewImages = newImages.filter(newImg =>
                             !prev.some(oldImg => oldImg.imageUrl === newImg.imageUrl)
                         );
                         return [...prev, ...uniqueNewImages];
                     }
                 });
-
+                // Actualizar el estado de excludedIds con los nuevos postIds
+                const newPostIds = newImages.map(img => img.postId);
+                setExcludedIds(prev => {
+                    const combined = [...prev];
+                    newPostIds.forEach(id => {
+                        if (!combined.includes(id)) {
+                            combined.push(id);
+                        }
+                    });
+                    return combined;
+                });
                 setHasMore(response.data.hasMore);
             } catch (err) {
                 console.error('Error fetching post images:', err);
@@ -150,69 +136,33 @@ const ControlPanel = () => {
                 setLoading(false);
             }
         };
-
-        // Solo cargar imágenes si estamos en la sección explorer
         if (activeMenu === 'explorer' || location.pathname.includes('/explorer')) {
             fetchPostImages();
         }
-    }, [page, activeMenu, location.pathname]);
+    }, [page, activeMenu, location.pathname]); // No incluimos excludedIds para evitar re-fetch innecesario
 
-    // Detectar scroll al final de la ventana
-    useEffect(() => {
-        // Función para detectar scroll (con throttle para evitar llamadas excesivas)
-        let scrollTimer = null;
-        function handleScroll() {
-            if (scrollTimer) return;
-            
-            scrollTimer = setTimeout(() => {
-                if (loading || !hasMore) {
-                    scrollTimer = null;
-                    return;
-                }
-                
-                // Calcular posiciones de forma simplificada
-                const scrolledToBottom = window.innerHeight + window.scrollY >= 
-                    document.documentElement.scrollHeight - 500;
-                
-                if (scrolledToBottom) {
-                    console.log("Cargando más imágenes - Página:", page + 1);
-                    setPage(prevPage => prevPage + 1);
-                }
-                
-                scrollTimer = null;
-            }, 200);
-        }
-        
-        // También cargar más al llegar al final de la ventana inicial si hay espacio
-        function checkInitialScroll() {
-            if (!loading && hasMore && 
-                window.innerHeight >= document.documentElement.scrollHeight - 200) {
-                console.log("Carga inicial - ventana grande, se necesitan más imágenes");
-                setPage(prevPage => prevPage + 1);
-            }
-        }
-        
-        // Comprobar después de que las imágenes se hayan cargado
-        setTimeout(checkInitialScroll, 500);
-        
-        window.addEventListener('scroll', handleScroll);
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-            if (scrollTimer) clearTimeout(scrollTimer);
-        };
-    }, [loading, hasMore, page]);
-
-    // Reset pagination when changing sections
+    // Reset de paginación y de los IDs excluidos al cambiar de sección
     useEffect(() => {
         setPage(1);
         setPostImages([]);
+        setPostImagesByPage({});
         setHasMore(true);
+        setExcludedIds([]);
     }, [activeMenu]);
 
-    const isUserPost = location.pathname.includes('/post/');
-    const contentClassName = isUserPost
-        ? 'no-padding'
-        : (activeMenu === 'editProfile' ? 'overflow-hidden-desktop' : '');
+    // Intersection Observer para detectar el último elemento y cargar más imágenes automáticamente
+    const observer = useRef();
+    const lastImageRef = useCallback(node => {
+        if (loading) return;
+        if (observer.current) observer.current.disconnect();
+        observer.current = new IntersectionObserver(entries => {
+            if (entries[0].isIntersecting && hasMore) {
+                console.log("IntersectionObserver: cargando más imágenes - Página:", page + 1);
+                setPage(prevPage => prevPage + 1);
+            }
+        }, { rootMargin: '100px' });
+        if (node) observer.current.observe(node);
+    }, [loading, hasMore, page]);
 
     const handleImageClick = (postId) => {
         const token = localStorage.getItem('authToken');
@@ -225,43 +175,33 @@ const ControlPanel = () => {
 
     const handleSaveClick = async (e, postId) => {
         e.stopPropagation();
-
         const token = localStorage.getItem('authToken');
         if (!token) {
             navigate('/', { state: { showRegister: true } });
             return;
         }
-
         try {
             const backendUrl = import.meta.env.VITE_BACKEND_URL;
-            
             if (!savedPosts[postId]) {
-                // Guardar post
                 await axios.post(
                     `${backendUrl}/api/users/favorites/${postId}`,
                     {},
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
-                
                 setSavedPosts(prev => ({ ...prev, [postId]: true }));
-                
-                // Mostrar texto "Guardado" por 2 segundos
                 setShowSavedTextMap(prev => ({ ...prev, [postId]: true }));
                 setTimeout(() => {
                     setShowSavedTextMap(prev => ({ ...prev, [postId]: false }));
                 }, 2000);
             } else {
-                // Eliminar post de guardados
                 await axios.delete(`${backendUrl}/api/users/favorites/${postId}`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
-                
                 setSavedPosts(prev => {
                     const newSavedPosts = { ...prev };
                     delete newSavedPosts[postId];
                     return newSavedPosts;
                 });
-                
                 setShowSavedTextMap(prev => {
                     const newMap = { ...prev };
                     delete newMap[postId];
@@ -274,21 +214,25 @@ const ControlPanel = () => {
     };
 
     const renderExplorer = () => {
+        const pageKeys = Object.keys(postImagesByPage).sort((a, b) => a - b);
+        const lastPageKey = pageKeys[pageKeys.length - 1];
         return (
             <div className="explorer-container">
-                {/* Mostramos cada página por separado para mantener el orden visual */}
                 {Object.keys(postImagesByPage).map(pageNum => (
                     <div key={`page-${pageNum}`} className="explorer-page">
                         <div className="explorer-gallery">
                             {postImagesByPage[pageNum].map((item, index) => {
+                                const isLastItem =
+                                    (pageNum === lastPageKey) &&
+                                    (index === postImagesByPage[pageNum].length - 1);
                                 const isPostSaved = savedPosts[item.postId];
                                 const showSavedText = showSavedTextMap[item.postId];
-                                
                                 return (
                                     <div
                                         className="masonry-item"
                                         key={`${item.postId}-${index}-${pageNum}`}
                                         onClick={() => handleImageClick(item.postId)}
+                                        ref={isLastItem ? lastImageRef : null}
                                     >
                                         <img
                                             src={item.imageUrl}
@@ -311,12 +255,10 @@ const ControlPanel = () => {
                                                 />
                                                 <span>{item.user.username}</span>
                                             </div>
-                                            {(item.user.country) && (
+                                            {item.user.country && (
                                                 <div className="location-info">
                                                     <i className="location-icon fas fa-map-marker-alt"></i>
-                                                    <span>
-                                                        {item.user.country}
-                                                    </span>
+                                                    <span>{item.user.country}</span>
                                                 </div>
                                             )}
                                             {item.peopleTags && item.peopleTags.length > 0 && (
@@ -331,48 +273,19 @@ const ControlPanel = () => {
                         </div>
                     </div>
                 ))}
-                
-                {/* Indicadores de estado y debug */}
+
                 <div style={{ padding: '20px', textAlign: 'center', clear: 'both' }}>
-                    <div style={{ 
-                        marginBottom: '10px', 
-                        fontFamily: 'monospace', 
-                        fontSize: '12px',
-                        backgroundColor: '#f8f9fa',
-                        padding: '5px',
-                        borderRadius: '4px'
-                    }}>
-                        {scrollDebug}
-                    </div>
-                    
                     {loading && (
                         <div className="loading-spinner">
                             <i className="fas fa-spinner fa-spin"></i>
                             <span>Cargando imágenes...</span>
                         </div>
                     )}
-                    
+
                     {error && <div className="error-message">{error}</div>}
-                    
+
                     {!loading && !error && !hasMore && postImages.length > 0 && (
                         <div className="end-message">No hay más imágenes para mostrar</div>
-                    )}
-                    
-                    {!loading && hasMore && (
-                        <button 
-                            onClick={() => setPage(p => p + 1)}
-                            style={{ 
-                                padding: '8px 15px', 
-                                background: '#4e73df', 
-                                color: 'white', 
-                                border: 'none', 
-                                borderRadius: '4px',
-                                cursor: 'pointer',
-                                marginTop: '10px'
-                            }}
-                        >
-                            Cargar más imágenes
-                        </button>
                     )}
                 </div>
             </div>
@@ -404,9 +317,7 @@ const ControlPanel = () => {
                 <Route path="magazine" element={
                     <ProtectedRoute><div><h1>Contenido de Revista</h1></div></ProtectedRoute>
                 } />
-                <Route path="info" element={
-                    <div><h1>Información</h1></div>
-                } />
+                <Route path="info" element={<div><h1>Información</h1></div>} />
                 <Route path="editProfile" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
                 <Route path="misOfertas" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
                 <Route path="configuracion" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
@@ -414,12 +325,15 @@ const ControlPanel = () => {
                 <Route path="community" element={<ProtectedRoute><MyComunity /></ProtectedRoute>} />
                 <Route path="createPost" element={<ProtectedRoute><CreatePost /></ProtectedRoute>} />
                 <Route path="guardados" element={<ProtectedRoute><Guardados /></ProtectedRoute>} />
-                
-                {/* Ruta por defecto - redirige a explorer */}
                 <Route path="*" element={<Navigate to="/ControlPanel/explorer" replace />} />
             </Routes>
         );
     };
+
+    const isUserPost = location.pathname.includes('/post/');
+    const contentClassName = isUserPost
+        ? 'no-padding'
+        : (activeMenu === 'editProfile' ? 'overflow-hidden-desktop' : '');
 
     return (
         <Layout activeMenu={activeMenu} contentClassName={contentClassName}>
