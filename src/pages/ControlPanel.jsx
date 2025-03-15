@@ -21,6 +21,7 @@ const ControlPanel = () => {
     const [hasMore, setHasMore] = useState(true);
     const [page, setPage] = useState(1);
     const [error, setError] = useState(null);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     const observer = useRef();
     const lastImageElementRef = useCallback(node => {
@@ -35,6 +36,11 @@ const ControlPanel = () => {
     }, [loading, hasMore]);
 
     useEffect(() => {
+        const token = localStorage.getItem('authToken');
+        setIsAuthenticated(!!token);
+    }, []);
+
+    useEffect(() => {
         const params = new URLSearchParams(location.search);
         const token = params.get('token');
         if (token) {
@@ -43,34 +49,32 @@ const ControlPanel = () => {
     }, [location, navigate]);
 
     useEffect(() => {
-        if (location.state?.activeMenu !== 'explorer' && location.state?.activeMenu) return;
+        if (location.state?.activeMenu !== 'explorer' && location.state?.activeMenu !== 'creatives' && location.state?.activeMenu) {
+            // Si la sección no es el explorador ni creatives y el usuario no está autenticado, redirigir al home
+            if (!isAuthenticated && location.state?.activeMenu !== 'explorer' && location.state?.activeMenu !== 'creatives') {
+                navigate('/', { state: { showRegister: true } });
+                return;
+            }
+        }
 
         const fetchPostImages = async () => {
             setLoading(true);
             setError(null);
             try {
                 const backendUrl = import.meta.env.VITE_BACKEND_URL;
-                const token = localStorage.getItem('authToken');
-
-                if (!token) {
-                    navigate('/login');
-                    return;
-                }
-
-                const headers = { Authorization: `Bearer ${token}` };
-                const response = await axios.get(`${backendUrl}/api/posts/random-images`, {
-                    headers,
-                    params: { page, limit: 20 }
-                });
+                const response = await axios.get(`${backendUrl}/api/posts/explorer?page=${page}&limit=20`);
 
                 setPostImages(prev => {
-                    // Merge with previous images for infinite scrolling
                     const newImages = response.data.images;
-                    // Check for duplicates to prevent showing the same image twice
                     const uniqueNewImages = newImages.filter(newImg =>
                         !prev.some(oldImg => oldImg.imageUrl === newImg.imageUrl)
                     );
-                    return [...prev, ...uniqueNewImages];
+                    
+                    if (page === 1) {
+                        return newImages;
+                    } else {
+                        return [...prev, ...uniqueNewImages];
+                    }
                 });
 
                 setHasMore(response.data.hasMore);
@@ -83,7 +87,7 @@ const ControlPanel = () => {
         };
 
         fetchPostImages();
-    }, [page, navigate, location.state?.activeMenu]);
+    }, [page, navigate, location.state?.activeMenu, isAuthenticated]);
 
     const activeMenu = location.state?.activeMenu || 'explorer';
 
@@ -93,12 +97,23 @@ const ControlPanel = () => {
         : (activeMenu === 'editProfile' ? 'overflow-hidden-desktop' : '');
 
     const handleImageClick = (postId) => {
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            navigate('/', { state: { showRegister: true } });
+            return;
+        }
         navigate(`/ControlPanel/post/${postId}`);
     };
 
     const handleSaveClick = (e, imageId) => {
-        e.stopPropagation(); // Para que no navegue al post
-        // Lógica para guardar la imagen (se implementará más adelante)
+        e.stopPropagation();
+        
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            navigate('/', { state: { showRegister: true } });
+            return;
+        }
+        
         console.log('Guardar imagen:', imageId);
     };
 
@@ -162,20 +177,40 @@ const ControlPanel = () => {
     };
 
     const renderContent = () => {
+        // Componente para proteger rutas que requieren autenticación
+        const ProtectedRoute = ({ children }) => {
+            if (!isAuthenticated) {
+                navigate('/', { state: { showRegister: true } });
+                return null;
+            }
+            return children;
+        };
+
         return (
             <Routes>
-                <Route path="post/:id" element={<UserPost />} />
-                <Route path="profile/:username" element={<UserProfile />} />
-                <Route path="guardados/folder/:folderId" element={<FolderContent />} />
+                <Route path="post/:id" element={<ProtectedRoute><UserPost /></ProtectedRoute>} />
+                <Route path="profile/:username" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
+                <Route path="guardados/folder/:folderId" element={<ProtectedRoute><FolderContent /></ProtectedRoute>} />
                 <Route
                     path="*"
                     element={
                         (() => {
-                            switch (activeMenu) {
-                                case 'explorer':
+                            // Para el explorador y creatives, permitir acceso sin autenticación
+                            if (activeMenu === 'explorer' || activeMenu === 'creatives') {
+                                if (activeMenu === 'explorer') {
                                     return renderExplorer();
-                                case 'creatives':
+                                } else {
                                     return <Creatives />;
+                                }
+                            }
+                            
+                            // Para otras secciones, verificar autenticación
+                            if (!isAuthenticated) {
+                                navigate('/', { state: { showRegister: true } });
+                                return null;
+                            }
+                            
+                            switch (activeMenu) {
                                 case 'fashion':
                                     return <div><h1>Contenido de Estudiar Moda</h1></div>;
                                 case 'blog':
@@ -187,17 +222,17 @@ const ControlPanel = () => {
                                 case 'editProfile':
                                 case 'misOfertas':
                                 case 'configuracion':
-                                    return <EditProfile />;
+                                    return <ProtectedRoute><EditProfile /></ProtectedRoute>;
                                 case 'profile':
-                                    return <MiPerfil />;
+                                    return <ProtectedRoute><MiPerfil /></ProtectedRoute>;
                                 case 'community':
-                                    return <MyComunity />;
+                                    return <ProtectedRoute><MyComunity /></ProtectedRoute>;
                                 case 'createPost':
-                                    return <CreatePost />;
+                                    return <ProtectedRoute><CreatePost /></ProtectedRoute>;
                                 case 'guardados':
-                                    return <Guardados />;
+                                    return <ProtectedRoute><Guardados /></ProtectedRoute>;
                                 default:
-                                    return <div><h1>Contenido por defecto</h1></div>;
+                                    return renderExplorer();
                             }
                         })()
                     }
@@ -207,7 +242,7 @@ const ControlPanel = () => {
     };
 
     return (
-        <Layout contentClassName={`dashboard-content ${contentClassName}`}>
+        <Layout activeMenu={activeMenu} contentClassName={contentClassName}>
             {renderContent()}
         </Layout>
     );

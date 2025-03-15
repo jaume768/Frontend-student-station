@@ -43,15 +43,7 @@ const Creatives = () => {
 
             try {
                 const backendUrl = import.meta.env.VITE_BACKEND_URL;
-                const token = localStorage.getItem('authToken');
-
-                if (!token) {
-                    navigate('/login');
-                    return;
-                }
-
-                const headers = { Authorization: `Bearer ${token}` };
-
+                
                 // Construir parámetros de consulta
                 let params = new URLSearchParams();
                 params.append('page', page);
@@ -61,8 +53,7 @@ const Creatives = () => {
                 if (filters.category) params.append('category', filters.category);
 
                 const response = await axios.get(
-                    `${backendUrl}/api/users/creatives?${params.toString()}`,
-                    { headers }
+                    `${backendUrl}/api/users/creatives?${params.toString()}`
                 );
 
                 const newCreatives = response.data.creatives;
@@ -92,7 +83,7 @@ const Creatives = () => {
         };
 
         fetchCreatives();
-    }, [page, filters.country, filters.category, navigate]);
+    }, [page, filters.country, filters.category]);
 
     // Manejar cambios en los filtros
     const handleFilterChange = (filterName, value) => {
@@ -109,6 +100,11 @@ const Creatives = () => {
 
     // Navegar al perfil del usuario
     const handleUserClick = (username) => {
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            navigate('/', { state: { showRegister: true } });
+            return;
+        }
         navigate(`/ControlPanel/profile/${username}`);
     };
 

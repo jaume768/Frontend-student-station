@@ -83,14 +83,19 @@ const MobileNavbar = ({ profilePicture }) => {
                                 )}
                             </div>
                         ) : (
-                            <Link
-                                to="/ControlPanel"
-                                state={{ activeMenu: item.id }}
-                                className={activeMenu === item.id ? 'active' : ''}
+                            <div 
+                                className={`nav-link-container ${activeMenu === item.id ? 'active' : ''}`}
+                                onClick={() => {
+                                    if (!token && item.id !== 'explorer' && item.id !== 'creatives') {
+                                        navigate('/', { state: { showRegister: true } });
+                                    } else {
+                                        navigate('/ControlPanel', { state: { activeMenu: item.id } });
+                                    }
+                                }}
                             >
                                 {item.icon}
                                 <span>{item.label}</span>
-                            </Link>
+                            </div>
                         )}
                     </li>
                 ))}
