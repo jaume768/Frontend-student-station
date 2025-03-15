@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
-import { FaPencilAlt, FaBriefcase, FaCog, FaChevronDown, FaChevronUp, FaTrash } from 'react-icons/fa';
+import { FaPencilAlt, FaBriefcase, FaCog, FaChevronDown, FaChevronUp, FaTrash, FaCamera, FaCheck, FaTimes } from 'react-icons/fa';
 import './css/EditProfile.css';
 import MisOfertasSection from './MisOfertasSection';
 
@@ -140,6 +140,13 @@ const EditProfile = () => {
     const [cvFileName, setCvFileName] = useState('');
     const [portfolioFileName, setPortfolioFileName] = useState('');
     const [isUploading, setIsUploading] = useState(false);
+
+    // Estados para la edición de la foto de perfil
+    const [isEditingProfilePicture, setIsEditingProfilePicture] = useState(false);
+    const [selectedProfileImage, setSelectedProfileImage] = useState(null);
+    const [profileImageFile, setProfileImageFile] = useState(null);
+    const [isUploadingProfilePicture, setIsUploadingProfilePicture] = useState(false);
+    const profileImageInputRef = useRef(null);
 
     useEffect(() => {
         const fetchUserProfile = async () => {
@@ -362,7 +369,7 @@ const EditProfile = () => {
             institution: '',
             trainingStart: '',
             trainingEnd: '',
-            currentlyInProgress: false,
+            currentlyInProgress: false
         }]);
     };
 
@@ -626,13 +633,90 @@ const EditProfile = () => {
         }
     };
 
+    // Manejador para abrir el selector de imagen de perfil
+    const handleProfilePictureClick = () => {
+        if (profileImageInputRef.current) {
+            profileImageInputRef.current.click();
+        }
+    };
+
+    // Manejador para el cambio de archivo de imagen de perfil
+    const handleProfileImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setSelectedProfileImage(URL.createObjectURL(file));
+            setProfileImageFile(file);
+            setIsEditingProfilePicture(true);
+        }
+    };
+
+    // Manejador para guardar la imagen de perfil
+    const handleSaveProfileImage = async () => {
+        if (!profileImageFile) {
+            return;
+        }
+        
+        setIsUploadingProfilePicture(true);
+        
+        try {
+            const token = localStorage.getItem("authToken");
+            if (!token) return;
+            const backendUrl = import.meta.env.VITE_BACKEND_URL;
+            
+            const formData = new FormData();
+            formData.append('file', profileImageFile);
+            
+            const response = await fetch(`${backendUrl}/api/users/profile-picture`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                body: formData
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                // Actualizar la imagen de perfil en el estado
+                setUserData(prev => ({
+                    ...prev,
+                    profilePicture: data.profilePicture || prev.profilePicture
+                }));
+                
+                // Limpiar el estado de edición
+                setSelectedProfileImage(null);
+                setProfileImageFile(null);
+                setIsEditingProfilePicture(false);
+            } else {
+                console.error("Error al actualizar la foto:", data.error);
+            }
+        } catch (err) {
+            console.error("Error en la actualización de la foto:", err);
+        } finally {
+            setIsUploadingProfilePicture(false);
+        }
+    };
+
+    // Manejador para cancelar la edición de la imagen de perfil
+    const handleCancelProfileImageEdit = () => {
+        setSelectedProfileImage(null);
+        setProfileImageFile(null);
+        setIsEditingProfilePicture(false);
+    };
+
     return (
         <div className="edit-profile-wrapper">
             <form onSubmit={handleSubmit}>
                 <div className="profile-section">
                     <div className="profile-banner">
                         <div className="banner-left">
-                            <img src={userData.profilePicture} alt="Perfil" className="profile-picture" />
+                            <div className="profile-picture-container" onClick={handleProfilePictureClick}>
+                                <img src={selectedProfileImage || userData.profilePicture} alt="Perfil" className="profile-picture-edit" />
+                                <div className="profile-picture-overlay">
+                                    <FaCamera />
+                                    <span>Cambiar foto</span>
+                                </div>
+                            </div>
                             <div className="profile-info">
                                 <h2 className="profile-name">{userData.fullName}</h2>
                                 <p className="profile-username">{userData.username}</p>
@@ -642,6 +726,35 @@ const EditProfile = () => {
                         </div>
                         <div className="banner-right">
                             <span className="creative-type">{userData.creativeType}</span>
+                            <input 
+                                type="file" 
+                                id="profile-picture-input"
+                                name="profile-picture"
+                                accept="image/*"
+                                onChange={handleProfileImageChange}
+                                ref={profileImageInputRef}
+                                style={{ display: 'none' }}
+                            />
+                            {isEditingProfilePicture && (
+                                <div className="profile-picture-edit-actions">
+                                    <button 
+                                        type="button" 
+                                        className="save-profile-picture-button"
+                                        onClick={handleSaveProfileImage}
+                                        disabled={isUploadingProfilePicture}
+                                    >
+                                        {isUploadingProfilePicture ? 'Guardando...' : 'Guardar'}
+                                    </button>
+                                    <button 
+                                        type="button" 
+                                        className="cancel-profile-picture-edit-button"
+                                        onClick={handleCancelProfileImageEdit}
+                                        disabled={isUploadingProfilePicture}
+                                    >
+                                        Cancelar
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     </div>
                     <div className="profile-body">
