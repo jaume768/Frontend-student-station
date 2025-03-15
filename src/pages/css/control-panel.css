@@ -1,3 +1,4 @@
+/* ======== Layout General ======== */
 .dashboard-container {
     display: flex;
     height: 100vh;
@@ -260,7 +261,6 @@
     background-color: black;
 }
 
-
 .dashboard-header select {
     padding: 5px;
     border-radius: 4px;
@@ -280,21 +280,19 @@
     background-color: rgb(255, 255, 255);
 }
 
+/* ======== Contenedor principal de la sección Explorer ======== */
 .explorer-container {
     width: 100%;
     padding: 0 1rem;
 }
 
+/* 
+   Si antes usabas .explorer-page y .explorer-gallery con column-count,
+   puedes ELIMINAR o comentar esas reglas. Ejemplo:
+*/
+/*
 .explorer-page {
     margin-bottom: 20px;
-}
-
-.page-title {
-    margin-bottom: 10px;
-    font-size: 14px;
-    color: #999;
-    padding-left: 8px;
-    border-left: 3px solid #4e73df;
 }
 
 .explorer-gallery {
@@ -302,45 +300,33 @@
     column-gap: 16px;
     width: 100%;
 }
+*/
 
-/* Media queries para responsividad */
-@media (max-width: 1400px) {
-    .explorer-gallery {
-        column-count: 5;
-    }
+/* ======== Clases para react-masonry-css ======== */
+.my-masonry-grid {
+    display: flex;
+    /* Importante para Masonry */
+    margin-left: -16px;
+    /* Ajusta al gap que quieras entre columnas */
+    width: auto;
 }
 
-@media (max-width: 1200px) {
-    .explorer-gallery {
-        column-count: 4;
-    }
+.my-masonry-grid_column {
+    padding-left: 16px;
+    /* Debe coincidir con el margin-left de arriba */
+    background-clip: padding-box;
 }
 
-@media (max-width: 992px) {
-    .explorer-gallery {
-        column-count: 3;
-    }
-}
+/* Puedes ajustar 16px por el espacio que desees entre columnas */
 
-@media (max-width: 768px) {
-    .explorer-gallery {
-        column-count: 2;
-    }
-}
-
-@media (max-width: 480px) {
-    .explorer-gallery {
-        column-count: 1;
-    }
-}
-
+/* ======== Tarjeta (masonry-item) ======== */
 .masonry-item {
     position: relative;
     margin-bottom: 16px;
-    break-inside: avoid;
+    /* break-inside: avoid;  <- ya no es necesario con Masonry, pero no estorba */
     overflow: hidden;
     border-radius: 16px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
     cursor: pointer;
 }
 
@@ -354,7 +340,7 @@
     transform: scale(1.05);
 }
 
-/* Overlay con información sobre la imagen */
+/* ======== Overlay con información sobre la imagen ======== */
 .overlay {
     position: absolute;
     top: 0;
@@ -371,7 +357,7 @@
     opacity: 1;
 }
 
-/* Estilos para el botón de guardar en Explorer */
+/* ======== Botón "Guardar" ======== */
 .save-btn {
     position: absolute;
     top: 10px;
@@ -406,10 +392,12 @@
         transform: scale(1);
         box-shadow: 0 0 0 0 rgba(8, 181, 153, 0.7);
     }
+
     50% {
         transform: scale(1.05);
         box-shadow: 0 0 0 10px rgba(8, 181, 153, 0);
     }
+
     100% {
         transform: scale(1);
         box-shadow: 0 0 0 0 rgba(8, 181, 153, 0);
@@ -436,14 +424,17 @@
         opacity: 0;
         transform: translateY(100%);
     }
+
     10% {
         opacity: 1;
         transform: translateY(0);
     }
+
     90% {
         opacity: 1;
         transform: translateY(0);
     }
+
     100% {
         opacity: 0;
         transform: translateY(-100%);
@@ -454,6 +445,7 @@
     opacity: 1;
 }
 
+/* ======== Info de usuario, ubicación y tag ======== */
 .user-info {
     position: absolute;
     top: 10px;
@@ -522,7 +514,7 @@
     opacity: 1;
 }
 
-/* Indicadores de carga, error y fin */
+/* ======== Indicadores de carga, error y fin ======== */
 .loading-indicator {
     display: flex;
     flex-direction: column;
@@ -543,8 +535,13 @@
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .error-message {
@@ -556,7 +553,8 @@
     border-radius: 8px;
 }
 
-.end-message, .no-images-message {
+.end-message,
+.no-images-message {
     color: #777;
     text-align: center;
     margin: 2rem 0;
@@ -564,45 +562,9 @@
     font-style: italic;
 }
 
-/* Estilos responsivos para la galería */
-@media (max-width: 1600px) {
-    .explorer-gallery {
-        column-count: 5;
-    }
-}
-
-@media (max-width: 1200px) {
-    .explorer-gallery {
-        column-count: 4;
-    }
-}
-
-@media (max-width: 992px) {
-    .explorer-gallery {
-        column-count: 3;
-    }
-}
-
-@media (max-width: 768px) {
-    .explorer-gallery {
-        column-count: 2;
-        gap: 10px;
-    }
-    
-    .explorer-container {
-        padding: 0 0.5rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .explorer-gallery {
-        column-count: 1;
-    }
-}
-
 /* Loading indicators and messages */
-.loading-indicator, 
-.error-message, 
+.loading-indicator,
+.error-message,
 .end-message {
     text-align: center;
     padding: 20px;
@@ -628,23 +590,13 @@
     border-top: 1px solid #eee;
 }
 
-@media (max-width: 1268px) {
-    .explorer-gallery {
-        column-count: 4;
-    }
-}
-
+/* ======== Responsividad para otras secciones ======== */
 @media (max-width: 768px) {
-    .explorer-gallery {
-        column-count: 2;
-        column-gap: 8px;
-    }
-    
     .save-btn {
         padding: 6px 12px;
         font-size: 0.8rem;
     }
-    
+
     .user-info img {
         width: 24px;
         height: 24px;
@@ -652,7 +604,6 @@
 }
 
 @media (max-width: 480px) {
-
     .profile-options-modal {
         position: absolute;
         top: -226px;
@@ -670,10 +621,6 @@
 
     .dashboard-main {
         margin-left: 0;
-    }
-
-    .explorer-gallery {
-        column-count: 2;
     }
 
     .dashboard-sidebar {
@@ -707,6 +654,7 @@
     padding: 0;
 }
 
+/* ======== Navbar móvil ======== */
 .mobile-navbar {
     display: none;
 }
@@ -725,7 +673,6 @@
         border-top: 1px solid #ccc;
         z-index: 900;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-
         padding-bottom: env(safe-area-inset-bottom);
     }
 
@@ -770,6 +717,7 @@
     }
 }
 
+/* ======== Menú lateral móvil ======== */
 .side-menu-overlay {
     position: fixed;
     top: 0;
