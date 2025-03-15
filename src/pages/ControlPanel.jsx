@@ -164,7 +164,9 @@ const ControlPanel = () => {
             setHasMore(true);
             setExcludedIds([]);
             if (observer.current) observer.current.disconnect();
-            window.scrollTo(0, 0);
+            if (window.innerWidth > 768) {
+                window.scrollTo(0, 0);
+            }
         }
     }, [activeMenu, location.pathname]);
 
