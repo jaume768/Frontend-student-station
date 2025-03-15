@@ -143,12 +143,18 @@ const ControlPanel = () => {
 
     // Reset de paginación y de los IDs excluidos al cambiar de sección
     useEffect(() => {
-        setPage(1);
-        setPostImages([]);
-        setPostImagesByPage({});
-        setHasMore(true);
-        setExcludedIds([]);
-    }, [activeMenu]);
+        if (activeMenu === 'explorer' || location.pathname.includes('/explorer')) {
+            setPage(1);
+            setPostImages([]);
+            setPostImagesByPage({});
+            setHasMore(true);
+            setExcludedIds([]);
+            // Aseguramos que el observador se desconecte para que pueda volver a conectarse
+            if (observer.current) observer.current.disconnect();
+            // Devolvemos la pantalla al inicio
+            window.scrollTo(0, 0);
+        }
+    }, [activeMenu, location.pathname]);
 
     // Intersection Observer para detectar el último elemento y cargar más imágenes automáticamente
     const observer = useRef();
