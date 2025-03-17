@@ -7,12 +7,14 @@ import MiPerfil from '../components/controlPanel/MiPerfil';
 import MyComunity from '../components/controlPanel/MyComunity';
 import CreatePost from '../components/controlPanel/CreatePost';
 import CreateOffer from '../components/controlPanel/CreateOffer';
+import CreateEducationalOffer from '../components/controlPanel/CreateEducationalOffer';
 import UserPost from '../components/controlPanel/UserPost';
 import Guardados from '../components/controlPanel/Guardados';
 import UserProfile from '../components/controlPanel/UserProfile';
 import FolderContent from '../components/controlPanel/FolderContent';
 import Creatives from '../components/controlPanel/Creatives';
 import Explorer from '../components/controlPanel/Explorer';
+import Offers from '../components/controlPanel/Offers';
 import './css/control-panel.css';
 
 const ControlPanel = () => {
@@ -21,7 +23,6 @@ const ControlPanel = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [activeMenu, setActiveMenu] = useState('explorer');
 
-    // Verificar autenticación y cargar activeMenu desde sessionStorage/localStorage
     useEffect(() => {
         const token = localStorage.getItem('authToken');
         setIsAuthenticated(!!token);
@@ -35,7 +36,6 @@ const ControlPanel = () => {
         }
     }, [location.pathname, location.state]);
 
-    // Verificación de autenticación para rutas protegidas
     useEffect(() => {
         const token = localStorage.getItem('authToken');
         const protectedMenus = [
@@ -48,7 +48,6 @@ const ControlPanel = () => {
         }
     }, [activeMenu, navigate]);
 
-    // Rutas protegidas
     const renderContent = () => {
         const ProtectedRoute = ({ children }) => {
             if (!isAuthenticated) {
@@ -64,6 +63,8 @@ const ControlPanel = () => {
                 <Route path="profile/:username" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
                 <Route path="guardados/folder/:folderId" element={<ProtectedRoute><FolderContent /></ProtectedRoute>} />
                 <Route path="explorer" element={<Explorer />} />
+                <Route path="offers" element={<Offers />} />
+                <Route path="offers/:offerId" element={<Offers />} />
                 <Route path="creatives" element={<Creatives />} />
                 <Route path="fashion" element={<ProtectedRoute><div><h1>Contenido de Estudiar Moda</h1></div></ProtectedRoute>} />
                 <Route path="blog" element={<ProtectedRoute><div><h1>Contenido de Blog</h1></div></ProtectedRoute>} />
@@ -76,13 +77,13 @@ const ControlPanel = () => {
                 <Route path="community" element={<ProtectedRoute><MyComunity /></ProtectedRoute>} />
                 <Route path="createPost" element={<ProtectedRoute><CreatePost /></ProtectedRoute>} />
                 <Route path="createOffer" element={<ProtectedRoute><CreateOffer /></ProtectedRoute>} />
+                <Route path="createEducationalOffer" element={<ProtectedRoute><CreateEducationalOffer /></ProtectedRoute>} />
                 <Route path="guardados" element={<ProtectedRoute><Guardados /></ProtectedRoute>} />
                 <Route path="*" element={<Navigate to="/ControlPanel/explorer" replace />} />
             </Routes>
         );
     };
 
-    // Determinar clases para el contenido según la ruta actual
     const isUserPost = location.pathname.includes('/post/');
     const contentClassName = isUserPost
         ? 'no-padding'

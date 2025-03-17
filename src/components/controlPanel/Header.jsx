@@ -6,7 +6,7 @@ import ProfileOptionsModal from './ProfileOptionsModal';
 
 const Header = ({ profilePicture, onHamburgerClick }) => {
     const [showProfileOptions, setShowProfileOptions] = useState(false);
-    const [userType, setUserType] = useState(null);
+    const [professionalType, setProfessionalType] = useState(null);
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -19,7 +19,7 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
                     const response = await axios.get(`${backendUrl}/api/users/profile`, {
                         headers: { Authorization: `Bearer ${token}` }
                     });
-                    setUserType(response.data.professionalType ? 'professional' : 'creative');
+                    setProfessionalType(response.data.professionalType || null);
                 } catch (error) {
                     console.error('Error fetching user type:', error);
                 }
@@ -76,11 +76,27 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
             return;
         }
         
-        if (userType === 'professional') {
+        // Tipos 1, 2, 4 pueden crear ofertas de trabajo
+        if ([1, 2, 4].includes(professionalType)) {
             navigate('/ControlPanel/createOffer');
-        } else {
+        }
+        // Tipo 3 puede crear ofertas educativas
+        else if (professionalType === 3) {
+            navigate('/ControlPanel/createEducationalOffer');
+        }
+        // Creativos y otros tipos pueden crear posts
+        else {
             navigate('/ControlPanel/createPost');
         }
+    };
+
+    const getCreateButtonText = () => {
+        if ([1, 2, 4].includes(professionalType)) {
+            return "Crear";
+        } else if (professionalType === 3) {
+            return "Crear";
+        }
+        return "Crear";
     };
 
     return (
@@ -103,7 +119,7 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
                     className="create-post-btn"
                     onClick={handleCreateClick}
                 >
-                    <FaPlus style={{ color: 'white' }} /> crear
+                    <FaPlus style={{ color: 'white' }} /> {getCreateButtonText()}
                 </button>
                 <div className="profile-wrapper" style={{ position: 'relative' }}>
                     <img

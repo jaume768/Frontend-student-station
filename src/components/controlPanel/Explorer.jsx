@@ -46,7 +46,7 @@ const Explorer = () => {
             setLoading(true);
             try {
                 const backendUrl = import.meta.env.VITE_BACKEND_URL;
-                const limit = 3;
+                const limit = 8;
                 const viewedPosts = getViewedPosts();
                 
                 const response = await axios.get(

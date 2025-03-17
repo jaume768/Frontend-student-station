@@ -1,0 +1,228 @@
+.create-educational-offer {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+.create-educational-offer h2 {
+    font-size: 24px;
+    color: #1a1a1a;
+    margin-bottom: 24px;
+}
+
+.form-section {
+    background: white;
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.form-section h3 {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.form-row {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 16px;
+}
+
+.form-group {
+    flex: 1;
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #555;
+    font-weight: 500;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="url"],
+.form-group input[type="date"],
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.duration-input,
+.price-input {
+    display: flex;
+    gap: 8px;
+}
+
+.duration-input input,
+.price-input input {
+    flex: 2;
+}
+
+.duration-input select,
+.price-input select {
+    flex: 1;
+}
+
+.requirements-input {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.requirements-input input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.requirements-input button {
+    padding: 8px 16px;
+    background-color: #0a66c2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.requirements-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.requirement-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 12px;
+    background-color: #f0f2f5;
+    border-radius: 16px;
+    font-size: 14px;
+}
+
+.requirement-item button {
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 0 4px;
+}
+
+.requirement-item button:hover {
+    color: #dc3545;
+}
+
+.gallery-preview {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.gallery-item {
+    position: relative;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.gallery-item button {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+}
+
+.social-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    margin-top: 24px;
+}
+
+.cancel-button,
+.submit-button {
+    padding: 10px 24px;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.cancel-button {
+    background-color: white;
+    border: 1px solid #ddd;
+    color: #666;
+}
+
+.cancel-button:hover {
+    background-color: #f5f5f5;
+}
+
+.submit-button {
+    background-color: #0a66c2;
+    border: none;
+    color: white;
+}
+
+.submit-button:hover {
+    background-color: #004182;
+}
+
+.submit-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+    .form-row {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .social-links {
+        grid-template-columns: 1fr;
+    }
+
+    .gallery-preview {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
+}

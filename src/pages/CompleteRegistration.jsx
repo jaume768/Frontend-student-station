@@ -38,7 +38,6 @@ const CompleteRegistration = () => {
                     clearInterval(intervalId);
                 }
             } catch (err) {
-                // Puede que aún no esté creado, seguimos intentando
             }
         }, 500);
 
