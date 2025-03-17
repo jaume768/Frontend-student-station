@@ -1,12 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { FaBookmark, FaSearch, FaBars, FaPlus } from 'react-icons/fa';
+import axios from 'axios';
 import ProfileOptionsModal from './ProfileOptionsModal';
 
 const Header = ({ profilePicture, onHamburgerClick }) => {
     const [showProfileOptions, setShowProfileOptions] = useState(false);
+    const [userType, setUserType] = useState(null);
     const navigate = useNavigate();
     const location = useLocation();
+
+    useEffect(() => {
+        const fetchUserType = async () => {
+            const token = localStorage.getItem('authToken');
+            if (token) {
+                try {
+                    const backendUrl = import.meta.env.VITE_BACKEND_URL;
+                    const response = await axios.get(`${backendUrl}/api/users/profile`, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+                    setUserType(response.data.professionalType ? 'professional' : 'creative');
+                } catch (error) {
+                    console.error('Error fetching user type:', error);
+                }
+            }
+        };
+        fetchUserType();
+    }, []);
 
     const handleProfileClick = () => {
         const token = localStorage.getItem('authToken');
@@ -49,6 +69,20 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
         }
     };
 
+    const handleCreateClick = () => {
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            navigate('/', { state: { showRegister: true } });
+            return;
+        }
+        
+        if (userType === 'professional') {
+            navigate('/ControlPanel/createOffer');
+        } else {
+            navigate('/ControlPanel/createPost');
+        }
+    };
+
     return (
         <header className="dashboard-header">
             <div className="dahsboard-search">
@@ -67,9 +101,7 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
                 </div>
                 <button
                     className="create-post-btn"
-                    onClick={() =>
-                        navigate('/ControlPanel/createPost')
-                    }
+                    onClick={handleCreateClick}
                 >
                     <FaPlus style={{ color: 'white' }} /> crear
                 </button>

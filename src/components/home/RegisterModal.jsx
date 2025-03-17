@@ -328,7 +328,7 @@ const RegisterModal = ({ onClose, onSwitchToLogin }) => {
                   <form onSubmit={handleVerify}>
                     <div
                       className="reg-input-group reg-code-inputs"
-                      style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem' }}
+                      style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', flexDirection: 'row' }}
                     >
                       {codeDigits.map((digit, index) => (
                         <input

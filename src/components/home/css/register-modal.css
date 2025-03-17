@@ -139,6 +139,7 @@
 .reg-input-group input {
   width: 100%;
   padding: 0.75rem;
+  color: black;
   border-radius: 8px;
   border: 1px solid #ccc;
 }

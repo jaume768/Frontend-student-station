@@ -1,0 +1,143 @@
+.create-offer-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.create-offer-container h2 {
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.offer-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    font-weight: 500;
+    color: #555;
+}
+
+.form-group input[type="text"],
+.form-group input[type="url"],
+.form-group select,
+.form-group textarea {
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="url"]:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #38c785;
+    box-shadow: 0 0 0 2px rgba(6, 182, 160, 0.2);
+}
+
+.form-group textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.form-group input[type="checkbox"] {
+    margin-right: 0.5rem;
+}
+
+.form-group input[type="file"] {
+    padding: 0.5rem;
+    border: 1px dashed #ddd;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.logo-preview {
+    margin-top: 0.5rem;
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 2px solid #ddd;
+}
+
+.logo-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.error-message {
+    color: #dc3545;
+    background-color: #ffe6e6;
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.form-actions button {
+    flex: 1;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.form-actions button[type="submit"] {
+    background-color: #38c785;
+    color: white;
+}
+
+.form-actions button[type="submit"]:hover {
+    background-color: #2e8e66;
+}
+
+.form-actions button[type="submit"]:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.form-actions .cancel-btn {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.form-actions .cancel-btn:hover {
+    background-color: #e0e0e0;
+}
+
+@media (max-width: 768px) {
+    .create-offer-container {
+        margin: auto;
+        padding: 1rem;
+        max-width: 90%;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+}

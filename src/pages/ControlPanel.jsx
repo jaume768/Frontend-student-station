@@ -1,5 +1,5 @@
 import { Routes, Route, useLocation, useNavigate, Navigate } from 'react-router-dom';
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 
 // Librería de Masonry
@@ -10,6 +10,7 @@ import EditProfile from '../components/controlPanel/EditProfile';
 import MiPerfil from '../components/controlPanel/MiPerfil';
 import MyComunity from '../components/controlPanel/MyComunity';
 import CreatePost from '../components/controlPanel/CreatePost';
+import CreateOffer from '../components/controlPanel/CreateOffer';
 import UserPost from '../components/controlPanel/UserPost';
 import Guardados from '../components/controlPanel/Guardados';
 import UserProfile from '../components/controlPanel/UserProfile';
@@ -34,6 +35,11 @@ const ControlPanel = () => {
     const [activeMenu, setActiveMenu] = useState('explorer');
     // Estado para acumular los IDs de posts ya mostrados (para no repetirlos)
     const [excludedIds, setExcludedIds] = useState([]);
+
+    // Ref para el elemento sentinela que dispara la carga
+    const sentinelRef = useRef(null);
+    // Ref para el IntersectionObserver
+    const observer = useRef(null);
 
     // Verificar autenticación y cargar activeMenu desde sessionStorage/localStorage
     useEffect(() => {
@@ -103,18 +109,14 @@ const ControlPanel = () => {
             try {
                 const backendUrl = import.meta.env.VITE_BACKEND_URL;
                 const limit = 5;
-
-                // Aunque excludedIds ya no está en la lista de dependencias,
-                // podemos seguir usándolo aquí para construir el query
+                // Construir query para excluir imágenes ya cargadas
                 const excludeQuery = excludedIds.length
                     ? `&exclude=${excludedIds.join(",")}`
                     : "";
-
                 const response = await axios.get(
                     `${backendUrl}/api/posts/explorer?page=${page}&limit=${limit}${excludeQuery}`
                 );
                 const newImages = response.data.images;
-
                 // Evitar duplicados
                 setPostImages(prev => {
                     if (page === 1) {
@@ -126,7 +128,6 @@ const ControlPanel = () => {
                         return [...prev, ...uniqueNewImages];
                     }
                 });
-
                 // Actualizar excludedIds con los nuevos postIds
                 const newPostIds = newImages.map(img => img.postId);
                 setExcludedIds(prev => {
@@ -138,7 +139,6 @@ const ControlPanel = () => {
                     });
                     return combined;
                 });
-
                 setHasMore(response.data.hasMore);
             } catch (err) {
                 console.error('Error fetching post images:', err);
@@ -148,13 +148,12 @@ const ControlPanel = () => {
             }
         };
 
-        // Solo se dispara si estamos en la sección explorer
+        // Dispara solo en la sección explorer
         if (activeMenu === 'explorer' || location.pathname.includes('/explorer')) {
             fetchPostImages();
         }
-        // IMPORTANTE: quitamos excludedIds del array de dependencias
+        // Se omite excludedIds en las dependencias
     }, [page, activeMenu, location.pathname]);
-
 
     // Reset al cambiar de sección
     useEffect(() => {
@@ -170,18 +169,28 @@ const ControlPanel = () => {
         }
     }, [activeMenu, location.pathname]);
 
-    // Intersection Observer para el scroll infinito
-    const observer = useRef();
-    const lastImageRef = useCallback(node => {
+    // Configurar el Intersection Observer para el elemento sentinela
+    useEffect(() => {
         if (loading) return;
         if (observer.current) observer.current.disconnect();
+
+        // Ajustar rootMargin según el ancho de pantalla
+        const margin = window.innerWidth < 768 ? '100px' : '500px';
+
         observer.current = new IntersectionObserver(entries => {
             if (entries[0].isIntersecting && hasMore && !loading) {
                 setPage(prevPage => prevPage + 1);
             }
-        }, { rootMargin: '500px' });
-        if (node) observer.current.observe(node);
-    }, [loading, hasMore, page]);
+        }, { rootMargin: margin });
+
+        if (sentinelRef.current) {
+            observer.current.observe(sentinelRef.current);
+        }
+
+        return () => {
+            if (observer.current) observer.current.disconnect();
+        };
+    }, [loading, hasMore]);
 
     // Handlers
     const handleImageClick = (postId) => {
@@ -249,11 +258,10 @@ const ControlPanel = () => {
             <div className="explorer-container">
                 <Masonry
                     breakpointCols={breakpointColumnsObj}
-                    className="my-masonry-grid"           // clase contenedor
-                    columnClassName="my-masonry-grid_column" // clase para columnas
+                    className="my-masonry-grid"
+                    columnClassName="my-masonry-grid_column"
                 >
                     {postImages.map((item, index) => {
-                        const isLastItem = (index === postImages.length - 1);
                         const isPostSaved = savedPosts[item.postId];
                         const showSavedText = showSavedTextMap[item.postId];
 
@@ -262,7 +270,6 @@ const ControlPanel = () => {
                                 className="masonry-item"
                                 key={`${item.postId}-${index}`}
                                 onClick={() => handleImageClick(item.postId)}
-                                ref={isLastItem ? lastImageRef : null}
                             >
                                 <img
                                     src={item.imageUrl}
@@ -304,6 +311,12 @@ const ControlPanel = () => {
                     })}
                 </Masonry>
 
+                {/*
+                  El elemento sentinela ahora tiene un marginTop para quedar fuera del viewport
+                  hasta que el usuario haga scroll.
+                */}
+                <div ref={sentinelRef} style={{ height: '1px', marginTop: '90vh' }} />
+
                 <div style={{ padding: '20px', textAlign: 'center', clear: 'both' }}>
                     {loading && (
                         <div className="loading-spinner">
@@ -311,9 +324,7 @@ const ControlPanel = () => {
                             <span>Cargando imágenes...</span>
                         </div>
                     )}
-
                     {error && <div className="error-message">{error}</div>}
-
                     {!loading && !error && !hasMore && postImages.length > 0 && (
                         <div className="end-message">No hay más imágenes para mostrar</div>
                     )}
@@ -322,7 +333,7 @@ const ControlPanel = () => {
         );
     };
 
-    // Rutas
+    // Rutas protegidas
     const renderContent = () => {
         const ProtectedRoute = ({ children }) => {
             if (!isAuthenticated) {
@@ -338,7 +349,7 @@ const ControlPanel = () => {
                 <Route path="profile/:username" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
                 <Route path="guardados/folder/:folderId" element={<ProtectedRoute><FolderContent /></ProtectedRoute>} />
 
-                {/* Aquí utilizamos nuestro componente Explorer con Masonry */}
+                {/* Componente Explorer */}
                 <Route path="explorer" element={<Explorer />} />
 
                 <Route path="creatives" element={<Creatives />} />
@@ -361,6 +372,7 @@ const ControlPanel = () => {
                 <Route path="profile" element={<ProtectedRoute><MiPerfil /></ProtectedRoute>} />
                 <Route path="community" element={<ProtectedRoute><MyComunity /></ProtectedRoute>} />
                 <Route path="createPost" element={<ProtectedRoute><CreatePost /></ProtectedRoute>} />
+                <Route path="createOffer" element={<ProtectedRoute><CreateOffer /></ProtectedRoute>} />
                 <Route path="guardados" element={<ProtectedRoute><Guardados /></ProtectedRoute>} />
 
                 {/* Redirección por defecto */}
