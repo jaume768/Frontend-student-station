@@ -38,6 +38,7 @@ const CompleteRegistration = () => {
                     clearInterval(intervalId);
                 }
             } catch (err) {
+                console.error(err);
             }
         }, 500);
 

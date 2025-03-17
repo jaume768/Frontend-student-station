@@ -76,15 +76,12 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
             return;
         }
         
-        // Tipos 1, 2, 4 pueden crear ofertas de trabajo
-        if ([1, 2, 4].includes(professionalType)) {
+        if ([1, 2, 3, 5].includes(professionalType)) {
             navigate('/ControlPanel/createOffer');
         }
-        // Tipo 3 puede crear ofertas educativas
-        else if (professionalType === 3) {
+        else if (professionalType === 4) {
             navigate('/ControlPanel/createEducationalOffer');
         }
-        // Creativos y otros tipos pueden crear posts
         else {
             navigate('/ControlPanel/createPost');
         }

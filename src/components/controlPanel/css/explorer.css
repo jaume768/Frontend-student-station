@@ -1,0 +1,194 @@
+.explorer-container {
+    padding: 20px;
+}
+
+.my-masonry-grid {
+    display: flex;
+    margin-left: -16px;
+    width: auto;
+}
+
+.my-masonry-grid_column {
+    padding-left: 16px;
+    background-clip: padding-box;
+}
+
+.masonry-item {
+    position: relative;
+    margin-bottom: 16px;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s ease;
+    cursor: pointer;
+}
+
+.masonry-item:hover {
+    transform: scale(1.02);
+}
+
+.masonry-item img {
+    width: 100%;
+    display: block;
+    border-radius: 8px;
+}
+
+.overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+    padding: 20px;
+    color: white;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.masonry-item:hover .overlay {
+    opacity: 1;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.user-info img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.user-info span {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.save-button-explorer {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: #06b6a0;
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 2;
+    color: white;
+}
+
+.masonry-item:hover .save-button-explorer {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.save-button-explorer:hover {
+    background: #06b6a0;
+    transform: scale(1.1) !important;
+}
+
+.save-button-explorer svg {
+    font-size: 18px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.save-button-explorer.saved {
+    background: #06b6a0;
+    animation: saveAnimation 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.save-button-explorer.saved svg {
+    transform: scale(1);
+    color: white;
+    animation: iconAnimation 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes saveAnimation {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes iconAnimation {
+    0% {
+        transform: scale(1);
+    }
+    25% {
+        transform: scale(0.8);
+    }
+    50% {
+        transform: scale(1.3);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.save-feedback {
+    position: absolute;
+    top: 55px;
+    right: 12px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-size: 12px;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 2;
+}
+
+.save-feedback.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.country-tag {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #333;
+    z-index: 2;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.masonry-item:hover .country-tag {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.loading-spinner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin: 20px 0;
+    color: #666;
+}
+
+.loading-spinner i {
+    font-size: 24px;
+}

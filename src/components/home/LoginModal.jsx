@@ -29,7 +29,6 @@ const LoginModal = ({ onClose, onSwitchToRegister, onSwitchToReset }) => {
             const data = await response.json();
             if (response.ok) {
                 localStorage.setItem('authToken', data.token);
-                // Guardar el tipo de profesional en el localStorage
                 if (data.user && data.user.professionalType !== undefined) {
                     localStorage.setItem('professionalType', data.user.professionalType);
                 }

@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Masonry from 'react-masonry-css';
+import { FaBookmark, FaRegBookmark } from 'react-icons/fa';
+import './css/explorer.css';
 
 const Explorer = () => {
     const navigate = useNavigate();
@@ -9,6 +11,8 @@ const Explorer = () => {
         const saved = sessionStorage.getItem('explorerImages');
         return saved ? JSON.parse(saved) : [];
     });
+    const [savedPosts, setSavedPosts] = useState(new Set());
+    const [saveFeedback, setSaveFeedback] = useState({ show: false, postId: null, text: "" });
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(() => {
         const saved = sessionStorage.getItem('explorerPage');
@@ -17,6 +21,66 @@ const Explorer = () => {
     const [hasMore, setHasMore] = useState(true);
     const observerRef = useRef(null);
     const sentinelRef = useRef(null);
+
+    // Cargar posts guardados al inicio
+    useEffect(() => {
+        const fetchSavedPosts = async () => {
+            const token = localStorage.getItem('authToken');
+            if (!token) return;
+
+            try {
+                const backendUrl = import.meta.env.VITE_BACKEND_URL;
+                const response = await axios.get(`${backendUrl}/api/users/favorites`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                setSavedPosts(new Set(response.data.map(post => post.postId)));
+            } catch (error) {
+                console.error('Error cargando posts guardados:', error);
+            }
+        };
+
+        fetchSavedPosts();
+    }, []);
+
+    const handleSavePost = async (e, postId) => {
+        e.stopPropagation(); // Evitar que se propague al click del post
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            navigate('/', { state: { showRegister: true } });
+            return;
+        }
+
+        try {
+            const backendUrl = import.meta.env.VITE_BACKEND_URL;
+            const isSaved = savedPosts.has(postId);
+            
+            if (isSaved) {
+                await axios.delete(`${backendUrl}/api/users/favorites/${postId}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                setSavedPosts(prev => {
+                    const newSet = new Set(prev);
+                    newSet.delete(postId);
+                    return newSet;
+                });
+                setSaveFeedback({ show: true, postId, text: "Eliminado de guardados" });
+            } else {
+                await axios.post(`${backendUrl}/api/users/favorites`, 
+                    { postId },
+                    { headers: { Authorization: `Bearer ${token}` }}
+                );
+                setSavedPosts(prev => new Set([...prev, postId]));
+                setSaveFeedback({ show: true, postId, text: "¡Guardado!" });
+            }
+
+            // Ocultar el feedback después de 2 segundos
+            setTimeout(() => {
+                setSaveFeedback({ show: false, postId: null, text: "" });
+            }, 2000);
+        } catch (error) {
+            console.error('Error al guardar/desguardar post:', error);
+        }
+    };
 
     // Función para obtener y gestionar los posts vistos (ahora usando sessionStorage)
     const getViewedPosts = () => {
@@ -38,10 +102,7 @@ const Explorer = () => {
     // Cargar imágenes
     useEffect(() => {
         const fetchImages = async () => {
-            // Si ya tenemos imágenes guardadas, no las volvemos a cargar
-            if (postImages.length > 0 && page === 1) {
-                return;
-            }
+            if (postImages.length > 0 && page === 1) return;
 
             setLoading(true);
             try {
@@ -53,7 +114,6 @@ const Explorer = () => {
                     `${backendUrl}/api/posts/explorer?page=${page}&limit=${limit}&exclude=${viewedPosts.join(',')}`
                 );
                 
-                // Marcar los nuevos posts como vistos
                 response.data.images.forEach(img => {
                     addViewedPost(img.postId);
                 });
@@ -62,7 +122,6 @@ const Explorer = () => {
                 setPostImages(newImages);
                 setHasMore(response.data.hasMore);
 
-                // Guardar el estado en sessionStorage
                 sessionStorage.setItem('explorerImages', JSON.stringify(newImages));
                 sessionStorage.setItem('explorerPage', page.toString());
             } catch (error) {
@@ -78,11 +137,10 @@ const Explorer = () => {
     // Limpiar sessionStorage cuando se desmonta el componente
     useEffect(() => {
         return () => {
-            // Solo limpiamos si estamos navegando fuera del explorer
             if (!window.location.pathname.includes('/explorer')) {
                 sessionStorage.removeItem('explorerImages');
                 sessionStorage.removeItem('explorerPage');
-                sessionStorage.removeItem('viewedPosts'); // También limpiamos los posts vistos
+                sessionStorage.removeItem('viewedPosts');
             }
         };
     }, []);
@@ -133,13 +191,24 @@ const Explorer = () => {
                         className="masonry-item"
                         key={`${item.postId}-${index}`}
                         onClick={() => handlePostClick(item.postId)}
-                        style={{ cursor: 'pointer' }}
                     >
                         <img
                             src={item.imageUrl}
                             alt={item.postTitle || 'Imagen de post'}
                             loading="lazy"
                         />
+                        <button
+                            className={`save-button-explorer ${savedPosts.has(item.postId) ? 'saved' : ''}`}
+                            onClick={(e) => handleSavePost(e, item.postId)}
+                            title={savedPosts.has(item.postId) ? "Quitar de guardados" : "Guardar"}
+                        >
+                            {savedPosts.has(item.postId) ? <FaBookmark /> : <FaRegBookmark />}
+                        </button>
+                        {saveFeedback.show && saveFeedback.postId === item.postId && (
+                            <div className={`save-feedback ${saveFeedback.show ? 'show' : ''}`}>
+                                {saveFeedback.text}
+                            </div>
+                        )}
                         <div className="overlay">
                             <div className="user-info">
                                 <img
@@ -150,6 +219,11 @@ const Explorer = () => {
                                 <span>{item.user.username}</span>
                             </div>
                         </div>
+                        {item.user.country && (
+                            <div className="country-tag">
+                                {item.user.country}
+                            </div>
+                        )}
                     </div>
                 ))}
             </Masonry>
