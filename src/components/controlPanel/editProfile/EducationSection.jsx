@@ -28,7 +28,7 @@ const EducationSection = ({
             {!isEducationCollapsed && (
                 <div className="section-content">
                     <div className="education-list">
-                        {educationList.map((edu, index) => (
+                        {Array.isArray(educationList) && educationList.map((edu, index) => (
                             <div key={index} className="education-item">
                                 <div className="education-header">
                                     <h4>Formación {index + 1}</h4>

@@ -28,7 +28,7 @@ const SoftwareSection = ({
                 <div className="section-content">
                     <div className="form-group-edit">
                         <div className="tags-container">
-                            {software && software.map((sw, index) => (
+                            {Array.isArray(software) && software.map((sw, index) => (
                                 <div key={index} className="tag">
                                     {sw}
                                     {isSoftwareEditing && (
@@ -45,7 +45,7 @@ const SoftwareSection = ({
                         </div>
                         {isSoftwareEditing && (
                             <>
-                                {software.length < 12 && (
+                                {Array.isArray(software) && software.length < 12 && (
                                     <div className="software-input-container">
                                         <input
                                             type="text"

@@ -19,6 +19,8 @@ import JobSearchSection from './editProfile/JobSearchSection';
 import ContactSection from './editProfile/ContactSection';
 import PDFUploadSection from './editProfile/PDFUploadSection';
 import ConfigurationSection from './editProfile/ConfigurationSection';
+import ProfessionalMilestonesSection from './editProfile/ProfessionalMilestonesSection';
+import CompanyContactSection from './editProfile/CompanyContactSection';
 
 const getCreativeTypeText = (type) => {
     switch (type) {
@@ -30,16 +32,6 @@ const getCreativeTypeText = (type) => {
         default: return "";
     }
 };
-
-const EditButton = ({ isEditing, onClick }) => (
-    <button
-        type="button"
-        className={`edit-data-button ${isEditing ? "save-mode" : ""}`}
-        onClick={onClick}
-    >
-        {isEditing ? "Guardar datos" : "Editar datos"}
-    </button>
-);
 
 const EditProfile = () => {
     const location = useLocation();
@@ -60,6 +52,8 @@ const EditProfile = () => {
         email: 'correo@ejemplo.com',
         creativeType: 'Estudiante',
         biography: '',
+        professionalType: null,
+        companyName: ''
     });
 
     const [basicInfo, setBasicInfo] = useState({
@@ -67,10 +61,23 @@ const EditProfile = () => {
         lastName: '',
         country: '',
         city: '',
+        companyName: ''
     });
+
+    // Determinar si el usuario es una empresa
+    const [isCompany, setIsCompany] = useState(false);
+
+    // Estado para el resumen profesional
     const [professionalSummary, setProfessionalSummary] = useState('');
 
-    // Estados para la sección de formación educativa
+    // Estados para las nuevas secciones de empresa
+    const [professionalMilestones, setProfessionalMilestones] = useState([]);
+    const [companyTags, setCompanyTags] = useState([]);
+    const [isProfessionalMilestonesCollapsed, setIsProfessionalMilestonesCollapsed] = useState(false);
+    const [isProfessionalMilestonesEditing, setIsProfessionalMilestonesEditing] = useState(false);
+    const [isCompanyContactCollapsed, setIsCompanyContactCollapsed] = useState(false);
+    const [isCompanyContactEditing, setIsCompanyContactEditing] = useState(false);
+
     const [educationList, setEducationList] = useState([]);
     const [selfTaught, setSelfTaught] = useState(false);
 
@@ -86,7 +93,6 @@ const EditProfile = () => {
     // Estados para otras secciones
     const [skills, setSkills] = useState([]);
     const [currentPassword, setCurrentPassword] = useState("");
-    const [error, setError] = useState("");
     const [newSkill, setNewSkill] = useState("");
     const [popularSkills, setPopularSkills] = useState([
         "Patronaje industrial", "Confección básica", "Confección intermedia", "Confección avanzada",
@@ -131,6 +137,7 @@ const EditProfile = () => {
     const [isPasswordEditing, setIsPasswordEditing] = useState(false);
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [error, setError] = useState("");
 
     // Estados para colapsar secciones
     const [isBasicCollapsed, setIsBasicCollapsed] = useState(false);
@@ -149,12 +156,14 @@ const EditProfile = () => {
     const [isProfessionalFormationCollapsed, setIsProfessionalFormationCollapsed] = useState(false);
 
     // Estados para CV y Portfolio
+    const [isPdfEditing, setIsPdfEditing] = useState(false);
     const [cvFile, setCvFile] = useState(null);
     const [portfolioFile, setPortfolioFile] = useState(null);
-    const [isPdfEditing, setIsPdfEditing] = useState(false);
+    const [isUploading, setIsUploading] = useState(false);
+    const [uploadingCV, setUploadingCV] = useState(false);
+    const [uploadingPortfolio, setUploadingPortfolio] = useState(false);
     const [cvFileName, setCvFileName] = useState('');
     const [portfolioFileName, setPortfolioFileName] = useState('');
-    const [isUploading, setIsUploading] = useState(false);
 
     // Estados para la edición de la foto de perfil
     const [isEditingProfilePicture, setIsEditingProfilePicture] = useState(false);
@@ -182,8 +191,8 @@ const EditProfile = () => {
                     email: user.email,
                     creativeType: getCreativeTypeText(user.creativeType),
                     biography: user.biography || '',
-                    googleId: user.googleId,
-                    hasPassword: user.hasPassword,
+                    professionalType: user.professionalType,
+                    companyName: user.companyName || ''
                 });
                 setProfessionalTitle(user.professionalTitle || '');
                 if (user.fullName) {
@@ -193,6 +202,7 @@ const EditProfile = () => {
                         lastName: names.slice(1).join(' ') || '',
                         country: user.country || '',
                         city: user.city || '',
+                        companyName: user.companyName || ''
                     });
                 }
                 setProfessionalSummary(user.biography || '');
@@ -242,6 +252,33 @@ const EditProfile = () => {
                 }
                 if (user.portfolioUrl) {
                     setPortfolioFileName(user.portfolioUrl.split('/').pop());
+                }
+
+                // Cargar datos específicos de empresa si es necesario
+                const userIsCompany = user.professionalType === 1 || user.professionalType === 2 || user.professionalType === 4;
+                setIsCompany(userIsCompany);
+
+                // Actualizar estados específicos para empresas
+                if (userIsCompany) {
+                    // Inicializar los hitos profesionales si existen
+                    if (user.professionalMilestones && Array.isArray(user.professionalMilestones)) {
+                        setProfessionalMilestones(user.professionalMilestones);
+                    } else {
+                        // Inicializar con un hito vacío por defecto
+                        setProfessionalMilestones([{
+                            date: '',
+                            name: '',
+                            entity: '',
+                            description: ''
+                        }]);
+                    }
+
+                    // Inicializar las etiquetas de la empresa si existen
+                    if (user.companyTags && Array.isArray(user.companyTags)) {
+                        setCompanyTags(user.companyTags);
+                    } else {
+                        setCompanyTags([]);
+                    }
                 }
             } catch (error) {
                 console.error('Error al obtener el perfil:', error);
@@ -295,12 +332,59 @@ const EditProfile = () => {
         }
     };
 
+    const handleUpdateEmail = async () => {
+        if (newEmail !== confirmEmail) {
+            setError("Los emails no coinciden");
+            return;
+        }
+
+        if (!newEmail || !confirmEmail) {
+            setError("Por favor, completa todos los campos");
+            return;
+        }
+
+        try {
+            const token = localStorage.getItem('authToken');
+            if (!token) return;
+            const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+            const response = await axios.put(
+                `${backendUrl}/api/users/email`,
+                { email: newEmail },
+                {
+                    headers: { Authorization: `Bearer ${token}` }
+                }
+            );
+
+            if (response.data.success) {
+                // Actualizar el estado local
+                setUserData({
+                    ...userData,
+                    email: newEmail
+                });
+
+                // Limpiar los campos
+                setNewEmail("");
+                setConfirmEmail("");
+                setIsEmailEditing(false);
+                setError("");
+
+                // Mostrar mensaje de éxito
+                alert("Email actualizado con éxito");
+            }
+        } catch (error) {
+            console.error("Error al actualizar el email:", error);
+            setError(error.response?.data?.message || "Error al actualizar el email");
+        }
+    };
 
     const handleProfessionalSummaryChange = (e) => {
         setProfessionalSummary(e.target.value);
     };
 
     const handleEducationListChange = (index, e) => {
+        if (!Array.isArray(educationList)) return;
+
         const { name, value, type, checked } = e.target;
         const updatedList = educationList.map((edu, i) =>
             i === index ? { ...edu, [name]: type === 'checkbox' ? checked : value } : edu
@@ -315,62 +399,74 @@ const EditProfile = () => {
     const handleSkillKeyDown = (e) => {
         if (e.key === "Enter") {
             e.preventDefault();
-            if (newSkill.trim() && skills.length < 12 && !skills.includes(newSkill.trim())) {
-                setSkills([...skills, newSkill.trim()]);
+            const currentSkills = Array.isArray(skills) ? skills : [];
+            if (newSkill.trim() && currentSkills.length < 12 && !currentSkills.includes(newSkill.trim())) {
+                setSkills([...currentSkills, newSkill.trim()]);
                 setNewSkill("");
             }
         }
     };
 
     const removeSkill = (index) => {
+        if (!Array.isArray(skills)) return;
         setSkills(skills.filter((_, i) => i !== index));
     };
 
     const addPopularSkill = (skill) => {
-        if (isHabilidadesEditing && skills.length < 12 && !skills.includes(skill)) {
-            setSkills([...skills, skill]);
-            setPopularSkills(popularSkills.filter(s => s !== skill));
+        const currentSkills = Array.isArray(skills) ? skills : [];
+        const currentPopularSkills = Array.isArray(popularSkills) ? popularSkills : [];
+
+        if (isHabilidadesEditing && currentSkills.length < 12 && !currentSkills.includes(skill)) {
+            setSkills([...currentSkills, skill]);
+            setPopularSkills(currentPopularSkills.filter(s => s !== skill));
         }
     };
 
     const handleSoftwareKeyDown = (e) => {
         if (e.key === "Enter") {
             e.preventDefault();
-            if (newSoftware.trim() && software.length < 12 && !software.includes(newSoftware.trim())) {
-                setSoftware([...software, newSoftware.trim()]);
+            const currentSoftware = Array.isArray(software) ? software : [];
+            if (newSoftware.trim() && currentSoftware.length < 12 && !currentSoftware.includes(newSoftware.trim())) {
+                setSoftware([...currentSoftware, newSoftware.trim()]);
                 setNewSoftware("");
             }
         }
     };
 
     const removeSoftware = (index) => {
+        if (!Array.isArray(software)) return;
         setSoftware(software.filter((_, i) => i !== index));
     };
 
     const addPopularSoftware = (sw) => {
-        if (isSoftwareEditing && software.length < 12 && !software.includes(sw)) {
-            setSoftware([...software, sw]);
-            setPopularSoftware(popularSoftware.filter(s => s !== sw));
+        const currentSoftware = Array.isArray(software) ? software : [];
+        const currentPopularSoftware = Array.isArray(popularSoftware) ? popularSoftware : [];
+
+        if (isSoftwareEditing && currentSoftware.length < 12 && !currentSoftware.includes(sw)) {
+            setSoftware([...currentSoftware, sw]);
+            setPopularSoftware(currentPopularSoftware.filter(s => s !== sw));
         }
     };
 
     const handleContractChange = (e) => {
         const { name, checked } = e.target;
-        setContract(prev => ({ ...prev, [name]: checked }));
+        setContract(prev => ({ ...(prev || {}), [name]: checked }));
     };
 
     const handleLocationChange = (e) => {
         const { name, checked } = e.target;
-        setLocationType(prev => ({ ...prev, [name]: checked }));
+        setLocationType(prev => ({ ...(prev || {}), [name]: checked }));
     };
 
     const handleSocialChange = (e) => {
         const { name, value } = e.target;
-        setSocial(prev => ({ ...prev, [name]: value }));
+        setSocial(prev => ({ ...(prev || {}), [name]: value }));
     };
 
     // Handlers para Formación Profesional
     const handleProfessionalFormationChange = (index, e) => {
+        if (!Array.isArray(professionalFormationList)) return;
+
         const { name, value, type, checked } = e.target;
         const updatedList = professionalFormationList.map((item, i) =>
             i === index ? { ...item, [name]: type === 'checkbox' ? checked : value } : item
@@ -379,7 +475,8 @@ const EditProfile = () => {
     };
 
     const addProfessionalFormation = () => {
-        setProfessionalFormationList([...professionalFormationList, {
+        const currentList = Array.isArray(professionalFormationList) ? professionalFormationList : [];
+        setProfessionalFormationList([...currentList, {
             trainingName: '',
             institution: '',
             trainingStart: '',
@@ -389,12 +486,15 @@ const EditProfile = () => {
     };
 
     const removeProfessionalFormation = (index) => {
+        if (!Array.isArray(professionalFormationList)) return;
+
         if (professionalFormationList.length > 1) {
             setProfessionalFormationList(professionalFormationList.filter((_, i) => i !== index));
         }
     };
 
     const addEducation = () => {
+        const currentList = Array.isArray(educationList) ? educationList : [];
         const emptyEducation = {
             institution: '',
             otherInstitution: '',
@@ -403,13 +503,14 @@ const EditProfile = () => {
             formationEnd: '',
             currentlyEnrolled: false
         };
-        setEducationList([...educationList, emptyEducation]);
+        setEducationList([...currentList, emptyEducation]);
     };
 
     const removeEducation = (index) => {
+        if (!Array.isArray(educationList)) return;
+
         if (educationList.length > 1) {
-            const updated = educationList.filter((_, i) => i !== index);
-            setEducationList(updated);
+            setEducationList(educationList.filter((_, i) => i !== index));
         }
     };
 
@@ -422,15 +523,23 @@ const EditProfile = () => {
                 city: basicInfo.city,
                 country: basicInfo.country,
                 biography: professionalSummary,
-                education: educationList,
-                professionalFormation: professionalFormationList,
-                skills: skills,
-                software: software,
-                contract: contract,
-                locationType: locationType,
-                social: social,
+                education: Array.isArray(educationList) ? educationList : [],
+                professionalFormation: Array.isArray(professionalFormationList) ? professionalFormationList : [],
+                skills: Array.isArray(skills) ? skills : [],
+                software: Array.isArray(software) ? software : [],
+                contract: contract || {},
+                locationType: locationType || {},
+                social: social || {},
                 professionalTitle: professionalTitle,
+                companyName: basicInfo.companyName
             };
+
+            // Si es una empresa, incluir los hitos profesionales y etiquetas
+            if (isCompany) {
+                updates.professionalMilestones = Array.isArray(professionalMilestones) ? professionalMilestones : [];
+                updates.companyTags = Array.isArray(companyTags) ? companyTags : [];
+            }
+
             const response = await axios.put(`${backendUrl}/api/users/profile`, updates, {
                 headers: { Authorization: `Bearer ${token}` },
             });
@@ -466,6 +575,9 @@ const EditProfile = () => {
             if (updatedUser.social) {
                 setSocial(updatedUser.social);
             }
+            if (updatedUser.companyName) {
+                setBasicInfo(prev => ({ ...prev, companyName: updatedUser.companyName }));
+            }
         } catch (error) {
             console.error('Error al actualizar el perfil:', error);
         }
@@ -496,153 +608,78 @@ const EditProfile = () => {
     // Manejador para cambios en los archivos
     const handleFileChange = (e) => {
         const { name, files } = e.target;
-        if (files.length > 0) {
-            const file = files[0];
-            if (file.type !== 'application/pdf') {
-                alert('Solo se permiten archivos PDF');
-                return;
-            }
+        if (files.length === 0) return;
 
-            // Tamaño máximo: 10MB
-            if (file.size > 10 * 1024 * 1024) {
-                alert('El archivo es demasiado grande. El tamaño máximo es 10MB.');
-                return;
-            }
+        const file = files[0];
+        if (file.type !== 'application/pdf') {
+            alert('Solo se permiten archivos PDF');
+            return;
+        }
 
-            if (name === 'cv') {
-                setCvFile(file);
-                setCvFileName(file.name);
-            } else if (name === 'portfolio') {
-                setPortfolioFile(file);
-                setPortfolioFileName(file.name);
-            }
+        if (name === 'cv') {
+            setCvFile(file);
+            setCvFileName(file.name);
+        } else if (name === 'portfolio') {
+            setPortfolioFile(file);
+            setPortfolioFileName(file.name);
         }
     };
 
     // Función para subir archivos PDF
     const uploadPdfFiles = async () => {
         if (!cvFile && !portfolioFile) {
-            alert('No se ha seleccionado ningún archivo');
+            setIsPdfEditing(false);
             return;
         }
 
         setIsUploading(true);
+
         try {
             const token = localStorage.getItem('authToken');
+            if (!token) return;
             const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-            let updatedData = {};
-
-            // Subir CV si está seleccionado
             if (cvFile) {
+                setUploadingCV(true);
                 const cvFormData = new FormData();
                 cvFormData.append('file', cvFile);
-                cvFormData.append('type', 'cv');
 
-                const cvResponse = await axios.post(
-                    `${backendUrl}/api/users/upload-pdf`,
-                    cvFormData,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                            'Content-Type': 'multipart/form-data'
-                        }
+                const cvResponse = await axios.put(`${backendUrl}/api/users/cv`, cvFormData, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'multipart/form-data'
                     }
-                );
+                });
 
-                if (cvResponse.data.success) {
-                    updatedData.cvUrl = cvResponse.data.fileUrl;
-                    alert('CV subido con éxito');
+                if (cvResponse.data.cvUrl) {
+                    setCvFileName(cvResponse.data.cvUrl.split('/').pop());
                 }
+                setUploadingCV(false);
             }
 
-            // Subir Portfolio si está seleccionado
             if (portfolioFile) {
+                setUploadingPortfolio(true);
                 const portfolioFormData = new FormData();
                 portfolioFormData.append('file', portfolioFile);
-                portfolioFormData.append('type', 'portfolio');
 
-                const portfolioResponse = await axios.post(
-                    `${backendUrl}/api/users/upload-pdf`,
-                    portfolioFormData,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                            'Content-Type': 'multipart/form-data'
-                        }
+                const portfolioResponse = await axios.put(`${backendUrl}/api/users/portfolio`, portfolioFormData, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'multipart/form-data'
                     }
-                );
+                });
 
-                if (portfolioResponse.data.success) {
-                    updatedData.portfolioUrl = portfolioResponse.data.fileUrl;
-                    alert('Portfolio subido con éxito');
+                if (portfolioResponse.data.portfolioUrl) {
+                    setPortfolioFileName(portfolioResponse.data.portfolioUrl.split('/').pop());
                 }
+                setUploadingPortfolio(false);
             }
 
-            // Actualizar el perfil con las nuevas URLs
-            if (Object.keys(updatedData).length > 0) {
-                await axios.put(
-                    `${backendUrl}/api/users/profile`,
-                    updatedData,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`
-                        }
-                    }
-                );
-
-                // Refrescar los datos del usuario
-                const fetchUserProfile = async () => {
-                    try {
-                        const token = localStorage.getItem('authToken');
-                        if (!token) return;
-                        const backendUrl = import.meta.env.VITE_BACKEND_URL;
-                        const response = await axios.get(`${backendUrl}/api/users/profile`, {
-                            headers: { Authorization: `Bearer ${token}` },
-                        });
-                        const user = response.data;
-                        setUserData({
-                            profilePicture: user.profile?.profilePicture || '/multimedia/usuarioDefault.jpg',
-                            fullName: user.fullName,
-                            username: user.username,
-                            city: user.city,
-                            country: user.country,
-                            email: user.email,
-                            creativeType: getCreativeTypeText(user.creativeType),
-                            biography: user.biography || '',
-                            googleId: user.googleId,
-                            hasPassword: user.hasPassword,
-                        });
-                        // Actualizar datos del usuario (reusando código existente)
-                        if (user.fullName) {
-                            const names = user.fullName.split(' ');
-                            setBasicInfo({
-                                firstName: names[0] || '',
-                                lastName: names.slice(1).join(' ') || '',
-                                country: user.country || '',
-                                city: user.city || '',
-                            });
-                        }
-                        // Actualizar nombres de archivo si están disponibles
-                        if (user.cvUrl) {
-                            setCvFileName(user.cvUrl.split('/').pop());
-                        }
-                        if (user.portfolioUrl) {
-                            setPortfolioFileName(user.portfolioUrl.split('/').pop());
-                        }
-                    } catch (error) {
-                        console.error('Error al obtener el perfil:', error);
-                    }
-                };
-                fetchUserProfile();
-            }
-
-            setIsPdfEditing(false);
             setCvFile(null);
             setPortfolioFile(null);
+            setIsPdfEditing(false);
         } catch (error) {
             console.error('Error al subir archivos PDF:', error);
-            alert('Error al subir los archivos. Inténtalo de nuevo.');
         } finally {
             setIsUploading(false);
         }
@@ -719,6 +756,51 @@ const EditProfile = () => {
         setIsEditingProfilePicture(false);
     };
 
+    // Manejadores para las nuevas secciones de empresa
+    const handleAddMilestone = () => {
+        const currentMilestones = Array.isArray(professionalMilestones) ? professionalMilestones : [];
+        setProfessionalMilestones([
+            ...currentMilestones,
+            {
+                date: '',
+                name: '',
+                entity: '',
+                description: ''
+            }
+        ]);
+    };
+
+    const handleMilestoneChange = (index, e) => {
+        if (!Array.isArray(professionalMilestones)) return;
+
+        const { name, value } = e.target;
+        const updatedMilestones = [...professionalMilestones];
+        updatedMilestones[index] = {
+            ...updatedMilestones[index],
+            [name]: value
+        };
+        setProfessionalMilestones(updatedMilestones);
+    };
+
+    const handleRemoveMilestone = (index) => {
+        if (!Array.isArray(professionalMilestones)) return;
+
+        setProfessionalMilestones(professionalMilestones.filter((_, i) => i !== index));
+    };
+
+    const handleAddTag = (tag) => {
+        const currentTags = Array.isArray(companyTags) ? companyTags : [];
+        if (currentTags.length < 3 && !currentTags.includes(tag)) {
+            setCompanyTags([...currentTags, tag]);
+        }
+    };
+
+    const handleRemoveTag = (index) => {
+        if (!Array.isArray(companyTags)) return;
+
+        setCompanyTags(companyTags.filter((_, i) => i !== index));
+    };
+
     return (
         <div className="edit-profile-wrapper">
             <form onSubmit={handleSubmit}>
@@ -729,16 +811,18 @@ const EditProfile = () => {
                         isEditingProfilePicture={isEditingProfilePicture}
                         isUploadingProfilePicture={isUploadingProfilePicture}
                         handleProfilePictureClick={handleProfilePictureClick}
+                        handleProfileImageChange={handleProfileImageChange}
                         handleSaveProfileImage={handleSaveProfileImage}
                         handleCancelProfileImageEdit={handleCancelProfileImageEdit}
                         profileImageInputRef={profileImageInputRef}
+                        professionalType={userData.professionalType}
                     />
                     <div className="profile-body">
                         <NavigationMenu
                             activeOption={activeOption}
                             setActiveOption={setActiveOption}
                         />
-                        <div className="right-form">
+                        <div className="profile-sections">
                             {activeOption === "editProfile" && (
                                 <>
                                     <BasicInfoSection
@@ -750,6 +834,7 @@ const EditProfile = () => {
                                         handleBasicInfoChange={handleBasicInfoChange}
                                         updateProfileData={updateProfileData}
                                         countryOptions={countryOptions}
+                                        isCompany={isCompany}
                                     />
                                     <ProfessionalTitleSection
                                         isProfessionalTitleCollapsed={isProfessionalTitleCollapsed}
@@ -769,122 +854,168 @@ const EditProfile = () => {
                                         handleProfessionalSummaryChange={handleProfessionalSummaryChange}
                                         updateProfileData={updateProfileData}
                                     />
-                                    <EducationSection
-                                        isEducationCollapsed={isEducationCollapsed}
-                                        setIsEducationCollapsed={setIsEducationCollapsed}
-                                        isEducationEditing={isEducationEditing}
-                                        setIsEducationEditing={setIsEducationEditing}
-                                        educationList={educationList}
-                                        handleEducationListChange={handleEducationListChange}
-                                        addEducation={addEducation}
-                                        removeEducation={removeEducation}
-                                        selfTaught={selfTaught}
-                                        handleSelfTaughtChange={handleSelfTaughtChange}
-                                        updateProfileData={updateProfileData}
-                                        institutionOptions={institutionOptions}
-                                        currentDate={currentDate}
-                                    />
-                                    <ProfessionalFormationSection
-                                        isProfessionalFormationCollapsed={isProfessionalFormationCollapsed}
-                                        setIsProfessionalFormationCollapsed={setIsProfessionalFormationCollapsed}
-                                        isProfessionalFormationEditing={isProfessionalFormationEditing}
-                                        setIsProfessionalFormationEditing={setIsProfessionalFormationEditing}
-                                        professionalFormationList={professionalFormationList}
-                                        handleProfessionalFormationChange={handleProfessionalFormationChange}
-                                        addProfessionalFormation={addProfessionalFormation}
-                                        removeProfessionalFormation={removeProfessionalFormation}
-                                        updateProfileData={updateProfileData}
-                                        currentDate={currentDate}
-                                    />
-                                    <SkillsSection
-                                        isHabilidadesCollapsed={isHabilidadesCollapsed}
-                                        setIsHabilidadesCollapsed={setIsHabilidadesCollapsed}
-                                        isHabilidadesEditing={isHabilidadesEditing}
-                                        setIsHabilidadesEditing={setIsHabilidadesEditing}
-                                        skills={skills}
-                                        newSkill={newSkill}
-                                        setNewSkill={setNewSkill}
-                                        handleSkillKeyDown={handleSkillKeyDown}
-                                        removeSkill={removeSkill}
-                                        popularSkills={popularSkills}
-                                        addPopularSkill={addPopularSkill}
-                                        updateProfileData={updateProfileData}
-                                    />
-                                    <SoftwareSection
-                                        isSoftwareCollapsed={isSoftwareCollapsed}
-                                        setIsSoftwareCollapsed={setIsSoftwareCollapsed}
-                                        isSoftwareEditing={isSoftwareEditing}
-                                        setIsSoftwareEditing={setIsSoftwareEditing}
-                                        software={software}
-                                        newSoftware={newSoftware}
-                                        setNewSoftware={setNewSoftware}
-                                        handleSoftwareKeyDown={handleSoftwareKeyDown}
-                                        removeSoftware={removeSoftware}
-                                        popularSoftware={popularSoftware}
-                                        addPopularSoftware={addPopularSoftware}
-                                        updateProfileData={updateProfileData}
-                                    />
-                                    <JobSearchSection
-                                        isEnBuscaCollapsed={isEnBuscaCollapsed}
-                                        setIsEnBuscaCollapsed={setIsEnBuscaCollapsed}
-                                        isEnBuscaEditing={isEnBuscaEditing}
-                                        setIsEnBuscaEditing={setIsEnBuscaEditing}
-                                        contract={contract}
-                                        handleContractChange={handleContractChange}
-                                        locationType={locationType}
-                                        handleLocationChange={handleLocationChange}
-                                        updateProfileData={updateProfileData}
-                                    />
-                                    <ContactSection
-                                        isContactCollapsed={isContactCollapsed}
-                                        setIsContactCollapsed={setIsContactCollapsed}
-                                        isContactEditing={isContactEditing}
-                                        setIsContactEditing={setIsContactEditing}
-                                        social={social}
-                                        handleSocialChange={handleSocialChange}
-                                        updateProfileData={updateProfileData}
-                                    />
-                                    <PDFUploadSection
-                                        isPdfEditing={isPdfEditing}
-                                        setIsPdfEditing={setIsPdfEditing}
-                                        cvFileName={cvFileName}
-                                        portfolioFileName={portfolioFileName}
-                                        handleFileChange={handleFileChange}
-                                        uploadPdfFiles={uploadPdfFiles}
-                                        isUploading={isUploading}
+
+                                    {isCompany ? (
+                                        // Secciones específicas para empresas
+                                        <>
+                                            <ProfessionalMilestonesSection
+                                                isProfessionalMilestonesCollapsed={isProfessionalMilestonesCollapsed}
+                                                setIsProfessionalMilestonesCollapsed={setIsProfessionalMilestonesCollapsed}
+                                                isProfessionalMilestonesEditing={isProfessionalMilestonesEditing}
+                                                setIsProfessionalMilestonesEditing={setIsProfessionalMilestonesEditing}
+                                                professionalMilestones={professionalMilestones}
+                                                handleAddMilestone={handleAddMilestone}
+                                                handleMilestoneChange={handleMilestoneChange}
+                                                handleRemoveMilestone={handleRemoveMilestone}
+                                                updateProfileData={updateProfileData}
+                                            />
+                                            <SkillsSection
+                                                isHabilidadesCollapsed={isHabilidadesCollapsed}
+                                                setIsHabilidadesCollapsed={setIsHabilidadesCollapsed}
+                                                isHabilidadesEditing={isHabilidadesEditing}
+                                                setIsHabilidadesEditing={setIsHabilidadesEditing}
+                                                skills={skills}
+                                                newSkill={newSkill}
+                                                setNewSkill={setNewSkill}
+                                                handleSkillKeyDown={handleSkillKeyDown}
+                                                removeSkill={removeSkill}
+                                                popularSkills={popularSkills}
+                                                addPopularSkill={addPopularSkill}
+                                                updateProfileData={updateProfileData}
+                                            />
+                                            <CompanyContactSection
+                                                isCompanyContactCollapsed={isCompanyContactCollapsed}
+                                                setIsCompanyContactCollapsed={setIsCompanyContactCollapsed}
+                                                isCompanyContactEditing={isCompanyContactEditing}
+                                                setIsCompanyContactEditing={setIsCompanyContactEditing}
+                                                companyTags={companyTags}
+                                                handleAddTag={handleAddTag}
+                                                handleRemoveTag={handleRemoveTag}
+                                                updateProfileData={updateProfileData}
+                                            />
+                                        </>
+                                    ) : (
+                                        <>
+                                            <EducationSection
+                                                isEducationCollapsed={isEducationCollapsed}
+                                                setIsEducationCollapsed={setIsEducationCollapsed}
+                                                isEducationEditing={isEducationEditing}
+                                                setIsEducationEditing={setIsEducationEditing}
+                                                educationList={educationList}
+                                                handleEducationListChange={handleEducationListChange}
+                                                addEducation={addEducation}
+                                                removeEducation={removeEducation}
+                                                selfTaught={selfTaught}
+                                                handleSelfTaughtChange={handleSelfTaughtChange}
+                                                updateProfileData={updateProfileData}
+                                                institutionOptions={institutionOptions}    // <-- Prop agregada
+                                                currentDate={currentDate}                  // Si también se utiliza currentDate en el componente
+                                            />
+
+                                            <ProfessionalFormationSection
+                                                isProfessionalFormationCollapsed={isProfessionalFormationCollapsed}
+                                                setIsProfessionalFormationCollapsed={setIsProfessionalFormationCollapsed}
+                                                isProfessionalFormationEditing={isProfessionalFormationEditing}
+                                                setIsProfessionalFormationEditing={setIsProfessionalFormationEditing}
+                                                professionalFormationList={professionalFormationList}
+                                                onProfessionalFormationChange={handleProfessionalFormationChange}
+                                                onAddProfessionalFormation={addProfessionalFormation}
+                                                onRemoveProfessionalFormation={removeProfessionalFormation}
+                                                updateProfileData={updateProfileData}
+                                            />
+                                            <SkillsSection
+                                                isHabilidadesCollapsed={isHabilidadesCollapsed}
+                                                setIsHabilidadesCollapsed={setIsHabilidadesCollapsed}
+                                                isHabilidadesEditing={isHabilidadesEditing}
+                                                setIsHabilidadesEditing={setIsHabilidadesEditing}
+                                                skills={skills}
+                                                newSkill={newSkill}
+                                                setNewSkill={setNewSkill}
+                                                handleSkillKeyDown={handleSkillKeyDown}
+                                                removeSkill={removeSkill}
+                                                popularSkills={popularSkills}
+                                                addPopularSkill={addPopularSkill}
+                                                updateProfileData={updateProfileData}
+                                            />
+                                            <SoftwareSection
+                                                isSoftwareCollapsed={isSoftwareCollapsed}
+                                                setIsSoftwareCollapsed={setIsSoftwareCollapsed}
+                                                isSoftwareEditing={isSoftwareEditing}
+                                                setIsSoftwareEditing={setIsSoftwareEditing}
+                                                software={software}
+                                                newSoftware={newSoftware}
+                                                setNewSoftware={setNewSoftware}
+                                                handleSoftwareKeyDown={handleSoftwareKeyDown}
+                                                removeSoftware={removeSoftware}
+                                                popularSoftware={popularSoftware}
+                                                addPopularSoftware={addPopularSoftware}
+                                                updateProfileData={updateProfileData}
+                                            />
+                                            <JobSearchSection
+                                                isEnBuscaCollapsed={isEnBuscaCollapsed}
+                                                setIsEnBuscaCollapsed={setIsEnBuscaCollapsed}
+                                                isEnBuscaEditing={isEnBuscaEditing}
+                                                setIsEnBuscaEditing={setIsEnBuscaEditing}
+                                                contract={contract}
+                                                handleContractChange={handleContractChange}
+                                                locationType={locationType}
+                                                handleLocationChange={handleLocationChange}
+                                                updateProfileData={updateProfileData}
+                                            />
+                                            <ContactSection
+                                                isContactCollapsed={isContactCollapsed}
+                                                setIsContactCollapsed={setIsContactCollapsed}
+                                                isContactEditing={isContactEditing}
+                                                setIsContactEditing={setIsContactEditing}
+                                                social={social}
+                                                handleSocialChange={handleSocialChange}
+                                                updateProfileData={updateProfileData}
+                                            />
+                                            <PDFUploadSection
+                                                isPdfEditing={isPdfEditing}
+                                                setIsPdfEditing={setIsPdfEditing}
+                                                cvFileName={cvFileName}
+                                                portfolioFileName={portfolioFileName}
+                                                handleFileChange={handleFileChange}
+                                                uploadPdfFiles={uploadPdfFiles}
+                                                isUploading={isUploading}
+                                                uploadingCV={uploadingCV}
+                                                uploadingPortfolio={uploadingPortfolio}
+                                                userData={userData}
+                                                setCvFile={setCvFile}
+                                                setCvFileName={setCvFileName}
+                                                setPortfolioFile={setPortfolioFile}
+                                                setPortfolioFileName={setPortfolioFileName}
+                                            />
+                                        </>
+                                    )}
+
+                                    <ConfigurationSection
                                         userData={userData}
-                                        setCvFile={setCvFile}
-                                        setCvFileName={setCvFileName}
-                                        setPortfolioFile={setPortfolioFile}
-                                        setPortfolioFileName={setPortfolioFileName}
+                                        isEmailEditing={isEmailEditing}
+                                        setIsEmailEditing={setIsEmailEditing}
+                                        emailInput={userData.email || ''}
+                                        setEmailInput={setEmailInput}
+                                        newEmail={newEmail}
+                                        setNewEmail={setNewEmail}
+                                        confirmEmail={confirmEmail}
+                                        setConfirmEmail={setConfirmEmail}
+                                        handleUpdateEmail={handleUpdateEmail}
+                                        isPasswordEditing={isPasswordEditing}
+                                        setIsPasswordEditing={setIsPasswordEditing}
+                                        currentPassword={currentPassword}
+                                        setCurrentPassword={setCurrentPassword}
+                                        newPassword={newPassword}
+                                        setNewPassword={setNewPassword}
+                                        confirmPassword={confirmPassword}
+                                        setConfirmPassword={setConfirmPassword}
+                                        handleChangePassword={handleChangePassword}
+                                        error={error}
                                     />
                                 </>
                             )}
                             {activeOption === "misOfertas" && (
                                 <MisOfertasSection />
-                            )}
-                            {activeOption === "configuracion" && (
-                                <ConfigurationSection
-                                    userData={userData}
-                                    isEmailEditing={isEmailEditing}
-                                    setIsEmailEditing={setIsEmailEditing}
-                                    emailInput={emailInput}
-                                    setEmailInput={setEmailInput}
-                                    newEmail={newEmail}
-                                    setNewEmail={setNewEmail}
-                                    confirmEmail={confirmEmail}
-                                    setConfirmEmail={setConfirmEmail}
-                                    isPasswordEditing={isPasswordEditing}
-                                    setIsPasswordEditing={setIsPasswordEditing}
-                                    currentPassword={currentPassword}
-                                    setCurrentPassword={setCurrentPassword}
-                                    newPassword={newPassword}
-                                    setNewPassword={setNewPassword}
-                                    confirmPassword={confirmPassword}
-                                    setConfirmPassword={setConfirmPassword}
-                                    error={error}
-                                    handleChangePassword={handleChangePassword}
-                                />
                             )}
                         </div>
                     </div>

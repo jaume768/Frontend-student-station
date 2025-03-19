@@ -27,7 +27,7 @@ const ContactSection = ({
                             type="email"
                             name="emailContacto"
                             placeholder="Email de contacto"
-                            value={social.emailContacto}
+                            value={social?.emailContacto || ""}
                             onChange={handleSocialChange}
                             disabled={!isContactEditing}
                         />
@@ -38,7 +38,7 @@ const ContactSection = ({
                             type="url"
                             name="sitioWeb"
                             placeholder="https://www.tusitio.com"
-                            value={social.sitioWeb}
+                            value={social?.sitioWeb || ""}
                             onChange={handleSocialChange}
                             disabled={!isContactEditing}
                         />
@@ -51,7 +51,7 @@ const ContactSection = ({
                                 type="text"
                                 name="instagram"
                                 placeholder="tu_usuario"
-                                value={social.instagram}
+                                value={social?.instagram || ""}
                                 onChange={handleSocialChange}
                                 disabled={!isContactEditing}
                             />
@@ -64,8 +64,8 @@ const ContactSection = ({
                             <input
                                 type="text"
                                 name="linkedin"
-                                placeholder="tu_perfil"
-                                value={social.linkedin}
+                                placeholder="tu_usuario"
+                                value={social?.linkedin || ""}
                                 onChange={handleSocialChange}
                                 disabled={!isContactEditing}
                             />
@@ -79,7 +79,7 @@ const ContactSection = ({
                                 type="text"
                                 name="behance"
                                 placeholder="tu_usuario"
-                                value={social.behance}
+                                value={social?.behance || ""}
                                 onChange={handleSocialChange}
                                 disabled={!isContactEditing}
                             />
@@ -88,12 +88,12 @@ const ContactSection = ({
                     <div className="form-group-edit">
                         <label>Tumblr</label>
                         <div className="social-input-container">
-                            <span className="social-prefix">tumblr.com/blog/</span>
+                            <span className="social-prefix">tumblr.com/</span>
                             <input
                                 type="text"
                                 name="tumblr"
-                                placeholder="tu_blog"
-                                value={social.tumblr}
+                                placeholder="tu_usuario"
+                                value={social?.tumblr || ""}
                                 onChange={handleSocialChange}
                                 disabled={!isContactEditing}
                             />
@@ -106,8 +106,8 @@ const ContactSection = ({
                             <input
                                 type="text"
                                 name="youtube"
-                                placeholder="@tu_canal"
-                                value={social.youtube}
+                                placeholder="tu_canal"
+                                value={social?.youtube || ""}
                                 onChange={handleSocialChange}
                                 disabled={!isContactEditing}
                             />
@@ -121,7 +121,7 @@ const ContactSection = ({
                                 type="text"
                                 name="pinterest"
                                 placeholder="tu_usuario"
-                                value={social.pinterest}
+                                value={social?.pinterest || ""}
                                 onChange={handleSocialChange}
                                 disabled={!isContactEditing}
                             />

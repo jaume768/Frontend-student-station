@@ -30,7 +30,7 @@ const JobSearchSection = ({
                                 type="checkbox"
                                 id="practicas"
                                 name="practicas"
-                                checked={contract.practicas}
+                                checked={contract?.practicas || false}
                                 onChange={handleContractChange}
                                 disabled={!isEnBuscaEditing}
                             />
@@ -41,7 +41,7 @@ const JobSearchSection = ({
                                 type="checkbox"
                                 id="tiempoCompleto"
                                 name="tiempoCompleto"
-                                checked={contract.tiempoCompleto}
+                                checked={contract?.tiempoCompleto || false}
                                 onChange={handleContractChange}
                                 disabled={!isEnBuscaEditing}
                             />
@@ -52,7 +52,7 @@ const JobSearchSection = ({
                                 type="checkbox"
                                 id="parcial"
                                 name="parcial"
-                                checked={contract.parcial}
+                                checked={contract?.parcial || false}
                                 onChange={handleContractChange}
                                 disabled={!isEnBuscaEditing}
                             />
@@ -60,13 +60,13 @@ const JobSearchSection = ({
                         </div>
                     </div>
                     <div className="form-group-edit">
-                        <h4>Tipo de ubicación</h4>
+                        <h4>Modalidad</h4>
                         <div className="checkbox-group">
                             <input
                                 type="checkbox"
                                 id="presencial"
                                 name="presencial"
-                                checked={locationType.presencial}
+                                checked={locationType?.presencial || false}
                                 onChange={handleLocationChange}
                                 disabled={!isEnBuscaEditing}
                             />
@@ -77,7 +77,7 @@ const JobSearchSection = ({
                                 type="checkbox"
                                 id="remoto"
                                 name="remoto"
-                                checked={locationType.remoto}
+                                checked={locationType?.remoto || false}
                                 onChange={handleLocationChange}
                                 disabled={!isEnBuscaEditing}
                             />
@@ -88,7 +88,7 @@ const JobSearchSection = ({
                                 type="checkbox"
                                 id="hibrido"
                                 name="hibrido"
-                                checked={locationType.hibrido}
+                                checked={locationType?.hibrido || false}
                                 onChange={handleLocationChange}
                                 disabled={!isEnBuscaEditing}
                             />

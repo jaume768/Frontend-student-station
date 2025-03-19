@@ -10,7 +10,8 @@ const BasicInfoSection = ({
     basicInfo,
     handleBasicInfoChange,
     updateProfileData,
-    countryOptions
+    countryOptions,
+    isCompany
 }) => {
     return (
         <section className="form-section">
@@ -26,28 +27,44 @@ const BasicInfoSection = ({
             </div>
             {!isBasicCollapsed && (
                 <div className="section-content">
-                    <div className="form-group-edit">
-                        <label>Nombre</label>
-                        <input
-                            type="text"
-                            name="firstName"
-                            placeholder="Introduce tu nombre"
-                            value={basicInfo.firstName}
-                            onChange={handleBasicInfoChange}
-                            disabled={!isBasicEditing}
-                        />
-                    </div>
-                    <div className="form-group-edit">
-                        <label>Apellidos</label>
-                        <input
-                            type="text"
-                            name="lastName"
-                            placeholder="Introduce tus apellidos"
-                            value={basicInfo.lastName}
-                            onChange={handleBasicInfoChange}
-                            disabled={!isBasicEditing}
-                        />
-                    </div>
+                    {isCompany ? (
+                        <div className="form-group-edit">
+                            <label>Nombre de la empresa</label>
+                            <input
+                                type="text"
+                                name="companyName"
+                                placeholder="Introduce el nombre de la empresa"
+                                value={basicInfo.companyName || ''}
+                                onChange={handleBasicInfoChange}
+                                disabled={!isBasicEditing}
+                            />
+                        </div>
+                    ) : (
+                        <>
+                            <div className="form-group-edit">
+                                <label>Nombre</label>
+                                <input
+                                    type="text"
+                                    name="firstName"
+                                    placeholder="Introduce tu nombre"
+                                    value={basicInfo.firstName}
+                                    onChange={handleBasicInfoChange}
+                                    disabled={!isBasicEditing}
+                                />
+                            </div>
+                            <div className="form-group-edit">
+                                <label>Apellidos</label>
+                                <input
+                                    type="text"
+                                    name="lastName"
+                                    placeholder="Introduce tus apellidos"
+                                    value={basicInfo.lastName}
+                                    onChange={handleBasicInfoChange}
+                                    disabled={!isBasicEditing}
+                                />
+                            </div>
+                        </>
+                    )}
                     <div className="form-group-edit">
                         <label>País de residencia</label>
                         <select

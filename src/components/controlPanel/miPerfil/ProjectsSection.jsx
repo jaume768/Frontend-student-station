@@ -2,14 +2,17 @@ import React from 'react';
 import { FaTh, FaList } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
-const ProjectsSection = ({ isGalleryView, toggleView, userPosts }) => {
+const ProjectsSection = ({ isGalleryView, toggleView, userPosts = [] }) => {
     const navigate = useNavigate();
     
     const totalGridItems = 15;
     const renderProjectsGrid = () => {
+        // Asegurarse de que userPosts sea un array
+        const posts = Array.isArray(userPosts) ? userPosts : [];
+        
         return [...Array(totalGridItems)].map((_, index) => {
-            if (index < userPosts.length) {
-                const post = userPosts[index];
+            if (index < posts.length) {
+                const post = posts[index];
                 return (
                     <div
                         key={index}

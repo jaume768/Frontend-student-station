@@ -95,6 +95,7 @@ const MiPerfil = () => {
                 profile={profile} 
                 activeTab={activeTab} 
                 setActiveTab={setActiveTab} 
+                professionalType={profile?.professionalType}
             />
 
             <div className="miPerfil-content">

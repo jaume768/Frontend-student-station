@@ -19,13 +19,9 @@ const ConfigurationSection = ({
     confirmPassword,
     setConfirmPassword,
     error,
-    handleChangePassword
+    handleChangePassword,
+    handleUpdateEmail
 }) => {
-    const handleSaveEmail = async () => {
-        // Implementar la lógica para guardar el email
-        setIsEmailEditing(false);
-    };
-
     return (
         <div className="configuration-section">
             <h2>Configuración de la cuenta</h2>
@@ -47,7 +43,7 @@ const ConfigurationSection = ({
                         </div>
                     ) : (
                         <div className="email-edit-form">
-                            <div className="form-group">
+                            <div className="form-group-edit">
                                 <label>Email actual</label>
                                 <input
                                     type="email"
@@ -55,7 +51,7 @@ const ConfigurationSection = ({
                                     disabled
                                 />
                             </div>
-                            <div className="form-group">
+                            <div className="form-group-edit">
                                 <label>Nuevo email</label>
                                 <input
                                     type="email"
@@ -64,7 +60,7 @@ const ConfigurationSection = ({
                                     placeholder="Introduce tu nuevo email"
                                 />
                             </div>
-                            <div className="form-group">
+                            <div className="form-group-edit">
                                 <label>Confirmar nuevo email</label>
                                 <input
                                     type="email"
@@ -77,7 +73,7 @@ const ConfigurationSection = ({
                                 <button
                                     type="button"
                                     className="save-email-button"
-                                    onClick={handleSaveEmail}
+                                    onClick={handleUpdateEmail}
                                 >
                                     Guardar
                                 </button>
@@ -117,7 +113,7 @@ const ConfigurationSection = ({
                     ) : (
                         <div className="password-edit-form">
                             {!userData.googleId && (
-                                <div className="form-group">
+                                <div className="form-group-edit">
                                     <label>Contraseña actual</label>
                                     <input
                                         type="password"
@@ -127,7 +123,7 @@ const ConfigurationSection = ({
                                     />
                                 </div>
                             )}
-                            <div className="form-group">
+                            <div className="form-group-edit">
                                 <label>Nueva contraseña</label>
                                 <input
                                     type="password"
@@ -136,7 +132,7 @@ const ConfigurationSection = ({
                                     placeholder="Introduce tu nueva contraseña"
                                 />
                             </div>
-                            <div className="form-group">
+                            <div className="form-group-edit">
                                 <label>Confirmar nueva contraseña</label>
                                 <input
                                     type="password"
@@ -162,7 +158,7 @@ const ConfigurationSection = ({
                                         setCurrentPassword("");
                                         setNewPassword("");
                                         setConfirmPassword("");
-                                        setError("");
+                                        // setError("");
                                     }}
                                 >
                                     Cancelar

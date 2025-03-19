@@ -19,7 +19,7 @@ const SkillsSection = ({
     return (
         <section className="form-section">
             <div className="section-header-edit">
-                <h3>Habilidades</h3>
+                <h3>Habilidades destacadas</h3>
                 <button type="button" className="collapse-toggle" onClick={() => setIsHabilidadesCollapsed(!isHabilidadesCollapsed)}>
                     {isHabilidadesCollapsed ? <FaChevronDown /> : <FaChevronUp />}
                 </button>
@@ -28,7 +28,7 @@ const SkillsSection = ({
                 <div className="section-content">
                     <div className="form-group-edit">
                         <div className="tags-container">
-                            {skills && skills.map((skill, index) => (
+                            {Array.isArray(skills) && skills.map((skill, index) => (
                                 <div key={index} className="tag">
                                     {skill}
                                     {isHabilidadesEditing && (
@@ -45,7 +45,7 @@ const SkillsSection = ({
                         </div>
                         {isHabilidadesEditing && (
                             <>
-                                {skills.length < 12 && (
+                                {Array.isArray(skills) && skills.length < 12 && (
                                     <div className="skill-input-container">
                                         <input
                                             type="text"

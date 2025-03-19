@@ -9,27 +9,38 @@ const ProfileHeader = ({
     handleProfilePictureClick,
     handleSaveProfileImage,
     handleCancelProfileImageEdit,
-    profileImageInputRef
+    profileImageInputRef,
+    handleProfileImageChange,
+    professionalType
 }) => {
+    // Determinar si el usuario es una empresa
+    const isCompany = professionalType === 1 || professionalType === 2 || professionalType === 4;
+
     return (
         <div className="profile-banner">
             <div className="banner-left">
                 <div className="profile-picture-container" onClick={handleProfilePictureClick}>
-                    <img src={selectedProfileImage || userData.profilePicture} alt="Perfil" className="profile-picture-edit" />
+                    <img src={selectedProfileImage || userData?.profilePicture || "/multimedia/usuarioDefault.jpg"} alt="Perfil" className="profile-picture-edit" />
                     <div className="profile-picture-overlay">
                         <FaCamera />
                         <span>Cambiar foto</span>
                     </div>
                 </div>
                 <div className="profile-info">
-                    <h2 className="profile-name">{userData.fullName}</h2>
-                    <p className="profile-username">{userData.username}</p>
-                    <p className="profile-location">{userData.city}, {userData.country}</p>
-                    <p className="profile-email">{userData.email}</p>
+                    <h2 className="profile-name">
+                        {isCompany 
+                            ? (userData?.companyName || "Nombre de la Empresa") 
+                            : (userData?.fullName || "Nombre Apellido")}
+                    </h2>
+                    <p className="profile-username">{userData?.username || ""}</p>
+                    <p className="profile-location">
+                        {userData?.city ? `${userData.city}${userData?.country ? `, ${userData.country}` : ''}` : 'Ubicación no especificada'}
+                    </p>
+                    <p className="profile-email">{userData?.email || ""}</p>
                 </div>
             </div>
             <div className="banner-right">
-                <span className="creative-type">{userData.creativeType}</span>
+                <span className="creative-type">{userData?.creativeType || ""}</span>
                 <input 
                     type="file" 
                     id="profile-picture-input"
@@ -37,6 +48,7 @@ const ProfileHeader = ({
                     accept="image/*"
                     ref={profileImageInputRef}
                     style={{ display: 'none' }}
+                    onChange={handleProfileImageChange}
                 />
                 {isEditingProfilePicture && (
                     <div className="profile-picture-edit-actions">

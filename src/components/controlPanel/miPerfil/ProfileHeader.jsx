@@ -1,8 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const ProfileHeader = ({ profile, activeTab, setActiveTab }) => {
+const ProfileHeader = ({ profile, activeTab, setActiveTab, professionalType }) => {
     const navigate = useNavigate();
+    
+    const isCompany = professionalType === 1 || professionalType === 2 || professionalType === 4;
 
     return (
         <div className="miPerfil-header-container">
@@ -14,7 +16,9 @@ const ProfileHeader = ({ profile, activeTab, setActiveTab }) => {
                 />
                 <div className="miPerfil-personal-info">
                     <h1 className="miPerfil-name">
-                        {profile?.fullName || "Nombre Apellido"}
+                        {isCompany 
+                            ? (profile?.companyName || "Nombre de la Empresa") 
+                            : (profile?.fullName || "Nombre Apellido")}
                     </h1>
                     <p className="miPerfil-occupations">
                         {profile?.professionalTitle || "Título profesional no especificada"}

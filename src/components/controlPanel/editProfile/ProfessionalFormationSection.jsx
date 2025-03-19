@@ -8,9 +8,9 @@ const ProfessionalFormationSection = ({
     isProfessionalFormationEditing,
     setIsProfessionalFormationEditing,
     professionalFormationList,
-    handleProfessionalFormationChange,
-    addProfessionalFormation,
-    removeProfessionalFormation,
+    onProfessionalFormationChange,
+    onAddProfessionalFormation,
+    onRemoveProfessionalFormation,
     updateProfileData,
     currentDate
 }) => {
@@ -25,83 +25,86 @@ const ProfessionalFormationSection = ({
             {!isProfessionalFormationCollapsed && (
                 <div className="section-content">
                     <div className="professional-formation-list">
-                        {professionalFormationList.map((item, index) => (
+                        {Array.isArray(professionalFormationList) && professionalFormationList.map((item, index) => (
                             <div key={index} className="professional-formation-item">
                                 <div className="formation-header">
                                     <h4>Formación {index + 1}</h4>
                                     {isProfessionalFormationEditing && professionalFormationList.length > 1 && (
                                         <button
                                             type="button"
-                                            className="remove-formation"
-                                            onClick={() => removeProfessionalFormation(index)}
+                                            className="remove-button"
+                                            onClick={() => onRemoveProfessionalFormation(index)}
                                         >
                                             <FaTrash />
                                         </button>
                                     )}
                                 </div>
                                 <div className="form-group-edit">
-                                    <label>Nombre de la formación</label>
+                                    <label>Título</label>
                                     <input
                                         type="text"
-                                        name="trainingName"
-                                        placeholder="Ej: Curso de Patronaje"
-                                        value={item.trainingName}
-                                        onChange={(e) => handleProfessionalFormationChange(index, e)}
+                                        name="title"
+                                        placeholder="Ej: Curso de diseño de moda"
+                                        value={item.title || ''}
+                                        onChange={(e) => onProfessionalFormationChange(index, e)}
                                         disabled={!isProfessionalFormationEditing}
                                     />
                                 </div>
                                 <div className="form-group-edit">
-                                    <label>Institución o empresa</label>
+                                    <label>Institución</label>
                                     <input
                                         type="text"
                                         name="institution"
-                                        placeholder="Ej: Escuela de Moda XYZ"
-                                        value={item.institution}
-                                        onChange={(e) => handleProfessionalFormationChange(index, e)}
+                                        placeholder="Ej: Escuela de Diseño"
+                                        value={item.institution || ''}
+                                        onChange={(e) => onProfessionalFormationChange(index, e)}
                                         disabled={!isProfessionalFormationEditing}
                                     />
                                 </div>
-                                <div className="date-range">
+                                <div className="form-row">
                                     <div className="form-group-edit">
                                         <label>Fecha de inicio</label>
                                         <input
-                                            type="date"
-                                            name="trainingStart"
-                                            value={item.trainingStart}
-                                            max={currentDate}
-                                            onChange={(e) => handleProfessionalFormationChange(index, e)}
+                                            type="month"
+                                            name="startDate"
+                                            value={item.startDate || ''}
+                                            onChange={(e) => onProfessionalFormationChange(index, e)}
+                                            max={item.endDate || currentDate}
                                             disabled={!isProfessionalFormationEditing}
                                         />
                                     </div>
                                     <div className="form-group-edit">
                                         <label>Fecha de finalización</label>
                                         <input
-                                            type="date"
-                                            name="trainingEnd"
-                                            value={item.trainingEnd}
-                                            min={item.trainingStart}
+                                            type="month"
+                                            name="endDate"
+                                            value={item.endDate || ''}
+                                            onChange={(e) => onProfessionalFormationChange(index, e)}
+                                            min={item.startDate || ''}
                                             max={currentDate}
-                                            onChange={(e) => handleProfessionalFormationChange(index, e)}
-                                            disabled={!isProfessionalFormationEditing || item.currentlyInProgress}
+                                            disabled={!isProfessionalFormationEditing}
                                         />
                                     </div>
                                 </div>
-                                <div className="form-group-edit-checkbox checkbox-group">
-                                    <input
-                                        type="checkbox"
-                                        id={`currentlyInProgress-${index}`}
-                                        name="currentlyInProgress"
-                                        checked={item.currentlyInProgress}
-                                        onChange={(e) => handleProfessionalFormationChange(index, e)}
+                                <div className="form-group-edit">
+                                    <label>Descripción</label>
+                                    <textarea
+                                        name="description"
+                                        placeholder="Describe brevemente esta formación"
+                                        value={item.description || ''}
+                                        onChange={(e) => onProfessionalFormationChange(index, e)}
                                         disabled={!isProfessionalFormationEditing}
                                     />
-                                    <label htmlFor={`currentlyInProgress-${index}`}>Actualmente en curso</label>
                                 </div>
                             </div>
                         ))}
                         {isProfessionalFormationEditing && (
-                            <button type="button" className="add-formation" onClick={addProfessionalFormation}>
-                                + Añadir otra formación
+                            <button
+                                type="button"
+                                className="add-button"
+                                onClick={onAddProfessionalFormation}
+                            >
+                                + Añadir formación profesional
                             </button>
                         )}
                     </div>
