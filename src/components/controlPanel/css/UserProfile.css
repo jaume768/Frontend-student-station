@@ -269,7 +269,7 @@
 /* =============================== */
 
 /* Contenedor de la columna derecha (publicaciones) */
-.user-profile-right {
+.user-profile-right-content {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -284,18 +284,22 @@
 }
 
 /* Transición para cambios de vista en publicaciones */
-.user-profile-projects-grid {
+.user-profile-project-grid {
     transition: all 0.3s ease-in-out;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    width: 100%;
 }
 
-.user-profile-projects-grid.gallery {
+.user-profile-project-grid.gallery {
     display: grid;
     justify-content: center;
     grid-template-columns: repeat(3, 0.22fr);
     gap: 7px;
 }
 
-.user-profile-projects-grid.individual {
+.user-profile-project-grid.individual {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -303,9 +307,9 @@
 }
 
 /* Estilos para cada publicación/proyecto */
-.user-profile-project-placeholder {
+.user-profile-project-card {
     position: relative;
-    background: #cccccc;
+    background: #f5f5f5;
     height: 110px;
     width: 110px;
     overflow: hidden;
@@ -313,19 +317,21 @@
     transition: transform 0.3s ease;
 }
 
-.user-profile-project-placeholder img {
+.user-profile-project-image {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     border-radius: 8px;
     transition: transform 0.3s ease;
 }
 
-.user-profile-project-placeholder:hover {
+.user-profile-project-card:hover {
     transform: scale(1.05);
     z-index: 1;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.user-profile-projects-grid.individual .user-profile-project-placeholder {
+.user-profile-project-grid.individual .user-profile-project-card {
     height: 20em;
     width: 20em;
 }
@@ -358,7 +364,7 @@
     }
 
     .user-profile-left-content,
-    .user-profile-right {
+    .user-profile-right-content {
         display: block;
     }
 }
@@ -382,12 +388,12 @@
     }
 
     .user-profile-left-content,
-    .user-profile-right {
+    .user-profile-right-content {
         display: none;
     }
 
     .user-profile-left-content.active,
-    .user-profile-right.active {
+    .user-profile-right-content.active {
         margin-bottom: 4em;
         display: block;
     }

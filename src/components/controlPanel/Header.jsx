@@ -80,17 +80,14 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
             return;
         }
         
-        // Si el usuario es de tipo 0 o no tiene tipo, ir directamente a crear publicación
         if (!professionalType || professionalType === 0) {
             navigate('/ControlPanel/createPost');
             return;
         }
         
-        // Para todos los demás tipos, mostrar el modal de opciones
         setShowCreateOptions(prev => !prev);
     };
 
-    // Cerrar los modales cuando se hace clic fuera de ellos
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (createButtonRef.current && !createButtonRef.current.contains(event.target)) {
