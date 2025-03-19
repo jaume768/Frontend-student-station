@@ -1,14 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { FaBookmark, FaSearch, FaBars, FaPlus } from 'react-icons/fa';
 import axios from 'axios';
 import ProfileOptionsModal from './ProfileOptionsModal';
+import CreateOptionsModal from './CreateOptionsModal';
 
 const Header = ({ profilePicture, onHamburgerClick }) => {
     const [showProfileOptions, setShowProfileOptions] = useState(false);
+    const [showCreateOptions, setShowCreateOptions] = useState(false);
     const [professionalType, setProfessionalType] = useState(null);
     const navigate = useNavigate();
     const location = useLocation();
+    const createButtonRef = useRef(null);
 
     useEffect(() => {
         const fetchUserType = async () => {
@@ -39,6 +42,7 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
 
     useEffect(() => {
         setShowProfileOptions(false);
+        setShowCreateOptions(false);
     }, [location]);
 
     const handleOptionSelect = (option) => {
@@ -76,16 +80,29 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
             return;
         }
         
-        if ([1, 2, 3, 5].includes(professionalType)) {
-            navigate('/ControlPanel/createOffer');
-        }
-        else if (professionalType === 4) {
-            navigate('/ControlPanel/createEducationalOffer');
-        }
-        else {
+        // Si el usuario es de tipo 0 o no tiene tipo, ir directamente a crear publicación
+        if (!professionalType || professionalType === 0) {
             navigate('/ControlPanel/createPost');
+            return;
         }
+        
+        // Para todos los demás tipos, mostrar el modal de opciones
+        setShowCreateOptions(prev => !prev);
     };
+
+    // Cerrar los modales cuando se hace clic fuera de ellos
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (createButtonRef.current && !createButtonRef.current.contains(event.target)) {
+                setShowCreateOptions(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     const getCreateButtonText = () => {
         if ([1, 2, 4].includes(professionalType)) {
@@ -112,12 +129,20 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
                     <FaBookmark className="nav-icon-save" title="Guardados" />
                     <span>Guardados</span>
                 </div>
-                <button
-                    className="create-post-btn"
-                    onClick={handleCreateClick}
-                >
-                    <FaPlus style={{ color: 'white' }} /> {getCreateButtonText()}
-                </button>
+                <div className="create-button-container" ref={createButtonRef} style={{ position: 'relative' }}>
+                    <button
+                        className="create-post-btn"
+                        onClick={handleCreateClick}
+                    >
+                        <FaPlus style={{ color: 'white' }} /> {getCreateButtonText()}
+                    </button>
+                    {showCreateOptions && (
+                        <CreateOptionsModal
+                            onClose={() => setShowCreateOptions(false)}
+                            professionalType={professionalType}
+                        />
+                    )}
+                </div>
                 <div className="profile-wrapper" style={{ position: 'relative' }}>
                     <img
                         className="profile-img"

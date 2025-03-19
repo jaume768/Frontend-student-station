@@ -284,10 +284,10 @@ const Creatives = () => {
                             <div className="creative-tags">
                                 {creative.professionalAreas && creative.professionalAreas.length > 0 ? (
                                     creative.professionalAreas.slice(0, 3).map((area, idx) => (
-                                        <span key={idx} className="tag">{area}</span>
+                                        <span key={idx} className="tag-creatives">{area}</span>
                                     ))
                                 ) : (
-                                    <span className="tag">Fotografía</span>
+                                    <span className="tag-creatives">Fotografía</span>
                                 )}
                             </div>
                         </div>

@@ -536,14 +536,14 @@
 }
 
 /* Grupos de campos */
-.form-group {
+.form-group-edit {
     margin-bottom: 1rem;
     display: flex;
     flex-direction: column;
     gap: 0.3rem;
 }
 
-.form-group label {
+.form-group-edit label {
     font-weight: 500;
     color: #000;
 }
@@ -556,27 +556,37 @@
     margin-bottom: 20px;
 }
 
-.form-group input,
-.form-group select,
-.form-group textarea {
+.form-group-edit input,
+.form-group-edit select,
+.form-group-edit textarea {
     padding: 0.6rem;
     color: #777;
     background-color: #f8f8f8;
     border: 1px solid transparent;
     border-radius: 8px;
     font-size: 1rem;
+    margin-right: 7px;
 }
 
-.form-group input:disabled,
-.form-group select:disabled,
-.form-group textarea:disabled {
+.form-group-edit input:disabled,
+.form-group-edit select:disabled,
+.form-group-edit textarea:disabled {
     background-color: #e0e0e0;
     cursor: not-allowed;
+    margin-right: 7px;
 }
 
-.form-group textarea {
+.form-group-edit textarea {
     resize: vertical;
     min-height: 150px;
+}
+
+.form-group-edit-checkbox {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
 }
 
 /* Grupo de fechas */
@@ -642,7 +652,10 @@
 
 .remove-tag {
     margin-left: 0.3rem;
+    background-color: red;
+    border: none;
     cursor: pointer;
+    padding: 0.1em;
 }
 
 .popular-tags {
