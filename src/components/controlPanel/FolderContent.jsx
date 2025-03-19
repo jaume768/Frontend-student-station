@@ -8,11 +8,12 @@ const FolderContent = () => {
     const { folderId } = useParams();
     const navigate = useNavigate();
     const [folder, setFolder] = useState(null);
-    const [posts, setPosts] = useState([]);
+    const [folderItems, setFolderItems] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [activePostMenu, setActivePostMenu] = useState(null);
+    const [activeItemMenu, setActiveItemMenu] = useState(null);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-    const [postToDelete, setPostToDelete] = useState(null);
+    const [itemToDelete, setItemToDelete] = useState(null);
+    const [notification, setNotification] = useState({ show: false, message: '', type: '' });
 
     useEffect(() => {
         const fetchFolderContent = async () => {
@@ -33,37 +34,22 @@ const FolderContent = () => {
 
                 setFolder(folderRes.data.folder);
 
-                // Si la carpeta tiene posts, cargar los detalles de cada uno
-                if (folderRes.data.folder && Array.isArray(folderRes.data.folder.posts) && folderRes.data.folder.posts.length > 0) {
-                    // Para asegurarnos de que estamos trabajando con IDs (strings) y no objetos
-                    const postIds = folderRes.data.folder.posts.map(post =>
-                        typeof post === 'string' ? post : post._id ? post._id : post.toString()
+                // Si la carpeta tiene items, mostrarlos directamente
+                if (folderRes.data.folder && Array.isArray(folderRes.data.folder.items) && folderRes.data.folder.items.length > 0) {
+                    // Ordenar por fecha de adición (más reciente primero)
+                    const sortedItems = [...folderRes.data.folder.items].sort((a, b) => 
+                        new Date(b.addedAt) - new Date(a.addedAt)
                     );
-
-                    // Cargar los detalles de cada post usando los IDs correctos
-                    const postsPromises = postIds.map(postId =>
-                        axios.get(`${backendUrl}/api/posts/${postId}`, {
-                            headers: { Authorization: `Bearer ${token}` }
-                        })
-                            .then(res => res.data.post)
-                            .catch(err => {
-                                console.error(`Error al cargar post ${postId}:`, err);
-                                return null;
-                            })
-                    );
-
-                    const postsWithDetails = await Promise.all(postsPromises);
-                    // Filtrar posts nulos (que pueden ocurrir si hay errores en la solicitud)
-                    const validPosts = postsWithDetails.filter(post => post !== null);
-                    setPosts(validPosts);
-                    console.log("Posts cargados correctamente:", validPosts.length);
+                    
+                    setFolderItems(sortedItems);
+                    console.log("Items cargados correctamente:", sortedItems.length);
                 } else {
-                    console.log("No se encontraron posts en la carpeta");
-                    setPosts([]);
+                    console.log("No se encontraron imágenes en la carpeta");
+                    setFolderItems([]);
                 }
             } catch (error) {
                 console.error('Error fetching folder content:', error);
-                setPosts([]);
+                setFolderItems([]);
             } finally {
                 setLoading(false);
             }
@@ -77,8 +63,8 @@ const FolderContent = () => {
     // Cerrar menú cuando se hace clic en otra parte
     useEffect(() => {
         const handleClickOutside = (event) => {
-            if (activePostMenu && !event.target.closest('.post-menu-container')) {
-                setActivePostMenu(null);
+            if (activeItemMenu && !event.target.closest('.item-menu-container')) {
+                setActiveItemMenu(null);
             }
         };
 
@@ -86,7 +72,7 @@ const FolderContent = () => {
         return () => {
             document.removeEventListener('click', handleClickOutside);
         };
-    }, [activePostMenu]);
+    }, [activeItemMenu]);
 
     const goBack = () => {
         // Usar window.history para volver a la página anterior en lugar de una ruta fija
@@ -97,25 +83,25 @@ const FolderContent = () => {
         navigate(`/ControlPanel/post/${postId}`);
     };
 
-    const togglePostMenu = (postId, e) => {
+    const toggleItemMenu = (itemId, e) => {
         e.stopPropagation();
-        setActivePostMenu(activePostMenu === postId ? null : postId);
+        setActiveItemMenu(activeItemMenu === itemId ? null : itemId);
     };
 
-    const confirmDeletePost = (postId, e) => {
+    const confirmDeleteItem = (item, e) => {
         e.stopPropagation();
-        setPostToDelete(postId);
+        setItemToDelete(item);
         setShowDeleteConfirm(true);
-        setActivePostMenu(null);
+        setActiveItemMenu(null);
     };
 
     const cancelDelete = () => {
-        setPostToDelete(null);
+        setItemToDelete(null);
         setShowDeleteConfirm(false);
     };
 
-    const removePostFromFolder = async () => {
-        if (!postToDelete || !folderId) return;
+    const removeItemFromFolder = async () => {
+        if (!itemToDelete || !folderId) return;
 
         try {
             const token = localStorage.getItem('authToken');
@@ -123,12 +109,13 @@ const FolderContent = () => {
 
             const backendUrl = import.meta.env.VITE_BACKEND_URL;
             
-            // Eliminar post de la carpeta
-            await axios.post(
+            // Eliminar imagen de la carpeta
+            const response = await axios.post(
                 `${backendUrl}/api/folders/remove`,
                 { 
                     folderId: folderId,
-                    postId: postToDelete 
+                    postId: itemToDelete.postId,
+                    imageUrl: itemToDelete.imageUrl
                 },
                 { 
                     headers: { Authorization: `Bearer ${token}` } 
@@ -136,14 +123,36 @@ const FolderContent = () => {
             );
 
             // Actualizar el estado local
-            setPosts(prevPosts => prevPosts.filter(post => post._id !== postToDelete));
+            setFolderItems(prevItems => prevItems.filter(item => 
+                !(item.postId === itemToDelete.postId && item.imageUrl === itemToDelete.imageUrl)
+            ));
+            
+            // Mostrar notificación
+            setNotification({
+                show: true,
+                message: 'Imagen devuelta a guardados',
+                type: 'success'
+            });
+            
+            setTimeout(() => {
+                setNotification({ show: false, message: '', type: '' });
+            }, 3000);
             
             // Cerrar el diálogo de confirmación
             setShowDeleteConfirm(false);
-            setPostToDelete(null);
+            setItemToDelete(null);
             
         } catch (error) {
-            console.error('Error al eliminar post de la carpeta:', error);
+            console.error('Error al eliminar imagen de la carpeta:', error);
+            setNotification({
+                show: true,
+                message: 'Error al eliminar la imagen',
+                type: 'error'
+            });
+            
+            setTimeout(() => {
+                setNotification({ show: false, message: '', type: '' });
+            }, 3000);
         }
     };
 
@@ -163,94 +172,74 @@ const FolderContent = () => {
                 </button>
                 <h1>{folder ? folder.name : 'Carpeta'}</h1>
                 <div className="folder-stats">
-                    {posts.length} {posts.length === 1 ? 'post guardado' : 'posts guardados'}
+                    {folderItems.length} {folderItems.length === 1 ? 'imagen guardada' : 'imágenes guardadas'}
                 </div>
             </div>
 
-            {posts.length > 0 ? (
+            {folderItems.length > 0 ? (
                 <div className="folder-content-masonry">
-                    {posts.map((post) => (
+                    {folderItems.map((item) => (
                         <div
-                            key={post._id}
+                            key={`${item.postId}-${item.imageUrl}`}
                             className="masonry-item"
-                            onClick={() => openPost(post._id)}
+                            onClick={() => openPost(item.postId)}
                         >
                             <img
-                                src={post.mainImage}
-                                alt={post.title || 'Post guardado'}
+                                src={item.imageUrl}
+                                alt="Imagen guardada"
                                 className="masonry-img"
                             />
                             
                             <div className="overlay"></div>
                             
                             {/* Menú de opciones */}
-                            <div className="post-menu-container">
+                            <div className="item-menu-container">
                                 <button 
-                                    className="post-menu-button"
-                                    onClick={(e) => togglePostMenu(post._id, e)}
+                                    className="item-menu-button"
+                                    onClick={(e) => toggleItemMenu(`${item.postId}-${item.imageUrl}`, e)}
                                 >
                                     <FaEllipsisV />
                                 </button>
                                 
-                                {activePostMenu === post._id && (
-                                    <div className="post-menu-dropdown">
+                                {activeItemMenu === `${item.postId}-${item.imageUrl}` && (
+                                    <div className="item-menu-dropdown">
                                         <button 
-                                            className="post-menu-option delete"
-                                            onClick={(e) => confirmDeletePost(post._id, e)}
+                                            className="item-menu-option delete"
+                                            onClick={(e) => confirmDeleteItem(item, e)}
                                         >
                                             <FaTrash /> Quitar de la carpeta
                                         </button>
                                     </div>
                                 )}
                             </div>
-                            
-                            <div className="user-info">
-                                <img
-                                    src={post.author?.profilePicture || "/multimedia/usuarioDefault.jpg"}
-                                    alt={post.author?.username || "Usuario"}
-                                    className="user-avatar"
-                                />
-                                <span className="username">{post.author?.username || "Usuario"}</span>
-                            </div>
-                            
-                            {post.location && (
-                                <div className="location-info">
-                                    <i className="location-icon fas fa-map-marker-alt"></i>
-                                    <span>{post.location}</span>
-                                </div>
-                            )}
-                            
-                            {post.category && <div className="tag-label">{post.category}</div>}
                         </div>
                     ))}
                 </div>
             ) : (
                 <div className="empty-folder-message">
-                    Esta carpeta está vacía. Guarda posts para verlos aquí.
+                    <p>Esta carpeta está vacía.</p>
+                    <p>Guarda imágenes desde la sección de Guardados.</p>
                 </div>
             )}
 
-            {/* Confirmación de eliminación */}
+            {/* Diálogo de confirmación para eliminar */}
             {showDeleteConfirm && (
-                <div className="delete-confirmation-overlay">
-                    <div className="delete-confirmation-modal">
-                        <h3>¿Quitar post de la carpeta?</h3>
-                        <p>Esta acción solo eliminará el post de la carpeta, no lo eliminará del sistema.</p>
-                        <div className="confirmation-buttons">
-                            <button 
-                                className="confirm-button delete" 
-                                onClick={removePostFromFolder}
-                            >
-                                Quitar
-                            </button>
-                            <button 
-                                className="cancel-button" 
-                                onClick={cancelDelete}
-                            >
-                                Cancelar
-                            </button>
+                <div className="delete-confirm-overlay">
+                    <div className="delete-confirm-dialog">
+                        <h3>¿Quitar de la carpeta?</h3>
+                        <p>Esta imagen se devolverá a tus guardados.</p>
+                        <div className="delete-confirm-buttons">
+                            <button className="cancel-button" onClick={cancelDelete}>Cancelar</button>
+                            <button className="confirm-button" onClick={removeItemFromFolder}>Confirmar</button>
                         </div>
                     </div>
+                </div>
+            )}
+            
+            {/* Notificación */}
+            {notification.show && (
+                <div className={`notification ${notification.type}`}>
+                    <p>{notification.message}</p>
                 </div>
             )}
         </div>

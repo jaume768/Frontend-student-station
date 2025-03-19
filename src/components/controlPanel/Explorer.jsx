@@ -11,8 +11,8 @@ const Explorer = () => {
         const saved = sessionStorage.getItem('explorerImages');
         return saved ? JSON.parse(saved) : [];
     });
-    const [savedPosts, setSavedPosts] = useState(new Set());
-    const [saveFeedback, setSaveFeedback] = useState({ show: false, postId: null, text: "" });
+    const [savedPosts, setSavedPosts] = useState(new Map());
+    const [saveFeedback, setSaveFeedback] = useState({ show: false, postId: null, imageUrl: null, text: "" });
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(() => {
         const saved = sessionStorage.getItem('explorerPage');
@@ -33,7 +33,22 @@ const Explorer = () => {
                 const response = await axios.get(`${backendUrl}/api/users/favorites`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
-                setSavedPosts(new Set(response.data.map(post => post.postId)));
+                
+                // Crear un mapa de imágenes guardadas por postId e imageUrl
+                const savedImagesMap = new Map();
+                
+                if (response.data.favorites) {
+                    response.data.favorites.forEach(fav => {
+                        if (fav.postId && fav.mainImage) {
+                            // Usar una clave compuesta de postId + imageUrl
+                            const key = `${fav.postId}-${fav.mainImage}`;
+                            savedImagesMap.set(key, true);
+                        }
+                    });
+                }
+                
+                // Guardar el mapa en el estado
+                setSavedPosts(savedImagesMap);
             } catch (error) {
                 console.error('Error cargando posts guardados:', error);
             }
@@ -42,7 +57,7 @@ const Explorer = () => {
         fetchSavedPosts();
     }, []);
 
-    const handleSavePost = async (e, postId) => {
+    const handleSavePost = async (e, postId, imageUrl) => {
         e.stopPropagation(); // Evitar que se propague al click del post
         const token = localStorage.getItem('authToken');
         if (!token) {
@@ -52,30 +67,45 @@ const Explorer = () => {
 
         try {
             const backendUrl = import.meta.env.VITE_BACKEND_URL;
-            const isSaved = savedPosts.has(postId);
+            // Crear una clave compuesta para verificar si esta imagen específica está guardada
+            const key = `${postId}-${imageUrl}`;
+            const isSaved = savedPosts.has(key);
             
             if (isSaved) {
+                // Eliminar esta imagen específica de favoritos
                 await axios.delete(`${backendUrl}/api/users/favorites/${postId}`, {
-                    headers: { Authorization: `Bearer ${token}` }
+                    headers: { Authorization: `Bearer ${token}` },
+                    data: { imageUrl } // Enviar la URL de la imagen en el cuerpo de la solicitud
                 });
+                
+                // Actualizar el estado local
                 setSavedPosts(prev => {
-                    const newSet = new Set(prev);
-                    newSet.delete(postId);
-                    return newSet;
+                    const newMap = new Map(prev);
+                    newMap.delete(key);
+                    return newMap;
                 });
-                setSaveFeedback({ show: true, postId, text: "Eliminado de guardados" });
+                
+                setSaveFeedback({ show: true, postId, imageUrl, text: "Eliminado de guardados" });
             } else {
-                await axios.post(`${backendUrl}/api/users/favorites`, 
-                    { postId },
+                // Guardar la imagen específica
+                await axios.post(`${backendUrl}/api/users/favorites/${postId}`, 
+                    { imageUrl },
                     { headers: { Authorization: `Bearer ${token}` }}
                 );
-                setSavedPosts(prev => new Set([...prev, postId]));
-                setSaveFeedback({ show: true, postId, text: "¡Guardado!" });
+                
+                // Actualizar el estado local
+                setSavedPosts(prev => {
+                    const newMap = new Map(prev);
+                    newMap.set(key, true);
+                    return newMap;
+                });
+                
+                setSaveFeedback({ show: true, postId, imageUrl, text: "¡Guardado!" });
             }
 
             // Ocultar el feedback después de 2 segundos
             setTimeout(() => {
-                setSaveFeedback({ show: false, postId: null, text: "" });
+                setSaveFeedback({ show: false, postId: null, imageUrl: null, text: "" });
             }, 2000);
         } catch (error) {
             console.error('Error al guardar/desguardar post:', error);
@@ -198,13 +228,13 @@ const Explorer = () => {
                             loading="lazy"
                         />
                         <button
-                            className={`save-button-explorer ${savedPosts.has(item.postId) ? 'saved' : ''}`}
-                            onClick={(e) => handleSavePost(e, item.postId)}
-                            title={savedPosts.has(item.postId) ? "Quitar de guardados" : "Guardar"}
+                            className={`save-button-explorer ${savedPosts.has(`${item.postId}-${item.imageUrl}`) ? 'saved' : ''}`}
+                            onClick={(e) => handleSavePost(e, item.postId, item.imageUrl)}
+                            title={savedPosts.has(`${item.postId}-${item.imageUrl}`) ? "Quitar de guardados" : "Guardar"}
                         >
-                            {savedPosts.has(item.postId) ? <FaBookmark /> : <FaRegBookmark />}
+                            {savedPosts.has(`${item.postId}-${item.imageUrl}`) ? <FaBookmark /> : <FaRegBookmark />}
                         </button>
-                        {saveFeedback.show && saveFeedback.postId === item.postId && (
+                        {saveFeedback.show && saveFeedback.postId === item.postId && saveFeedback.imageUrl === item.imageUrl && (
                             <div className={`save-feedback ${saveFeedback.show ? 'show' : ''}`}>
                                 {saveFeedback.text}
                             </div>
@@ -233,7 +263,6 @@ const Explorer = () => {
             {loading && (
                 <div className="loading-spinner">
                     <i className="fas fa-spinner fa-spin"></i>
-                    <span>Cargando imágenes...</span>
                 </div>
             )}
         </div>

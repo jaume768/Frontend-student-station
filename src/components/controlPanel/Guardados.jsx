@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { FaPlus, FaPencilAlt, FaTimes, FaCheck } from 'react-icons/fa';
+import { FaPlus, FaPencilAlt, FaTimes, FaCheck, FaFolder } from 'react-icons/fa';
 import './css/Guardados.css';
 
 const LONG_PRESS_TIME = 500; // milisegundos para considerar "long press"
@@ -20,6 +20,7 @@ const Guardados = () => {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [folderToDelete, setFolderToDelete] = useState(null);
     const [editingFolderName, setEditingFolderName] = useState({ id: null, name: '' });
+    const [notification, setNotification] = useState({ show: false, message: '', type: '' });
 
     const navigate = useNavigate();
     const totalSlots = 15;
@@ -130,7 +131,9 @@ const Guardados = () => {
         } else {
             // Si NO estamos en modo selección y NO fue un long press, abrimos el post
             if (post?._id && !longPressTriggered) {
-                navigate(`/ControlPanel/post/${post._id}`);
+                // Usar postId si existe, sino usar _id (para compatibilidad con datos antiguos)
+                const postIdToNavigate = post.postId || post._id;
+                navigate(`/ControlPanel/post/${postIdToNavigate}`);
             }
         }
     };
@@ -266,15 +269,33 @@ const Guardados = () => {
             const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
             // Para cada post seleccionado, llamamos al endpoint para añadirlo a la carpeta
-            const promises = selectedPosts.map(postId =>
-                axios.post(
+            const promises = selectedPosts.map(postId => {
+                // Buscar el post completo para obtener su información
+                const post = savedPosts.find(p => p._id === postId);
+                
+                return axios.post(
                     `${backendUrl}/api/folders/add`,
-                    { folderId: selectedFolder, postId },
+                    { 
+                        folderId: selectedFolder, 
+                        postId: post.postId || post._id,
+                        imageUrl: post.mainImage
+                    },
                     { headers: { Authorization: `Bearer ${token}` } }
-                )
-            );
+                );
+            });
 
-            await Promise.all(promises);
+            const results = await Promise.all(promises);
+            
+            // Mostrar notificación de éxito
+            setNotification({
+                show: true,
+                message: 'Imágenes movidas a la carpeta',
+                type: 'success'
+            });
+            
+            setTimeout(() => {
+                setNotification({ show: false, message: '', type: '' });
+            }, 3000);
 
             // Actualizamos la lista de carpetas para reflejar los cambios
             const res = await axios.get(`${backendUrl}/api/folders`, {
@@ -284,12 +305,30 @@ const Guardados = () => {
             if (res.data.folders) {
                 setFolders(res.data.folders);
             }
+            
+            // Actualizamos la lista de posts guardados (ya que se eliminaron de favoritos)
+            const favRes = await axios.get(`${backendUrl}/api/users/favorites`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            
+            if (favRes.data.favorites) {
+                setSavedPosts(favRes.data.favorites);
+            }
 
             // Limpiamos la selección
             setSelectedPosts([]);
             setIsSelecting(false);
         } catch (error) {
             console.error('Error al guardar en carpeta:', error);
+            setNotification({
+                show: true,
+                message: 'Error al mover las imágenes',
+                type: 'error'
+            });
+            
+            setTimeout(() => {
+                setNotification({ show: false, message: '', type: '' });
+            }, 3000);
         }
     };
 
@@ -520,37 +559,39 @@ const Guardados = () => {
                                 }}
                             >
                                 <div className="folder-thumbnail-container">
-                                    {folder.posts && folder.posts.length > 0 ? (
+                                    {folder.items && folder.items.length > 0 ? (
                                         <>
                                             {/* Mostrar hasta 4 miniaturas de posts en un grid */}
-                                            {folder.posts.slice(0, Math.min(4, folder.posts.length)).map((postId, index) => {
-                                                // Buscar el post completo para obtener la imagen principal
-                                                const post = savedPosts.find(p => p._id === postId);
-                                                return (
+                                            <div className="folder-thumbnails-grid">
+                                                {folder.items.slice(0, Math.min(4, folder.items.length)).map((item, index) => (
                                                     <div
-                                                        key={postId}
-                                                        className={`folder-thumbnail thumbnail-${Math.min(4, folder.posts.length)}`}
+                                                        key={`${item.postId}-${item.imageUrl}`}
+                                                        className={`folder-thumbnail thumbnail-${Math.min(4, folder.items.length)}`}
                                                     >
-                                                        {post && post.mainImage && (
-                                                            <img
-                                                                src={post.mainImage}
-                                                                alt=""
-                                                                className="folder-thumbnail-img"
-                                                            />
-                                                        )}
+                                                        <img
+                                                            src={item.imageUrl}
+                                                            alt=""
+                                                            className="folder-thumbnail-img"
+                                                        />
                                                     </div>
-                                                );
-                                            })}
+                                                ))}
+                                            </div>
                                         </>
                                     ) : (
-                                        <div className="empty-folder-thumbnail">
-                                            <span>Vacía</span>
+                                        // Placeholder para carpetas vacías
+                                        <div className="folder-placeholder">
+                                            <div className="folder-placeholder-icon">
+                                                <FaFolder size={30} />
+                                            </div>
+                                            <p>Carpeta vacía</p>
                                         </div>
                                     )}
                                 </div>
                                 <div className="folder-info">
                                     <p className="folder-name">{folder.name}</p>
-                                    <span className="folder-count">{folder.posts?.length || 0} fotos</span>
+                                    <p className="folder-count">
+                                        {folder.items ? folder.items.length : 0} {folder.items && folder.items.length === 1 ? 'imagen' : 'imágenes'}
+                                    </p>
                                 </div>
                             </div>
                         ))
@@ -588,6 +629,13 @@ const Guardados = () => {
                             </button>
                         </div>
                     </div>
+                </div>
+            )}
+
+            {/* Notificación */}
+            {notification.show && (
+                <div className={`notification ${notification.type}`}>
+                    <p>{notification.message}</p>
                 </div>
             )}
         </div>

@@ -96,6 +96,7 @@
     align-items: center;
     justify-content: center;
     transition: background-color 0.3s ease;
+    position: relative;
 }
 
 .save-button-post.saved {
@@ -104,13 +105,14 @@
 
 .saved-text {
     position: absolute;
-    top: -5px;
-    right: 10px;
+    top: 40px;
+    right: -30px;
     background-color: #08b599;
     color: white;
     padding: 2px 8px;
     border-radius: 4px;
     font-size: 0.8rem;
+    white-space: nowrap;
     opacity: 0;
     animation: fadeIn 0.3s forwards;
 }

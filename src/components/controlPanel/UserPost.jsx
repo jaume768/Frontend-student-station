@@ -6,6 +6,7 @@ import {
     FaChevronLeft,
     FaChevronRight,
     FaBookmark,
+    FaRegBookmark,
     FaShareAlt,
     FaUserCircle,
     FaTrash
@@ -22,8 +23,8 @@ const UserPost = () => {
     const [touchEnd, setTouchEnd] = useState(null);
     const minSwipeDistance = 50;
 
-    const [isSaved, setIsSaved] = useState(false);
-    const [showSavedText, setShowSavedText] = useState(false);
+    const [savedImages, setSavedImages] = useState(new Map());
+    const [saveFeedback, setSaveFeedback] = useState({ show: false, imageUrl: null, text: "" });
     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     // Obtener el ID del usuario autenticado.
@@ -69,10 +70,24 @@ const UserPost = () => {
                 const favResponse = await axios.get(`${backendUrl}/api/users/favorites`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
+                
+                // 3. Creamos un mapa de imágenes guardadas
+                const savedImagesMap = new Map();
                 const favorites = favResponse.data.favorites || [];
-                // 3. Comprobamos si el post actual está en esa lista
-                const isPostSaved = favorites.some((favPost) => favPost._id === response.data.post._id);
-                setIsSaved(isPostSaved);
+                
+                favorites.forEach(fav => {
+                    if (fav.postId && fav.savedImage) {
+                        // Usar una clave compuesta de postId + imageUrl
+                        const key = `${fav.postId}-${fav.savedImage}`;
+                        savedImagesMap.set(key, true);
+                    }
+                });
+                
+                setSavedImages(savedImagesMap);
+                
+                console.log("Imágenes guardadas:", Array.from(savedImagesMap.keys()));
+                console.log("Post ID actual:", id);
+                console.log("Imágenes del post:", response.data.post.images);
             } catch (error) {
                 console.error('Error al cargar la publicación o favoritos:', error);
             } finally {
@@ -110,25 +125,53 @@ const UserPost = () => {
         const token = localStorage.getItem('authToken');
         if (!token) return;
         const backendUrl = import.meta.env.VITE_BACKEND_URL;
+        
+        // Obtener la imagen actual
+        const currentImage = images[currentImageIndex];
+        if (!currentImage) return;
+        
+        // Crear una clave compuesta para verificar si esta imagen específica está guardada
+        const key = `${id}-${currentImage}`;
+        const isImageSaved = savedImages.has(key);
+        
         try {
-            if (!isSaved) {
+            if (!isImageSaved) {
+                // Guardar la imagen específica
                 await axios.post(
-                    `${backendUrl}/api/users/favorites/${post._id}`,
-                    {},
+                    `${backendUrl}/api/users/favorites/${id}`,
+                    { imageUrl: currentImage },
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
-                setIsSaved(true);
-                setShowSavedText(true);
-                setTimeout(() => {
-                    setShowSavedText(false);
-                }, 2000);
-            } else {
-                await axios.delete(`${backendUrl}/api/users/favorites/${post._id}`, {
-                    headers: { Authorization: `Bearer ${token}` },
+                
+                // Actualizar el estado local
+                setSavedImages(prev => {
+                    const newMap = new Map(prev);
+                    newMap.set(key, true);
+                    return newMap;
                 });
-                setIsSaved(false);
-                setShowSavedText(false);
+                
+                setSaveFeedback({ show: true, imageUrl: currentImage, text: "¡Guardado!" });
+            } else {
+                // Eliminar esta imagen específica de favoritos
+                await axios.delete(`${backendUrl}/api/users/favorites/${id}`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                    data: { imageUrl: currentImage }
+                });
+                
+                // Actualizar el estado local
+                setSavedImages(prev => {
+                    const newMap = new Map(prev);
+                    newMap.delete(key);
+                    return newMap;
+                });
+                
+                setSaveFeedback({ show: true, imageUrl: currentImage, text: "Eliminado de guardados" });
             }
+            
+            // Ocultar el feedback después de 2 segundos
+            setTimeout(() => {
+                setSaveFeedback({ show: false, imageUrl: null, text: "" });
+            }, 2000);
         } catch (error) {
             console.error('Error al actualizar favoritos:', error);
         }
@@ -201,11 +244,14 @@ const UserPost = () => {
                         />
                         <div className="options">
                             <button
-                                className={`save-button-post ${isSaved ? 'saved' : ''}`}
+                                className={`save-button-post ${savedImages.has(`${id}-${mainImage}`) ? 'saved' : ''}`}
                                 onClick={handleSave}
+                                title={savedImages.has(`${id}-${mainImage}`) ? "Quitar de guardados" : "Guardar"}
                             >
-                                <FaBookmark size={20} />
-                                {showSavedText && <span className="saved-text">Guardado</span>}
+                                {savedImages.has(`${id}-${mainImage}`) ? <FaBookmark size={20} /> : <FaRegBookmark size={20} />}
+                                {saveFeedback.show && saveFeedback.imageUrl === mainImage && (
+                                    <span className="saved-text">{saveFeedback.text}</span>
+                                )}
                             </button>
                             <button className="compartir" onClick={handleShare}>
                                 <FaShareAlt size={20} />

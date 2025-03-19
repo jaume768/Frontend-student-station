@@ -110,7 +110,7 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
                     onClick={() => navigate('/ControlPanel/guardados')}
                 >
                     <FaBookmark className="nav-icon-save" title="Guardados" />
-                    <span>guardados</span>
+                    <span>Guardados</span>
                 </div>
                 <button
                     className="create-post-btn"

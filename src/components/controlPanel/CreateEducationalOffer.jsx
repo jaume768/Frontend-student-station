@@ -141,7 +141,7 @@ const CreateEducationalOffer = () => {
         <div className="create-educational-offer">
             <h2>Crear Oferta Educativa</h2>
             <form onSubmit={handleSubmit}>
-                <div className="form-section">
+                <div className="form-section-educational">
                     <h3>Información Básica</h3>
                     <div className="form-group">
                         <label htmlFor="programName">Nombre del Programa *</label>
@@ -189,7 +189,7 @@ const CreateEducationalOffer = () => {
                     </div>
                 </div>
 
-                <div className="form-section">
+                <div className="form-section-educational">
                     <h3>Modalidad y Duración</h3>
                     <div className="form-row">
                         <div className="form-group">
@@ -259,7 +259,7 @@ const CreateEducationalOffer = () => {
                 </div>
 
                 {(formData.modality === 'Presencial' || formData.modality === 'Híbrida') && (
-                    <div className="form-section">
+                    <div className="form-section-educational">
                         <h3>Ubicación</h3>
                         <div className="form-row">
                             <div className="form-group">
@@ -301,7 +301,7 @@ const CreateEducationalOffer = () => {
                     </div>
                 )}
 
-                <div className="form-section">
+                <div className="form-section-educational">
                     <h3>Detalles del Programa</h3>
                     <div className="form-row">
                         <div className="form-group">
@@ -369,7 +369,7 @@ const CreateEducationalOffer = () => {
                     </div>
                 </div>
 
-                <div className="form-section">
+                <div className="form-section-educational">
                     <h3>Requisitos</h3>
                     <div className="requirements-input">
                         <input
@@ -394,7 +394,7 @@ const CreateEducationalOffer = () => {
                     </div>
                 </div>
 
-                <div className="form-section">
+                <div className="form-section-educational">
                     <h3>Descripción</h3>
                     <div className="form-group">
                         <textarea
@@ -407,7 +407,7 @@ const CreateEducationalOffer = () => {
                     </div>
                 </div>
 
-                <div className="form-section">
+                <div className="form-section-educational">
                     <h3>Multimedia</h3>
                     <div className="form-group">
                         <label htmlFor="banner">Banner Principal</label>
@@ -454,7 +454,7 @@ const CreateEducationalOffer = () => {
                     </div>
                 </div>
 
-                <div className="form-section">
+                <div className="form-section-educational">
                     <h3>Redes Sociales</h3>
                     <div className="social-links">
                         <div className="form-group">
