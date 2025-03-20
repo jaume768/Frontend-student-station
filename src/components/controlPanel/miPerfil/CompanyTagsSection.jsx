@@ -6,11 +6,6 @@ const CompanyTagsSection = ({ companyTags, offersPractices = false }) => {
 
     return (
         <div className="profile-section">
-            <h3 className="section-title">
-                <FaTags className="section-icon" />
-                Especialización
-            </h3>
-            
             {hasContent ? (
                 <div className="company-tags-container">
                     {companyTags.map((tag, index) => (

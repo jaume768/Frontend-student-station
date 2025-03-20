@@ -15,6 +15,7 @@ import DownloadableFilesSection from './miPerfil/DownloadableFilesSection';
 import ProjectsSection from './miPerfil/ProjectsSection';
 import MilestoneSection from './miPerfil/MilestoneSection';
 import CompanyTagsSection from './miPerfil/CompanyTagsSection';
+import CompanyOffersSection from './miPerfil/CompanyOffersSection';
 
 const MiPerfil = () => {
     const [profile, setProfile] = useState(null);
@@ -22,6 +23,8 @@ const MiPerfil = () => {
     const [activeTab, setActiveTab] = useState('perfil');
     const [userPosts, setUserPosts] = useState([]);
     const [isCompany, setIsCompany] = useState(false);
+    const [companyRightTab, setCompanyRightTab] = useState('ofertas');
+    const [companyOffers, setCompanyOffers] = useState([]);
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -63,6 +66,28 @@ const MiPerfil = () => {
         fetchUserPosts();
     }, []);
 
+    // Obtener ofertas de trabajo publicadas por la empresa
+    useEffect(() => {
+        if (!isCompany) return;
+        
+        const fetchCompanyOffers = async () => {
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) return;
+                const backendUrl = import.meta.env.VITE_BACKEND_URL;
+                const res = await axios.get(`${backendUrl}/api/offers/user`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                setCompanyOffers(res.data.offers || []);
+            } catch (error) {
+                console.error("Error al cargar las ofertas de la empresa", error);
+                setCompanyOffers([]);
+            }
+        };
+        
+        fetchCompanyOffers();
+    }, [isCompany]);
+
     const toggleView = () => {
         setIsGalleryView(prev => !prev);
     };
@@ -78,12 +103,14 @@ const MiPerfil = () => {
 
             <div className="miPerfil-content">
                 <div className={`miPerfil-left-content ${activeTab === 'perfil' ? 'active' : ''}`}>
+                    {isCompany ? (
+                        <CompanyTagsSection companyTags={profile?.companyTags} offersPractices={profile?.offersPractices} />
+                    ) : null}
                     <BiographySection biography={profile?.biography} />
                     
                     {isCompany ? (
                         <>
                             <MilestoneSection professionalMilestones={profile?.professionalMilestones} />
-                            <CompanyTagsSection companyTags={profile?.companyTags} offersPractices={profile?.offersPractices} />
                         </>
                     ) : (
                         <>
@@ -98,12 +125,41 @@ const MiPerfil = () => {
                     <SocialSection social={profile?.social} />
                 </div>
 
-                <div className={`miPerfil-right ${activeTab === 'publicaciones' ? 'active' : ''}`}>
-                    <ProjectsSection 
-                        isGalleryView={isGalleryView} 
-                        toggleView={toggleView} 
-                        userPosts={userPosts} 
-                    />
+                <div className={`miPerfil-right ${activeTab === 'ofertas' ? 'active' : ''}`}>
+                    {isCompany ? (
+                        <>
+                            <div className="company-tabs">
+                                <button 
+                                    className={`company-tab ${companyRightTab === 'ofertas' ? 'active' : ''}`}
+                                    onClick={() => setCompanyRightTab('ofertas')}
+                                >
+                                    Ofertas de trabajo ({companyOffers.length})
+                                </button>
+                                <button 
+                                    className={`company-tab ${companyRightTab === 'publicaciones' ? 'active' : ''}`}
+                                    onClick={() => setCompanyRightTab('publicaciones')}
+                                >
+                                    Publicaciones ({userPosts.length})
+                                </button>
+                            </div>
+                            
+                            {companyRightTab === 'publicaciones' ? (
+                                <ProjectsSection 
+                                    isGalleryView={isGalleryView} 
+                                    toggleView={toggleView} 
+                                    userPosts={userPosts}
+                                />
+                            ) : (
+                                <CompanyOffersSection offers={companyOffers} />
+                            )}
+                        </>
+                    ) : (
+                        <ProjectsSection 
+                            isGalleryView={isGalleryView} 
+                            toggleView={toggleView} 
+                            userPosts={userPosts} 
+                        />
+                    )}
                 </div>
             </div>
         </div>

@@ -15,6 +15,7 @@ import FolderContent from '../components/controlPanel/FolderContent';
 import Creatives from '../components/controlPanel/Creatives';
 import Explorer from '../components/controlPanel/Explorer';
 import Offers from '../components/controlPanel/Offers';
+import ViewOffer from '../components/controlPanel/ViewOffer';
 import './css/control-panel.css';
 
 const ControlPanel = () => {
@@ -79,6 +80,8 @@ const ControlPanel = () => {
                 <Route path="createOffer" element={<ProtectedRoute><CreateOffer /></ProtectedRoute>} />
                 <Route path="createEducationalOffer" element={<ProtectedRoute><CreateEducationalOffer /></ProtectedRoute>} />
                 <Route path="guardados" element={<ProtectedRoute><Guardados /></ProtectedRoute>} />
+                <Route path="offer/:offerId" element={<ProtectedRoute><ViewOffer /></ProtectedRoute>} />
+                <Route path="edit-offer/:offerId" element={<ProtectedRoute><CreateOffer /></ProtectedRoute>} />
                 <Route path="*" element={<Navigate to="/ControlPanel/explorer" replace />} />
             </Routes>
         );
