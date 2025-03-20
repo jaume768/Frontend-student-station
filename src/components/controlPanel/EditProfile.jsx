@@ -73,6 +73,7 @@ const EditProfile = () => {
     // Estados para las nuevas secciones de empresa
     const [professionalMilestones, setProfessionalMilestones] = useState([]);
     const [companyTags, setCompanyTags] = useState([]);
+    const [offersPractices, setOffersPractices] = useState(false);
     const [isProfessionalMilestonesCollapsed, setIsProfessionalMilestonesCollapsed] = useState(false);
     const [isProfessionalMilestonesEditing, setIsProfessionalMilestonesEditing] = useState(false);
     const [isCompanyContactCollapsed, setIsCompanyContactCollapsed] = useState(false);
@@ -269,6 +270,7 @@ const EditProfile = () => {
                     } else {
                         setCompanyTags([]);
                     }
+                    setOffersPractices(user.offersPractices || false);
                 }
             } catch (error) {
                 console.error('Error al obtener el perfil:', error);
@@ -505,11 +507,12 @@ const EditProfile = () => {
                 locationType: locationType || {},
                 social: social || {},
                 professionalTitle: professionalTitle,
-                companyName: basicInfo.companyName
+                companyName: basicInfo.companyName,
+                companyTags: Array.isArray(companyTags) ? companyTags : [],
+                offersPractices
             };
             if (isCompany) {
                 updates.professionalMilestones = Array.isArray(professionalMilestones) ? professionalMilestones : [];
-                updates.companyTags = Array.isArray(companyTags) ? companyTags : [];
             }
             const response = await axios.put(`${backendUrl}/api/users/profile`, updates, {
                 headers: { Authorization: `Bearer ${token}` },
@@ -548,6 +551,12 @@ const EditProfile = () => {
             }
             if (updatedUser.companyName) {
                 setBasicInfo(prev => ({ ...prev, companyName: updatedUser.companyName }));
+            }
+            if (updatedUser.companyTags) {
+                setCompanyTags(updatedUser.companyTags);
+            }
+            if (updatedUser.offersPractices !== undefined) {
+                setOffersPractices(updatedUser.offersPractices);
             }
         } catch (error) {
             console.error('Error al actualizar el perfil:', error);
@@ -830,6 +839,8 @@ const EditProfile = () => {
                                                 companyTags={companyTags}
                                                 handleAddTag={handleAddTag}
                                                 handleRemoveTag={handleRemoveTag}
+                                                offersPractices={offersPractices}
+                                                setOffersPractices={setOffersPractices}
                                                 updateProfileData={updateProfileData}
                                             />
                                         </>

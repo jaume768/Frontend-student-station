@@ -13,12 +13,15 @@ import EducationSection from './miPerfil/EducationSection';
 import SocialSection from './miPerfil/SocialSection';
 import DownloadableFilesSection from './miPerfil/DownloadableFilesSection';
 import ProjectsSection from './miPerfil/ProjectsSection';
+import MilestoneSection from './miPerfil/MilestoneSection';
+import CompanyTagsSection from './miPerfil/CompanyTagsSection';
 
 const MiPerfil = () => {
     const [profile, setProfile] = useState(null);
     const [isGalleryView, setIsGalleryView] = useState(true);
     const [activeTab, setActiveTab] = useState('perfil');
     const [userPosts, setUserPosts] = useState([]);
+    const [isCompany, setIsCompany] = useState(false);
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -30,6 +33,12 @@ const MiPerfil = () => {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 setProfile(res.data);
+                
+                const userIsCompany = 
+                    res.data.professionalType === 1 || 
+                    res.data.professionalType === 2 || 
+                    res.data.professionalType === 4;
+                setIsCompany(userIsCompany);
             } catch (error) {
                 console.error("Error al cargar el perfil", error);
             }
@@ -58,37 +67,6 @@ const MiPerfil = () => {
         setIsGalleryView(prev => !prev);
     };
 
-    const navigate = useNavigate();
-
-    const totalGridItems = 15;
-    const renderProjectsGrid = () => {
-        return [...Array(totalGridItems)].map((_, index) => {
-            if (index < userPosts.length) {
-                const post = userPosts[index];
-                return (
-                    <div
-                        key={index}
-                        className="miPerfil-project-placeholder"
-                        onClick={() => navigate(`/ControlPanel/post/${post._id}`)}
-                        style={{ cursor: 'pointer' }}
-                    >
-                        <img
-                            src={post.mainImage}
-                            alt={`Publicación ${index + 1}`}
-                            style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }}
-                        />
-                    </div>
-                );
-            } else {
-                return (
-                    <div key={index} className="miPerfil-project-placeholder">
-                        {/* Placeholder sin imagen */}
-                    </div>
-                );
-            }
-        });
-    };
-
     return (
         <div className="miPerfil-container">
             <ProfileHeader 
@@ -101,12 +79,23 @@ const MiPerfil = () => {
             <div className="miPerfil-content">
                 <div className={`miPerfil-left-content ${activeTab === 'perfil' ? 'active' : ''}`}>
                     <BiographySection biography={profile?.biography} />
-                    <ProfessionalExperienceSection professionalFormation={profile?.professionalFormation} />
+                    
+                    {isCompany ? (
+                        <>
+                            <MilestoneSection professionalMilestones={profile?.professionalMilestones} />
+                            <CompanyTagsSection companyTags={profile?.companyTags} offersPractices={profile?.offersPractices} />
+                        </>
+                    ) : (
+                        <>
+                            <ProfessionalExperienceSection professionalFormation={profile?.professionalFormation} />
+                            <SoftwareSection software={profile?.software} />
+                            <EducationSection education={profile?.education} />
+                            <DownloadableFilesSection cvUrl={profile?.cvUrl} portfolioUrl={profile?.portfolioUrl} />
+                        </>
+                    )}
+                    
                     <SkillsSection skills={profile?.skills} />
-                    <SoftwareSection software={profile?.software} />
-                    <EducationSection education={profile?.education} />
                     <SocialSection social={profile?.social} />
-                    <DownloadableFilesSection cvUrl={profile?.cvUrl} portfolioUrl={profile?.portfolioUrl} />
                 </div>
 
                 <div className={`miPerfil-right ${activeTab === 'publicaciones' ? 'active' : ''}`}>
