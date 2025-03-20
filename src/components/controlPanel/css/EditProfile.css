@@ -480,6 +480,14 @@
     color: #777;
 }
 
+@media (min-width: 769px) {
+    .profile-sections {
+        overflow-y: auto;
+        max-height: calc(100vh - 120px); 
+    }
+}
+
+
 .checkbox-group-search input[type="checkbox"] {
     margin-right: 0.5rem;
 }

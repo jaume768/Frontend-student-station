@@ -222,7 +222,6 @@ const EditProfile = () => {
                             currentlyEnrolled: false
                         }]
                 );
-                // Si el usuario tiene formación profesional, se asigna; de lo contrario se usa el valor por defecto.
                 if (user.professionalFormation && Array.isArray(user.professionalFormation) && user.professionalFormation.length > 0) {
                     setProfessionalFormationList(
                         user.professionalFormation.map(item => ({
@@ -246,25 +245,18 @@ const EditProfile = () => {
                     youtube: "",
                     pinterest: ""
                 });
-                // Actualizar nombres de archivo si están disponibles
                 if (user.cvUrl) {
                     setCvFileName(user.cvUrl.split('/').pop());
                 }
                 if (user.portfolioUrl) {
                     setPortfolioFileName(user.portfolioUrl.split('/').pop());
                 }
-
-                // Cargar datos específicos de empresa si es necesario
                 const userIsCompany = user.professionalType === 1 || user.professionalType === 2 || user.professionalType === 4;
                 setIsCompany(userIsCompany);
-
-                // Actualizar estados específicos para empresas
                 if (userIsCompany) {
-                    // Inicializar los hitos profesionales si existen
                     if (user.professionalMilestones && Array.isArray(user.professionalMilestones)) {
                         setProfessionalMilestones(user.professionalMilestones);
                     } else {
-                        // Inicializar con un hito vacío por defecto
                         setProfessionalMilestones([{
                             date: '',
                             name: '',
@@ -272,8 +264,6 @@ const EditProfile = () => {
                             description: ''
                         }]);
                     }
-
-                    // Inicializar las etiquetas de la empresa si existen
                     if (user.companyTags && Array.isArray(user.companyTags)) {
                         setCompanyTags(user.companyTags);
                     } else {
@@ -337,17 +327,14 @@ const EditProfile = () => {
             setError("Los emails no coinciden");
             return;
         }
-
         if (!newEmail || !confirmEmail) {
             setError("Por favor, completa todos los campos");
             return;
         }
-
         try {
             const token = localStorage.getItem('authToken');
             if (!token) return;
             const backendUrl = import.meta.env.VITE_BACKEND_URL;
-
             const response = await axios.put(
                 `${backendUrl}/api/users/email`,
                 { email: newEmail },
@@ -355,21 +342,15 @@ const EditProfile = () => {
                     headers: { Authorization: `Bearer ${token}` }
                 }
             );
-
             if (response.data.success) {
-                // Actualizar el estado local
                 setUserData({
                     ...userData,
                     email: newEmail
                 });
-
-                // Limpiar los campos
                 setNewEmail("");
                 setConfirmEmail("");
                 setIsEmailEditing(false);
                 setError("");
-
-                // Mostrar mensaje de éxito
                 alert("Email actualizado con éxito");
             }
         } catch (error) {
@@ -384,7 +365,6 @@ const EditProfile = () => {
 
     const handleEducationListChange = (index, e) => {
         if (!Array.isArray(educationList)) return;
-
         const { name, value, type, checked } = e.target;
         const updatedList = educationList.map((edu, i) =>
             i === index ? { ...edu, [name]: type === 'checkbox' ? checked : value } : edu
@@ -415,7 +395,6 @@ const EditProfile = () => {
     const addPopularSkill = (skill) => {
         const currentSkills = Array.isArray(skills) ? skills : [];
         const currentPopularSkills = Array.isArray(popularSkills) ? popularSkills : [];
-
         if (isHabilidadesEditing && currentSkills.length < 12 && !currentSkills.includes(skill)) {
             setSkills([...currentSkills, skill]);
             setPopularSkills(currentPopularSkills.filter(s => s !== skill));
@@ -441,7 +420,6 @@ const EditProfile = () => {
     const addPopularSoftware = (sw) => {
         const currentSoftware = Array.isArray(software) ? software : [];
         const currentPopularSoftware = Array.isArray(popularSoftware) ? popularSoftware : [];
-
         if (isSoftwareEditing && currentSoftware.length < 12 && !currentSoftware.includes(sw)) {
             setSoftware([...currentSoftware, sw]);
             setPopularSoftware(currentPopularSoftware.filter(s => s !== sw));
@@ -463,10 +441,8 @@ const EditProfile = () => {
         setSocial(prev => ({ ...(prev || {}), [name]: value }));
     };
 
-    // Handlers para Formación Profesional
     const handleProfessionalFormationChange = (index, e) => {
         if (!Array.isArray(professionalFormationList)) return;
-
         const { name, value, type, checked } = e.target;
         const updatedList = professionalFormationList.map((item, i) =>
             i === index ? { ...item, [name]: type === 'checkbox' ? checked : value } : item
@@ -487,7 +463,6 @@ const EditProfile = () => {
 
     const removeProfessionalFormation = (index) => {
         if (!Array.isArray(professionalFormationList)) return;
-
         if (professionalFormationList.length > 1) {
             setProfessionalFormationList(professionalFormationList.filter((_, i) => i !== index));
         }
@@ -508,7 +483,6 @@ const EditProfile = () => {
 
     const removeEducation = (index) => {
         if (!Array.isArray(educationList)) return;
-
         if (educationList.length > 1) {
             setEducationList(educationList.filter((_, i) => i !== index));
         }
@@ -533,13 +507,10 @@ const EditProfile = () => {
                 professionalTitle: professionalTitle,
                 companyName: basicInfo.companyName
             };
-
-            // Si es una empresa, incluir los hitos profesionales y etiquetas
             if (isCompany) {
                 updates.professionalMilestones = Array.isArray(professionalMilestones) ? professionalMilestones : [];
                 updates.companyTags = Array.isArray(companyTags) ? companyTags : [];
             }
-
             const response = await axios.put(`${backendUrl}/api/users/profile`, updates, {
                 headers: { Authorization: `Bearer ${token}` },
             });
@@ -605,17 +576,14 @@ const EditProfile = () => {
         "Universidad de Buenos Aires", "Universidad de Sydney", "Universidad de Pekín"
     ];
 
-    // Manejador para cambios en los archivos
     const handleFileChange = (e) => {
         const { name, files } = e.target;
         if (files.length === 0) return;
-
         const file = files[0];
         if (file.type !== 'application/pdf') {
             alert('Solo se permiten archivos PDF');
             return;
         }
-
         if (name === 'cv') {
             setCvFile(file);
             setCvFileName(file.name);
@@ -625,56 +593,46 @@ const EditProfile = () => {
         }
     };
 
-    // Función para subir archivos PDF
     const uploadPdfFiles = async () => {
         if (!cvFile && !portfolioFile) {
             setIsPdfEditing(false);
             return;
         }
-
         setIsUploading(true);
-
         try {
             const token = localStorage.getItem('authToken');
             if (!token) return;
             const backendUrl = import.meta.env.VITE_BACKEND_URL;
-
             if (cvFile) {
                 setUploadingCV(true);
                 const cvFormData = new FormData();
                 cvFormData.append('file', cvFile);
-
                 const cvResponse = await axios.put(`${backendUrl}/api/users/cv`, cvFormData, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'multipart/form-data'
                     }
                 });
-
                 if (cvResponse.data.cvUrl) {
                     setCvFileName(cvResponse.data.cvUrl.split('/').pop());
                 }
                 setUploadingCV(false);
             }
-
             if (portfolioFile) {
                 setUploadingPortfolio(true);
                 const portfolioFormData = new FormData();
                 portfolioFormData.append('file', portfolioFile);
-
                 const portfolioResponse = await axios.put(`${backendUrl}/api/users/portfolio`, portfolioFormData, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'multipart/form-data'
                     }
                 });
-
                 if (portfolioResponse.data.portfolioUrl) {
                     setPortfolioFileName(portfolioResponse.data.portfolioUrl.split('/').pop());
                 }
                 setUploadingPortfolio(false);
             }
-
             setCvFile(null);
             setPortfolioFile(null);
             setIsPdfEditing(false);
@@ -685,14 +643,12 @@ const EditProfile = () => {
         }
     };
 
-    // Manejador para abrir el selector de imagen de perfil
     const handleProfilePictureClick = () => {
         if (profileImageInputRef.current) {
             profileImageInputRef.current.click();
         }
     };
 
-    // Manejador para el cambio de archivo de imagen de perfil
     const handleProfileImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -702,22 +658,17 @@ const EditProfile = () => {
         }
     };
 
-    // Manejador para guardar la imagen de perfil
     const handleSaveProfileImage = async () => {
         if (!profileImageFile) {
             return;
         }
-
         setIsUploadingProfilePicture(true);
-
         try {
             const token = localStorage.getItem("authToken");
             if (!token) return;
             const backendUrl = import.meta.env.VITE_BACKEND_URL;
-
             const formData = new FormData();
             formData.append('file', profileImageFile);
-
             const response = await fetch(`${backendUrl}/api/users/profile-picture`, {
                 method: 'PUT',
                 headers: {
@@ -725,17 +676,12 @@ const EditProfile = () => {
                 },
                 body: formData
             });
-
             const data = await response.json();
-
             if (response.ok) {
-                // Actualizar la imagen de perfil en el estado
                 setUserData(prev => ({
                     ...prev,
                     profilePicture: data.profilePicture || prev.profilePicture
                 }));
-
-                // Limpiar el estado de edición
                 setSelectedProfileImage(null);
                 setProfileImageFile(null);
                 setIsEditingProfilePicture(false);
@@ -749,14 +695,12 @@ const EditProfile = () => {
         }
     };
 
-    // Manejador para cancelar la edición de la imagen de perfil
     const handleCancelProfileImageEdit = () => {
         setSelectedProfileImage(null);
         setProfileImageFile(null);
         setIsEditingProfilePicture(false);
     };
 
-    // Manejadores para las nuevas secciones de empresa
     const handleAddMilestone = () => {
         const currentMilestones = Array.isArray(professionalMilestones) ? professionalMilestones : [];
         setProfessionalMilestones([
@@ -772,7 +716,6 @@ const EditProfile = () => {
 
     const handleMilestoneChange = (index, e) => {
         if (!Array.isArray(professionalMilestones)) return;
-
         const { name, value } = e.target;
         const updatedMilestones = [...professionalMilestones];
         updatedMilestones[index] = {
@@ -784,7 +727,6 @@ const EditProfile = () => {
 
     const handleRemoveMilestone = (index) => {
         if (!Array.isArray(professionalMilestones)) return;
-
         setProfessionalMilestones(professionalMilestones.filter((_, i) => i !== index));
     };
 
@@ -797,7 +739,6 @@ const EditProfile = () => {
 
     const handleRemoveTag = (index) => {
         if (!Array.isArray(companyTags)) return;
-
         setCompanyTags(companyTags.filter((_, i) => i !== index));
     };
 
@@ -854,9 +795,7 @@ const EditProfile = () => {
                                         handleProfessionalSummaryChange={handleProfessionalSummaryChange}
                                         updateProfileData={updateProfileData}
                                     />
-
                                     {isCompany ? (
-                                        // Secciones específicas para empresas
                                         <>
                                             <ProfessionalMilestonesSection
                                                 isProfessionalMilestonesCollapsed={isProfessionalMilestonesCollapsed}
@@ -908,10 +847,9 @@ const EditProfile = () => {
                                                 selfTaught={selfTaught}
                                                 handleSelfTaughtChange={handleSelfTaughtChange}
                                                 updateProfileData={updateProfileData}
-                                                institutionOptions={institutionOptions}    // <-- Prop agregada
-                                                currentDate={currentDate}                  // Si también se utiliza currentDate en el componente
+                                                institutionOptions={institutionOptions}
+                                                currentDate={currentDate}
                                             />
-
                                             <ProfessionalFormationSection
                                                 isProfessionalFormationCollapsed={isProfessionalFormationCollapsed}
                                                 setIsProfessionalFormationCollapsed={setIsProfessionalFormationCollapsed}
@@ -989,31 +927,34 @@ const EditProfile = () => {
                                             />
                                         </>
                                     )}
-
-                                    <ConfigurationSection
-                                        userData={userData}
-                                        isEmailEditing={isEmailEditing}
-                                        setIsEmailEditing={setIsEmailEditing}
-                                        emailInput={userData.email || ''}
-                                        setEmailInput={setEmailInput}
-                                        newEmail={newEmail}
-                                        setNewEmail={setNewEmail}
-                                        confirmEmail={confirmEmail}
-                                        setConfirmEmail={setConfirmEmail}
-                                        handleUpdateEmail={handleUpdateEmail}
-                                        isPasswordEditing={isPasswordEditing}
-                                        setIsPasswordEditing={setIsPasswordEditing}
-                                        currentPassword={currentPassword}
-                                        setCurrentPassword={setCurrentPassword}
-                                        newPassword={newPassword}
-                                        setNewPassword={setNewPassword}
-                                        confirmPassword={confirmPassword}
-                                        setConfirmPassword={setConfirmPassword}
-                                        handleChangePassword={handleChangePassword}
-                                        error={error}
-                                    />
                                 </>
                             )}
+
+                            {activeOption === "configuracion" && (
+                                <ConfigurationSection
+                                    userData={userData}
+                                    isEmailEditing={isEmailEditing}
+                                    setIsEmailEditing={setIsEmailEditing}
+                                    emailInput={userData.email || ''}
+                                    setEmailInput={setEmailInput}
+                                    newEmail={newEmail}
+                                    setNewEmail={setNewEmail}
+                                    confirmEmail={confirmEmail}
+                                    setConfirmEmail={setConfirmEmail}
+                                    handleUpdateEmail={handleUpdateEmail}
+                                    isPasswordEditing={isPasswordEditing}
+                                    setIsPasswordEditing={setIsPasswordEditing}
+                                    currentPassword={currentPassword}
+                                    setCurrentPassword={setCurrentPassword}
+                                    newPassword={newPassword}
+                                    setNewPassword={setNewPassword}
+                                    confirmPassword={confirmPassword}
+                                    setConfirmPassword={setConfirmPassword}
+                                    handleChangePassword={handleChangePassword}
+                                    error={error}
+                                />
+                            )}
+
                             {activeOption === "misOfertas" && (
                                 <MisOfertasSection />
                             )}
