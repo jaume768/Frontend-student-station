@@ -1,8 +1,10 @@
-import React from 'react';
-import { FaBriefcase, FaCalendarAlt, FaMapMarkerAlt } from 'react-icons/fa';
+import React, { useState } from 'react';
+import { FaBriefcase, FaCalendarAlt, FaMapMarkerAlt, FaFilter } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 const CompanyOffersSection = ({ offers = [] }) => {
+    const [statusFilter, setStatusFilter] = useState('all');
+
     if (!Array.isArray(offers) || offers.length === 0) {
         return (
             <div className="company-offers-empty-company">
@@ -18,47 +20,103 @@ const CompanyOffersSection = ({ offers = [] }) => {
         );
     }
 
+    // Helper function to translate status
+    const translateStatus = (status) => {
+        switch (status) {
+            case 'pending': return 'Pendiente';
+            case 'accepted': return 'Aceptada';
+            case 'cancelled': return 'Cancelada';
+            default: return 'Desconocido';
+        }
+    };
+
+    // Filter offers based on selected status
+    const filteredOffers = statusFilter === 'all'
+        ? offers
+        : offers.filter(offer => offer.status === statusFilter);
+
     return (
         <div className="company-offers-container-company">
-            {offers.map((offer, index) => (
-                <div key={index} className="company-offer-item-company">
-                    <div className="offer-header-company">
-                        <h3 className="offer-title-company">{offer.title}</h3>
-                        <span className="offer-status-company">{offer.status === 'active' ? 'Activa' : 'Cerrada'}</span>
-                    </div>
-                    
-                    <div className="offer-details-company">
-                        <div className="offer-detail-company">
-                            <FaCalendarAlt className="offer-icon-company" />
-                            <span>{new Date(offer.publicationDate).toLocaleDateString('es-ES', { 
-                                year: 'numeric', 
-                                month: 'short', 
-                                day: 'numeric' 
-                            })}</span>
-                        </div>
-                        
-                        <div className="offer-detail-company">
-                            <FaMapMarkerAlt className="offer-icon-company" />
-                            <span>{offer.location || 'Ubicación no especificada'}</span>
-                        </div>
-                    </div>
-                    
-                    <div className="offer-description-company">
-                        {offer.description && offer.description.length > 120 
-                            ? `${offer.description.substring(0, 120)}...` 
-                            : offer.description || 'Sin descripción'}
-                    </div>
-                    
-                    <div className="offer-actions-company">
-                        <Link to={`/ControlPanel/offer/${offer._id}`} className="view-offer-button-company">
-                            Ver detalles
-                        </Link>
-                        <Link to={`/ControlPanel/edit-offer/${offer._id}`} className="edit-offer-button-company">
-                            Editar
-                        </Link>
-                    </div>
+            <div className="offers-filter-section">
+                <div className="filter-header">
+                    <FaFilter className="filter-icon" />
+                    <span>Filtrar por estado:</span>
                 </div>
-            ))}
+                <div className="filter-options">
+                    <button
+                        className={`filter-button-company ${statusFilter === 'all' ? 'active' : ''}`}
+                        onClick={() => setStatusFilter('all')}
+                    >
+                        Todas
+                    </button>
+                    <button
+                        className={`filter-button-company ${statusFilter === 'pending' ? 'active' : ''}`}
+                        onClick={() => setStatusFilter('pending')}
+                    >
+                        Pendientes
+                    </button>
+                    <button
+                        className={`filter-button-company ${statusFilter === 'accepted' ? 'active' : ''}`}
+                        onClick={() => setStatusFilter('accepted')}
+                    >
+                        Aceptadas
+                    </button>
+                    <button
+                        className={`filter-button-company ${statusFilter === 'cancelled' ? 'active' : ''}`}
+                        onClick={() => setStatusFilter('cancelled')}
+                    >
+                        Canceladas
+                    </button>
+                </div>
+            </div>
+
+            {filteredOffers.length === 0 ? (
+                <div className="no-filtered-offers">
+                    <p>No hay ofertas con el filtro seleccionado.</p>
+                </div>
+            ) : (
+                filteredOffers.map((offer, index) => (
+                    <div key={index} className="company-offer-item-company">
+                        <div className="offer-header-company">
+                            <h3 className="offer-title-company">{offer.position}</h3>
+                            <span className={`offer-status-company status-${offer.status}`}>
+                                {translateStatus(offer.status)}
+                            </span>
+                        </div>
+
+                        <div className="offer-details-company">
+                            <div className="offer-detail-company">
+                                <FaCalendarAlt className="offer-icon-company" />
+                                <span>{new Date(offer.publicationDate).toLocaleDateString('es-ES', {
+                                    year: 'numeric',
+                                    month: 'short',
+                                    day: 'numeric'
+                                })}</span>
+                            </div>
+
+                            <div className="offer-detail-company">
+                                <FaMapMarkerAlt className="offer-icon-company" />
+                                <span>{offer.city || 'Ubicación no especificada'}</span>
+                            </div>
+                        </div>
+
+                        <div className="offer-description-company">
+                            {offer.description && offer.description.length > 120
+                                ? `${offer.description.substring(0, 120)}...`
+                                : offer.description || 'Sin descripción'}
+                        </div>
+
+                        <div className="offer-actions-company">
+                            <Link to={`/ControlPanel/offer/${offer._id}`} className="view-offer-button-company">
+                                Ver detalles
+                            </Link>
+                            <Link to={`/ControlPanel/edit-offer/${offer._id}`} className="edit-offer-button-company">
+                                Editar
+                            </Link>
+                        </div>
+                    </div>
+                ))
+            )}
         </div>
     );
 };
