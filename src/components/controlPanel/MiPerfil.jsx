@@ -16,6 +16,7 @@ import ProjectsSection from './miPerfil/ProjectsSection';
 import MilestoneSection from './miPerfil/MilestoneSection';
 import CompanyTagsSection from './miPerfil/CompanyTagsSection';
 import CompanyOffersSection from './miPerfil/CompanyOffersSection';
+import EducationalOffersSection from './miPerfil/EducationalOffersSection';
 
 const MiPerfil = () => {
     const [profile, setProfile] = useState(null);
@@ -23,8 +24,10 @@ const MiPerfil = () => {
     const [activeTab, setActiveTab] = useState('perfil');
     const [userPosts, setUserPosts] = useState([]);
     const [isCompany, setIsCompany] = useState(false);
+    const [isEducationalInstitution, setIsEducationalInstitution] = useState(false);
     const [companyRightTab, setCompanyRightTab] = useState('ofertas');
     const [companyOffers, setCompanyOffers] = useState([]);
+    const [educationalOffers, setEducationalOffers] = useState([]);
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -40,8 +43,11 @@ const MiPerfil = () => {
                 const userIsCompany = 
                     res.data.professionalType === 1 || 
                     res.data.professionalType === 2 || 
+                    res.data.professionalType === 3;
+                const userIsEducationalInstitution = 
                     res.data.professionalType === 4;
                 setIsCompany(userIsCompany);
+                setIsEducationalInstitution(userIsEducationalInstitution);
             } catch (error) {
                 console.error("Error al cargar el perfil", error);
             }
@@ -68,25 +74,40 @@ const MiPerfil = () => {
 
     // Obtener ofertas de trabajo publicadas por la empresa
     useEffect(() => {
-        if (!isCompany) return;
-        
-        const fetchCompanyOffers = async () => {
-            try {
-                const token = localStorage.getItem('authToken');
-                if (!token) return;
-                const backendUrl = import.meta.env.VITE_BACKEND_URL;
-                const res = await axios.get(`${backendUrl}/api/offers/user`, {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
-                setCompanyOffers(res.data.offers || []);
-            } catch (error) {
-                console.error("Error al cargar las ofertas de la empresa", error);
-                setCompanyOffers([]);
-            }
-        };
-        
-        fetchCompanyOffers();
-    }, [isCompany]);
+        if (isCompany) {
+            const fetchCompanyOffers = async () => {
+                try {
+                    const token = localStorage.getItem('authToken');
+                    if (!token) return;
+                    const backendUrl = import.meta.env.VITE_BACKEND_URL;
+                    const res = await axios.get(`${backendUrl}/api/offers/user`, {
+                        headers: { Authorization: `Bearer ${token}` },
+                    });
+                    setCompanyOffers(res.data.offers || []);
+                } catch (error) {
+                    console.error("Error al cargar las ofertas de la empresa", error);
+                    setCompanyOffers([]);
+                }
+            };
+            fetchCompanyOffers();
+        } else if (isEducationalInstitution) {
+            const fetchEducationalOffers = async () => {
+                try {
+                    const token = localStorage.getItem('authToken');
+                    if (!token) return;
+                    const backendUrl = import.meta.env.VITE_BACKEND_URL;
+                    const res = await axios.get(`${backendUrl}/api/offers/educational-offers/user`, {
+                        headers: { Authorization: `Bearer ${token}` },
+                    });
+                    setEducationalOffers(res.data.offers || []);
+                } catch (error) {
+                    console.error("Error al cargar las ofertas educativas de la institución", error);
+                    setEducationalOffers([]);
+                }
+            };
+            fetchEducationalOffers();
+        }
+    }, [isCompany, isEducationalInstitution]);
 
     const toggleView = () => {
         setIsGalleryView(prev => !prev);
@@ -105,6 +126,8 @@ const MiPerfil = () => {
                 <div className={`miPerfil-left-content ${activeTab === 'perfil' ? 'active' : ''}`}>
                     {isCompany ? (
                         <CompanyTagsSection companyTags={profile?.companyTags} offersPractices={profile?.offersPractices} />
+                    ) : isEducationalInstitution ? (
+                        <></>
                     ) : null}
                     <BiographySection biography={profile?.biography} />
                     
@@ -112,6 +135,8 @@ const MiPerfil = () => {
                         <>
                             <MilestoneSection professionalMilestones={profile?.professionalMilestones} />
                         </>
+                    ) : isEducationalInstitution ? (
+                        <></>
                     ) : (
                         <>
                             <ProfessionalExperienceSection professionalFormation={profile?.professionalFormation} />
@@ -125,7 +150,7 @@ const MiPerfil = () => {
                     <SocialSection social={profile?.social} />
                 </div>
 
-                <div className={`miPerfil-right ${activeTab === 'ofertas' ? 'active' : ''}`}>
+                <div className={`miPerfil-right-posts ${activeTab === 'ofertas' ? 'active' : ''}`}>
                     {isCompany ? (
                         <>
                             <div className="company-tabs">
@@ -151,6 +176,33 @@ const MiPerfil = () => {
                                 />
                             ) : (
                                 <CompanyOffersSection offers={companyOffers} />
+                            )}
+                        </>
+                    ) : isEducationalInstitution ? (
+                        <>
+                            <div className="company-tabs">
+                                <button 
+                                    className={`company-tab ${companyRightTab === 'ofertas' ? 'active' : ''}`}
+                                    onClick={() => setCompanyRightTab('ofertas')}
+                                >
+                                    Ofertas educativas ({educationalOffers.length})
+                                </button>
+                                <button 
+                                    className={`company-tab ${companyRightTab === 'publicaciones' ? 'active' : ''}`}
+                                    onClick={() => setCompanyRightTab('publicaciones')}
+                                >
+                                    Publicaciones ({userPosts.length})
+                                </button>
+                            </div>
+                            
+                            {companyRightTab === 'publicaciones' ? (
+                                <ProjectsSection 
+                                    isGalleryView={isGalleryView} 
+                                    toggleView={toggleView} 
+                                    userPosts={userPosts}
+                                />
+                            ) : (
+                                <EducationalOffersSection offers={educationalOffers} />
                             )}
                         </>
                     ) : (

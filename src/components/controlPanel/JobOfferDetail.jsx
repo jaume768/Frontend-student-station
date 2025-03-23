@@ -48,7 +48,7 @@ const JobOfferDetail = () => {
     };
 
     const handleBack = () => {
-        navigate('/ControlPanel/offers');
+        navigate(-1); // Utilizar navigate(-1) para volver a la página anterior
     };
 
     return (

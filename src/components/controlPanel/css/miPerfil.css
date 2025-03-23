@@ -632,6 +632,13 @@
     gap: 10px;
 }
 
+@media (min-width: 769px) {
+    .miPerfil-right-posts {
+      overflow-y: auto;
+      max-height: calc(100vh - 120px);
+    }
+}
+
 .filter-button-company {
     background-color: #fff;
     border: 1px solid #e0e0e0;

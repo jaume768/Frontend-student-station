@@ -17,6 +17,8 @@ import Explorer from '../components/controlPanel/Explorer';
 import Offers from '../components/controlPanel/Offers';
 import ViewOffer from '../components/controlPanel/ViewOffer';
 import JobOfferDetail from '../components/controlPanel/JobOfferDetail';
+import EducationalOfferDetail from '../components/controlPanel/EducationalOfferDetail';
+import Fashion from '../components/controlPanel/Fashion';
 import './css/control-panel.css';
 
 const ControlPanel = () => {
@@ -68,8 +70,9 @@ const ControlPanel = () => {
                 <Route path="offers" element={<Offers />} />
                 <Route path="offers/:offerId" element={<Offers />} />
                 <Route path="JobOfferDetail/:offerId" element={<JobOfferDetail />} />
+                <Route path="EducationalOfferDetail/:offerId" element={<EducationalOfferDetail />} />
                 <Route path="creatives" element={<Creatives />} />
-                <Route path="fashion" element={<ProtectedRoute><div><h1>Contenido de Estudiar Moda</h1></div></ProtectedRoute>} />
+                <Route path="fashion" element={<Fashion />} />
                 <Route path="blog" element={<ProtectedRoute><div><h1>Contenido de Blog</h1></div></ProtectedRoute>} />
                 <Route path="magazine" element={<ProtectedRoute><div><h1>Contenido de Revista</h1></div></ProtectedRoute>} />
                 <Route path="info" element={<div><h1>Información</h1></div>} />
@@ -84,6 +87,7 @@ const ControlPanel = () => {
                 <Route path="guardados" element={<ProtectedRoute><Guardados /></ProtectedRoute>} />
                 <Route path="offer/:offerId" element={<ProtectedRoute><ViewOffer /></ProtectedRoute>} />
                 <Route path="edit-offer/:offerId" element={<ProtectedRoute><CreateOffer /></ProtectedRoute>} />
+                <Route path="edit-educational-offer/:offerId" element={<ProtectedRoute><CreateEducationalOffer /></ProtectedRoute>} />
                 <Route path="*" element={<Navigate to="/ControlPanel/explorer" replace />} />
             </Routes>
         );

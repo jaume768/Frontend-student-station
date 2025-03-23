@@ -17,6 +17,7 @@ import UserProjectsSection from './userProfile/UserProjectsSection';
 import UserCompanyTagsSection from './userProfile/UserCompanyTagsSection';
 import UserMilestoneSection from './userProfile/UserMilestoneSection';
 import UserCompanyOffersSection from './userProfile/UserCompanyOffersSection';
+import UserEducationalOffersSection from './userProfile/UserEducationalOffersSection';
 
 const UserProfile = () => {
     const { username } = useParams();
@@ -33,6 +34,7 @@ const UserProfile = () => {
     const [postsLoading, setPostsLoading] = useState(false);
     const [notification, setNotification] = useState({ show: false, type: '', message: '' });
     const [isCompany, setIsCompany] = useState(false);
+    const [isEducationalInstitution, setIsEducationalInstitution] = useState(false);
     const [companyRightTab, setCompanyRightTab] = useState('ofertas');
     const [companyOffers, setCompanyOffers] = useState([]);
 
@@ -46,19 +48,21 @@ const UserProfile = () => {
                 const headers = { Authorization: `Bearer ${token}` };
                 const res = await axios.get(`${backendUrl}/api/users/profile/${username}`, { headers });
                 setProfile(res.data);
-                
+
                 // Verificar si el usuario actual sigue al usuario del perfil
                 const currentUser = await axios.get(`${backendUrl}/api/users/profile`, { headers });
                 const isFollowingUser = currentUser.data.following.includes(res.data._id);
                 setIsFollowing(isFollowingUser);
-                
-                // Verificar si es una empresa
-                const userIsCompany = 
-                    res.data.professionalType === 1 || 
-                    res.data.professionalType === 2 || 
-                    res.data.professionalType === 4;
+
+                // Verificar si es una empresa o institución educativa
+                const userIsCompany =
+                    res.data.professionalType === 1 ||
+                    res.data.professionalType === 2 ||
+                    res.data.professionalType === 3;
+                const userIsEducationalInstitution = res.data.professionalType === 4;
                 setIsCompany(userIsCompany);
-                
+                setIsEducationalInstitution(userIsEducationalInstitution);
+
                 // Verificar si las notificaciones están activas
                 if (isFollowingUser && currentUser.data.notifications) {
                     const notificationActive = currentUser.data.notifications.some(
@@ -66,7 +70,7 @@ const UserProfile = () => {
                     );
                     setIsNotificationActive(notificationActive);
                 }
-                
+
                 setLoading(false);
             } catch (error) {
                 console.error("Error al cargar el perfil del usuario", error);
@@ -74,7 +78,7 @@ const UserProfile = () => {
                 setLoading(false);
             }
         };
-        
+
         const fetchUserPosts = async () => {
             try {
                 setPostsLoading(true);
@@ -92,31 +96,34 @@ const UserProfile = () => {
                 setPostsLoading(false);
             }
         };
-        
-        // Función para obtener ofertas de trabajo de la empresa
-        const fetchCompanyOffers = async () => {
+
+        fetchUserProfile();
+        fetchUserPosts();
+    }, [username]);
+
+    useEffect(() => {
+        if (!isCompany && !isEducationalInstitution) return;
+        if (!profile) return;
+
+        const fetchOffers = async () => {
             try {
-                const token = localStorage.getItem('authToken');
-                if (!token) return;
                 const backendUrl = import.meta.env.VITE_BACKEND_URL;
-                const res = await axios.get(`${backendUrl}/api/offers/publisher/${profile?._id}`, {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
+                let endpoint = `${backendUrl}/api/users/${profile._id}/offers`;
+                
+                if (isEducationalInstitution) {
+                    endpoint = `${backendUrl}/api/users/${profile._id}/educational-offers`;
+                }
+                
+                const res = await axios.get(endpoint);
                 setCompanyOffers(res.data.offers || []);
             } catch (error) {
-                console.error("Error al cargar las ofertas de la empresa", error);
+                console.error("Error al cargar las ofertas:", error);
                 setCompanyOffers([]);
             }
         };
-        
-        fetchUserProfile();
-        fetchUserPosts();
-        
-        // Si hay un perfil y es una empresa, obtener sus ofertas
-        if (profile && isCompany) {
-            fetchCompanyOffers();
-        }
-    }, [username, profile?._id, isCompany]);
+
+        fetchOffers();
+    }, [profile, isCompany, isEducationalInstitution]);
 
     const handleFollow = async () => {
         try {
@@ -131,22 +138,22 @@ const UserProfile = () => {
             );
             setIsFollowing(true);
             setIsNotificationActive(true); // Por defecto, las notificaciones se activan al seguir
-            
+
             // Actualizar el contador de seguidores
             const updatedProfile = { ...profile };
             updatedProfile.followers = [...updatedProfile.followers, "currentUserId"]; // Placeholder
             setProfile(updatedProfile);
-            
+
             // Mostrar mensaje de éxito al usuario
             const message = 'Ahora sigues a este usuario';
-            
+
             // Mostrar notificación visual de éxito
             showNotification('success', message);
         } catch (error) {
             console.error("Error al seguir al usuario", error);
             // Mensaje de error más descriptivo para el usuario
             let errorMessage = "Ha ocurrido un error. Por favor, inténtalo de nuevo.";
-            
+
             if (error.response) {
                 // El servidor respondió con un código de error
                 if (error.response.status === 400) {
@@ -161,7 +168,7 @@ const UserProfile = () => {
                 // La solicitud se realizó pero no se recibió respuesta
                 errorMessage = "No se pudo conectar con el servidor. Verifica tu conexión.";
             }
-            
+
             // Mostrar notificación visual de error
             showNotification('error', errorMessage);
         } finally {
@@ -180,24 +187,24 @@ const UserProfile = () => {
             });
             setIsFollowing(false);
             setIsNotificationActive(false);
-            
+
             // Actualizar el contador de seguidores
             const updatedProfile = { ...profile };
             updatedProfile.followers = updatedProfile.followers.filter(
                 id => id !== "currentUserId" // Placeholder
             );
             setProfile(updatedProfile);
-            
+
             // Mostrar mensaje de éxito al usuario
             const message = 'Has dejado de seguir a este usuario';
-            
+
             // Mostrar notificación visual de éxito
             showNotification('success', message);
         } catch (error) {
             console.error("Error al dejar de seguir al usuario", error);
             // Mensaje de error más descriptivo para el usuario
             let errorMessage = "Ha ocurrido un error. Por favor, inténtalo de nuevo.";
-            
+
             if (error.response) {
                 // El servidor respondió con un código de error
                 if (error.response.status === 400) {
@@ -212,7 +219,7 @@ const UserProfile = () => {
                 // La solicitud se realizó pero no se recibió respuesta
                 errorMessage = "No se pudo conectar con el servidor. Verifica tu conexión.";
             }
-            
+
             // Mostrar notificación visual de error
             showNotification('error', errorMessage);
         } finally {
@@ -225,7 +232,7 @@ const UserProfile = () => {
             const token = localStorage.getItem('authToken');
             if (!token) return;
             const backendUrl = import.meta.env.VITE_BACKEND_URL;
-            
+
             if (isNotificationActive) {
                 // Desactivar notificaciones
                 await axios.post(
@@ -241,7 +248,7 @@ const UserProfile = () => {
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
             }
-            
+
             setIsNotificationActive(!isNotificationActive);
         } catch (error) {
             console.error("Error al cambiar el estado de las notificaciones", error);
@@ -290,7 +297,7 @@ const UserProfile = () => {
                     <span>{notification.message}</span>
                 </div>
             )}
-            <UserProfileHeader 
+            <UserProfileHeader
                 profile={profile}
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
@@ -308,40 +315,65 @@ const UserProfile = () => {
                             <UserCompanyTagsSection companyTags={profile?.companyTags} offersPractices={profile?.offersPractices} />
                             <UserBiographySection biography={profile?.biography} />
                             <UserMilestoneSection professionalMilestones={profile?.professionalMilestones} />
+                            <UserSkillsSection skills={profile?.skills} />
+                            <UserSocialSection social={profile?.social} />
+                        </>
+                    ) : isEducationalInstitution ? (
+                        <>
+                            <UserBiographySection biography={profile?.biography} />
+                            <UserEducationSection education={profile?.education} />
+                            <UserSkillsSection skills={profile?.skills} />
+                            <UserSocialSection social={profile?.social} />
+                            <UserEducationalOffersSection offers={profile?.educationalOffers} />
                         </>
                     ) : (
                         <>
                             <UserBiographySection biography={profile?.biography} />
-                            <UserProfessionalExperienceSection professionalFormation={profile?.professionalFormation} />
+
+                            {profile?.professionalFormation && profile.professionalFormation.some(item =>
+                                item.trainingName?.trim() || item.institution?.trim()
+                            ) && (
+                                    <UserProfessionalExperienceSection professionalFormation={profile.professionalFormation} />
+                                )}
+
                             <UserSoftwareSection software={profile?.software} />
-                            <UserEducationSection education={profile?.education} />
-                            <UserDownloadableFilesSection cvUrl={profile?.cvUrl} portfolioUrl={profile?.portfolioUrl} />
+
+                            {profile?.education && profile.education.some(item =>
+                                item.formationName?.trim() || item.institution?.trim() || item.otherInstitution?.trim()
+                            ) && (
+                                    <UserEducationSection education={profile.education} />
+                                )}
+
+                            <UserSkillsSection skills={profile?.skills} />
+
+                            {(profile?.cvUrl || profile?.portfolioUrl) && (
+                                <UserDownloadableFilesSection cvUrl={profile.cvUrl} portfolioUrl={profile.portfolioUrl} />
+                            )}
+                            <UserSocialSection social={profile?.social} />
                         </>
                     )}
-                    <UserSkillsSection skills={profile?.skills} />
-                    <UserSocialSection social={profile?.social} />
                 </div>
 
                 <div className={`user-profile-right-content ${activeTab === 'publicaciones' || activeTab === 'ofertas' ? 'active' : ''}`}>
                     {isCompany ? (
                         <>
                             <div className="company-tabs-userP">
-                                <button 
+                                <button
                                     className={`company-tab-userP ${companyRightTab === 'ofertas' ? 'active' : ''}`}
                                     onClick={() => setCompanyRightTab('ofertas')}
                                 >
                                     Ofertas de trabajo ({companyOffers.length})
                                 </button>
-                                <button 
+                                <button
                                     className={`company-tab-userP ${companyRightTab === 'publicaciones' ? 'active' : ''}`}
                                     onClick={() => setCompanyRightTab('publicaciones')}
                                 >
                                     Publicaciones ({userPosts.length})
                                 </button>
                             </div>
-                            
+
                             {companyRightTab === 'publicaciones' ? (
-                                <UserProjectsSection 
+                                <UserProjectsSection
                                     isGalleryView={isGalleryView}
                                     toggleView={toggleView}
                                     userPosts={userPosts}
@@ -350,8 +382,35 @@ const UserProfile = () => {
                                 <UserCompanyOffersSection offers={companyOffers} />
                             )}
                         </>
+                    ) : isEducationalInstitution ? (
+                        <>
+                            <div className="company-tabs-userP">
+                                <button
+                                    className={`company-tab-userP ${companyRightTab === 'ofertas' ? 'active' : ''}`}
+                                    onClick={() => setCompanyRightTab('ofertas')}
+                                >
+                                    Ofertas educativas ({companyOffers.length})
+                                </button>
+                                <button
+                                    className={`company-tab-userP ${companyRightTab === 'publicaciones' ? 'active' : ''}`}
+                                    onClick={() => setCompanyRightTab('publicaciones')}
+                                >
+                                    Publicaciones ({userPosts.length})
+                                </button>
+                            </div>
+
+                            {companyRightTab === 'publicaciones' ? (
+                                <UserProjectsSection
+                                    isGalleryView={isGalleryView}
+                                    toggleView={toggleView}
+                                    userPosts={userPosts}
+                                />
+                            ) : (
+                                <UserEducationalOffersSection offers={companyOffers} />
+                            )}
+                        </>
                     ) : (
-                        <UserProjectsSection 
+                        <UserProjectsSection
                             isGalleryView={isGalleryView}
                             toggleView={toggleView}
                             userPosts={userPosts}

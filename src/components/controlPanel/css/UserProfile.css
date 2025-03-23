@@ -264,6 +264,13 @@
     background: #2aa56f;
 }
 
+@media (min-width: 769px) {
+    .user-profile-right-content {
+      overflow-y: auto;
+      max-height: calc(100vh - 120px);
+    }
+}
+
 /* =============================== */
 /* Sección de Publicaciones (Derecha) */
 /* =============================== */

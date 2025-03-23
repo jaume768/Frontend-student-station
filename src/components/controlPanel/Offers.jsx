@@ -6,6 +6,7 @@ import './css/offers.css';
 const Offers = () => {
     const navigate = useNavigate();
     const [offers, setOffers] = useState([]);
+    const [filteredOffers, setFilteredOffers] = useState([]); // Initialize filteredOffers here
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [activeFilter, setActiveFilter] = useState('all');
@@ -19,9 +20,14 @@ const Offers = () => {
     useEffect(() => {
         const fetchOffers = async () => {
             try {
+                setLoading(true);
                 const backendUrl = import.meta.env.VITE_BACKEND_URL;
                 const response = await axios.get(`${backendUrl}/api/offers?status=accepted`);
-                setOffers(response.data.offers || []);
+                const sortedOffers = response.data.offers.sort((a, b) => 
+                    new Date(b.publicationDate) - new Date(a.publicationDate)
+                );
+                setOffers(sortedOffers);
+                setFilteredOffers(sortedOffers); // Update filteredOffers here
             } catch (error) {
                 console.error('Error cargando ofertas:', error);
                 setError('No se pudieron cargar las ofertas');
@@ -42,7 +48,7 @@ const Offers = () => {
     };
 
     // Aplicar filtros a las ofertas
-    const filteredOffers = offers.filter(offer => {
+    const filteredOffersList = filteredOffers.filter(offer => {
         // Filtro por botones principales
         if (activeFilter === 'internship' && offer.jobType !== 'Prácticas') return false;
         
@@ -239,13 +245,13 @@ const Offers = () => {
                 </div>
 
                 <div className="offers-grid">
-                    {filteredOffers.length === 0 ? (
+                    {filteredOffersList.length === 0 ? (
                         <div className="no-offers-message">
                             <i className="fas fa-search"></i>
                             <p>No se encontraron ofertas con los filtros seleccionados</p>
                         </div>
                     ) : (
-                        filteredOffers.map(offer => (
+                        filteredOffersList.map(offer => (
                             <div 
                                 key={offer._id}
                                 className="offer-card"
