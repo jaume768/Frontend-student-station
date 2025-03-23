@@ -351,6 +351,12 @@
     margin-bottom: 10px;
 }
 
+.success-popup-actions{
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
 .image-tags-section .tag {
     background: #01a8e9;
     color: #fff;

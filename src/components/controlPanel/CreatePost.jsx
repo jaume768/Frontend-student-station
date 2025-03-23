@@ -511,12 +511,6 @@ const CreatePost = () => {
                         <div className="success-popup">
                             <div className="success-popup-header">
                                 <h3>¡Post publicado con éxito!</h3>
-                                <button 
-                                    className="close-popup-btn"
-                                    onClick={() => setUploadSuccess(false)}
-                                >
-                                    <FaTimes />
-                                </button>
                             </div>
                             <p>Tu publicación ha sido subida correctamente y ya está disponible para toda la comunidad.</p>
                             <div className="success-popup-actions">

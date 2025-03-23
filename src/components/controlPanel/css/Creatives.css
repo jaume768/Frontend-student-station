@@ -116,7 +116,6 @@
     cursor: pointer;
     display: flex;
     flex-direction: column;
-    padding-bottom: 15px;
 }
 
 .creative-card:hover {
@@ -200,12 +199,12 @@
 
 /* Etiquetas */
 .creative-tags {
-    padding: 15px 15px 0;
+    padding: 5px 15px 0;
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
+    margin-bottom: 10px;
 }
-
 .tag-creatives {
     background-color: #f7f7f7;
     color: #666;

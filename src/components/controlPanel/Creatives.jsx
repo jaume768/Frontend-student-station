@@ -57,17 +57,23 @@ const Creatives = () => {
                 );
 
                 const newCreatives = response.data.creatives;
+                
+                // Filtrar solo creativos que tengan al menos un post
+                const filteredCreatives = newCreatives.filter(creative => creative.lastPost);
 
                 // Actualizar estado
                 setCreatives(prev => {
                     if (page === 1) {
-                        return newCreatives;
+                        return filteredCreatives;
                     } else {
-                        return [...prev, ...newCreatives];
+                        return [...prev, ...filteredCreatives];
                     }
                 });
 
-                setHasMore(newCreatives.length > 0 && page < response.data.totalPages);
+                // Ajustar hasMore basado en la cantidad de creativos filtrados
+                const originalLength = newCreatives.length;
+                const filteredLength = filteredCreatives.length;
+                setHasMore(filteredLength > 0 && originalLength > 0 && page < response.data.totalPages);
 
                 // Guardar países para filtro si es la primera página
                 if (page === 1) {
@@ -248,10 +254,9 @@ const Creatives = () => {
                             ref={isLastElement ? lastCreativeElementRef : null}
                             onClick={() => handleUserClick(creative.username)}
                         >
-                            {/* Perfil en la parte superior */}
                             <div className="creative-profile">
                                 <img
-                                    src={creative.profilePicture || "/multimedia/usuarioDefault.jpg"}
+                                    src={creative.profile && creative.profile.profilePicture ? creative.profile.profilePicture : "/multimedia/usuarioDefault.jpg"}
                                     alt={creative.username}
                                     className="profile-picture"
                                 />
@@ -265,30 +270,20 @@ const Creatives = () => {
                                     )}
                                 </div>
                             </div>
-                            
-                            {/* Imagen del post en el medio */}
-                            <div className="creative-post-image">
-                                {creative.lastPost ? (
-                                    <img
-                                        src={creative.lastPost.mainImage}
-                                        alt={creative.lastPost.title || "Proyecto creativo"}
-                                    />
-                                ) : (
-                                    <div className="no-post-placeholder">
-                                        <span>Sin proyectos</span>
-                                    </div>
-                                )}
-                            </div>
-                            
-                            {/* Etiquetas en la parte inferior */}
                             <div className="creative-tags">
-                                {creative.professionalAreas && creative.professionalAreas.length > 0 ? (
-                                    creative.professionalAreas.slice(0, 3).map((area, idx) => (
-                                        <span key={idx} className="tag-creatives">{area}</span>
+                                {creative.skills && creative.skills.length > 0 ? (
+                                    creative.skills.slice(0, 3).map((skill, idx) => (
+                                        <span key={idx} className="tag-creatives">{skill}</span>
                                     ))
                                 ) : (
-                                    <span className="tag-creatives">Fotografía</span>
+                                    <span className="tag-creatives">Sin habilidades</span>
                                 )}
+                            </div>
+                            <div className="creative-post-image">
+                                <img
+                                    src={creative.lastPost.mainImage}
+                                    alt={creative.lastPost.title || "Proyecto creativo"}
+                                />
                             </div>
                         </div>
                     );
@@ -299,6 +294,13 @@ const Creatives = () => {
 
     return (
         <div className="creatives-container">
+            <div className="offers-header">
+                <h1>Creativos</h1>
+                <p className="offers-description">
+                    Descubre los nuevos talentos de la industria de la moda. Usa los filtros para descubrir perfiles según
+                    tus estudios, ciudad, especialización, disponibilidad para prácticas, colaboraciones y más.
+                </p>
+            </div>
             <div className="creatives-content">
                 <aside className="creatives-sidebar">
                     {renderFilters()}

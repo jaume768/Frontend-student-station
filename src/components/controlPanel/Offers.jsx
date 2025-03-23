@@ -105,7 +105,7 @@ const Offers = () => {
                         className={`offer-filter-tab ${activeFilter === 'all' ? 'offer-active' : ''}`}
                         onClick={() => handleFilterChange('all')}
                     >
-                        Todos (#{offers.length})
+                        Todos
                     </button>
                     <button 
                         className={`offer-filter-tab ${activeFilter === 'internship' ? 'offer-active' : ''}`}
