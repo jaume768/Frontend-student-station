@@ -16,6 +16,7 @@ import Creatives from '../components/controlPanel/Creatives';
 import Explorer from '../components/controlPanel/Explorer';
 import Offers from '../components/controlPanel/Offers';
 import ViewOffer from '../components/controlPanel/ViewOffer';
+import JobOfferDetail from '../components/controlPanel/JobOfferDetail';
 import './css/control-panel.css';
 
 const ControlPanel = () => {
@@ -66,6 +67,7 @@ const ControlPanel = () => {
                 <Route path="explorer" element={<Explorer />} />
                 <Route path="offers" element={<Offers />} />
                 <Route path="offers/:offerId" element={<Offers />} />
+                <Route path="JobOfferDetail/:offerId" element={<JobOfferDetail />} />
                 <Route path="creatives" element={<Creatives />} />
                 <Route path="fashion" element={<ProtectedRoute><div><h1>Contenido de Estudiar Moda</h1></div></ProtectedRoute>} />
                 <Route path="blog" element={<ProtectedRoute><div><h1>Contenido de Blog</h1></div></ProtectedRoute>} />

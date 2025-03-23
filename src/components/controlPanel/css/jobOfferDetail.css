@@ -1,0 +1,272 @@
+/* Contenedor principal */
+.job-offer-detail-container-jobdetail {
+    background-color: white;
+    width: 70%;
+    margin: auto;
+    min-height: calc(100vh - 80px);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Cabecera con banner */
+.job-offer-header-jobdetail {
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.job-offer-banner-jobdetail {
+    width: 100%;
+    height: 250px;
+    overflow: hidden;
+    position: relative;
+}
+
+.banner-image-jobdetail {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Título y sección de empresa */
+.job-offer-title-section-jobdetail {
+    padding: 16px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.job-offer-title-row-jobdetail {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.job-offer-position-jobdetail {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
+    color: #333;
+}
+
+.urgent-label-jobdetail {
+    background-color: #ff4d4d;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+}
+
+.job-offer-company-name-jobdetail {
+    font-size: 16px;
+    font-weight: 500;
+    color: #666;
+}
+
+/* Información principal de la oferta */
+.job-offer-main-info-jobdetail {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 16px 24px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+}
+
+.job-offer-info-left-jobdetail,
+.job-offer-info-right-jobdetail {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.job-offer-metadata-jobdetail {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.metadata-tag-jobdetail {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #666;
+}
+
+.metadata-tag-jobdetail i {
+    font-size: 16px;
+    color: #333;
+}
+
+.job-offer-publication-date-jobdetail {
+    font-size: 14px;
+    color: #999;
+}
+
+/* Botón de aplicar */
+.apply-button-jobdetail {
+    background-color: #ff5722;
+    color: #fff;
+    padding: 10px 24px;
+    border-radius: 24px;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.apply-button-jobdetail:hover {
+    background-color: #e64a19;
+}
+
+/* Contenido principal (descripciones, funciones, etc.) */
+.job-offer-content-jobdetail {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.job-section-jobdetail {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.section-title-jobdetail {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.rich-text-jobdetail {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #333;
+    white-space: pre-line;
+}
+
+/* Hard y Soft Skills */
+.tags-container-jobdetail {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.skill-tag-jobdetail {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.hard-skill-jobdetail {
+    background-color: #e1f5fe;
+    color: #0277bd;
+}
+
+.soft-skill-jobdetail {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+/* Oferta externa */
+.external-link-button-jobdetail {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #f5f5f5;
+    color: #333;
+    padding: 10px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.external-link-button-jobdetail:hover {
+    background-color: #e0e0e0;
+}
+
+/* Botón de volver */
+.back-button-jobdetail {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    color: #333;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: auto;
+    padding: 8px;
+    border-radius: 4px;
+    align-self: flex-start;
+}
+
+.back-button-jobdetail:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Loading y error */
+.job-offer-loading-jobdetail,
+.job-offer-error-jobdetail {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px;
+    text-align: center;
+    color: #666;
+}
+
+.job-offer-loading-jobdetail i {
+    font-size: 24px;
+    margin-bottom: 16px;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .job-offer-banner-jobdetail {
+        height: 180px;
+    }
+
+    .job-offer-title-row-jobdetail {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .job-offer-main-info-jobdetail {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .job-offer-metadata-jobdetail {
+        gap: 8px;
+    }
+
+    .metadata-tag-jobdetail {
+        gap: 4px;
+    }
+}

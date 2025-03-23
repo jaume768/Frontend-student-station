@@ -110,9 +110,6 @@ const CompanyOffersSection = ({ offers = [] }) => {
                             <Link to={`/ControlPanel/offer/${offer._id}`} className="view-offer-button-company">
                                 Ver detalles
                             </Link>
-                            <Link to={`/ControlPanel/edit-offer/${offer._id}`} className="edit-offer-button-company">
-                                Editar
-                            </Link>
                         </div>
                     </div>
                 ))
