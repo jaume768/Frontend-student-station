@@ -37,7 +37,7 @@ const EducationalOffersSection = ({ offers = [] }) => {
 
     // Helper function to format duration
     const formatDuration = (duration) => {
-        if (!duration) return '';
+        if (!duration) return 'No especificada';
         return `${duration.value} ${duration.unit}`;
     };
 
@@ -76,41 +76,55 @@ const EducationalOffersSection = ({ offers = [] }) => {
                 </div>
             </div>
 
-            <div className="offers-list-company">
-                {filteredOffers.length === 0 ? (
-                    <div className="no-filtered-offers">
-                        No hay ofertas educativas con el filtro seleccionado
-                    </div>
-                ) : (
-                    filteredOffers.map((offer) => (
-                        <div key={offer._id} className={`offer-card-company status-${offer.status}`}>
-                            <div className="offer-status-tag">{translateStatus(offer.status)}</div>
+            {filteredOffers.length === 0 ? (
+                <div className="no-filtered-offers">
+                    <p>No hay ofertas educativas con el filtro seleccionado.</p>
+                </div>
+            ) : (
+                filteredOffers.map((offer, index) => (
+                    <div key={index} className="company-offer-item-company">
+                        <div className="offer-header-company">
                             <h3 className="offer-title-company">{offer.programName}</h3>
-                            <div className="offer-details-company">
-                                <div className="offer-detail-company">
-                                    <FaGraduationCap />
-                                    <span>{offer.studyType}</span>
-                                </div>
-                                <div className="offer-detail-company">
-                                    <FaCalendarAlt />
-                                    <span>{formatDuration(offer.duration)}</span>
-                                </div>
-                                {offer.location && offer.location.city && (
-                                    <div className="offer-detail-company">
-                                        <FaMapMarkerAlt />
-                                        <span>{`${offer.location.city}, ${offer.location.country || ''}`}</span>
-                                    </div>
-                                )}
-                            </div>
-                            <div className="offer-actions-company">
-                                <Link to={`/ControlPanel/educational-offer/${offer._id}`} className="view-offer-button-company">
-                                    Ver oferta
-                                </Link>
-                            </div>
+                            <span className={`offer-status-company status-${offer.status}`}>
+                                {translateStatus(offer.status)}
+                            </span>
                         </div>
-                    ))
-                )}
-            </div>
+
+                        <div className="offer-details-company">
+                            <div className="offer-detail-company">
+                                <FaGraduationCap className="offer-icon-company" />
+                                <span>{offer.studyType || 'Tipo no especificado'}</span>
+                            </div>
+                            
+                            <div className="offer-detail-company">
+                                <FaCalendarAlt className="offer-icon-company" />
+                                <span>{formatDuration(offer.duration)}</span>
+                            </div>
+
+                            {offer.location && offer.location.city && (
+                                <div className="offer-detail-company">
+                                    <FaMapMarkerAlt className="offer-icon-company" />
+                                    <span>{`${offer.location.city}, ${offer.location.country || ''}`}</span>
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="offer-description-company">
+                            {offer.description 
+                                ? (typeof offer.description === 'string' && offer.description.length > 120
+                                    ? `${offer.description.replace(/<[^>]*>/g, '').substring(0, 120)}...`
+                                    : offer.description.replace(/<[^>]*>/g, ''))
+                                : 'Sin descripción'}
+                        </div>
+
+                        <div className="offer-actions-company">
+                            <Link to={`/ControlPanel/educational-offer/${offer._id}`} className="view-offer-button-company">
+                                Ver detalles
+                            </Link>
+                        </div>
+                    </div>
+                ))
+            )}
         </div>
     );
 };

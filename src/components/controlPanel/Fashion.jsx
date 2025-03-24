@@ -153,123 +153,139 @@ const Fashion = () => {
                     <h2>Filtros</h2>
                     <div className="offer-filter-section">
                         <h3>Ubicación</h3>
-                        <input
-                            type="text"
-                            className="offer-filter-input"
-                            placeholder="Ej: Madrid, Barcelona..."
-                            value={filters.location}
-                            name="location"
-                            onChange={handleInputChange}
-                        />
+                        <div className="offer-search-filter">
+                            <label htmlFor="location-input">
+                                <i className="fas fa-search"></i>
+                            </label>
+                            <input
+                                id="location-input"
+                                type="text"
+                                className="offer-filter-input"
+                                placeholder="Ej: Madrid, Barcelona..."
+                                value={filters.location}
+                                name="location"
+                                onChange={handleInputChange}
+                            />
+                        </div>
                     </div>
 
                     <div className="offer-filter-section">
                         <h3>Tipo de estudio</h3>
-                        <input
-                            type="text"
-                            className="offer-filter-input"
-                            placeholder="Ej: Máster, Grado..."
-                            value={filters.studyType}
-                            name="studyType"
-                            onChange={handleInputChange}
-                        />
+                        <div className="offer-search-filter">
+                            <label htmlFor="studyType-input">
+                                <i className="fas fa-search"></i>
+                            </label>
+                            <input
+                                id="studyType-input"
+                                type="text"
+                                className="offer-filter-input"
+                                placeholder="Ej: Máster, Grado..."
+                                value={filters.studyType}
+                                name="studyType"
+                                onChange={handleInputChange}
+                            />
+                        </div>
                     </div>
 
                     <div className="offer-filter-section">
                         <h3>Modalidad</h3>
-                        <input
-                            type="text"
-                            className="offer-filter-input"
-                            placeholder="Ej: Presencial, Online..."
-                            value={filters.modality}
-                            name="modality"
-                            onChange={handleInputChange}
-                        />
+                        <div className="offer-search-filter">
+                            <label htmlFor="modality-input">
+                                <i className="fas fa-search"></i>
+                            </label>
+                            <input
+                                id="modality-input"
+                                type="text"
+                                className="offer-filter-input"
+                                placeholder="Ej: Presencial, Online..."
+                                value={filters.modality}
+                                name="modality"
+                                onChange={handleInputChange}
+                            />
+                        </div>
                     </div>
 
                     <div className="offer-filter-section">
                         <h3>Área</h3>
-                        <input
-                            type="text"
-                            className="offer-filter-input"
-                            placeholder="Ej: Diseño, Marketing..."
-                            value={filters.knowledgeArea}
-                            name="knowledgeArea"
-                            onChange={handleInputChange}
-                        />
+                        <div className="offer-search-filter">
+                            <label htmlFor="knowledgeArea-input">
+                                <i className="fas fa-search"></i>
+                            </label>
+                            <input
+                                id="knowledgeArea-input"
+                                type="text"
+                                className="offer-filter-input"
+                                placeholder="Ej: Diseño, Marketing..."
+                                value={filters.knowledgeArea}
+                                name="knowledgeArea"
+                                onChange={handleInputChange}
+                            />
+                        </div>
                     </div>
 
-                    <button onClick={handleResetFilters} className="reset-filters-button">
+                    <button onClick={handleResetFilters} className="offer-apply-filters-button">
                         <i className="fas fa-undo"></i> Limpiar filtros
                     </button>
                 </div>
 
-                <div className="offers-content">
+                <div className="offers-grid">
                     <div className="offers-results-info">
                         <span>Mostrando {filteredOffers.length} ofertas educativas</span>
                     </div>
 
-                    <div className="offers-grid">
-                        {filteredOffers.length === 0 ? (
-                            <div className="no-offers-message">
-                                <i className="fas fa-search"></i>
-                                <p>No se encontraron ofertas educativas con los filtros seleccionados</p>
-                            </div>
-                        ) : (
-                            filteredOffers.map(offer => (
-                                <div 
-                                    key={offer._id}
-                                    className="offer-card"
-                                    onClick={() => handleOfferClick(offer)}
-                                >
-                                    <div className="offer-card-header">
-                                        <div className="offer-company-logo-container">
-                                            <img 
-                                                src={offer.banner || "/multimedia/education-default.png"} 
-                                                alt={offer.programName}
-                                                className="offer-company-logo"
-                                            />
-                                        </div>
-                                        <div className="offer-card-title">
-                                            <h3>{offer.programName}</h3>
-                                            <p className="offer-company-name">{offer.studyType}</p>
-                                        </div>
+                    {filteredOffers.length === 0 ? (
+                        <div className="no-offers-message">
+                            <i className="fas fa-search"></i>
+                            <p>No se encontraron ofertas educativas con los filtros seleccionados</p>
+                        </div>
+                    ) : (
+                        filteredOffers.map(offer => (
+                            <div 
+                                key={offer._id}
+                                className="offer-card"
+                                onClick={() => handleOfferClick(offer)}
+                            >
+                                <div className="offer-card-header">
+                                    <div className="offer-company-logo-container">
+                                        <img 
+                                            src={offer.banner || "/multimedia/education-default.png"} 
+                                            alt={offer.programName}
+                                            className="offer-company-logo"
+                                        />
                                     </div>
-                                    
-                                    <div className="offer-card-tags">
-                                        <div className="offer-tag offer-job-type">
-                                            <span>Duración</span>
-                                            <p>{formatDuration(offer.duration)}</p>
-                                        </div>
-                                        <div className="offer-tag offer-location">
-                                            <span>Ubicación</span>
-                                            <p>{offer.location?.city || 'No especificada'}</p>
-                                        </div>
-                                        <div className="offer-tag offer-post-type">
-                                            <span>Modalidad</span>
-                                            <p>{offer.modality || 'No especificada'}</p>
-                                        </div>
-                                    </div>
-                                    
-                                    <div className="offer-card-description">
-                                        <p>{offer.description ? (
-                                            offer.description.replace(/<[^>]*>/g, '').substring(0, 120) + '...'
-                                        ) : 'Sin descripción disponible'}</p>
-                                    </div>
-                                    
-                                    <div className="offer-card-footer">
-                                        <div className="offer-publish-date">
-                                            <i className="far fa-calendar-alt"></i>
-                                            <span>Publicado: {formatDate(offer.publicationDate)}</span>
-                                        </div>
-                                        <button className="offer-details-button">
-                                            Ver detalles <i className="fas fa-arrow-right"></i>
-                                        </button>
+                                    <div className="offer-card-title">
+                                        <h3>{offer.programName}</h3>
+                                        <p className="offer-company-name">{offer.studyType}</p>
                                     </div>
                                 </div>
-                            ))
-                        )}
-                    </div>
+                                
+                                <div className="offer-card-tags">
+                                    <div className="offer-tag">
+                                        <span>Duración</span>
+                                        <p>{formatDuration(offer.duration)}</p>
+                                    </div>
+                                    <div className="offer-tag">
+                                        <span>Ubicación</span>
+                                        <p>{offer.location?.city || 'No especificada'}</p>
+                                    </div>
+                                    <div className="offer-tag">
+                                        <span>Modalidad</span>
+                                        <p>{offer.modality || 'No especificada'}</p>
+                                    </div>
+                                </div>
+                                
+                                <div className="offer-card-footer">
+                                    <div className="offer-date">
+                                        <i className="far fa-calendar-alt"></i>
+                                        <span>Publicado: {formatDate(offer.publicationDate)}</span>
+                                    </div>
+                                    <button className="offer-action-button">
+                                        Ver detalles
+                                    </button>
+                                </div>
+                            </div>
+                        ))
+                    )}
                 </div>
             </div>
         </div>
