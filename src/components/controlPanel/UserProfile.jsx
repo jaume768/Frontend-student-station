@@ -82,23 +82,61 @@ const UserProfile = () => {
         const fetchUserPosts = async () => {
             try {
                 setPostsLoading(true);
-                const token = localStorage.getItem('authToken');
-                if (!token) return;
                 const backendUrl = import.meta.env.VITE_BACKEND_URL;
-                const res = await axios.get(`${backendUrl}/api/posts/user/${username}`, {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
-                setUserPosts(res.data.posts);
+                const { data } = await axios.get(`${backendUrl}/api/posts/user/${username}`);
+                setUserPosts(data);
                 setPostsLoading(false);
             } catch (error) {
                 console.error("Error al cargar las publicaciones del usuario", error);
-                setUserPosts([]);
                 setPostsLoading(false);
+            }
+        };
+
+        const fetchCompanyOffers = async () => {
+            try {
+                const backendUrl = import.meta.env.VITE_BACKEND_URL;
+                const { data } = await axios.get(`${backendUrl}/api/offers/user/${username}`);
+                setCompanyOffers(data);
+            } catch (error) {
+                console.error("Error al cargar las ofertas de trabajo", error);
+            }
+        };
+        
+        // Nueva función para obtener ofertas educativas
+        const fetchEducationalOffers = async () => {
+            try {
+                const backendUrl = import.meta.env.VITE_BACKEND_URL;
+                console.log("Fetching educational offers for user:", username);
+                const { data } = await axios.get(`${backendUrl}/api/offers/educational/user/${username}`);
+                setCompanyOffers(data); // Usamos el mismo estado para ofertas educativas
+            } catch (error) {
+                console.error("Error al cargar las ofertas educativas", error);
             }
         };
 
         fetchUserProfile();
         fetchUserPosts();
+        
+        // Verificamos qué tipo de ofertas debemos cargar según el tipo de usuario
+        const checkUserTypeAndFetchOffers = async () => {
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) return;
+                const backendUrl = import.meta.env.VITE_BACKEND_URL;
+                const headers = { Authorization: `Bearer ${token}` };
+                const res = await axios.get(`${backendUrl}/api/users/profile/${username}`, { headers });
+                
+                if (res.data.professionalType === 4) {
+                    fetchEducationalOffers();
+                } else if ([1, 2, 3].includes(res.data.professionalType)) {
+                    fetchCompanyOffers();
+                }
+            } catch (error) {
+                console.error("Error al verificar tipo de usuario", error);
+            }
+        };
+        
+        checkUserTypeAndFetchOffers();
     }, [username]);
 
     useEffect(() => {
@@ -111,7 +149,7 @@ const UserProfile = () => {
                 let endpoint = `${backendUrl}/api/users/${profile._id}/offers`;
                 
                 if (isEducationalInstitution) {
-                    endpoint = `${backendUrl}/api/users/${profile._id}/educational-offers`;
+                    endpoint = `${backendUrl}/api/offers/educational/user/${username}`;
                 }
                 
                 const res = await axios.get(endpoint);

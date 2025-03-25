@@ -96,7 +96,7 @@ const MiPerfil = () => {
                     const token = localStorage.getItem('authToken');
                     if (!token) return;
                     const backendUrl = import.meta.env.VITE_BACKEND_URL;
-                    const res = await axios.get(`${backendUrl}/api/offers/educational-offers/user`, {
+                    const res = await axios.get(`${backendUrl}/api/offers/educational/user/${profile.username}`, {
                         headers: { Authorization: `Bearer ${token}` },
                     });
                     setEducationalOffers(res.data.offers || []);
