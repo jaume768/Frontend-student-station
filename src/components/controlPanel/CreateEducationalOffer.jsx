@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -7,72 +7,121 @@ import './css/create-educational-offer.css';
 const CreateEducationalOffer = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
+        institutionName: '',
         programName: '',
         studyType: '',
-        knowledgeArea: '',
-        modality: '',
-        durationValue: '',
-        durationUnit: 'meses',
-        startDate: '',
-        endDate: '',
         city: '',
         country: '',
-        address: '',
-        price: '',
-        currency: 'EUR',
-        requirements: [],
+        educationType: '',
+        modality: '',
+        morningSchedule: false,
+        duration: '',
+        credits: '',
+        internships: false,
+        erasmus: false,
+        bilingualEducation: false,
+        enrollmentStartDate: '',
+        enrollmentStartMonth: '',
+        enrollmentEndDate: '',
+        enrollmentEndMonth: '',
+        schoolYearStartMonth: '',
+        schoolYearEndMonth: '',
+        websiteUrl: '',
         description: '',
-        schedule: '',
-        language: '',
-        availableSeats: '',
-        facebook: '',
-        instagram: '',
-        twitter: '',
-        linkedin: '',
-        website: ''
+        requirements: []
     });
 
     const [files, setFiles] = useState({
-        banner: null,
-        gallery: [],
-        brochure: null
+        headerImage: null
     });
 
     const [loading, setLoading] = useState(false);
+    const [errors, setErrors] = useState({});
     const [newRequirement, setNewRequirement] = useState('');
 
+    // Validación de campos al cambiar
+    useEffect(() => {
+        validateForm();
+    }, [formData]);
+
+    const validateForm = () => {
+        const newErrors = {};
+        
+        // Validaciones básicas
+        if (formData.institutionName && formData.institutionName.length > 100) {
+            newErrors.institutionName = 'El nombre de la institución no puede exceder los 100 caracteres';
+        }
+        
+        if (formData.programName && formData.programName.length > 100) {
+            newErrors.programName = 'El título no puede exceder los 100 caracteres';
+        }
+        
+        if (formData.websiteUrl && !/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/.test(formData.websiteUrl)) {
+            newErrors.websiteUrl = 'Por favor, introduce una URL válida';
+        }
+        
+        if (formData.duration && (isNaN(formData.duration) || parseInt(formData.duration) <= 0)) {
+            newErrors.duration = 'La duración debe ser un número positivo';
+        }
+        
+        if (formData.credits && (isNaN(formData.credits) || parseInt(formData.credits) <= 0)) {
+            newErrors.credits = 'Los créditos deben ser un número positivo';
+        }
+        
+        // Validaciones de fechas
+        if (formData.enrollmentStartDate && formData.enrollmentEndDate) {
+            const startDate = new Date(formData.enrollmentStartDate);
+            const endDate = new Date(formData.enrollmentEndDate);
+            
+            if (startDate > endDate) {
+                newErrors.enrollmentDates = 'La fecha de inicio no puede ser posterior a la fecha de finalización';
+            }
+        }
+        
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
     const handleInputChange = (e) => {
-        const { name, value } = e.target;
+        const { name, value, type, checked } = e.target;
         setFormData(prev => ({
             ...prev,
-            [name]: value
+            [name]: type === 'checkbox' ? checked : value
         }));
     };
 
     const handleFileChange = (e) => {
         const { name, files: fileList } = e.target;
-        if (name === 'gallery') {
+        if (fileList && fileList[0]) {
+            // Validar tamaño y tipo de archivo
+            const file = fileList[0];
+            const maxSize = 5 * 1024 * 1024; // 5MB
+            const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+            
+            if (file.size > maxSize) {
+                toast.error('El archivo es demasiado grande. Máximo 5MB permitido.');
+                return;
+            }
+            
+            if (!allowedTypes.includes(file.type)) {
+                toast.error('Tipo de archivo no permitido. Solo se aceptan JPG, PNG y GIF.');
+                return;
+            }
+            
             setFiles(prev => ({
                 ...prev,
-                [name]: [...prev[name], ...fileList]
-            }));
-        } else {
-            setFiles(prev => ({
-                ...prev,
-                [name]: fileList[0]
+                [name]: file
             }));
         }
     };
 
-    const handleRemoveGalleryImage = (index) => {
-        setFiles(prev => ({
-            ...prev,
-            gallery: prev.gallery.filter((_, i) => i !== index)
-        }));
-    };
-
     const addRequirement = () => {
         if (newRequirement.trim()) {
+            if (formData.requirements.length >= 10) {
+                toast.warning('Máximo 10 requisitos permitidos');
+                return;
+            }
+            
             setFormData(prev => ({
                 ...prev,
                 requirements: [...prev.requirements, newRequirement.trim()]
@@ -90,48 +139,72 @@ const CreateEducationalOffer = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        // Validación final antes de enviar
+        if (!validateForm()) {
+            toast.error('Por favor, corrige los errores antes de continuar');
+            return;
+        }
+        
         setLoading(true);
 
         try {
             const formDataToSend = new FormData();
 
-            // Añadir todos los campos del formulario
+            // Añadir todos los campos del formulario que no estén vacíos
             Object.keys(formData).forEach(key => {
                 if (key === 'requirements') {
                     formDataToSend.append(key, JSON.stringify(formData[key]));
-                } else if (formData[key]) {
+                } else if (formData[key] !== '' && formData[key] !== null && formData[key] !== undefined) {
                     formDataToSend.append(key, formData[key]);
                 }
             });
 
             // Añadir archivos
-            if (files.banner) {
-                formDataToSend.append('banner', files.banner);
-            }
-            files.gallery.forEach(file => {
-                formDataToSend.append('gallery', file);
-            });
-            if (files.brochure) {
-                formDataToSend.append('brochure', files.brochure);
+            if (files.headerImage) {
+                formDataToSend.append('headerImage', files.headerImage);
             }
 
             const backendUrl = import.meta.env.VITE_BACKEND_URL;
+            const token = localStorage.getItem('authToken');
+            
+            if (!token) {
+                throw new Error('No estás autenticado');
+            }
+            
             const response = await axios.post(
                 `${backendUrl}/api/offers/educational`,
                 formDataToSend,
                 {
                     headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+                        'Authorization': `Bearer ${token}`,
                         'Content-Type': 'multipart/form-data'
-                    }
+                    },
+                    timeout: 30000 // 30 segundos de timeout
                 }
             );
 
             toast.success('Oferta educativa creada con éxito');
-            navigate('/ControlPanel/offers');
+            navigate('/ControlPanel/fashion');
         } catch (error) {
             console.error('Error al crear la oferta educativa:', error);
-            toast.error(error.response?.data?.message || 'Error al crear la oferta educativa');
+            
+            if (error.response) {
+                // Errores específicos del servidor
+                const errorMessage = error.response.data?.message || 'Error al crear la oferta educativa';
+                toast.error(errorMessage);
+                
+                // Si hay errores de validación del servidor, mostrarlos
+                if (error.response.data?.errors) {
+                    setErrors(prev => ({...prev, ...error.response.data.errors}));
+                }
+            } else if (error.request) {
+                // Error de conexión
+                toast.error('No se pudo conectar con el servidor. Verifica tu conexión a internet.');
+            } else {
+                // Otros errores
+                toast.error('Error al crear la oferta educativa');
+            }
         } finally {
             setLoading(false);
         }
@@ -139,61 +212,122 @@ const CreateEducationalOffer = () => {
 
     return (
         <div className="create-educational-offer">
-            <h2>Crear Oferta Educativa</h2>
+            <h2>Publica una oferta educativa</h2>
             <form onSubmit={handleSubmit}>
-                <div className="form-section-educational">
-                    <h3>Información Básica</h3>
-                    <div className="form-group">
-                        <label htmlFor="programName">Nombre del Programa *</label>
+                {/* Sección para imagen de cabecera */}
+                <div className="create-educational-header-image-section">
+                    <div className="create-educational-header-image-upload">
+                        <label htmlFor="headerImage" className="create-educational-upload-label">
+                            <div className="create-educational-upload-icon">
+                                <i className="fas fa-arrow-up"></i>
+                            </div>
+                            <span>Sube tu imagen de cabecera</span>
+                        </label>
                         <input
-                            type="text"
-                            id="programName"
-                            name="programName"
-                            value={formData.programName}
-                            onChange={handleInputChange}
-                            required
+                            type="file"
+                            id="headerImage"
+                            name="headerImage"
+                            accept="image/*"
+                            onChange={handleFileChange}
+                            className="create-educational-file-input"
                         />
                     </div>
-
-                    <div className="form-row">
-                        <div className="form-group">
-                            <label htmlFor="studyType">Tipo de Estudio *</label>
-                            <select
-                                id="studyType"
-                                name="studyType"
-                                value={formData.studyType}
-                                onChange={handleInputChange}
-                                required
-                            >
-                                <option value="">Seleccionar...</option>
-                                <option value="Grado">Grado</option>
-                                <option value="Máster">Máster</option>
-                                <option value="Curso">Curso</option>
-                                <option value="Certificación">Certificación</option>
-                                <option value="Taller">Taller</option>
-                                <option value="Diplomado">Diplomado</option>
-                            </select>
+                    {files.headerImage && (
+                        <div className="create-educational-header-image-preview">
+                            <img src={URL.createObjectURL(files.headerImage)} alt="Vista previa" />
                         </div>
+                    )}
+                </div>
+                
+                {/* Información institucional */}
+                <div className="create-educational-form-field">
+                    <label htmlFor="institutionName">Nombre de la Institución</label>
+                    <input
+                        type="text"
+                        id="institutionName"
+                        name="institutionName"
+                        value={formData.institutionName}
+                        onChange={handleInputChange}
+                        required
+                        placeholder="Nombre de la institución académica"
+                    />
+                    {errors.institutionName && <span className="create-educational-error-message">{errors.institutionName}</span>}
+                </div>
 
-                        <div className="form-group">
-                            <label htmlFor="knowledgeArea">Área de Conocimiento *</label>
+                {/* Título del programa */}
+                <div className="create-educational-form-field">
+                    <label htmlFor="programName" className="create-educational-form-title">Título de la formación</label>
+                    <input
+                        type="text"
+                        id="programName"
+                        name="programName"
+                        value={formData.programName}
+                        onChange={handleInputChange}
+                        required
+                        placeholder="Nombre de la formación. Ejemplo: Artesanía Contemporánea"
+                        className="create-educational-large-input"
+                    />
+                    {errors.programName && <span className="create-educational-error-message">{errors.programName}</span>}
+                    <small>Introduce el nombre de la formación sin incluir palabras como "Grado Superior" o "Máster"</small>
+                </div>
+
+                {/* Especificaciones */}
+                <div className="create-educational-form-section">
+                    <h3>Especificaciones</h3>
+                    
+                    <div className="create-educational-form-row">
+                        <div className="create-educational-form-field">
+                            <label htmlFor="city">Ubicación</label>
                             <input
                                 type="text"
-                                id="knowledgeArea"
-                                name="knowledgeArea"
-                                value={formData.knowledgeArea}
+                                id="city"
+                                name="city"
+                                value={formData.city}
                                 onChange={handleInputChange}
+                                placeholder="Ciudad"
+                                required
+                            />
+                        </div>
+                        <div className="create-educational-form-field">
+                            <label htmlFor="country">&nbsp;</label>
+                            <input
+                                type="text"
+                                id="country"
+                                name="country"
+                                value={formData.country}
+                                onChange={handleInputChange}
+                                placeholder="País"
                                 required
                             />
                         </div>
                     </div>
+                    
+                    <div className="create-educational-form-field">
+                        <label htmlFor="educationType">Tipo de Educación</label>
+                        <select
+                            id="educationType"
+                            name="educationType"
+                            value={formData.educationType}
+                            onChange={handleInputChange}
+                            required
+                        >
+                            <option value="">Seleccionar...</option>
+                            <option value="Grado Superior">Grado Superior</option>
+                            <option value="Máster">Máster</option>
+                            <option value="Grado">Grado</option>
+                            <option value="Curso">Curso</option>
+                            <option value="Certificación">Certificación</option>
+                        </select>
+                    </div>
                 </div>
 
-                <div className="form-section-educational">
-                    <h3>Modalidad y Duración</h3>
-                    <div className="form-row">
-                        <div className="form-group">
-                            <label htmlFor="modality">Modalidad *</label>
+                {/* Formación */}
+                <div className="create-educational-form-section">
+                    <h3>Formación</h3>
+                    
+                    <div className="create-educational-form-row">
+                        <div className="create-educational-form-field">
+                            <label htmlFor="modality">Presencial</label>
                             <select
                                 id="modality"
                                 name="modality"
@@ -207,324 +341,256 @@ const CreateEducationalOffer = () => {
                                 <option value="Híbrida">Híbrida</option>
                             </select>
                         </div>
-
-                        <div className="form-group">
-                            <label htmlFor="durationValue">Duración *</label>
-                            <div className="duration-input">
-                                <input
-                                    type="number"
-                                    id="durationValue"
-                                    name="durationValue"
-                                    value={formData.durationValue}
-                                    onChange={handleInputChange}
-                                    required
-                                />
-                                <select
-                                    name="durationUnit"
-                                    value={formData.durationUnit}
-                                    onChange={handleInputChange}
-                                >
-                                    <option value="horas">horas</option>
-                                    <option value="meses">meses</option>
-                                    <option value="años">años</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="form-row">
-                        <div className="form-group">
-                            <label htmlFor="startDate">Fecha de Inicio *</label>
+                        <div className="create-educational-form-field create-educational-checkbox-field">
+                            <label htmlFor="morningSchedule">Horario de mañana?</label>
                             <input
-                                type="date"
-                                id="startDate"
-                                name="startDate"
-                                value={formData.startDate}
-                                onChange={handleInputChange}
-                                required
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="endDate">Fecha de Fin</label>
-                            <input
-                                type="date"
-                                id="endDate"
-                                name="endDate"
-                                value={formData.endDate}
+                                type="checkbox"
+                                id="morningSchedule"
+                                name="morningSchedule"
+                                checked={formData.morningSchedule}
                                 onChange={handleInputChange}
                             />
                         </div>
                     </div>
-                </div>
-
-                {(formData.modality === 'Presencial' || formData.modality === 'Híbrida') && (
-                    <div className="form-section-educational">
-                        <h3>Ubicación</h3>
-                        <div className="form-row">
-                            <div className="form-group">
-                                <label htmlFor="city">Ciudad *</label>
-                                <input
-                                    type="text"
-                                    id="city"
-                                    name="city"
-                                    value={formData.city}
-                                    onChange={handleInputChange}
-                                    required
-                                />
-                            </div>
-
-                            <div className="form-group">
-                                <label htmlFor="country">País *</label>
-                                <input
-                                    type="text"
-                                    id="country"
-                                    name="country"
-                                    value={formData.country}
-                                    onChange={handleInputChange}
-                                    required
-                                />
-                            </div>
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="address">Dirección *</label>
-                            <input
-                                type="text"
-                                id="address"
-                                name="address"
-                                value={formData.address}
-                                onChange={handleInputChange}
-                                required
-                            />
-                        </div>
-                    </div>
-                )}
-
-                <div className="form-section-educational">
-                    <h3>Detalles del Programa</h3>
-                    <div className="form-row">
-                        <div className="form-group">
-                            <label htmlFor="price">Precio</label>
-                            <div className="price-input">
-                                <input
-                                    type="number"
-                                    id="price"
-                                    name="price"
-                                    value={formData.price}
-                                    onChange={handleInputChange}
-                                />
-                                <select
-                                    name="currency"
-                                    value={formData.currency}
-                                    onChange={handleInputChange}
-                                >
-                                    <option value="EUR">EUR</option>
-                                    <option value="USD">USD</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="availableSeats">Plazas Disponibles</label>
+                    
+                    <div className="create-educational-form-row">
+                        <div className="create-educational-form-field">
+                            <label htmlFor="duration">Duración (Años)</label>
                             <input
                                 type="number"
-                                id="availableSeats"
-                                name="availableSeats"
-                                value={formData.availableSeats}
+                                id="duration"
+                                name="duration"
+                                value={formData.duration}
+                                onChange={handleInputChange}
+                                required
+                                min="1"
+                                step="1"
+                            />
+                            {errors.duration && <span className="create-educational-error-message">{errors.duration}</span>}
+                        </div>
+                        <div className="create-educational-form-field">
+                            <label htmlFor="credits">¿Créditos?</label>
+                            <input
+                                type="number"
+                                id="credits"
+                                name="credits"
+                                value={formData.credits}
+                                onChange={handleInputChange}
+                                min="1"
+                                step="1"
+                            />
+                            {errors.credits && <span className="create-educational-error-message">{errors.credits}</span>}
+                        </div>
+                    </div>
+                    
+                    <div className="create-educational-form-row create-educational-checkbox-group">
+                        <div className="create-educational-form-field create-educational-checkbox-field">
+                            <label htmlFor="internships">¿Prácticas?</label>
+                            <input
+                                type="checkbox"
+                                id="internships"
+                                name="internships"
+                                checked={formData.internships}
+                                onChange={handleInputChange}
+                            />
+                        </div>
+                        <div className="create-educational-form-field create-educational-checkbox-field">
+                            <label htmlFor="erasmus">¿Erasmus?</label>
+                            <input
+                                type="checkbox"
+                                id="erasmus"
+                                name="erasmus"
+                                checked={formData.erasmus}
+                                onChange={handleInputChange}
+                            />
+                        </div>
+                        <div className="create-educational-form-field create-educational-checkbox-field">
+                            <label htmlFor="bilingualEducation">Educación bilingüe</label>
+                            <input
+                                type="checkbox"
+                                id="bilingualEducation"
+                                name="bilingualEducation"
+                                checked={formData.bilingualEducation}
                                 onChange={handleInputChange}
                             />
                         </div>
                     </div>
+                </div>
 
-                    <div className="form-row">
-                        <div className="form-group">
-                            <label htmlFor="schedule">Horario *</label>
-                            <select
-                                id="schedule"
-                                name="schedule"
-                                value={formData.schedule}
+                {/* Plazo de matriculación */}
+                <div className="create-educational-form-section">
+                    <h3>Plazo de matriculación</h3>
+                    
+                    <div className="create-educational-form-row">
+                        <div className="create-educational-form-field">
+                            <label htmlFor="enrollmentStartDate">Día de inicio</label>
+                            <input
+                                type="number"
+                                id="enrollmentStartDate"
+                                name="enrollmentStartDate"
+                                value={formData.enrollmentStartDate}
                                 onChange={handleInputChange}
-                                required
+                                placeholder="Día"
+                                min="1"
+                                max="31"
+                            />
+                        </div>
+                        <div className="create-educational-form-field">
+                            <label htmlFor="enrollmentStartMonth">Mes</label>
+                            <select
+                                id="enrollmentStartMonth"
+                                name="enrollmentStartMonth"
+                                value={formData.enrollmentStartMonth}
+                                onChange={handleInputChange}
                             >
                                 <option value="">Seleccionar...</option>
-                                <option value="mañana">Mañana</option>
-                                <option value="tarde">Tarde</option>
-                                <option value="noche">Noche</option>
-                                <option value="fin de semana">Fin de semana</option>
+                                <option value="Enero">Enero</option>
+                                <option value="Febrero">Febrero</option>
+                                <option value="Marzo">Marzo</option>
+                                <option value="Abril">Abril</option>
+                                <option value="Mayo">Mayo</option>
+                                <option value="Junio">Junio</option>
+                                <option value="Julio">Julio</option>
+                                <option value="Agosto">Agosto</option>
+                                <option value="Septiembre">Septiembre</option>
+                                <option value="Octubre">Octubre</option>
+                                <option value="Noviembre">Noviembre</option>
+                                <option value="Diciembre">Diciembre</option>
                             </select>
                         </div>
-
-                        <div className="form-group">
-                            <label htmlFor="language">Idioma de Impartición *</label>
+                    </div>
+                    
+                    <div className="create-educational-form-row">
+                        <div className="create-educational-form-field">
+                            <label htmlFor="enrollmentEndDate">Día de finalización</label>
                             <input
-                                type="text"
-                                id="language"
-                                name="language"
-                                value={formData.language}
+                                type="number"
+                                id="enrollmentEndDate"
+                                name="enrollmentEndDate"
+                                value={formData.enrollmentEndDate}
                                 onChange={handleInputChange}
-                                required
+                                placeholder="Día"
+                                min="1"
+                                max="31"
                             />
+                        </div>
+                        <div className="create-educational-form-field">
+                            <label htmlFor="enrollmentEndMonth">Mes</label>
+                            <select
+                                id="enrollmentEndMonth"
+                                name="enrollmentEndMonth"
+                                value={formData.enrollmentEndMonth}
+                                onChange={handleInputChange}
+                            >
+                                <option value="">Seleccionar...</option>
+                                <option value="Enero">Enero</option>
+                                <option value="Febrero">Febrero</option>
+                                <option value="Marzo">Marzo</option>
+                                <option value="Abril">Abril</option>
+                                <option value="Mayo">Mayo</option>
+                                <option value="Junio">Junio</option>
+                                <option value="Julio">Julio</option>
+                                <option value="Agosto">Agosto</option>
+                                <option value="Septiembre">Septiembre</option>
+                                <option value="Octubre">Octubre</option>
+                                <option value="Noviembre">Noviembre</option>
+                                <option value="Diciembre">Diciembre</option>
+                            </select>
+                        </div>
+                    </div>
+                    {errors.enrollmentDates && <span className="create-educational-error-message">{errors.enrollmentDates}</span>}
+                </div>
+                
+                {/* Año escolar */}
+                <div className="create-educational-form-section">
+                    <h3>Año escolar</h3>
+                    
+                    <div className="create-educational-form-row">
+                        <div className="create-educational-form-field">
+                            <label htmlFor="schoolYearStartMonth">Mes de inicio</label>
+                            <select
+                                id="schoolYearStartMonth"
+                                name="schoolYearStartMonth"
+                                value={formData.schoolYearStartMonth}
+                                onChange={handleInputChange}
+                            >
+                                <option value="">Seleccionar...</option>
+                                <option value="Enero">Enero</option>
+                                <option value="Febrero">Febrero</option>
+                                <option value="Marzo">Marzo</option>
+                                <option value="Abril">Abril</option>
+                                <option value="Mayo">Mayo</option>
+                                <option value="Junio">Junio</option>
+                                <option value="Julio">Julio</option>
+                                <option value="Agosto">Agosto</option>
+                                <option value="Septiembre">Septiembre</option>
+                                <option value="Octubre">Octubre</option>
+                                <option value="Noviembre">Noviembre</option>
+                                <option value="Diciembre">Diciembre</option>
+                            </select>
+                        </div>
+                        <div className="create-educational-form-field">
+                            <label htmlFor="schoolYearEndMonth">Mes de finalización</label>
+                            <select
+                                id="schoolYearEndMonth"
+                                name="schoolYearEndMonth"
+                                value={formData.schoolYearEndMonth}
+                                onChange={handleInputChange}
+                            >
+                                <option value="">Seleccionar...</option>
+                                <option value="Enero">Enero</option>
+                                <option value="Febrero">Febrero</option>
+                                <option value="Marzo">Marzo</option>
+                                <option value="Abril">Abril</option>
+                                <option value="Mayo">Mayo</option>
+                                <option value="Junio">Junio</option>
+                                <option value="Julio">Julio</option>
+                                <option value="Agosto">Agosto</option>
+                                <option value="Septiembre">Septiembre</option>
+                                <option value="Octubre">Octubre</option>
+                                <option value="Noviembre">Noviembre</option>
+                                <option value="Diciembre">Diciembre</option>
+                            </select>
                         </div>
                     </div>
                 </div>
-
-                <div className="form-section-educational">
-                    <h3>Requisitos</h3>
-                    <div className="requirements-input">
+                
+                {/* Página web */}
+                <div className="create-educational-form-section">
+                    <h3>Página web donde ampliar información</h3>
+                    <div className="create-educational-form-field">
                         <input
-                            type="text"
-                            value={newRequirement}
-                            onChange={(e) => setNewRequirement(e.target.value)}
-                            placeholder="Añadir requisito..."
+                            type="url"
+                            id="websiteUrl"
+                            name="websiteUrl"
+                            value={formData.websiteUrl}
+                            onChange={handleInputChange}
+                            placeholder="Escribe aquí tu enlace"
                         />
-                        <button type="button" onClick={addRequirement}>
-                            Añadir
-                        </button>
-                    </div>
-                    <div className="requirements-list">
-                        {formData.requirements.map((req, index) => (
-                            <div key={index} className="requirement-item">
-                                <span>{req}</span>
-                                <button type="button" onClick={() => removeRequirement(index)}>
-                                    ×
-                                </button>
-                            </div>
-                        ))}
+                        {errors.websiteUrl && <span className="create-educational-error-message">{errors.websiteUrl}</span>}
                     </div>
                 </div>
-
-                <div className="form-section-educational">
+                
+                {/* Descripción y requisitos (opcional) */}
+                <div className="create-educational-form-section">
                     <h3>Descripción</h3>
-                    <div className="form-group">
+                    <div className="create-educational-form-field">
                         <textarea
                             name="description"
                             value={formData.description}
                             onChange={handleInputChange}
-                            required
-                            rows="6"
+                            rows="4"
+                            placeholder="Describe brevemente esta oferta educativa"
                         />
                     </div>
                 </div>
 
-                <div className="form-section-educational">
-                    <h3>Multimedia</h3>
-                    <div className="form-group">
-                        <label htmlFor="banner">Banner Principal</label>
-                        <input
-                            type="file"
-                            id="banner"
-                            name="banner"
-                            accept="image/*"
-                            onChange={handleFileChange}
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="gallery">Galería de Imágenes</label>
-                        <input
-                            type="file"
-                            id="gallery"
-                            name="gallery"
-                            accept="image/*"
-                            multiple
-                            onChange={handleFileChange}
-                        />
-                        <div className="gallery-preview">
-                            {Array.from(files.gallery).map((file, index) => (
-                                <div key={index} className="gallery-item">
-                                    <img src={URL.createObjectURL(file)} alt={`Preview ${index + 1}`} />
-                                    <button type="button" onClick={() => handleRemoveGalleryImage(index)}>
-                                        ×
-                                    </button>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="brochure">Folleto (PDF)</label>
-                        <input
-                            type="file"
-                            id="brochure"
-                            name="brochure"
-                            accept=".pdf"
-                            onChange={handleFileChange}
-                        />
-                    </div>
-                </div>
-
-                <div className="form-section-educational">
-                    <h3>Redes Sociales</h3>
-                    <div className="social-links">
-                        <div className="form-group">
-                            <label htmlFor="facebook">Facebook</label>
-                            <input
-                                type="url"
-                                id="facebook"
-                                name="facebook"
-                                value={formData.facebook}
-                                onChange={handleInputChange}
-                                placeholder="https://facebook.com/..."
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="instagram">Instagram</label>
-                            <input
-                                type="url"
-                                id="instagram"
-                                name="instagram"
-                                value={formData.instagram}
-                                onChange={handleInputChange}
-                                placeholder="https://instagram.com/..."
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="twitter">Twitter</label>
-                            <input
-                                type="url"
-                                id="twitter"
-                                name="twitter"
-                                value={formData.twitter}
-                                onChange={handleInputChange}
-                                placeholder="https://twitter.com/..."
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="linkedin">LinkedIn</label>
-                            <input
-                                type="url"
-                                id="linkedin"
-                                name="linkedin"
-                                value={formData.linkedin}
-                                onChange={handleInputChange}
-                                placeholder="https://linkedin.com/..."
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="website">Sitio Web</label>
-                            <input
-                                type="url"
-                                id="website"
-                                name="website"
-                                value={formData.website}
-                                onChange={handleInputChange}
-                                placeholder="https://..."
-                            />
-                        </div>
-                    </div>
-                </div>
-
-                <div className="form-actions">
-                    <button type="button" onClick={() => navigate(-1)} className="cancel-button">
+                <div className="create-educational-form-actions">
+                    <button type="button" onClick={() => navigate(-1)} className="create-educational-cancel-button">
                         Cancelar
                     </button>
-                    <button type="submit" className="submit-button" disabled={loading}>
-                        {loading ? 'Creando...' : 'Crear Oferta Educativa'}
+                    <button type="submit" className="create-educational-submit-button" disabled={loading}>
+                        {loading ? 'Publicando...' : 'Publicar oferta'}
                     </button>
                 </div>
             </form>

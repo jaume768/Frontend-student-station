@@ -9,7 +9,6 @@ const Blog = () => {
     const [error, setError] = useState(null);
     const [activeCategory, setActiveCategory] = useState('all');
 
-    // Lista de categorías
     const categories = [
         { id: 'all', name: 'Todos' },
         { id: 'trends', name: 'Tendencias' },
@@ -19,7 +18,6 @@ const Blog = () => {
         { id: 'business', name: 'Negocio' }
     ];
 
-    // Datos de ejemplo para el blog (normalmente vendrían de una API)
     const sampleArticles = [
         {
             id: 1,
@@ -101,7 +99,6 @@ const Blog = () => {
     ];
 
     useEffect(() => {
-        // Simulación de carga de datos de una API
         const fetchArticles = async () => {
             try {
                 setLoading(true);
@@ -124,12 +121,10 @@ const Blog = () => {
         fetchArticles();
     }, []);
 
-    // Filtrar artículos por categoría
     const filteredArticles = activeCategory === 'all' 
         ? articles 
         : articles.filter(article => article.category === activeCategory);
 
-    // Formatear fecha
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
         return new Date(dateString).toLocaleDateString('es-ES', options);

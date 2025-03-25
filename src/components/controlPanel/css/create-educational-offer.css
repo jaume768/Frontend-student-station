@@ -1,228 +1,247 @@
 .create-educational-offer {
-    max-width: 1200px;
+    max-width: 900px;
     margin: 0 auto;
-    padding: 24px;
+    padding: 20px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color: #333;
+    background-color: #f5f5f7;
 }
 
 .create-educational-offer h2 {
-    font-size: 24px;
-    color: #1a1a1a;
-    margin-bottom: 24px;
-}
-
-.form-section-educational {
-    background: white;
-    border-radius: 8px;
-    padding: 24px;
-    margin-bottom: 24px;
-    box-shadow: 0 1px 30px rgba(0, 0, 0, 0.1);
-}
-
-.form-section-educational h3 {
-    font-size: 18px;
+    font-size: 22px;
     color: #333;
-    margin-bottom: 16px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid #eee;
+    margin-bottom: 30px;
+    font-weight: 600;
+    text-align: center;
 }
 
-.form-row {
+.create-educational-offer form {
     display: flex;
-    gap: 24px;
-    margin-bottom: 16px;
+    flex-direction: column;
+    gap: 20px;
 }
 
-.form-group {
-    flex: 1;
-    margin-bottom: 16px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    color: #555;
-    font-weight: 500;
-}
-
-.form-group input[type="text"],
-.form-group input[type="number"],
-.form-group input[type="url"],
-.form-group input[type="date"],
-.form-group select,
-.form-group textarea {
-    width: 100%;
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-.form-group textarea {
-    resize: vertical;
-    min-height: 120px;
-}
-
-.duration-input,
-.price-input {
+/* Sección de imagen de cabecera */
+.create-educational-header-image-section {
     display: flex;
-    gap: 8px;
-}
-
-.duration-input input,
-.price-input input {
-    flex: 2;
-}
-
-.duration-input select,
-.price-input select {
-    flex: 1;
-}
-
-.requirements-input {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 16px;
-}
-
-.requirements-input input {
-    flex: 1;
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-.requirements-input button {
-    padding: 8px 16px;
-    background-color: #0a66c2;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.requirements-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-}
-
-.requirement-item {
-    display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 8px;
-    padding: 4px 12px;
-    background-color: #f0f2f5;
-    border-radius: 16px;
-    font-size: 14px;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-.requirement-item button {
-    background: none;
-    border: none;
-    color: #666;
-    cursor: pointer;
-    font-size: 18px;
-    padding: 0 4px;
-}
-
-.requirement-item button:hover {
-    color: #dc3545;
-}
-
-.gallery-preview {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 16px;
-    margin-top: 16px;
-}
-
-.gallery-item {
-    position: relative;
-}
-
-.gallery-item img {
-    width: 100%;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 4px;
-}
-
-.gallery-item button {
-    position: absolute;
-    top: -8px;
-    right: -8px;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background-color: #dc3545;
-    color: white;
-    border: none;
-    cursor: pointer;
+.create-educational-header-image-upload {
     display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.create-educational-upload-label {
+    display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
+    width: 100%;
+    height: 120px;
+    border: 1px dashed #ccc;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.create-educational-upload-label:hover {
+    border-color: #007bff;
+    background-color: rgba(0, 123, 255, 0.05);
+}
+
+.create-educational-upload-icon {
+    font-size: 24px;
+    color: #007bff;
+    margin-bottom: 10px;
+}
+
+.create-educational-file-input {
+    display: none;
+}
+
+.create-educational-header-image-preview {
+    width: 100%;
+    margin-top: 15px;
+}
+
+.create-educational-header-image-preview img {
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+/* Form fields */
+.create-educational-form-field {
+    margin-bottom: 15px;
+}
+
+.create-educational-form-field label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #555;
+}
+
+.create-educational-form-field input[type="text"],
+.create-educational-form-field input[type="number"],
+.create-educational-form-field input[type="url"],
+.create-educational-form-field select,
+.create-educational-form-field textarea {
+    width: 100%;
+    color: black;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: #fff;
+    transition: border-color 0.2s;
+}
+
+.create-educational-form-field input[type="text"]:focus,
+.create-educational-form-field input[type="number"]:focus,
+.create-educational-form-field input[type="url"]:focus,
+.create-educational-form-field select:focus,
+.create-educational-form-field textarea:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.create-educational-form-field.create-educational-checkbox-field {
+    display: flex;
+    align-items: center;
+}
+
+.create-educational-form-field.create-educational-checkbox-field label {
+    margin-right: 10px;
+    margin-bottom: 0;
+}
+
+.create-educational-form-field.create-educational-checkbox-field input[type="checkbox"] {
+    margin: 0;
+    width: 16px;
+    height: 16px;
+}
+
+.create-educational-form-field small {
+    display: block;
+    color: #777;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.create-educational-form-title {
+    font-size: 18px;
+    font-weight: 500;
+    color: #333;
+}
+
+.create-educational-large-input {
+    font-size: 16px !important;
+    padding: 14px !important;
+}
+
+.create-educational-error-message {
+    color: #d32f2f;
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
+}
+
+/* Form sections */
+.create-educational-form-section {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.create-educational-form-section h3 {
     font-size: 16px;
+    color: #333;
+    margin-bottom: 20px;
+    font-weight: 600;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
 }
 
-.social-links {
+.create-educational-form-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.create-educational-form-row > .create-educational-form-field {
+    flex: 1;
+}
+
+.create-educational-checkbox-group {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
 }
 
-.form-actions {
+/* Botones */
+.create-educational-form-actions {
     display: flex;
     justify-content: flex-end;
-    gap: 16px;
-    margin-top: 24px;
+    gap: 15px;
+    margin-top: 20px;
 }
 
-.cancel-button,
-.submit-button {
-    padding: 10px 24px;
-    border-radius: 4px;
-    font-size: 16px;
+.create-educational-cancel-button,
+.create-educational-submit-button {
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: all 0.2s;
 }
 
-.cancel-button {
-    background-color: white;
-    border: 1px solid #ddd;
-    color: #666;
-}
-
-.cancel-button:hover {
+.create-educational-cancel-button {
     background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    color: #555;
 }
 
-.submit-button {
-    background-color: #0a66c2;
+.create-educational-cancel-button:hover {
+    background-color: #e5e5e5;
+}
+
+.create-educational-submit-button {
+    background-color: #007bff;
     border: none;
     color: white;
 }
 
-.submit-button:hover {
-    background-color: #004182;
+.create-educational-submit-button:hover {
+    background-color: #0069d9;
 }
 
-.submit-button:disabled {
-    background-color: #ccc;
+.create-educational-submit-button:disabled {
+    background-color: #80bdff;
     cursor: not-allowed;
 }
 
+/* Responsive */
 @media (max-width: 768px) {
-    .form-row {
+    .create-educational-form-row {
         flex-direction: column;
-        gap: 16px;
+        gap: 10px;
     }
-
-    .social-links {
+    
+    .create-educational-checkbox-group {
         grid-template-columns: 1fr;
-    }
-
-    .gallery-preview {
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     }
 }

@@ -293,6 +293,10 @@
     .blog-card.featured-blog .blog-card-image-container {
         height: 200px;
     }
+    
+    .blog-container{
+        margin-bottom: 3em;
+    }
 }
 
 @media (max-width: 576px) {
