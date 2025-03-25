@@ -359,7 +359,6 @@ const UserProfile = () => {
                     ) : isEducationalInstitution ? (
                         <>
                             <UserBiographySection biography={profile?.biography} />
-                            <UserEducationSection education={profile?.education} />
                             <UserSkillsSection skills={profile?.skills} />
                             <UserSocialSection social={profile?.social} />
                             <UserEducationalOffersSection offers={profile?.educationalOffers} />
@@ -395,15 +394,15 @@ const UserProfile = () => {
                 <div className={`user-profile-right-content ${activeTab === 'publicaciones' || activeTab === 'ofertas' ? 'active' : ''}`}>
                     {isCompany ? (
                         <>
-                            <div className="company-tabs-userP">
+                            <div className="company-tabs-user-profile">
                                 <button
-                                    className={`company-tab-userP ${companyRightTab === 'ofertas' ? 'active' : ''}`}
+                                    className={`company-tab-user-profile ${companyRightTab === 'ofertas' ? 'active' : ''}`}
                                     onClick={() => setCompanyRightTab('ofertas')}
                                 >
                                     Ofertas de trabajo ({companyOffers.length})
                                 </button>
                                 <button
-                                    className={`company-tab-userP ${companyRightTab === 'publicaciones' ? 'active' : ''}`}
+                                    className={`company-tab-user-profile ${companyRightTab === 'publicaciones' ? 'active' : ''}`}
                                     onClick={() => setCompanyRightTab('publicaciones')}
                                 >
                                     Publicaciones ({userPosts.length})
@@ -422,15 +421,15 @@ const UserProfile = () => {
                         </>
                     ) : isEducationalInstitution ? (
                         <>
-                            <div className="company-tabs-userP">
+                            <div className="company-tabs-user-profile">
                                 <button
-                                    className={`company-tab-userP ${companyRightTab === 'ofertas' ? 'active' : ''}`}
+                                    className={`company-tab-user-profile ${companyRightTab === 'ofertas' ? 'active' : ''}`}
                                     onClick={() => setCompanyRightTab('ofertas')}
                                 >
                                     Ofertas educativas ({companyOffers.length})
                                 </button>
                                 <button
-                                    className={`company-tab-userP ${companyRightTab === 'publicaciones' ? 'active' : ''}`}
+                                    className={`company-tab-user-profile ${companyRightTab === 'publicaciones' ? 'active' : ''}`}
                                     onClick={() => setCompanyRightTab('publicaciones')}
                                 >
                                     Publicaciones ({userPosts.length})

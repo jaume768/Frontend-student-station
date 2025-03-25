@@ -96,7 +96,7 @@
 /* Contenedor de contenidos (perfil y publicaciones) */
 .user-profile-content {
     display: flex;
-    gap: 20px;
+    gap: 5em;
     margin-top: 20px;
 }
 
@@ -467,4 +467,266 @@
 
 .notification.hide {
     animation: slideOut 0.3s ease-in forwards;
+}
+
+/* Estilos faltantes para que UserProfile se vea igual que MiPerfil */
+
+/* Estilo para el botón de ver */
+.user-profile-view-btn {
+    background: transparent;
+    color: #38c785;
+    border: 2px solid #38c785;
+}
+
+.user-profile-view-btn:hover {
+    background: #38c785;
+    color: #fff;
+}
+
+/* Estilos para pestañas de empresa */
+.company-tabs-user-profile {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    width: 100%;
+    justify-content: center;
+}
+
+.company-tab-user-profile {
+    background: #f0f0f0;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #555;
+}
+
+.company-tab-user-profile.active {
+    background: #38c785;
+    color: white;
+}
+
+.company-tab-user-profile:hover {
+    background: #e0e0e0;
+}
+
+.company-tab-user-profile.active:hover {
+    background: #2aa56f;
+}
+
+/* Estilos para secciones de ofertas */
+.user-profile-company-offers {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.user-profile-offer-card {
+    background: white;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.user-profile-offer-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.user-profile-offer-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.user-profile-offer-company {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.user-profile-offer-description {
+    font-size: 0.95rem;
+    color: #555;
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+.user-profile-offer-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.user-profile-offer-detail {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.user-profile-offer-detail svg {
+    color: #38c785;
+}
+
+.user-profile-offer-apply {
+    margin-top: 15px;
+    text-align: right;
+}
+
+.user-profile-offer-apply-btn {
+    background: #38c785;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.3s ease;
+}
+
+.user-profile-offer-apply-btn:hover {
+    background: #2aa56f;
+}
+
+/* Para las etiquetas de empresa */
+.user-profile-company-tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.user-profile-company-tag {
+    background-color: #f0f7f4;
+    color: #38a3a5;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+}
+
+.user-profile-practice-badge {
+    margin-top: 15px;
+    display: inline-block;
+}
+
+.user-profile-practice-badge span {
+    background-color: #fef3c7;
+    color: #d97706;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+}
+
+/* Para la sección de hitos profesionales */
+.user-profile-milestones-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.user-profile-milestone-item {
+    padding-bottom: 15px;
+}
+
+.user-profile-milestone-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 5px;
+}
+
+.user-profile-milestone-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin: 0;
+    color: #333;
+}
+
+.user-profile-milestone-date {
+    font-size: 0.9rem;
+    color: #777;
+}
+
+.user-profile-milestone-entity {
+    font-size: 1rem;
+    font-style: italic;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+.user-profile-milestone-description {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #555;
+    margin: 5px 0 0 0;
+}
+
+.user-profile-milestone-divider {
+    border: none;
+    border-top: 1px solid #e0e0e0;
+    margin: 15px 0 5px 0;
+}
+
+.user-profile-no-data-message {
+    color: #888;
+    font-style: italic;
+    margin-top: 10px;
+}
+
+/* Estilos para contenedor vacío */
+.user-profile-company-offers-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.user-profile-empty-icon {
+    font-size: 2.5rem;
+    color: #ccc;
+    margin-bottom: 15px;
+}
+
+.user-profile-empty-title {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: #555;
+}
+
+.user-profile-empty-subtitle {
+    color: #777;
+    margin-bottom: 20px;
+}
+
+.user-profile-create-offer-btn {
+    background: #38c785;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: background 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.user-profile-create-offer-btn:hover {
+    background: #2aa56f;
 }

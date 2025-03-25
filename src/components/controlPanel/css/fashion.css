@@ -168,7 +168,7 @@
   position: relative;
   cursor: pointer;
   transition: transform 0.3s, box-shadow 0.3s;
-  height: 200px;
+  height: 220px;
 }
 
 .institution-card:hover {
