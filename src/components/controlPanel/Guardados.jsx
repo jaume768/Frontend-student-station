@@ -268,23 +268,31 @@ const Guardados = () => {
             if (!token) return;
             const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
+            // Mostrar notificación de proceso
+            setNotification({
+                show: true,
+                message: 'Moviendo imágenes a la carpeta...',
+                type: 'info'
+            });
+
             // Para cada post seleccionado, llamamos al endpoint para añadirlo a la carpeta
-            const promises = selectedPosts.map(postId => {
+            // Usamos un bucle for...of para procesar las solicitudes secuencialmente
+            for (const postId of selectedPosts) {
                 // Buscar el post completo para obtener su información
                 const post = savedPosts.find(p => p._id === postId);
                 
-                return axios.post(
+                if (!post) continue;
+                
+                await axios.post(
                     `${backendUrl}/api/folders/add`,
                     { 
                         folderId: selectedFolder, 
                         postId: post.postId || post._id,
-                        imageUrl: post.mainImage
+                        imageUrl: post.mainImage || post.savedImage
                     },
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
-            });
-
-            const results = await Promise.all(promises);
+            }
             
             // Mostrar notificación de éxito
             setNotification({

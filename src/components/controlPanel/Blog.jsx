@@ -28,7 +28,7 @@ const Blog = () => {
             image: '/multimedia/blog/trends-spring-2025.png',
             date: '2025-03-20',
             category: 'trends',
-            author: 'María Fernández',
+            author: 'Miriam',
             featured: true,
             size: 'large-blog'
         },
@@ -39,7 +39,7 @@ const Blog = () => {
             image: '/multimedia/blog/sustainable-designers.jpg',
             date: '2025-03-18',
             category: 'designers',
-            author: 'Carlos Ruiz',
+            author: 'Miriam',
             featured: false,
             size: 'medium-blog'
         },
@@ -50,7 +50,7 @@ const Blog = () => {
             image: '/multimedia/blog/madrid-fashion-week.webp',
             date: '2025-03-15',
             category: 'events',
-            author: 'Laura González',
+            author: 'Miriam',
             featured: false,
             size: 'medium-blog'
         },
@@ -61,7 +61,7 @@ const Blog = () => {
             image: '/multimedia/blog/innovative-textiles.jpg',
             date: '2025-03-12',
             category: 'sustainability',
-            author: 'Ana Martínez',
+            author: 'Miriam',
             featured: false,
             size: 'small-blog'
         },
@@ -72,7 +72,7 @@ const Blog = () => {
             image: '/multimedia/blog/ai-fashion-design.jpg',
             date: '2025-03-10',
             category: 'business',
-            author: 'Javier Torres',
+            author: 'Miriam',
             featured: false,
             size: 'small-blog'
         },
@@ -83,7 +83,7 @@ const Blog = () => {
             image: '/multimedia/blog/90s-revival.jpg',
             date: '2025-03-08',
             category: 'trends',
-            author: 'Clara Sánchez',
+            author: 'Miriam',
             featured: false,
             size: 'medium-blog'
         },
@@ -94,7 +94,7 @@ const Blog = () => {
             image: '/multimedia/blog/carolina-herrera.jpg',
             date: '2025-03-02',
             category: 'designers',
-            author: 'Elena Vázquez',
+            author: 'Miriam',
             featured: true,
             size: 'large-blog'
         }
@@ -160,7 +160,7 @@ const Blog = () => {
     return (
         <div className="blog-container">
             <div className="blog-header">
-                <h1>Magazine</h1>
+                <h1>Blog</h1>
                 <p className="blog-description">
                     Explora las últimas noticias, tendencias y entrevistas del mundo de la moda
                 </p>

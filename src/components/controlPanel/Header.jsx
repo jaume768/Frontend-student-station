@@ -1,18 +1,27 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { FaBookmark, FaSearch, FaBars, FaPlus } from 'react-icons/fa';
+import { FaBookmark, FaSearch, FaBars, FaPlus, FaTimes } from 'react-icons/fa';
 import axios from 'axios';
 import ProfileOptionsModal from './ProfileOptionsModal';
 import CreateOptionsModal from './CreateOptionsModal';
+import SearchResults from './SearchResults';
+import SearchFullScreen from './SearchFullScreen';
 
 const Header = ({ profilePicture, onHamburgerClick }) => {
     const [showProfileOptions, setShowProfileOptions] = useState(false);
     const [showCreateOptions, setShowCreateOptions] = useState(false);
     const [professionalType, setProfessionalType] = useState(null);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [searchResults, setSearchResults] = useState(null);
+    const [isSearching, setIsSearching] = useState(false);
+    const [showResults, setShowResults] = useState(false);
+    const [showFullScreenSearch, setShowFullScreenSearch] = useState(false);
+    const [searchTimeout, setSearchTimeout] = useState(null);
+    const searchRef = useRef(null);
     const navigate = useNavigate();
     const location = useLocation();
     const createButtonRef = useRef(null);
-
+    
     useEffect(() => {
         const fetchUserType = async () => {
             const token = localStorage.getItem('authToken');
@@ -31,6 +40,78 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
         fetchUserType();
     }, []);
 
+    // Función para realizar la búsqueda
+    const performSearch = useCallback(async (term) => {
+        if (term.trim().length < 2) {
+            setSearchResults(null);
+            setShowResults(false);
+            return;
+        }
+        
+        try {
+            setIsSearching(true);
+            const backendUrl = import.meta.env.VITE_BACKEND_URL;
+            const response = await axios.get(`${backendUrl}/api/users/search`, {
+                params: { query: term.trim() }
+            });
+            setSearchResults(response.data.results);
+            setIsSearching(false);
+            return response.data.results;
+        } catch (error) {
+            console.error('Error en la búsqueda:', error);
+            setIsSearching(false);
+            return null;
+        }
+    }, []);
+
+    // Manejar cambios en el input con debounce
+    const handleSearchInputChange = (e) => {
+        const value = e.target.value;
+        setSearchQuery(value);
+        
+        // Limpiar cualquier timeout pendiente
+        if (searchTimeout) {
+            clearTimeout(searchTimeout);
+        }
+        
+        if (value.trim() === '') {
+            setSearchResults(null);
+            setShowResults(false);
+            return;
+        }
+        
+        // Configurar un nuevo timeout para debouncing (300ms)
+        const timeout = setTimeout(async () => {
+            if (value.trim().length >= 2) {
+                const results = await performSearch(value);
+                if (results) {
+                    setShowResults(true);
+                }
+            }
+        }, 300);
+        
+        setSearchTimeout(timeout);
+    };
+    
+    // Manejar el evento Enter para abrir la búsqueda completa
+    const handleSearch = async (e) => {
+        if (e.key === 'Enter' && searchQuery.trim().length >= 2) {
+            e.preventDefault();
+            const results = await performSearch(searchQuery);
+            if (results) {
+                setShowFullScreenSearch(true);
+                setShowResults(false);
+            }
+        }
+    };
+    
+    const clearSearch = () => {
+        setSearchQuery('');
+        setSearchResults(null);
+        setShowResults(false);
+        setShowFullScreenSearch(false);
+    };
+    
     const handleProfileClick = () => {
         const token = localStorage.getItem('authToken');
         if (!token) {
@@ -43,6 +124,8 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
     useEffect(() => {
         setShowProfileOptions(false);
         setShowCreateOptions(false);
+        setShowResults(false);
+        setShowFullScreenSearch(false);
     }, [location]);
 
     const handleOptionSelect = (option) => {
@@ -93,6 +176,10 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
             if (createButtonRef.current && !createButtonRef.current.contains(event.target)) {
                 setShowCreateOptions(false);
             }
+            
+            if (searchRef.current && !searchRef.current.contains(event.target)) {
+                setShowResults(false);
+            }
         };
 
         document.addEventListener('mousedown', handleClickOutside);
@@ -109,14 +196,60 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
         }
         return "Crear";
     };
+    
+    const handleResultClick = (type, item) => {
+        setShowResults(false);
+        setShowFullScreenSearch(false);
+        switch (type) {
+            case 'user':
+                navigate(`/ControlPanel/profile/${item.username}`);
+                break;
+            case 'post':
+                navigate(`/ControlPanel/post/${item._id}`);
+                break;
+            case 'offer':
+                navigate(`/ControlPanel/offer/${item._id}`);
+                break;
+            case 'educationalOffer':
+                navigate(`/ControlPanel/educational-offer/${item._id}`);
+                break;
+            default:
+                break;
+        }
+    };
 
     return (
         <header className="dashboard-header">
-            <div className="dahsboard-search">
+            <div className="dahsboard-search" ref={searchRef}>
                 <div className="search-input-container">
                     <FaSearch className="search-icon" />
-                    <input type="text" placeholder="Buscar" />
+                    <input 
+                        type="text" 
+                        placeholder="Buscar" 
+                        value={searchQuery}
+                        onChange={handleSearchInputChange}
+                        onKeyDown={handleSearch}
+                        onFocus={() => searchQuery.trim().length >= 2 && searchResults && setShowResults(true)}
+                    />
+                    {searchQuery && (
+                        <FaTimes 
+                            className="search-clear-icon" 
+                            onClick={clearSearch}
+                            style={{ cursor: 'pointer', position: 'absolute', right: '10px', top: '10px' }}
+                        />
+                    )}
                 </div>
+                {showResults && searchResults && (
+                    <SearchResults 
+                        results={searchResults} 
+                        onResultClick={handleResultClick}
+                        isLoading={isSearching}
+                        onViewAll={() => {
+                            setShowFullScreenSearch(true);
+                            setShowResults(false);
+                        }}
+                    />
+                )}
             </div>
             <div className="header-right">
                 <div
@@ -156,6 +289,16 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
                     )}
                 </div>
             </div>
+            
+            {showFullScreenSearch && (
+                <SearchFullScreen 
+                    initialResults={searchResults}
+                    initialQuery={searchQuery}
+                    onClose={() => setShowFullScreenSearch(false)}
+                    onSearch={performSearch}
+                    onResultClick={handleResultClick}
+                />
+            )}
         </header>
     );
 };
