@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './css/jobOfferDetail.css';
+import ApplyOfferModal from './ApplyOfferModal';
 
 const JobOfferDetail = () => {
     const { offerId } = useParams();
@@ -9,6 +10,9 @@ const JobOfferDetail = () => {
     const [offer, setOffer] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [userApplied, setUserApplied] = useState(false);
 
     useEffect(() => {
         const fetchOfferDetails = async () => {
@@ -24,10 +28,39 @@ const JobOfferDetail = () => {
             }
         };
 
+        const checkAuthStatus = () => {
+            const token = localStorage.getItem('authToken');
+            setIsAuthenticated(!!token);
+        };
+
         if (offerId) {
             fetchOfferDetails();
+            checkAuthStatus();
         }
     }, [offerId]);
+
+    // Verificar si el usuario ya aplicó a esta oferta
+    useEffect(() => {
+        const checkIfUserApplied = async () => {
+            if (!isAuthenticated || !offer) return;
+            
+            try {
+                const backendUrl = import.meta.env.VITE_BACKEND_URL;
+                const token = localStorage.getItem('authToken');
+                
+                const response = await axios.get(
+                    `${backendUrl}/api/offers/${offerId}/check-application`,
+                    { headers: { Authorization: `Bearer ${token}` } }
+                );
+                
+                setUserApplied(response.data.hasApplied);
+            } catch (error) {
+                console.error('Error al verificar aplicación:', error);
+            }
+        };
+        
+        checkIfUserApplied();
+    }, [offerId, isAuthenticated, offer]);
 
     if (loading) {
         return (
@@ -49,6 +82,39 @@ const JobOfferDetail = () => {
 
     const handleBack = () => {
         navigate(-1); // Utilizar navigate(-1) para volver a la página anterior
+    };
+
+    const handleOpenApplyModal = () => {
+        if (!isAuthenticated) {
+            // Redirigir al login si no está autenticado
+            navigate('/login', { state: { from: `/offers/${offerId}` } });
+            return;
+        }
+        setIsApplyModalOpen(true);
+    };
+
+    const handleCloseApplyModal = () => {
+        setIsApplyModalOpen(false);
+    };
+
+    const handleSubmitApplication = async (answers) => {
+        try {
+            const backendUrl = import.meta.env.VITE_BACKEND_URL;
+            const token = localStorage.getItem('authToken');
+
+            await axios.post(
+                `${backendUrl}/api/offers/${offerId}/apply`,
+                { answers },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+
+            // Actualizar estado de aplicación
+            setUserApplied(true);
+            return true;
+        } catch (error) {
+            console.error('Error al enviar la aplicación:', error);
+            throw error;
+        }
     };
 
     return (
@@ -103,9 +169,15 @@ const JobOfferDetail = () => {
                     <div className="job-offer-publication-date-jobdetail">
                         Publicado: {formatDate(offer.publicationDate)}
                     </div>
-                    <button className="apply-button-jobdetail">
-                        Inscribirme a esta oferta
-                    </button>
+                    {userApplied ? (
+                        <button className="apply-button-jobdetail applied-button" disabled>
+                            Ya inscrito
+                        </button>
+                    ) : (
+                        <button className="apply-button-jobdetail" onClick={handleOpenApplyModal}>
+                            Inscribirme a esta oferta
+                        </button>
+                    )}
                 </div>
             </div>
 
@@ -174,6 +246,14 @@ const JobOfferDetail = () => {
                     </section>
                 )}
             </div>
+
+            <ApplyOfferModal
+                isOpen={isApplyModalOpen}
+                onClose={handleCloseApplyModal}
+                onSubmitApplication={handleSubmitApplication}
+                offer={offer}
+                userApplied={userApplied}
+            />
         </div>
     );
 };

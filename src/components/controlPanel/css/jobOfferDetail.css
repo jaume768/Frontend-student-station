@@ -132,6 +132,17 @@
     background-color: #e64a19;
 }
 
+/* Estilo para cuando ya está inscrito */
+.apply-button-jobdetail.applied-button {
+    background-color: #78909c;
+    cursor: not-allowed;
+    opacity: 0.8;
+}
+
+.apply-button-jobdetail.applied-button:hover {
+    background-color: #78909c;
+}
+
 /* Contenido principal (descripciones, funciones, etc.) */
 .job-offer-content-jobdetail {
     background-color: #fff;
