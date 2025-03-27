@@ -86,7 +86,7 @@ const Guardados = () => {
     }, [selectedPosts]);
 
     // -------- LÓGICA DE PULSACIÓN LARGA (para iniciar selección) --------
-    const handlePressDown = (post) => {
+    const handlePressDown = (post, event) => {
         if (!post) return;
 
         // Marcamos que el click ha iniciado
@@ -96,12 +96,16 @@ const Guardados = () => {
         if (isSelecting) return;
 
         setLongPressTriggered(false); // Resetea la bandera
+        
+        // Usar TouchEvent para detectar el evento de touch específicamente
+        const isTouchEvent = event && event.type && event.type.includes('touch');
+        
         pressTimer.current = setTimeout(() => {
             // Si pasan LONG_PRESS_TIME ms sin soltar, se activa modo selección
             setLongPressTriggered(true);
             setIsSelecting(true);
             toggleSelectPost(post?._id);
-        }, LONG_PRESS_TIME);
+        }, isTouchEvent ? LONG_PRESS_TIME * 1.5 : LONG_PRESS_TIME); // Tiempo extra para dispositivos touch
     };
 
     const handlePressUp = () => {
@@ -414,7 +418,7 @@ const Guardados = () => {
                                         height: post ? 'auto' : `${itemHeight}px`,
                                     }}
                                     onContextMenu={(e) => e.preventDefault()} // Evita menú contextual en móviles
-                                    onMouseDown={() => handlePressDown(post)}
+                                    onMouseDown={(e) => handlePressDown(post, e)}
                                     onMouseUp={() => handlePressUp()}
                                     onMouseLeave={() => {
                                         // Si el mouse sale, cancelamos el timeout
@@ -423,7 +427,7 @@ const Guardados = () => {
                                             pressTimer.current = null;
                                         }
                                     }}
-                                    onTouchStart={() => handlePressDown(post)}
+                                    onTouchStart={(e) => handlePressDown(post, e)}
                                     onTouchEnd={() => handlePressUp()}
                                     onClick={() => {
                                         // Solo procesamos el click si no estamos en modo selección

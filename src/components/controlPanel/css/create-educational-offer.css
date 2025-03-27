@@ -192,11 +192,12 @@
 }
 
 /* Botones */
-.create-educational-form-actions {
+.create-educational-form-actions-final {
     display: flex;
     justify-content: flex-end;
     gap: 15px;
     margin-top: 20px;
+    margin-bottom: 3em;
 }
 
 .create-educational-cancel-button,

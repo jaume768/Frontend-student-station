@@ -263,7 +263,7 @@ const CreateEducationalOffer = () => {
                     setFormData={setFormData} 
                 />
 
-                <div className="create-educational-form-actions">
+                <div className="create-educational-form-actions-final">
                     <button type="button" onClick={() => navigate(-1)} className="create-educational-cancel-button">
                         Cancelar
                     </button>

@@ -521,7 +521,7 @@ const CreateOffer = () => {
                     setFormData={setFormData} 
                 />
 
-                <div className="form-actions">
+                <div className="form-actions-final">
                     <button type="submit" className="submit-btn" disabled={loading}>
                         {loading ? (isEditing ? 'Actualizando oferta...' : 'Publicando oferta...') : (isEditing ? 'Actualizar oferta de trabajo' : 'Crear oferta de trabajo')}
                     </button>

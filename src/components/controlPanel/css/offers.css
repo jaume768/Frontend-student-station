@@ -392,17 +392,36 @@
     transition: all 0.3s ease;
 }
 
+/* Media query para dispositivos móviles */
 @media (max-width: 768px) {
     .offers-main-content {
         flex-direction: column;
     }
-
+    
     .offers-sidebar {
-        position: static;
+        display: none; /* Ocultar sidebar con filtros en móvil */
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    
+    .offers-content {
         width: 100%;
     }
-
+    
     .offers-grid {
         grid-template-columns: 1fr;
+    }
+    
+    .offer-card {
+        margin-bottom: 16px;
+    }
+    
+    .offer-card-logo {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .offer-card-location-label {
+        font-size: 12px;
     }
 }
