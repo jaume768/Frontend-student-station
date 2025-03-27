@@ -107,7 +107,7 @@ const UserProfile = () => {
             try {
                 const backendUrl = import.meta.env.VITE_BACKEND_URL;
                 console.log("Fetching educational offers for user:", username);
-                const { data } = await axios.get(`${backendUrl}/api/offers/educational/user/${username}`);
+                const { data } = await axios.get(`${backendUrl}/api/offers/educational/user-external/${username}`);
                 setCompanyOffers(data); // Usamos el mismo estado para ofertas educativas
             } catch (error) {
                 console.error("Error al cargar las ofertas educativas", error);

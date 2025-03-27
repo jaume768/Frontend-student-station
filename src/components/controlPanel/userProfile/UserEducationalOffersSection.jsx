@@ -100,7 +100,7 @@ const UserEducationalOffersSection = ({ offers = [] }) => {
                                 )}
                             </div>
                             <div className="offer-actions">
-                                <Link to={`/ControlPanel/educational-offer/${offer._id}`} className="view-offer-button">
+                                <Link to={`/ControlPanel/EducationalOfferDetail/${offer._id}`} className="view-offer-button">
                                     Ver oferta
                                 </Link>
                             </div>
