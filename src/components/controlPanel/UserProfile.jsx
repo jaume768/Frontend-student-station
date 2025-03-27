@@ -146,10 +146,10 @@ const UserProfile = () => {
         const fetchOffers = async () => {
             try {
                 const backendUrl = import.meta.env.VITE_BACKEND_URL;
-                let endpoint = `${backendUrl}/api/users/${profile._id}/offers`;
+                let endpoint = `${backendUrl}/api/offers/user/${username}`;
                 
                 if (isEducationalInstitution) {
-                    endpoint = `${backendUrl}/api/offers/educational/user/${username}`;
+                    endpoint = `${backendUrl}/api/offers/educational/user-external/${username}`;
                 }
                 
                 const res = await axios.get(endpoint);
@@ -361,7 +361,6 @@ const UserProfile = () => {
                             <UserBiographySection biography={profile?.biography} />
                             <UserSkillsSection skills={profile?.skills} />
                             <UserSocialSection social={profile?.social} />
-                            <UserEducationalOffersSection offers={profile?.educationalOffers} />
                         </>
                     ) : (
                         <>

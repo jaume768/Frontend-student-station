@@ -385,6 +385,17 @@ const Guardados = () => {
                         - Una vez en selección, toca/clic en otras imágenes para (de)seleccionarlas.
                     </p>
 
+                    {isSelecting && selectedPosts.length > 0 && selectedFolder && (
+                        <div className="save-to-folder-button-container">
+                            <button
+                                className="save-to-folder-button"
+                                onClick={handleSaveToFolder}
+                            >
+                                Guardar {selectedPosts.length} {selectedPosts.length === 1 ? 'imagen' : 'imágenes'} en esta carpeta
+                            </button>
+                        </div>
+                    )}
+
                     {/* Contenedor con efecto masonry (5 columnas en desktop, menos en móvil) */}
                     <div className="guardados-masonry">
                         {Array.from({ length: totalSlots }).map((_, index) => {
@@ -435,17 +446,6 @@ const Guardados = () => {
                             );
                         })}
                     </div>
-
-                    {isSelecting && selectedPosts.length > 0 && selectedFolder && (
-                        <div className="save-to-folder-button-container">
-                            <button
-                                className="save-to-folder-button"
-                                onClick={handleSaveToFolder}
-                            >
-                                Guardar {selectedPosts.length} {selectedPosts.length === 1 ? 'imagen' : 'imágenes'} en esta carpeta
-                            </button>
-                        </div>
-                    )}
                 </div>
             </div>
 

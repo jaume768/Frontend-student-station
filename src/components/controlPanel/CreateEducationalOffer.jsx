@@ -7,7 +7,6 @@ import './css/create-educational-offer.css';
 const CreateEducationalOffer = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
-        institutionName: '',
         programName: '',
         studyType: '',
         city: '',
@@ -35,6 +34,7 @@ const CreateEducationalOffer = () => {
         headerImage: null
     });
 
+    const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState({});
     const [newRequirement, setNewRequirement] = useState('');
@@ -44,13 +44,25 @@ const CreateEducationalOffer = () => {
         validateForm();
     }, [formData]);
 
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) return;
+                const backendUrl = import.meta.env.VITE_BACKEND_URL;
+                const res = await axios.get(`${backendUrl}/api/users/profile`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                setProfile(res.data);
+            } catch (error) {
+                console.error("Error al cargar el perfil", error);
+            }
+        };
+        fetchProfile();
+    }, []);
+
     const validateForm = () => {
         const newErrors = {};
-        
-        // Validaciones básicas
-        if (formData.institutionName && formData.institutionName.length > 100) {
-            newErrors.institutionName = 'El nombre de la institución no puede exceder los 100 caracteres';
-        }
         
         if (formData.programName && formData.programName.length > 100) {
             newErrors.programName = 'El título no puede exceder los 100 caracteres';
@@ -165,6 +177,8 @@ const CreateEducationalOffer = () => {
                 formDataToSend.append('headerImage', files.headerImage);
             }
 
+            formDataToSend.append('institutionName', profile.companyName);
+
             const backendUrl = import.meta.env.VITE_BACKEND_URL;
             const token = localStorage.getItem('authToken');
             
@@ -180,7 +194,7 @@ const CreateEducationalOffer = () => {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'multipart/form-data'
                     },
-                    timeout: 30000 // 30 segundos de timeout
+                    timeout: 3000
                 }
             );
 
@@ -239,21 +253,6 @@ const CreateEducationalOffer = () => {
                     )}
                 </div>
                 
-                {/* Información institucional */}
-                <div className="create-educational-form-field">
-                    <label htmlFor="institutionName">Nombre de la Institución</label>
-                    <input
-                        type="text"
-                        id="institutionName"
-                        name="institutionName"
-                        value={formData.institutionName}
-                        onChange={handleInputChange}
-                        required
-                        placeholder="Nombre de la institución académica"
-                    />
-                    {errors.institutionName && <span className="create-educational-error-message">{errors.institutionName}</span>}
-                </div>
-
                 {/* Título del programa */}
                 <div className="create-educational-form-field">
                     <label htmlFor="programName" className="create-educational-form-title">Título de la formación</label>
