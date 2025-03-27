@@ -262,6 +262,11 @@
         height: 180px;
     }
 
+    .job-offer-detail-container-jobdetail {
+        width: 100%;
+        margin-bottom: 3em;
+    }
+
     .job-offer-title-row-jobdetail {
         flex-direction: column;
         align-items: flex-start;
