@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
+import ExtraQuestionsForm from './ExtraQuestionsForm';
 import './css/create-offer.css';
 
 const CreateOffer = () => {
@@ -24,7 +25,9 @@ const CreateOffer = () => {
         requiredProfile: '',
         // Habilidades
         hardSkills: [],
-        softSkills: []
+        softSkills: [],
+        // Preguntas extra
+        extraQuestions: []
     });
 
     const [companyLogo, setCompanyLogo] = useState(null);
@@ -247,7 +250,7 @@ const CreateOffer = () => {
             Object.keys(offerData).forEach(key => {
                 if (key === 'hardSkills' || key === 'softSkills') {
                     // Estos ya se han añadido como tags
-                } else if (key === 'tags') {
+                } else if (key === 'tags' || key === 'extraQuestions') {
                     formDataToSend.append(key, JSON.stringify(offerData[key]));
                 } else {
                     formDataToSend.append(key, offerData[key]);
@@ -512,6 +515,11 @@ const CreateOffer = () => {
                         ))}
                     </div>
                 </div>
+
+                <ExtraQuestionsForm 
+                    formData={formData} 
+                    setFormData={setFormData} 
+                />
 
                 <div className="form-actions">
                     <button type="submit" className="submit-btn" disabled={loading}>

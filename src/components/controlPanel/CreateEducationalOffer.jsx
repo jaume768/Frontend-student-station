@@ -10,6 +10,7 @@ import EnrollmentForm from './CreateEducationalOffer/EnrollmentForm';
 import SchoolYearForm from './CreateEducationalOffer/SchoolYearForm';
 import WebsiteForm from './CreateEducationalOffer/WebsiteForm';
 import DescriptionForm from './CreateEducationalOffer/DescriptionForm';
+import ExtraQuestionsForm from './CreateEducationalOffer/ExtraQuestionsForm';
 import { validateForm } from './CreateEducationalOffer/utils';
 import './css/create-educational-offer.css';
 
@@ -36,7 +37,8 @@ const CreateEducationalOffer = () => {
         schoolYearEndMonth: '',
         websiteUrl: '',
         description: '',
-        requirements: []
+        requirements: [],
+        extraQuestions: []
     });
 
     const [files, setFiles] = useState({
@@ -144,7 +146,7 @@ const CreateEducationalOffer = () => {
 
             // Añadir todos los campos del formulario que no estén vacíos
             Object.keys(formData).forEach(key => {
-                if (key === 'requirements') {
+                if (key === 'requirements' || key === 'extraQuestions') {
                     formDataToSend.append(key, JSON.stringify(formData[key]));
                 } else if (formData[key] !== '' && formData[key] !== null && formData[key] !== undefined) {
                     formDataToSend.append(key, formData[key]);
@@ -254,6 +256,11 @@ const CreateEducationalOffer = () => {
                     setNewRequirement={setNewRequirement}
                     addRequirement={addRequirement}
                     removeRequirement={removeRequirement}
+                />
+                
+                <ExtraQuestionsForm 
+                    formData={formData} 
+                    setFormData={setFormData} 
                 />
 
                 <div className="create-educational-form-actions">
