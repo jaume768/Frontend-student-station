@@ -1,0 +1,227 @@
+.mis-ofertas-section {
+    width: 100%;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.mis-ofertas-header {
+    display: flex;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 20px;
+}
+
+.ofertas-tab {
+    padding: 12px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #757575;
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.3s;
+}
+
+.ofertas-tab.active {
+    color: #ff5722;
+    font-weight: 600;
+}
+
+.ofertas-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #ff5722;
+}
+
+.ofertas-tab:hover {
+    color: #ff5722;
+}
+
+.ofertas-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.oferta-card {
+    display: flex;
+    padding: 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    position: relative;
+    cursor: pointer;
+    transition: box-shadow 0.3s, transform 0.3s;
+}
+
+.oferta-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.oferta-card.oferta-caducada {
+    opacity: 0.7;
+}
+
+.urgent-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #ff4d4d;
+    color: white;
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.oferta-logo {
+    width: 60px;
+    height: 60px;
+    min-width: 60px;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-right: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f5f5f5;
+}
+
+.oferta-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.oferta-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.oferta-job-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 4px 0;
+    color: #333;
+}
+
+.oferta-company-name {
+    font-size: 14px;
+    color: #666;
+    margin: 0 0 8px 0;
+}
+
+.oferta-info {
+    font-size: 12px;
+    color: #999;
+    margin: 0 0 12px 0;
+}
+
+.oferta-status {
+    margin-top: auto;
+}
+
+.status-btn {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+}
+
+.status-btn.aplicadas {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.status-btn.guardadas {
+    background-color: #e3f2fd;
+    color: #1976d2;
+}
+
+.status-btn.caducadas {
+    background-color: #f5f5f5;
+    color: #757575;
+    cursor: default;
+}
+
+.ofertas-footer {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.buscar-ofertas-btn {
+    padding: 10px 24px;
+    background-color: #ff5722;
+    color: white;
+    border: none;
+    border-radius: 24px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.buscar-ofertas-btn:hover {
+    background-color: #e64a19;
+}
+
+.mis-ofertas-loading,
+.mis-ofertas-error,
+.no-ofertas-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 0;
+    color: #757575;
+    text-align: center;
+}
+
+.mis-ofertas-loading i {
+    font-size: 24px;
+    margin-bottom: 16px;
+    color: #ff5722;
+}
+
+.no-ofertas-message {
+    font-size: 14px;
+    color: #9e9e9e;
+}
+
+/* Media queries para responsividad */
+@media (max-width: 768px) {
+    .mis-ofertas-header {
+        overflow-x: auto;
+        padding-bottom: 8px;
+    }
+    
+    .ofertas-tab {
+        padding: 12px 12px;
+        font-size: 13px;
+        white-space: nowrap;
+    }
+    
+    .oferta-card {
+        flex-direction: column;
+    }
+    
+    .oferta-logo {
+        width: 48px;
+        height: 48px;
+        min-width: 48px;
+        margin-bottom: 12px;
+    }
+}

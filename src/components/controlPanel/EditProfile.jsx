@@ -50,6 +50,7 @@ const EditProfile = () => {
         city: 'Ciudad',
         country: 'País',
         email: 'correo@ejemplo.com',
+        role: '', // Added role field
         creativeType: 'Estudiante',
         biography: '',
         professionalType: null,
@@ -190,6 +191,7 @@ const EditProfile = () => {
                     city: user.city,
                     country: user.country,
                     email: user.email,
+                    role: user.role,
                     creativeType: getCreativeTypeText(user.creativeType),
                     biography: user.biography || '',
                     professionalType: user.professionalType,
@@ -967,7 +969,10 @@ const EditProfile = () => {
                             )}
 
                             {activeOption === "misOfertas" && (
-                                <MisOfertasSection />
+                                <MisOfertasSection 
+                                    userRole={userData.role} 
+                                    professionalType={userData.professionalType}
+                                />
                             )}
                         </div>
                     </div>
