@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './css/jobOfferDetail.css';
 import ApplyOfferModal from './ApplyOfferModal';
+import { FaBookmark, FaRegBookmark } from 'react-icons/fa';
 
 const JobOfferDetail = () => {
     const { offerId } = useParams();
@@ -13,6 +14,9 @@ const JobOfferDetail = () => {
     const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [userApplied, setUserApplied] = useState(false);
+    const [isSaved, setIsSaved] = useState(false);
+    const [savingOffer, setSavingOffer] = useState(false);
+    const [saveFeedback, setSaveFeedback] = useState({ show: false, text: "" });
 
     useEffect(() => {
         const fetchOfferDetails = async () => {
@@ -62,18 +66,33 @@ const JobOfferDetail = () => {
         checkIfUserApplied();
     }, [offerId, isAuthenticated, offer]);
 
-    if (loading) {
-        return (
-            <div className="job-offer-loading-jobdetail">
-                <i className="fas fa-spinner fa-spin"></i>
-                <span>Cargando detalles de la oferta...</span>
-            </div>
-        );
-    }
-
-    if (error || !offer) {
-        return <div className="job-offer-error-jobdetail">{error || 'No se encontró la oferta'}</div>;
-    }
+    // Verificar si la oferta está guardada
+    useEffect(() => {
+        const checkIfOfferIsSaved = async () => {
+            if (!isAuthenticated || !offer) return;
+            
+            try {
+                const backendUrl = import.meta.env.VITE_BACKEND_URL;
+                const token = localStorage.getItem('authToken');
+                
+                const response = await axios.get(
+                    `${backendUrl}/api/users/saved-offers`,
+                    { headers: { Authorization: `Bearer ${token}` } }
+                );
+                
+                const isSavedOffer = response.data.savedOffers.some(
+                    savedOfferId => savedOfferId === offerId || 
+                    (typeof savedOfferId === 'object' && savedOfferId._id === offerId)
+                );
+                
+                setIsSaved(isSavedOffer);
+            } catch (error) {
+                console.error('Error al verificar si la oferta está guardada:', error);
+            }
+        };
+        
+        checkIfOfferIsSaved();
+    }, [offerId, isAuthenticated, offer]);
 
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -116,6 +135,60 @@ const JobOfferDetail = () => {
             throw error;
         }
     };
+
+    const handleSaveOffer = async () => {
+        if (!isAuthenticated) {
+            navigate('/', { state: { showRegister: true } });
+            return;
+        }
+
+        try {
+            setSavingOffer(true);
+            const backendUrl = import.meta.env.VITE_BACKEND_URL;
+            const token = localStorage.getItem('authToken');
+            
+            if (isSaved) {
+                // Quitar de guardados
+                await axios.delete(
+                    `${backendUrl}/api/users/saved-offers/${offerId}`,
+                    { headers: { Authorization: `Bearer ${token}` } }
+                );
+                setIsSaved(false);
+                setSaveFeedback({ show: true, text: "Oferta eliminada de guardados" });
+            } else {
+                // Añadir a guardados
+                await axios.post(
+                    `${backendUrl}/api/users/saved-offers/${offerId}`,
+                    {},
+                    { headers: { Authorization: `Bearer ${token}` } }
+                );
+                setIsSaved(true);
+                setSaveFeedback({ show: true, text: "¡Oferta guardada!" });
+            }
+            
+            // Ocultar el feedback después de 2 segundos
+            setTimeout(() => {
+                setSaveFeedback({ show: false, text: "" });
+            }, 2000);
+        } catch (error) {
+            console.error('Error al guardar/desguardar oferta:', error);
+        } finally {
+            setSavingOffer(false);
+        }
+    };
+
+    if (loading) {
+        return (
+            <div className="job-offer-loading-jobdetail">
+                <i className="fas fa-spinner fa-spin"></i>
+                <span>Cargando detalles de la oferta...</span>
+            </div>
+        );
+    }
+
+    if (error || !offer) {
+        return <div className="job-offer-error-jobdetail">{error || 'No se encontró la oferta'}</div>;
+    }
 
     return (
         <div className="job-offer-detail-container-jobdetail">
@@ -169,15 +242,30 @@ const JobOfferDetail = () => {
                     <div className="job-offer-publication-date-jobdetail">
                         Publicado: {formatDate(offer.publicationDate)}
                     </div>
-                    {userApplied ? (
-                        <button className="apply-button-jobdetail applied-button" disabled>
-                            Ya inscrito
+                    <div className="job-offer-actions-jobdetail">
+                        {userApplied ? (
+                            <button className="apply-button-jobdetail applied-button" disabled>
+                                Ya inscrito
+                            </button>
+                        ) : (
+                            <button className="apply-button-jobdetail" onClick={handleOpenApplyModal}>
+                                Inscribirme a esta oferta
+                            </button>
+                        )}
+                        <button 
+                            className={`save-offer-button ${isSaved ? 'saved' : ''}`} 
+                            onClick={handleSaveOffer}
+                            disabled={savingOffer}
+                        >
+                            {isSaved ? <FaBookmark /> : <FaRegBookmark />}
+                            <span>{isSaved ? "Guardada" : "Guardar"}</span>
                         </button>
-                    ) : (
-                        <button className="apply-button-jobdetail" onClick={handleOpenApplyModal}>
-                            Inscribirme a esta oferta
-                        </button>
-                    )}
+                        {saveFeedback.show && (
+                            <div className={`save-feedback ${saveFeedback.show ? 'show' : ''}`}>
+                                {saveFeedback.text}
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
 
