@@ -7,17 +7,20 @@ import './css/explorer.css';
 
 const Explorer = () => {
     const navigate = useNavigate();
-    const [postImages, setPostImages] = useState(() => {
-        const saved = sessionStorage.getItem('explorerImages');
-        return saved ? JSON.parse(saved) : [];
-    });
+    
+    // On component mount, clear the session storage to ensure fresh data on refresh
+    useEffect(() => {
+        // Clear explorer-related data on component mount for fresh data
+        sessionStorage.removeItem('explorerImages');
+        sessionStorage.removeItem('explorerPage');
+        sessionStorage.removeItem('viewedPosts');
+    }, []);
+    
+    const [postImages, setPostImages] = useState([]);
     const [savedPosts, setSavedPosts] = useState(new Map());
     const [saveFeedback, setSaveFeedback] = useState({ show: false, postId: null, imageUrl: null, text: "" });
     const [loading, setLoading] = useState(false);
-    const [page, setPage] = useState(() => {
-        const saved = sessionStorage.getItem('explorerPage');
-        return saved ? parseInt(saved) : 1;
-    });
+    const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
     const observerRef = useRef(null);
     const sentinelRef = useRef(null);
@@ -132,8 +135,6 @@ const Explorer = () => {
     // Cargar imágenes
     useEffect(() => {
         const fetchImages = async () => {
-            if (postImages.length > 0 && page === 1) return;
-
             setLoading(true);
             try {
                 const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -141,7 +142,8 @@ const Explorer = () => {
                 const viewedPosts = getViewedPosts();
                 
                 const response = await axios.get(
-                    `${backendUrl}/api/posts/explorer?page=${page}&limit=${limit}&exclude=${viewedPosts.join(',')}`
+                    `${backendUrl}/api/posts/explorer?page=${page}&limit=${limit}&exclude=${viewedPosts.join(',')}`,
+                    { headers: { 'Cache-Control': 'no-cache' } } // Add cache control header
                 );
                 
                 response.data.images.forEach(img => {
@@ -152,8 +154,9 @@ const Explorer = () => {
                 setPostImages(newImages);
                 setHasMore(response.data.hasMore);
 
-                sessionStorage.setItem('explorerImages', JSON.stringify(newImages));
-                sessionStorage.setItem('explorerPage', page.toString());
+                // No longer need to store in sessionStorage since we're always loading fresh data
+                // sessionStorage.setItem('explorerImages', JSON.stringify(newImages));
+                // sessionStorage.setItem('explorerPage', page.toString());
             } catch (error) {
                 console.error('Error cargando imágenes:', error);
             } finally {
@@ -162,7 +165,7 @@ const Explorer = () => {
         };
 
         fetchImages();
-    }, [page]);
+    }, [page]); // Remove postImages from dependency array to avoid infinite loop
 
     // Limpiar sessionStorage cuando se desmonta el componente
     useEffect(() => {
