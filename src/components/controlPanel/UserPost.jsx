@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import {
     FaArrowLeft,
@@ -16,6 +16,9 @@ import './css/UserPost.css';
 const UserPost = () => {
     const navigate = useNavigate();
     const { id } = useParams();
+    const location = useLocation();
+    const clickedImageUrl = location.state?.clickedImageUrl;
+    
     const [post, setPost] = useState(null);
     const [loading, setLoading] = useState(true);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -65,6 +68,14 @@ const UserPost = () => {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 setPost(response.data.post);
+                
+                // Si tenemos una URL de imagen clickeada, buscamos su índice
+                if (clickedImageUrl && response.data.post.images) {
+                    const clickedIndex = response.data.post.images.findIndex(img => img === clickedImageUrl);
+                    if (clickedIndex !== -1) {
+                        setCurrentImageIndex(clickedIndex);
+                    }
+                }
 
                 // 2. Obtenemos la lista de favoritos del usuario
                 const favResponse = await axios.get(`${backendUrl}/api/users/favorites`, {

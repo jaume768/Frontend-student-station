@@ -198,8 +198,8 @@ const Explorer = () => {
         };
     }, [loading, hasMore]);
 
-    const handlePostClick = (postId) => {
-        navigate(`/ControlPanel/post/${postId}`);
+    const handlePostClick = (postId, imageUrl) => {
+        navigate(`/ControlPanel/post/${postId}`, { state: { clickedImageUrl: imageUrl } });
     };
 
     // Configuración de breakpoints para Masonry
@@ -223,7 +223,7 @@ const Explorer = () => {
                     <div
                         className="masonry-item"
                         key={`${item.postId}-${index}`}
-                        onClick={() => handlePostClick(item.postId)}
+                        onClick={() => handlePostClick(item.postId, item.imageUrl)}
                     >
                         <img
                             src={item.imageUrl}
