@@ -280,6 +280,14 @@
     background-color: rgb(255, 255, 255);
 }
 
+@media (max-width: 768px) {
+    .dashboard-content {
+        flex: 1;
+        padding: 0;
+        background-color: rgb(255, 255, 255);
+    }
+}
+
 /* ======== Contenedor principal de la sección Explorer ======== */
 .explorer-container {
     width: 100%;

@@ -373,6 +373,7 @@
     .user-profile-left-content,
     .user-profile-right-content {
         display: block;
+        width: 300px;
     }
 }
 
