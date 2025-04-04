@@ -84,7 +84,7 @@ const UserProfile = () => {
                 setPostsLoading(true);
                 const backendUrl = import.meta.env.VITE_BACKEND_URL;
                 const { data } = await axios.get(`${backendUrl}/api/posts/user/${username}`);
-                setUserPosts(data);
+                setUserPosts(data.posts || []);
                 setPostsLoading(false);
             } catch (error) {
                 console.error("Error al cargar las publicaciones del usuario", error);

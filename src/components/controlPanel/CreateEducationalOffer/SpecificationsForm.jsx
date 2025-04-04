@@ -42,11 +42,13 @@ const SpecificationsForm = ({ formData, handleInputChange }) => {
                     required
                 >
                     <option value="">Seleccionar...</option>
-                    <option value="Grado Superior">Grado Superior</option>
-                    <option value="Máster">Máster</option>
                     <option value="Grado">Grado</option>
+                    <option value="Máster">Máster</option>
+                    <option value="FP">FP</option>
                     <option value="Curso">Curso</option>
+                    <option value="Taller">Taller</option>
                     <option value="Certificación">Certificación</option>
+                    <option value="Otro">Otro</option>
                 </select>
             </div>
         </div>
