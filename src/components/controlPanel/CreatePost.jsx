@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FaUpload, FaArrowLeft, FaArrowRight, FaTrash, FaCheck, FaEye, FaTimes, FaSearch } from 'react-icons/fa';
+import { FaUpload, FaArrowLeft, FaArrowRight, FaTrash, FaCheck, FaEye, FaTimes, FaSearch, FaExclamationCircle } from 'react-icons/fa';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -27,6 +27,17 @@ const CreatePost = () => {
 
     // Estados para el formulario
     const [isFormComplete, setIsFormComplete] = useState(false);
+
+    // Estados para la validación de usuarios
+    const [validationErrors, setValidationErrors] = useState([]);
+    const [isValidating, setIsValidating] = useState(false);
+
+    // Estados para la carga y éxito de la publicación
+    const [isLoading, setIsLoading] = useState(false);
+    const [uploadSuccess, setUploadSuccess] = useState(false);
+    const [createdPostId, setCreatedPostId] = useState(null);
+    
+    const navigate = useNavigate();
 
     // Función para buscar usuarios mientras el usuario escribe
     useEffect(() => {
@@ -64,6 +75,48 @@ const CreatePost = () => {
         const isComplete = postTitle.trim() !== '' && postDescription.trim() !== '';
         setIsFormComplete(isComplete);
     }, [postTitle, postDescription]);
+
+    // Función para validar un nombre de usuario
+    const validateUsername = async (username) => {
+        if (!username.trim()) return true; // Empty usernames are fine (no tag)
+        
+        try {
+            const token = localStorage.getItem('authToken');
+            const backendUrl = import.meta.env.VITE_BACKEND_URL;
+            
+            const response = await axios.get(
+                `${backendUrl}/api/users/check-username/${username}`, 
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            
+            return response.data.exists;
+        } catch (error) {
+            console.error('Error validating username:', error);
+            return false;
+        }
+    };
+
+    // Función para validar todos los nombres de usuario
+    const validateAllUsernames = async () => {
+        setIsValidating(true);
+        setValidationErrors([]);
+        
+        const errors = [];
+        
+        for (let i = 0; i < peopleTags.length; i++) {
+            const tag = peopleTags[i];
+            if (tag.name.trim()) {
+                const isValid = await validateUsername(tag.name);
+                if (!isValid) {
+                    errors.push({ index: i, message: `El usuario "${tag.name}" no existe en la plataforma.` });
+                }
+            }
+        }
+        
+        setValidationErrors(errors);
+        setIsValidating(false);
+        return errors.length === 0;
+    };
 
     const addPeopleTagCard = () => {
         // Solo añadir si la última tarjeta tiene al menos un nombre
@@ -147,19 +200,32 @@ const CreatePost = () => {
         setMainImageIndex((prev) => (prev - 1 + images.length) % images.length);
     };
 
-    const [isLoading, setIsLoading] = useState(false);
-    const [uploadSuccess, setUploadSuccess] = useState(false);
-    const [createdPostId, setCreatedPostId] = useState(null);
-    
-    const navigate = useNavigate();
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!isFormComplete) {
             alert('Por favor completa todos los campos obligatorios.');
             return;
         }
+        
+        // Validar nombres de usuario antes de enviar
         setIsLoading(true);
+        
+        // Validar nombres de usuario
+        const allUsernamesValid = await validateAllUsernames();
+        
+        if (!allUsernamesValid) {
+            setIsLoading(false);
+            // Scroll to the first error
+            if (validationErrors.length > 0) {
+                const firstErrorIndex = validationErrors[0].index;
+                const errorElement = document.getElementById(`people-tag-${firstErrorIndex}`);
+                if (errorElement) {
+                    errorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+            return;
+        }
+        
         const formData = new FormData();
         formData.append('title', postTitle);
         formData.append('description', postDescription);
@@ -192,6 +258,7 @@ const CreatePost = () => {
             setPeopleTags([{ name: '', role: '' }]);
             setImageTags({});
             setNewTag('');
+            setValidationErrors([]);
         } catch (error) {
             console.error("Error al publicar el post", error);
         } finally {
@@ -356,7 +423,11 @@ const CreatePost = () => {
                         <section className="post-section">
                             <h3>Etiqueta personas</h3>
                             {peopleTags.map((tag, index) => (
-                                <div key={index} className="people-tag-card">
+                                <div 
+                                    key={index} 
+                                    id={`people-tag-${index}`}
+                                    className={`people-tag-card ${validationErrors.some(e => e.index === index) ? 'validation-error' : ''}`}
+                                >
                                     <div className="form-group-create-post">
                                         <label>Nombre</label>
                                         <div className="autocomplete-wrapper">
@@ -370,7 +441,7 @@ const CreatePost = () => {
                                                     setActiveTagIndex(index);
                                                     setSearchTerm(tag.name);
                                                 }}
-                                                className="post-input"
+                                                className={`post-input ${validationErrors.some(e => e.index === index) ? 'input-error' : ''}`}
                                             />
                                             {activeTagIndex === index && suggestedUsers.length > 0 && (
                                                 <div className="autocomplete-dropdown">
@@ -392,6 +463,11 @@ const CreatePost = () => {
                                                             </div>
                                                         ))
                                                     )}
+                                                </div>
+                                            )}
+                                            {validationErrors.some(e => e.index === index) && (
+                                                <div className="username-error-message">
+                                                    <FaExclamationCircle /> {validationErrors.find(e => e.index === index).message}
                                                 </div>
                                             )}
                                         </div>
@@ -495,9 +571,9 @@ const CreatePost = () => {
                         <button
                             type="submit"
                             className={`publish-btn ${isFormComplete ? 'active' : 'inactive'}`}
-                            disabled={!isFormComplete || isLoading}
+                            disabled={!isFormComplete || isLoading || isValidating}
                         >
-                            {isLoading ? 'Publicando...' : 'Publicar'}
+                            {isLoading || isValidating ? 'Validando...' : 'Publicar'}
                         </button>
                     </form>
                 </div>
