@@ -9,7 +9,8 @@ import {
     FaRegBookmark,
     FaShareAlt,
     FaUserCircle,
-    FaTrash
+    FaTrash,
+    FaTimes
 } from 'react-icons/fa';
 import './css/UserPost.css';
 
@@ -32,6 +33,7 @@ const UserPost = () => {
 
     // Obtener el ID del usuario autenticado.
     const [currentUserId, setCurrentUserId] = useState(null);
+    const [showFullScreenPreview, setShowFullScreenPreview] = useState(false);
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -252,6 +254,8 @@ const UserPost = () => {
                             src={mainImage}
                             alt="Imagen principal"
                             className="perfil__imagen-principal"
+                            onClick={() => setShowFullScreenPreview(true)}
+                            style={{ cursor: 'pointer' }}
                         />
                         <div className="options">
                             <button
@@ -393,6 +397,39 @@ const UserPost = () => {
                             <button onClick={handleDeletePost}>Confirmar</button>
                             <button onClick={() => setShowDeleteModal(false)}>Cancelar</button>
                         </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Modal de vista previa a pantalla completa */}
+            {showFullScreenPreview && (
+                <div className="fullscreen-preview-overlay" 
+                     onClick={() => setShowFullScreenPreview(false)}
+                     onTouchStart={onTouchStart}
+                     onTouchMove={onTouchMove}
+                     onTouchEnd={onTouchEnd}>
+                    <div className="fullscreen-preview-content">
+                        <button className="fullscreen-close-btn" onClick={() => setShowFullScreenPreview(false)}>
+                            <FaTimes size={24} />
+                        </button>
+                        <button className="fullscreen-prev-btn" onClick={(e) => {
+                            e.stopPropagation();
+                            handlePrevious();
+                        }}>
+                            <FaChevronLeft size={30} />
+                        </button>
+                        <img
+                            src={mainImage}
+                            alt="Vista previa a pantalla completa"
+                            className="fullscreen-image"
+                            onClick={(e) => e.stopPropagation()}
+                        />
+                        <button className="fullscreen-next-btn" onClick={(e) => {
+                            e.stopPropagation();
+                            handleNext();
+                        }}>
+                            <FaChevronRight size={30} />
+                        </button>
                     </div>
                 </div>
             )}
