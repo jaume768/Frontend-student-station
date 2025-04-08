@@ -72,7 +72,7 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 24px;
-    max-width: 900px;
+    max-width: 700px;
     margin: 0 auto 32px;
 }
 
@@ -103,7 +103,7 @@
     display: grid;
     grid-template-columns: 1fr;
     gap: 24px;
-    max-width: 900px;
+    max-width: 700px;
     margin: 0 auto;
 }
 
@@ -226,11 +226,15 @@
 .blog-card-content {
     padding: 16px;
     display: flex;
-    text-align: center;
     flex-direction: column;
     justify-content: space-between;
     flex-grow: 1;
     background-color: white;
+}
+
+/* Add centered text only for featured blog cards */
+.blog-featured-card .blog-card-content {
+    text-align: center;
 }
 
 .blog-card-title {
@@ -325,7 +329,7 @@
     background-color: #f9f9f9;
     border-radius: 8px;
     margin: 0 auto;
-    max-width: 1200px;
+    max-width: 700px;
     text-align: center;
 }
 
