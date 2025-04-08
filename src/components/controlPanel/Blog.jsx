@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 import './css/blog.css';
-import { FaSearch, FaSpinner, FaExclamationTriangle } from 'react-icons/fa';
+import { FaSearch, FaSpinner, FaExclamationTriangle, FaCalendarAlt, FaUser, FaArrowRight } from 'react-icons/fa';
 
 const Blog = () => {
     const [articles, setArticles] = useState([]);
@@ -11,119 +12,53 @@ const Blog = () => {
 
     const categories = [
         { id: 'all', name: 'Todos' },
-        { id: 'trends', name: 'Tendencias' },
+        { id: 'fashion', name: 'Moda' },
         { id: 'designers', name: 'Diseñadores' },
+        { id: 'industry', name: 'Industria' },
+        { id: 'education', name: 'Educación' },
         { id: 'events', name: 'Eventos' },
-        { id: 'sustainability', name: 'Sostenibilidad' },
-        { id: 'business', name: 'Negocio' }
+        { id: 'other', name: 'Otros' }
     ];
 
-    const sampleArticles = [
-        {
-            id: 1,
-            title: 'Las tendencias de primavera 2025: colores y estampados que dominarán la temporada',
-            excerpt: 'Descubre las principales tendencias de la moda para la próxima temporada primavera-verano 2025.',
-            image: '/multimedia/blog/trends-spring-2025.png',
-            date: '2025-03-20',
-            category: 'trends',
-            author: 'Miriam',
-            featured: true,
-            size: 'large-blog'
-        },
-        {
-            id: 2,
-            title: 'Entrevista exclusiva: El ascenso del nuevo talento en diseño sostenible',
-            excerpt: 'Conversamos con cinco diseñadores emergentes que están revolucionando la moda sostenible.',
-            image: '/multimedia/blog/sustainable-designers.jpg',
-            date: '2025-03-18',
-            category: 'designers',
-            author: 'Miriam',
-            featured: false,
-            size: 'medium-blog'
-        },
-        {
-            id: 3,
-            title: 'Semana de la Moda de Madrid: Lo más destacado',
-            excerpt: 'Un resumen de las colecciones más impactantes de la última edición.',
-            image: '/multimedia/blog/madrid-fashion-week.webp',
-            date: '2025-03-15',
-            category: 'events',
-            author: 'Miriam',
-            featured: false,
-            size: 'medium-blog'
-        },
-        {
-            id: 4,
-            title: 'El auge de los materiales textiles innovadores',
-            excerpt: 'Exploramos los nuevos materiales que están transformando la industria de la moda.',
-            image: '/multimedia/blog/innovative-textiles.jpg',
-            date: '2025-03-12',
-            category: 'sustainability',
-            author: 'Miriam',
-            featured: false,
-            size: 'small-blog'
-        },
-        {
-            id: 5,
-            title: 'Cómo la IA está transformando el diseño de moda',
-            excerpt: 'Un análisis del impacto de la inteligencia artificial en los procesos creativos.',
-            image: '/multimedia/blog/ai-fashion-design.jpg',
-            date: '2025-03-10',
-            category: 'business',
-            author: 'Miriam',
-            featured: false,
-            size: 'small-blog'
-        },
-        {
-            id: 6,
-            title: 'El regreso de los 90: Nostalgia en la pasarela',
-            excerpt: 'Analizamos cómo las tendencias de los 90 están volviendo con fuerza.',
-            image: '/multimedia/blog/90s-revival.jpg',
-            date: '2025-03-08',
-            category: 'trends',
-            author: 'Miriam',
-            featured: false,
-            size: 'medium-blog'
-        },
-        {
-            id: 8,
-            title: 'Entrevista con Carolina Herrera: 50 años de elegancia',
-            excerpt: 'La icónica diseñadora reflexiona sobre su trayectoria y el futuro de su marca.',
-            image: '/multimedia/blog/carolina-herrera.jpg',
-            date: '2025-03-02',
-            category: 'designers',
-            author: 'Miriam',
-            featured: true,
-            size: 'large-blog'
-        }
-    ];
+    // Ya no necesitamos los datos de muestra, ahora usamos datos reales del backend
 
     useEffect(() => {
         const fetchArticles = async () => {
             try {
                 setLoading(true);
-                // Aquí normalmente habría una llamada axios a una API real
-                // const backendUrl = import.meta.env.VITE_BACKEND_URL;
-                // const response = await axios.get(`${backendUrl}/api/blog/articles`);
+                const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
                 
-                // Simulamos una respuesta con datos de ejemplo
-                setTimeout(() => {
-                    setArticles(sampleArticles);
-                    setLoading(false);
-                }, 800);
+                // Si hay una categoría seleccionada que no sea 'all', usar el endpoint específico
+                let endpoint = '/api/blog';
+                if (activeCategory !== 'all') {
+                    endpoint = `/api/blog/category/${activeCategory}`;
+                }
+                
+                const response = await axios.get(`${apiUrl}${endpoint}`);
+                
+                if (response.data.success) {
+                    setArticles(response.data.data);
+                    setError(null);
+                } else {
+                    setError('No se pudieron cargar los artículos del blog');
+                }
             } catch (error) {
                 console.error('Error al cargar los artículos del blog:', error);
                 setError('Ocurrió un error al cargar los artículos. Por favor, inténtalo de nuevo más tarde.');
+            } finally {
                 setLoading(false);
             }
         };
 
         fetchArticles();
-    }, []);
+    }, [activeCategory]);
 
-    const filteredArticles = activeCategory === 'all' 
-        ? articles 
-        : articles.filter(article => article.category === activeCategory);
+    // Ya no necesitamos filtrar los artículos aquí, ya que lo hacemos en la API
+    const filteredArticles = articles;
+    
+    // Separar los dos artículos más recientes para mostrarlos en la parte superior
+    const featuredArticles = filteredArticles.slice(0, 2);
+    const regularArticles = filteredArticles.slice(2);
 
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -173,50 +108,86 @@ const Blog = () => {
                 </div>
             </div>
 
-            <div className="blog-bento-grid">
-                {filteredArticles.length === 0 ? (
-                    <div className="no-articles-message">
-                        <FaSearch />
-                        <p>No se encontraron artículos en esta categoría</p>
-                    </div>
-                ) : (
-                    filteredArticles.map(article => (
-                        <div 
-                            key={article.id} 
-                            className={`blog-card ${article.size} ${article.featured ? 'featured-blog' : ''}`}
-                        >
-                            <div className="blog-card-image-container">
-                                <img 
-                                    src={article.image || "/multimedia/blog/default-article.jpg"} 
-                                    alt={article.title}
-                                    className="blog-card-image"
-                                    onError={(e) => {
-                                        e.target.src = "/multimedia/blog/default-article.jpg";
-                                    }}
-                                />
-                                <div className="blog-card-category">
-                                    {categories.find(cat => cat.id === article.category)?.name || 'Categoría'}
+            {filteredArticles.length === 0 ? (
+                <div className="blog-empty-state">
+                    <FaSearch />
+                    <p>No se encontraron artículos en esta categoría</p>
+                </div>
+            ) : (
+                <>
+                    {/* Sección de artículos destacados (los 2 más recientes) */}
+                    <div className="blog-featured-section">
+                        {featuredArticles.map(article => (
+                            <div 
+                                key={article._id} 
+                                className="blog-featured-card"
+                            >
+                                <div className="blog-card-image-container">
+                                    <img 
+                                        src={article.image || "/multimedia/blog/default-article.jpg"} 
+                                        alt={article.title}
+                                        className="blog-card-image"
+                                        onError={(e) => {
+                                            e.target.src = "/multimedia/blog/default-article.jpg";
+                                        }}
+                                    />
                                 </div>
-                            </div>
-                            <div className="blog-card-content">
-                                <div>
-                                    <h3 className="blog-card-title">{article.title}</h3>
-                                    <p className="blog-card-excerpt">{article.excerpt}</p>
-                                </div>
-                                <div>
-                                    <div className="blog-card-meta">
-                                        <span className="blog-card-author">{article.author}</span>
-                                        <span className="blog-card-date">{formatDate(article.date)}</span>
+                                <div className="blog-card-content">
+                                    <div>
+                                        <h3 className="blog-card-title">{article.title}</h3>
+                                        <p className="blog-card-excerpt">{article.excerpt}</p>
                                     </div>
-                                    <Link to={`/ControlPanel/article/${article.id}`} className="blog-card-link">
-                                        Leer más
-                                    </Link>
+                                    <div>
+                                        <div className="blog-card-category-label">
+                                            {categories.find(cat => cat.id === article.category)?.name || 'Categoría'}
+                                        </div>
+                                        <span className="blog-card-date">{formatDate(article.publishedDate)}</span>
+                                        <Link to={`/ControlPanel/article/${article._id}`} className="blog-card-link">
+                                            Leer más <FaArrowRight style={{ marginLeft: '5px', fontSize: '12px' }} />
+                                        </Link>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))
-                )}
-            </div>
+                        ))}
+                    </div>
+
+                    {/* Sección de artículos regulares (el resto) */}
+                    <div className="blog-regular-section">
+                        {regularArticles.map(article => (
+                            <div 
+                                key={article._id} 
+                                className="blog-regular-card"
+                            >
+                                <div className="blog-card-image-container">
+                                    <img 
+                                        src={article.image || "/multimedia/blog/default-article.jpg"} 
+                                        alt={article.title}
+                                        className="blog-card-image"
+                                        onError={(e) => {
+                                            e.target.src = "/multimedia/blog/default-article.jpg";
+                                        }}
+                                    />
+                                </div>
+                                <div className="blog-card-content">
+                                    <div>
+                                        <h3 className="blog-card-title">{article.title}</h3>
+                                        <p className="blog-card-excerpt">{article.excerpt}</p>
+                                    </div>
+                                    <div>
+                                        <div className="blog-card-category-label">
+                                            {categories.find(cat => cat.id === article.category)?.name || 'Categoría'}
+                                        </div>
+                                        <span className="blog-card-date">{formatDate(article.publishedDate)}</span>
+                                        <Link to={`/ControlPanel/article/${article._id}`} className="blog-card-link">
+                                            Leer más <FaArrowRight style={{ marginLeft: '5px', fontSize: '12px' }} />
+                                        </Link>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </>
+            )}
         </div>
     );
 };
