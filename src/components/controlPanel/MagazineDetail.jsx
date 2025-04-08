@@ -111,9 +111,15 @@ const MagazineDetail = () => {
                         <p>La revista del diseño independiente y diseñadores emergentes. Esta edición presenta contenido exclusivo de las últimas tendencias y diseñadores emergentes en el mundo de la moda.</p>
                     </div>
                     <div className="magazine-detail-actions">
-                        <button className="primary-button">
-                            Comprar ahora
-                        </button>
+                        {magazine.link ? (
+                            <a href={magazine.link} target="_blank" rel="noopener noreferrer" className="primary-button">
+                                Comprar ahora
+                            </a>
+                        ) : (
+                            <button className="primary-button disabled" disabled>
+                                No disponible
+                            </button>
+                        )}
                     </div>
                 </div>
             </div>

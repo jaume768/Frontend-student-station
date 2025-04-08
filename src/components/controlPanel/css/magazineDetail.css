@@ -116,6 +116,15 @@
     background-color: #d13a2a;
 }
 
+.primary-button.disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.primary-button.disabled:hover {
+    background-color: #ccc;
+}
+
 /* Loading, error and not found states */
 .magazine-detail-loading,
 .magazine-detail-error,

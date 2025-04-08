@@ -69,15 +69,18 @@ const Magazine = () => {
                 <div className="magazine-grid">
                     {magazines.map((magazine) => (
                         <div key={magazine._id} className="magazine-card">
-                            <Link to={`/ControlPanel/magazine/${magazine._id}`}>
+                            <a href={magazine.link || '#'} target="_blank" rel="noopener noreferrer" 
+                               onClick={(e) => !magazine.link && e.preventDefault()}
+                               className={!magazine.link ? 'no-link' : ''}>
                                 <div className="magazine-image">
                                     <img src={magazine.image} alt={magazine.name} />
                                 </div>
                                 <div className="magazine-info">
                                     <h2>{magazine.name}</h2>
                                     <p className="magazine-price">{formatPrice(magazine.price)}</p>
+                                    {!magazine.link && <p className="magazine-no-link">No disponible</p>}
                                 </div>
-                            </Link>
+                            </a>
                         </div>
                     ))}
                 </div>

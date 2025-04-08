@@ -102,6 +102,17 @@
     display: block;
 }
 
+.magazine-card a.no-link {
+    cursor: default;
+}
+
+.magazine-no-link {
+    color: #999;
+    font-style: italic;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
 /* Loading state */
 .magazine-loading {
     text-align: center;
