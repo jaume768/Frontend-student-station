@@ -134,14 +134,16 @@ const Blog = () => {
                                 </div>
                                 <div className="blog-card-content">
                                     <div>
+                                        <div className="blog-card-meta-info">
+                                            <div className="blog-card-category-label">
+                                                {categories.find(cat => cat.id === article.category)?.name || 'Categoría'}
+                                            </div>
+                                            <span className="blog-card-date">{formatDate(article.publishedDate)}</span>
+                                        </div>
                                         <h3 className="blog-card-title">{article.title}</h3>
                                         <p className="blog-card-excerpt">{article.excerpt}</p>
                                     </div>
                                     <div>
-                                        <div className="blog-card-category-label">
-                                            {categories.find(cat => cat.id === article.category)?.name || 'Categoría'}
-                                        </div>
-                                        <span className="blog-card-date">{formatDate(article.publishedDate)}</span>
                                         <Link to={`/ControlPanel/article/${article._id}`} className="blog-card-link">
                                             Leer más <FaArrowRight style={{ marginLeft: '5px', fontSize: '12px' }} />
                                         </Link>
@@ -170,14 +172,16 @@ const Blog = () => {
                                 </div>
                                 <div className="blog-card-content">
                                     <div>
+                                        <div className="blog-card-meta-info">
+                                            <div className="blog-card-category-label">
+                                                {categories.find(cat => cat.id === article.category)?.name || 'Categoría'}
+                                            </div>
+                                            <span className="blog-card-date">{formatDate(article.publishedDate)}</span>
+                                        </div>
                                         <h3 className="blog-card-title">{article.title}</h3>
                                         <p className="blog-card-excerpt">{article.excerpt}</p>
                                     </div>
                                     <div>
-                                        <div className="blog-card-category-label">
-                                            {categories.find(cat => cat.id === article.category)?.name || 'Categoría'}
-                                        </div>
-                                        <span className="blog-card-date">{formatDate(article.publishedDate)}</span>
                                         <Link to={`/ControlPanel/article/${article._id}`} className="blog-card-link">
                                             Leer más <FaArrowRight style={{ marginLeft: '5px', fontSize: '12px' }} />
                                         </Link>
