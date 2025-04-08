@@ -20,6 +20,8 @@ import JobOfferDetail from '../components/controlPanel/JobOfferDetail';
 import EducationalOfferDetail from '../components/controlPanel/EducationalOfferDetail';
 import Fashion from '../components/controlPanel/Fashion';
 import Blog from '../components/controlPanel/Blog';
+import Magazine from '../components/controlPanel/Magazine';
+import MagazineDetail from '../components/controlPanel/MagazineDetail';
 import './css/control-panel.css';
 
 const ControlPanel = () => {
@@ -75,7 +77,8 @@ const ControlPanel = () => {
                 <Route path="creatives" element={<Creatives />} />
                 <Route path="fashion" element={<Fashion />} />
                 <Route path="blog" element={<Blog />} />
-                <Route path="magazine" element={<Blog />} />
+                <Route path="magazine" element={<Magazine />} />
+                <Route path="magazine/:id" element={<MagazineDetail />} />
                 <Route path="article/:id" element={<div><h1>Artículo en desarrollo</h1></div>} />
                 <Route path="info" element={<div><h1>Información</h1></div>} />
                 <Route path="editProfile" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
