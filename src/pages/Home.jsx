@@ -74,7 +74,7 @@ const Home = () => {
         />
       )}
 
-      <Footer isVisible={!showLogin && !showRegister && !showPasswordReset} />
+      <Footer isVisible={!showLogin && !showPasswordReset} />
     </div>
   );
 };

@@ -97,9 +97,7 @@ const PasswordResetModal = ({ onClose, onSwitchToLogin }) => {
     return (
         <div className="login-modal">
             <div className="login-card">
-                <button className="close-button" onClick={onClose}>
-                    <FaTimes />
-                </button>
+
                 {step === "email" && (
                     <>
                         <h1>Recuperar contraseña</h1>

@@ -19,37 +19,37 @@ const Header = ({ onLoginClick, onRegisterClick }) => {
                 <nav className={`header-home-nav ${isMenuOpen ? 'open' : ''}`}>
                     <ul>
                         <li>
-                            <Link to="/ControlPanel" state={{ activeMenu: 'explorer' }}>
+                            <Link to="/ControlPanel/explorer">
                                 Explorar
                             </Link>
                         </li>
                         <li>
-                            <Link to="/ControlPanel" state={{ activeMenu: 'creatives' }}>
-                                Diseñadores
+                            <Link to="/ControlPanel/creatives">
+                                Creativos
                             </Link>
                         </li>
                         <li>
-                            <Link to="/ControlPanel" state={{ activeMenu: 'fashion' }}>
+                            <Link to="/ControlPanel/fashion">
                                 Escuelas
                             </Link>
                         </li>
                         <li>
-                            <Link to="/ControlPanel" state={{ activeMenu: 'offers' }}>
+                            <Link to="/ControlPanel/offers">
                                 Trabajos
                             </Link>
                         </li>
                         <li>
-                            <Link to="/ControlPanel" state={{ activeMenu: 'magazine' }}>
+                            <Link to="/ControlPanel/magazine">
                                 Revista
                             </Link>
                         </li>
                         <li>
-                            <Link to="/ControlPanel" state={{ activeMenu: 'blog' }}>
+                            <Link to="/ControlPanel/blog">
                                 Blog
                             </Link>
                         </li>
                         <li>
-                            <Link to="/ControlPanel" state={{ activeMenu: 'info' }}>
+                            <Link to="/ControlPanel/info">
                                 About
                             </Link>
                         </li>

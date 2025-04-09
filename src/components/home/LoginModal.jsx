@@ -1,18 +1,16 @@
 import React, { useState } from 'react';
 import './css/login-modal.css';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
+
 import { useNavigate } from 'react-router-dom';
 
 const LoginModal = ({ onClose, onSwitchToRegister, onSwitchToReset }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
+
     const navigate = useNavigate();
 
-    const togglePassword = () => {
-        setShowPassword(!showPassword);
-    };
+
 
     const handleLogin = async (e) => {
         if (e) e.preventDefault();
@@ -63,18 +61,15 @@ const LoginModal = ({ onClose, onSwitchToRegister, onSwitchToReset }) => {
                         />
                     </div>
 
-                    <div className="input-group password-group">
+                    <div className="input-group">
                         <label htmlFor="password">Contraseña</label>
                         <input
                             id="password"
-                            type={showPassword ? 'text' : 'password'}
+                            type="password"
                             placeholder="Introduce tu contraseña"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                         />
-                        <span className="toggle-password" onClick={togglePassword}>
-                            {showPassword ? <FaEyeSlash /> : <FaEye />}
-                        </span>
                     </div>
 
                     <a
