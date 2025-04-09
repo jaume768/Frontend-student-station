@@ -14,7 +14,7 @@ const Magazine = () => {
         const fetchMagazines = async () => {
             try {
                 setLoading(true);
-                const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+                const apiUrl = process.env.REACT_APP_API_URL || 'https://backend-studen-station-production.up.railway.app';
                 const response = await axios.get(`${apiUrl}/api/magazines`);
                 
                 if (response.data.success) {

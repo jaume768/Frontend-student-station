@@ -26,7 +26,7 @@ const Blog = () => {
         const fetchArticles = async () => {
             try {
                 setLoading(true);
-                const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+                const apiUrl = process.env.REACT_APP_API_URL || 'https://backend-studen-station-production.up.railway.app';
                 
                 // Si hay una categoría seleccionada que no sea 'all', usar el endpoint específico
                 let endpoint = '/api/blog';
