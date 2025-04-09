@@ -142,6 +142,13 @@
     flex-wrap: nowrap;
 }
 
+@media (max-width: 668px) {
+    .perfil__galeria {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
 .perfil__miniatura {
     width: 80px;
     height: 80px;
