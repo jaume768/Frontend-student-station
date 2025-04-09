@@ -45,6 +45,17 @@
     font-size: 0.75em;
 }
 
+.mobile-profile-text {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.profile-arrow {
+    font-size: 0.7rem;
+    transition: transform 0.3s ease;
+}
+
 .nav-link-container {
     display: flex;
     flex-direction: column;

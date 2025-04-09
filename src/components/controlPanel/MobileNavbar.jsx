@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
-import { FaCompass, FaUsers, FaBookmark } from 'react-icons/fa';
+import { FaCompass, FaUsers, FaBookmark, FaChevronUp, FaChevronDown } from 'react-icons/fa';
 import ProfileOptionsModal from './ProfileOptionsModal';
 
 const mobileNavItems = [
@@ -79,7 +79,13 @@ const MobileNavbar = ({ profilePicture }) => {
                                     alt="Perfil"
                                     className="mobile-profile-img"
                                 />
-                                <span>{item.label}</span>
+                                <div className="mobile-profile-text">
+                                    <span>{item.label}</span>
+                                    {showProfileOptions ? 
+                                        <FaChevronUp className="profile-arrow" /> : 
+                                        <FaChevronDown className="profile-arrow" />
+                                    }
+                                </div>
                                 {showProfileOptions && (
                                     <ProfileOptionsModal
                                         onClose={() => setShowProfileOptions(false)}
