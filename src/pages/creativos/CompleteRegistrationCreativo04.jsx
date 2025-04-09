@@ -58,7 +58,7 @@ const CompleteRegistrationCreativo04 = () => {
                             navigate('/creativo/registro/otro/05');
                             break;
                         default:
-                            navigate('/ControlPanel');
+                            navigate('/creativo/registro/final');
                     }
                 } else if (role === "Profesional") {
                     const professionalType = localStorage.getItem("professionalType");
@@ -73,16 +73,16 @@ const CompleteRegistrationCreativo04 = () => {
                             navigate('/profesional/registro/agencia/05');
                             break;
                         case "4": // Una institución educativa
-                            navigate('/ControlPanel');
+                            navigate('/creativo/registro/final');
                             break;
                         case "5": // Otro
                             navigate('/creativo/registro/otro/05');
                             break;
                         default:
-                            navigate('/ControlPanel');
+                            navigate('/creativo/registro/final');
                     }
                 } else {
-                    navigate('/ControlPanel');
+                    navigate('/creativo/registro/final');
                 }
             } else {
                 setError(data.error || "Ha ocurrido un error.");

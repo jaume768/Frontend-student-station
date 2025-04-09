@@ -30,7 +30,7 @@ const CompleteRegistrationCreativoEstilista05 = () => {
         if (formationType === "Estudié en una escuela o universidad") {
           navigate('/creativo/registro/estilista/06');
         } else {
-          navigate('/ControlPanel');
+          navigate('/creativo/registro/final');
         }
       } else {
         setError(data.error || "Ha ocurrido un error.");

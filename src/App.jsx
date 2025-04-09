@@ -24,6 +24,7 @@ import CompleteRegistrationProfesionalInstitucion from './pages/profesionales/Co
 import CompleteRegistrationProfesionalMarca05 from './pages/profesionales/CompleteRegistrationProfesionalMarca05';
 import CompleteRegistrationProfesionalEmpresa05 from './pages/profesionales/CompleteRegistrationProfesionalEmpresa05';
 import CompleteRegistrationProfesionalAgencia05 from './pages/profesionales/CompleteRegistrationProfesionalAgencia05';
+import CompleteRegistrationCreativoFinal from './pages/creativos/CompleteRegistrationCreativoFinal';
 import UserPost from './components/controlPanel/UserPost';
 
 function App() {
@@ -46,7 +47,7 @@ function App() {
         <Route path="/creativo/registro/estilista/06" element={<CompleteRegistrationCreativoEstilista06 />} />
         <Route path="/creativo/registro/disenador/05" element={<CompleteRegistrationCreativoDisenador05 />} />
         <Route path="/creativo/registro/otro/05" element={<CompleteRegistrationCreativoOtro05 />} />
-
+        <Route path="/creativo/registro/final" element={<CompleteRegistrationCreativoFinal />} />
         <Route path="/profesional/registro" element={<CompleteRegistrationProfesional />} />
         <Route path="/profesional/registro/datos-personales" element={<CompleteRegistrationProfesionalDatosPersonales />} />
         <Route path="/profesional/registro/institucion" element={<CompleteRegistrationProfesionalInstitucion />} />

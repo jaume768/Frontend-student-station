@@ -43,7 +43,7 @@ const CompleteRegistrationProfesionalAgencia05 = () => {
             });
             const data = await response.json();
             if (response.ok) {
-                navigate('/ControlPanel');
+                navigate('/creativo/registro/final');
             } else {
                 setError(data.error || "Ha ocurrido un error.");
                 console.error(data.error);
