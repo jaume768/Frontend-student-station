@@ -16,7 +16,7 @@ const PDFUploadSection = ({
     setPortfolioFileName
 }) => {
     return (
-        <section className="form-section">
+        <section className="form-section-final">
             <div className="section-header-edit">
                 <h3>CV y Portfolio</h3>
             </div>
@@ -27,7 +27,7 @@ const PDFUploadSection = ({
                         <div className="pdf-upload-actions">
                             <button 
                                 type="button" 
-                                className="save-pdf-button"
+                                className="save-pdf-button edit-data-button save-mode"
                                 onClick={uploadPdfFiles}
                                 disabled={isUploading}
                             >
@@ -35,7 +35,7 @@ const PDFUploadSection = ({
                             </button>
                             <button 
                                 type="button" 
-                                className="cancel-pdf-edit-button"
+                                className="cancel-pdf-edit-button edit-data-button"
                                 onClick={() => setIsPdfEditing(false)}
                                 disabled={isUploading}
                             >
@@ -45,7 +45,7 @@ const PDFUploadSection = ({
                     ) : (
                         <button 
                             type="button" 
-                            className="edit-pdf-button"
+                            className="edit-pdf-button edit-data-button"
                             onClick={() => setIsPdfEditing(true)}
                         >
                             {(userData.cvUrl || userData.portfolioUrl) ? 'Cambiar archivos' : 'Subir archivos'}

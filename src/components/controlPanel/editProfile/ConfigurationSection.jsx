@@ -1,4 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import DeleteAccountModal from './DeleteAccountModal';
 
 const ConfigurationSection = ({
     userData,
@@ -22,6 +25,34 @@ const ConfigurationSection = ({
     handleChangePassword,
     handleUpdateEmail
 }) => {
+    const navigate = useNavigate();
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
+    
+    const handleDeleteAccount = async () => {
+        try {
+            setIsDeleting(true);
+            const token = localStorage.getItem('authToken');
+            if (!token) return;
+            
+            const backendUrl = import.meta.env.VITE_BACKEND_URL;
+            await axios.delete(`${backendUrl}/api/users/profile`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            
+            // Cerrar sesión
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('userRole');
+            
+            // Redirigir al inicio
+            navigate('/');
+        } catch (error) {
+            console.error('Error al eliminar la cuenta:', error);
+            alert('Ha ocurrido un error al eliminar la cuenta. Por favor, inténtalo de nuevo.');
+            setIsDeleting(false);
+            setIsDeleteModalOpen(false);
+        }
+    };
     return (
         <div className="configuration-section">
             <h2>Configuración de la cuenta</h2>
@@ -35,7 +66,7 @@ const ConfigurationSection = ({
                             <p>********</p>
                             <button
                                 type="button"
-                                className="edit-password-button"
+                                className="edit-password-button edit-data-button"
                                 onClick={() => setIsPasswordEditing(true)}
                             >
                                 Cambiar contraseña
@@ -76,14 +107,14 @@ const ConfigurationSection = ({
                             <div className="password-edit-actions">
                                 <button
                                     type="button"
-                                    className="save-password-button"
+                                    className="save-password-button edit-data-button save-mode"
                                     onClick={handleChangePassword}
                                 >
                                     Guardar
                                 </button>
                                 <button
                                     type="button"
-                                    className="cancel-password-edit-button"
+                                    className="cancel-password-edit-button edit-data-button"
                                     onClick={() => {
                                         setIsPasswordEditing(false);
                                         setCurrentPassword("");
@@ -100,7 +131,7 @@ const ConfigurationSection = ({
                 </div>
             </section>
 
-            <section className="form-section">
+            <section className="form-section-final">
                 <div className="section-header-edit">
                     <h3>Eliminar cuenta</h3>
                 </div>
@@ -110,12 +141,21 @@ const ConfigurationSection = ({
                             Al eliminar tu cuenta, todos tus datos personales, publicaciones y ofertas serán eliminados permanentemente.
                             Esta acción no se puede deshacer.
                         </p>
-                        <button type="button" className="delete-account-button">
+                        <button 
+                            type="button" 
+                            className="delete-account-button edit-data-button"
+                            onClick={() => setIsDeleteModalOpen(true)}
+                        >
                             Eliminar mi cuenta
                         </button>
                     </div>
                 </div>
             </section>
+            <DeleteAccountModal 
+                isOpen={isDeleteModalOpen}
+                onClose={() => setIsDeleteModalOpen(false)}
+                onConfirm={handleDeleteAccount}
+            />
         </div>
     );
 };
