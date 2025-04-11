@@ -107,33 +107,42 @@ const EducationSection = ({
                                     </div>
                                 </div>
                                 <div className="form-group-edit-checkbox checkbox-group">
-                                    <input
-                                        type="checkbox"
-                                        id={`currentlyEnrolled-${index}`}
-                                        name="currentlyEnrolled"
-                                        checked={edu.currentlyEnrolled}
-                                        onChange={(e) => handleEducationListChange(index, e)}
-                                        disabled={!isEducationEditing}
-                                    />
+                                    <div className="custom-checkbox">
+                                        <input
+                                            type="checkbox"
+                                            id={`currentlyEnrolled-${index}`}
+                                            name="currentlyEnrolled"
+                                            checked={edu.currentlyEnrolled}
+                                            onChange={(e) => handleEducationListChange(index, e)}
+                                            disabled={!isEducationEditing}
+                                        />
+                                        <span className="checkmark"></span>
+                                    </div>
                                     <label htmlFor={`currentlyEnrolled-${index}`}>Actualmente cursando</label>
                                 </div>
                             </div>
                         ))}
-                        {isEducationEditing && (
-                            <button type="button" className="add-education" onClick={addEducation}>
+                        {isEducationEditing && educationList.length < 3 && (
+                            <button type="button" className="add-button" onClick={addEducation}>
                                 + Añadir otra formación
                             </button>
                         )}
+                        {isEducationEditing && educationList.length >= 3 && (
+                            <p className="info-text">Máximo 3 formaciones permitidas</p>
+                        )}
                     </div>
                     <div className="form-group-edit-checkbox checkbox-group self-taught">
-                        <input
-                            type="checkbox"
-                            id="selfTaught"
-                            name="selfTaught"
-                            checked={selfTaught}
-                            onChange={handleSelfTaughtChange}
-                            disabled={!isEducationEditing}
-                        />
+                        <div className="custom-checkbox">
+                            <input
+                                type="checkbox"
+                                id="selfTaught"
+                                name="selfTaught"
+                                checked={selfTaught}
+                                onChange={handleSelfTaughtChange}
+                                disabled={!isEducationEditing}
+                            />
+                            <span className="checkmark"></span>
+                        </div>
                         <label htmlFor="selfTaught">Soy autodidacta</label>
                     </div>
                     <div className="button-container">

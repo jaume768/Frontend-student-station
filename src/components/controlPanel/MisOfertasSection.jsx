@@ -402,7 +402,7 @@ const MisOfertasSection = ({ userRole, professionalType }) => {
         );
     }
 
-    // Renderizar interfaz para creativos (original)
+    // Renderizar interfaz para creativos (nuevo diseño)
     return (
         <div className="mis-ofertas-section">
             <div className="mis-ofertas-header">
@@ -436,45 +436,44 @@ const MisOfertasSection = ({ userRole, professionalType }) => {
                             className={`oferta-card ${activeTab === 'caducadas' ? 'oferta-caducada' : ''}`}
                             onClick={() => handleJobOfferClick(offer._id)}
                         >
-                            {offer.isUrgent && <span className="urgent-badge">Urgente</span>}
-                            <div className="oferta-logo">
-                                <img 
-                                    src={offer.companyLogo || '/multimedia/company-default.png'} 
-                                    alt={offer.companyName} 
-                                />
-                            </div>
-                            <div className="oferta-details">
-                                <h4 className="oferta-job-title">{offer.position}</h4>
-                                <p className="oferta-company-name">{offer.companyName}</p>
-                                <p className="oferta-info">
-                                    <span>{formatDate(offer.publicationDate)}</span> | <span>{offer.jobType}</span> |{' '}
-                                    <span>{offer.city}</span>
-                                </p>
-                                <div className="oferta-status">
-                                    {activeTab === 'aplicadas' && (
-                                        <button 
-                                            className="status-btn aplicadas"
-                                            onClick={(e) => e.stopPropagation()}
-                                        >
-                                            Aplicación enviada
-                                        </button>
-                                    )}
-                                    {activeTab === 'guardadas' && (
-                                        <button 
-                                            className="status-btn guardadas"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                handleJobOfferClick(offer._id);
-                                            }}
-                                        >
-                                            Ver detalles
-                                        </button>
-                                    )}
-                                    {activeTab === 'caducadas' && (
-                                        <span className="status-btn caducadas">
-                                            Oferta caducada
-                                        </span>
-                                    )}
+                            <div className="oferta-content">
+                                <div className="oferta-logo">
+                                    <img 
+                                        src={offer.companyLogo || '/multimedia/company-default.png'} 
+                                        alt={offer.companyName} 
+                                    />
+                                </div>
+                                <div className="oferta-details">
+                                    <h4 className="oferta-job-title">Descripción del puesto de trabajo</h4>
+                                    <p className="oferta-company-name">{offer.companyName || 'Nombre de la empresa o marca'}</p>
+                                    
+                                    <div className="oferta-info-row">
+                                        <span className="info-item">{formatDate(offer.publicationDate)}</span>
+                                        <span className="info-separator">|</span>
+                                        <span className="info-item">{offer.jobType || 'No especificado'}</span>
+                                        <span className="info-separator">|</span>
+                                        <span className="info-item"><i className="location-icon"></i> {offer.city}, {offer.country || 'País'}</span>
+                                    </div>
+                                    
+                                    {offer.isUrgent && <div className="urgent-tag">Urgente</div>}
+                                    
+                                    <div className="oferta-status">
+                                        {activeTab === 'aplicadas' && (
+                                            <div className="status-pill aplicadas">
+                                                Aplicación enviada
+                                            </div>
+                                        )}
+                                        {activeTab === 'guardadas' && (
+                                            <div className="status-pill guardadas">
+                                                Ver detalles
+                                            </div>
+                                        )}
+                                        {activeTab === 'caducadas' && (
+                                            <div className="status-pill caducadas">
+                                                Oferta caducada
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         </div>

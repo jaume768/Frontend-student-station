@@ -663,6 +663,18 @@
     margin-right: 7px;
 }
 
+.form-group-edit-etiquetas input{
+    padding: 0.6rem;
+    color: #777;
+    background-color: #f8f8f8;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font-size: 1rem;
+    width: 27em;
+    margin-bottom: 15px;
+    margin-right: 7px;
+}
+
 .form-group-edit input:disabled,
 .form-group-edit select:disabled,
 .form-group-edit textarea:disabled {
@@ -682,6 +694,60 @@
     align-items: center;
     gap: 0.5rem;
     font-size: 0.95rem;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+/* Estilo para checkbox personalizado */
+.custom-checkbox {
+    position: relative;
+    display: inline-block;
+    width: 36px;
+    height: 20px;
+}
+
+.custom-checkbox input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 36px;
+    height: 20px;
+    background-color: #ccc;
+    border-radius: 10px;
+    transition: .3s;
+}
+
+.custom-checkbox input:checked + .checkmark {
+    background-color: #01a8e9;
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: block;
+    left: 3px;
+    top: 3px;
+    width: 14px;
+    height: 14px;
+    background-color: white;
+    border-radius: 50%;
+    transition: .3s;
+}
+
+.custom-checkbox input:checked + .checkmark:after {
+    transform: translateX(16px);
+}
+
+.custom-checkbox input:disabled + .checkmark {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 /* Grupo de fechas */
@@ -775,6 +841,7 @@
     margin-left: 0.3rem;
     color: #01a8e9;
     font-weight: bold;
+    margin-top: 4px;
 }
 
 /* Estilos para file inputs */
@@ -859,11 +926,6 @@
     cursor: pointer;
     color: #777;
     transition: color 0.3s ease;
-}
-
-.ofertas-tab.active {
-    color: #4c85ff;
-    border-bottom: 2px solid #4c85ff;
 }
 
 /* Lista de ofertas */

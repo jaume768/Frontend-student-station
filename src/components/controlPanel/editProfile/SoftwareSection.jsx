@@ -26,7 +26,7 @@ const SoftwareSection = ({
             </div>
             {!isSoftwareCollapsed && (
                 <div className="section-content">
-                    <div className="form-group-edit">
+                    <div className="form-group-edit-etiquetas">
                         <div className="tags-container">
                             {Array.isArray(software) && software.map((sw, index) => (
                                 <div key={index} className="tag">

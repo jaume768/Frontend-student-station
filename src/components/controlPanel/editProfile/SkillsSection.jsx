@@ -26,7 +26,7 @@ const SkillsSection = ({
             </div>
             {!isHabilidadesCollapsed && (
                 <div className="section-content">
-                    <div className="form-group-edit">
+                    <div className="form-group-edit-etiquetas">
                         <div className="tags-container">
                             {Array.isArray(skills) && skills.map((skill, index) => (
                                 <div key={index} className="tag">

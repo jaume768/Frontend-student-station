@@ -96,21 +96,32 @@ const EditProfile = () => {
     const [skills, setSkills] = useState([]);
     const [currentPassword, setCurrentPassword] = useState("");
     const [newSkill, setNewSkill] = useState("");
-    const [popularSkills, setPopularSkills] = useState([
+    
+    // Lista original de habilidades populares (constante para mantener el orden original)
+    const originalPopularSkills = [
         "Patronaje industrial", "Confección básica", "Confección intermedia", "Confección avanzada",
         "Creación de prototipos", "Conocimiento textil y materiales", "Conocimiento y aplicación de tendencias",
         "Desarrollo fichas técnicas", "Diseño de estampados", "Marketing", "Branding", "Ilustración de moda",
         "Gestión de proveedores y materiales", "Edición y retoque de imágenes", "Fotografía de moda y dirección de arte",
         "Organización de desfiles", "Gestión del tiempo", "Desarrollo de identidad de marca", "Comunicación visual",
         "Redacción y periodismo", "Aplicación textil", "Redacción descripción producto e-commerce"
-    ]);
+    ];
+    
+    // Estado para las habilidades populares filtradas
+    const [popularSkills, setPopularSkills] = useState([...originalPopularSkills]);
+    
     const [software, setSoftware] = useState([]);
     const [newSoftware, setNewSoftware] = useState("");
-    const [popularSoftware, setPopularSoftware] = useState([
+    
+    // Lista original de software popular (constante para mantener el orden original)
+    const originalPopularSoftware = [
         "Adobe Photoshop", "Adobe Illustrator", "Adobe Indesign", "Canva", "Clo 3D", "Marvelous Designer",
         "Procreate", "Gerber AccuMark", "Lectra", "Optitex", "Blender", "Asana", "Trello", "SewArt",
         "Tailornova", "Shopify", "ZBrush"
-    ]);
+    ];
+    
+    // Estado para el software popular filtrado
+    const [popularSoftware, setPopularSoftware] = useState([...originalPopularSoftware]);
     const [contract, setContract] = useState({ practicas: false, tiempoCompleto: false, parcial: false });
     const [locationType, setLocationType] = useState({ presencial: false, remoto: false, hibrido: false });
     const [social, setSocial] = useState({
@@ -234,8 +245,16 @@ const EditProfile = () => {
                         }))
                     );
                 }
-                setSkills(user.skills || []);
-                setSoftware(user.software || []);
+                const userSkills = user.skills || [];
+                const userSoftware = user.software || [];
+                setSkills(userSkills);
+                setSoftware(userSoftware);
+                
+                // Filtrar las habilidades populares para no mostrar las que ya tiene el usuario
+                setPopularSkills(originalPopularSkills.filter(skill => !userSkills.includes(skill)));
+                
+                // Filtrar el software popular para no mostrar los que ya tiene el usuario
+                setPopularSoftware(originalPopularSoftware.filter(sw => !userSoftware.includes(sw)));
                 setContract(user.contract || { practicas: false, tiempoCompleto: false, parcial: false });
                 setLocationType(user.locationType || { presencial: false, remoto: false, hibrido: false });
                 setSocial(user.social || {
@@ -393,15 +412,36 @@ const EditProfile = () => {
 
     const removeSkill = (index) => {
         if (!Array.isArray(skills)) return;
+        const skillToRemove = skills[index];
         setSkills(skills.filter((_, i) => i !== index));
+        
+        // Si la habilidad eliminada estaba en la lista original de habilidades populares
+        if (originalPopularSkills.includes(skillToRemove)) {
+            // Encontrar la posición original de la habilidad en la lista original
+            const originalIndex = originalPopularSkills.indexOf(skillToRemove);
+            
+            // Crear una nueva lista con la habilidad insertada en su posición original
+            const newPopularSkills = [...popularSkills];
+            
+            // Encontrar la posición correcta para insertar la habilidad
+            let insertIndex = 0;
+            for (let i = 0; i < originalIndex; i++) {
+                if (newPopularSkills.includes(originalPopularSkills[i])) {
+                    insertIndex = newPopularSkills.indexOf(originalPopularSkills[i]) + 1;
+                }
+            }
+            
+            // Insertar la habilidad en la posición correcta
+            newPopularSkills.splice(insertIndex, 0, skillToRemove);
+            setPopularSkills(newPopularSkills);
+        }
     };
 
     const addPopularSkill = (skill) => {
         const currentSkills = Array.isArray(skills) ? skills : [];
-        const currentPopularSkills = Array.isArray(popularSkills) ? popularSkills : [];
         if (isHabilidadesEditing && currentSkills.length < 12 && !currentSkills.includes(skill)) {
             setSkills([...currentSkills, skill]);
-            setPopularSkills(currentPopularSkills.filter(s => s !== skill));
+            setPopularSkills(popularSkills.filter(s => s !== skill));
         }
     };
 
@@ -418,15 +458,36 @@ const EditProfile = () => {
 
     const removeSoftware = (index) => {
         if (!Array.isArray(software)) return;
+        const softwareToRemove = software[index];
         setSoftware(software.filter((_, i) => i !== index));
+        
+        // Si el software eliminado estaba en la lista original de software popular
+        if (originalPopularSoftware.includes(softwareToRemove)) {
+            // Encontrar la posición original del software en la lista original
+            const originalIndex = originalPopularSoftware.indexOf(softwareToRemove);
+            
+            // Crear una nueva lista con el software insertado en su posición original
+            const newPopularSoftware = [...popularSoftware];
+            
+            // Encontrar la posición correcta para insertar el software
+            let insertIndex = 0;
+            for (let i = 0; i < originalIndex; i++) {
+                if (newPopularSoftware.includes(originalPopularSoftware[i])) {
+                    insertIndex = newPopularSoftware.indexOf(originalPopularSoftware[i]) + 1;
+                }
+            }
+            
+            // Insertar el software en la posición correcta
+            newPopularSoftware.splice(insertIndex, 0, softwareToRemove);
+            setPopularSoftware(newPopularSoftware);
+        }
     };
 
     const addPopularSoftware = (sw) => {
         const currentSoftware = Array.isArray(software) ? software : [];
-        const currentPopularSoftware = Array.isArray(popularSoftware) ? popularSoftware : [];
         if (isSoftwareEditing && currentSoftware.length < 12 && !currentSoftware.includes(sw)) {
             setSoftware([...currentSoftware, sw]);
-            setPopularSoftware(currentPopularSoftware.filter(s => s !== sw));
+            setPopularSoftware(popularSoftware.filter(s => s !== sw));
         }
     };
 
@@ -474,6 +535,9 @@ const EditProfile = () => {
 
     const addEducation = () => {
         const currentList = Array.isArray(educationList) ? educationList : [];
+        // Limitar a un máximo de 3 secciones de formación educativa
+        if (currentList.length >= 3) return;
+        
         const emptyEducation = {
             institution: '',
             otherInstitution: '',
