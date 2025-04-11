@@ -4,6 +4,7 @@
     padding: 1.5rem;
     font-family: 'Inter', sans-serif;
     color: #000;
+    overflow: hidden;
 }
 
 /* Sección que engloba el banner y el cuerpo */
@@ -570,6 +571,7 @@
 @media (min-width: 769px) {
     .profile-sections {
         overflow-y: auto;
+        width: 100%;
         max-height: calc(100vh - 120px); 
     }
 }
