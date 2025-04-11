@@ -12,7 +12,9 @@ const CompanyContactSection = ({
     handleRemoveTag,
     offersPractices = false,
     setOffersPractices,
-    updateProfileData
+    updateProfileData,
+    social,
+    handleSocialChange
 }) => {
     const [newTag, setNewTag] = useState('');
     const [error, setError] = useState('');
@@ -72,86 +74,54 @@ const CompanyContactSection = ({
             </div>
             {!isCompanyContactCollapsed && (
                 <div className="section-content">
-                    <p className="section-description">
-                        Agrega etiquetas para que otros puedan identificar tu campo de especialización.
-                        Intenta que sean claras y concisas. Añade hasta un máximo de 3 etiquetas.
-                    </p>
-                    
                     <div className="form-group-edit">
-                        <div className="tags-container">
-                            {Array.isArray(companyTags) && companyTags.length > 0 ? (
-                                companyTags.map((tag, index) => (
-                                    <div key={index} className="tag">
-                                        {tag}
-                                        {isCompanyContactEditing && (
-                                            <button 
-                                                type="button" 
-                                                className="remove-tag" 
-                                                onClick={() => handleRemoveTag(index)}
-                                            >
-                                                <FaTimes />
-                                            </button>
-                                        )}
-                                    </div>
-                                ))
-                            ) : (
-                                <div className="empty-tags">
-                                    {isCompanyContactEditing ? (
-                                        <p>No hay etiquetas. ¡Añade tu primera etiqueta!</p>
-                                    ) : (
-                                        <p>No hay etiquetas registradas todavía.</p>
-                                    )}
-                                </div>
-                            )}
+                        <label>Email de contacto</label>
+                        <input
+                            type="email"
+                            name="emailContacto"
+                            placeholder="Email de contacto"
+                            value={social?.emailContacto || ""}
+                            onChange={handleSocialChange}
+                            disabled={!isCompanyContactEditing}
+                        />
+                    </div>
+                    <div className="form-group-edit">
+                        <label>Sitio web</label>
+                        <input
+                            type="url"
+                            name="sitioWeb"
+                            placeholder="https://www.tusitio.com"
+                            value={social?.sitioWeb || ""}
+                            onChange={handleSocialChange}
+                            disabled={!isCompanyContactEditing}
+                        />
+                    </div>
+                    <div className="form-group-edit">
+                        <label>Instagram</label>
+                        <div className="social-input-container">
+                            <span className="social-prefix">instagram.com/</span>
+                            <input
+                                type="text"
+                                name="instagram"
+                                placeholder="tu_usuario"
+                                value={social?.instagram || ""}
+                                onChange={handleSocialChange}
+                                disabled={!isCompanyContactEditing}
+                            />
                         </div>
-                        
-                        {isCompanyContactEditing && (
-                            <div className="tag-input-container">
-                                <div className="tag-input-wrapper">
-                                    <input
-                                        type="text"
-                                        placeholder="Ejemplo: Moda sostenible"
-                                        value={newTag}
-                                        onChange={(e) => setNewTag(e.target.value)}
-                                        onKeyDown={handleKeyDown}
-                                        disabled={Array.isArray(companyTags) && companyTags.length >= 3}
-                                    />
-                                    <button
-                                        type="button"
-                                        className="add-tag-button"
-                                        onClick={addTag}
-                                        disabled={Array.isArray(companyTags) && companyTags.length >= 3}
-                                    >
-                                        <FaPlus />
-                                    </button>
-                                </div>
-                                
-                                {error && <p className="error-message">{error}</p>}
-                                
-                                <p className="tag-hint">
-                                    {Array.isArray(companyTags) && companyTags.length >= 3 ? (
-                                        'Has alcanzado el límite de 3 etiquetas.'
-                                    ) : (
-                                        'Presiona Enter al finalizar de escribir para añadir una etiqueta. Elimina haciendo clic en la X.'
-                                    )}
-                                </p>
-                            </div>
-                        )}
-                        
-                        <div className="practice-options">
-                            <label>
-                                <input
-                                    type="checkbox"
-                                    name="practices"
-                                    checked={offersPractices}
-                                    onChange={handlePracticesChange}
-                                    disabled={!isCompanyContactEditing}
-                                />
-                                Prácticas
-                            </label>
-                            <p className="tag-hint">
-                                Marca esta casilla si tu empresa ofrece prácticas profesionales
-                            </p>
+                    </div>
+                    <div className="form-group-edit">
+                        <label>LinkedIn</label>
+                        <div className="social-input-container">
+                            <span className="social-prefix">linkedin.com/in/</span>
+                            <input
+                                type="text"
+                                name="linkedin"
+                                placeholder="tu_usuario"
+                                value={social?.linkedin || ""}
+                                onChange={handleSocialChange}
+                                disabled={!isCompanyContactEditing}
+                            />
                         </div>
                     </div>
                     

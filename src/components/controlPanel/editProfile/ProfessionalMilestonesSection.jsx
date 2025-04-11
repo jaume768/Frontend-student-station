@@ -56,6 +56,15 @@ const ProfessionalMilestonesSection = ({
             alert('Por favor, completa todos los campos obligatorios marcados con *');
         }
     };
+    
+    // Asegurarse de que siempre haya al menos un hito vacío cuando se está editando
+    // y no hay hitos existentes
+    React.useEffect(() => {
+        if (isProfessionalMilestonesEditing && 
+            (!Array.isArray(professionalMilestones) || professionalMilestones.length === 0)) {
+            handleAddMilestone();
+        }
+    }, [isProfessionalMilestonesEditing]);
 
     return (
         <section className="form-section">
@@ -159,7 +168,9 @@ const ProfessionalMilestonesSection = ({
                             <button
                                 type="button"
                                 className="add-button"
-                                onClick={handleAddMilestone}
+                                onClick={() => {
+                                    handleAddMilestone();
+                                }}
                             >
                                 <FaPlus /> Añadir hito
                             </button>
@@ -173,6 +184,10 @@ const ProfessionalMilestonesSection = ({
                                 if (isProfessionalMilestonesEditing) {
                                     handleSave();
                                 } else {
+                                    // Si no hay hitos, añadir uno vacío al entrar en modo edición
+                                    if (!Array.isArray(professionalMilestones) || professionalMilestones.length === 0) {
+                                        handleAddMilestone();
+                                    }
                                     setIsProfessionalMilestonesEditing(true);
                                 }
                             }}

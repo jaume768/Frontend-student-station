@@ -908,6 +908,8 @@ const EditProfile = () => {
                                                 offersPractices={offersPractices}
                                                 setOffersPractices={setOffersPractices}
                                                 updateProfileData={updateProfileData}
+                                                social={social}
+                                                handleSocialChange={handleSocialChange}
                                             />
                                         </>
                                     ) : (
