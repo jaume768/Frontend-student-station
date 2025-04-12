@@ -109,8 +109,8 @@ const SearchFullScreen = ({ initialResults, initialQuery, onClose, onSearch, onR
                         )}
                     </div>
                     <div className="grid-result-info">
-                        <h4>{user.username}</h4>
-                        <p>{user.companyName || user.fullName || ''}</p>
+                        <h4>{user.fullName}</h4>
+                        <p>{user.companyName || ''}</p>
                         {user.professionalTitle && <p className="subtitle">{user.professionalTitle}</p>}
                         {user.professionalType && [1, 2, 4].includes(user.professionalType) ? (
                             <p className="subtitle">Empresa</p>

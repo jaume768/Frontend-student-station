@@ -24,34 +24,19 @@ const CreateOptionsModal = ({ onClose, professionalType }) => {
 
     return (
         <div className="create-options-modal">
-            <div className="create-options-content">
-                <div 
-                    className="create-option" 
-                    onClick={() => handleOptionSelect('createPost')}
-                >
-                    <span>Subir una publicación</span>
-                </div>
+            <ul className="create-options-content-ul">
+                <li onClick={() => handleOptionSelect('createPost')}>Subir una publicación</li>
                 
                 {/* Mostrar opción de oferta de trabajo para tipos 1, 2, 3 y 5 */}
                 {[1, 2, 3, 5].includes(professionalType) && (
-                    <div 
-                        className="create-option" 
-                        onClick={() => handleOptionSelect('createOffer')}
-                    >
-                        <span>Crear oferta de trabajo</span>
-                    </div>
+                    <li onClick={() => handleOptionSelect('createOffer')}>Crear oferta de trabajo</li>
                 )}
                 
                 {/* Mostrar opción de oferta educativa para tipo 4 */}
                 {professionalType === 4 && (
-                    <div 
-                        className="create-option" 
-                        onClick={() => handleOptionSelect('createEducationalOffer')}
-                    >
-                        <span>Crear oferta educativa</span>
-                    </div>
+                    <li onClick={() => handleOptionSelect('createEducationalOffer')}>Crear oferta educativa</li>
                 )}
-            </div>
+            </ul>
         </div>
     );
 };
