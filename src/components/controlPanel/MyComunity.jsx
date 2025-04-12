@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { FaSearch } from 'react-icons/fa';
 import './css/MyComunity.css';
 
 const MyComunity = () => {
     const [activeTab, setActiveTab] = useState('seguidos'); // 'seguidos' o 'seguidores'
     const [profiles, setProfiles] = useState([]);
+    const [filteredProfiles, setFilteredProfiles] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
     // Estado para la paginación
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
@@ -50,6 +53,7 @@ const MyComunity = () => {
                 }
                 
                 setProfiles(profilesList);
+                setFilteredProfiles(profilesList);
                 setTotalPages(data.totalPages);
                 setLoading(false);
             } catch (error) {
@@ -103,11 +107,39 @@ const MyComunity = () => {
     const handleTabChange = (tab) => {
         setActiveTab(tab);
         setPage(1); // Resetear la página al cambiar de pestaña
+        setSearchTerm(''); // Limpiar búsqueda al cambiar de pestaña
     };
 
     // Navegar al perfil de usuario
     const navigateToProfile = (username) => {
         navigate(`/ControlPanel/profile/${username}`);
+    };
+    
+    // Filtrar perfiles basado en el término de búsqueda
+    const handleSearch = (e) => {
+        const term = e.target.value.toLowerCase();
+        setSearchTerm(term);
+        
+        if (term.trim() === '') {
+            setFilteredProfiles(profiles);
+            return;
+        }
+        
+        const filtered = profiles.filter(user => {
+            const fullName = (user.fullName || '').toLowerCase();
+            const username = (user.username || '').toLowerCase();
+            const professionalTitle = (user.professionalTitle || '').toLowerCase();
+            const city = (user.city || '').toLowerCase();
+            const country = (user.country || '').toLowerCase();
+            
+            return fullName.includes(term) || 
+                   username.includes(term) || 
+                   professionalTitle.includes(term) ||
+                   city.includes(term) ||
+                   country.includes(term);
+        });
+        
+        setFilteredProfiles(filtered);
     };
 
     return (
@@ -131,6 +163,20 @@ const MyComunity = () => {
                     Mis seguidores ({followersCount})
                 </button>
             </div>
+            
+            {/* Buscador */}
+            <div className="mycomunity-search-container">
+                <div className="mycomunity-search">
+                    <FaSearch className="search-icon" />
+                    <input
+                        type="text"
+                        placeholder={`Buscar en ${activeTab === 'seguidos' ? 'mis seguidos' : 'mis seguidores'}...`}
+                        value={searchTerm}
+                        onChange={handleSearch}
+                        className="mycomunity-search-input"
+                    />
+                </div>
+            </div>
 
             {loading ? (
                 <div className="mycomunity-loading">Cargando perfiles...</div>
@@ -142,11 +188,15 @@ const MyComunity = () => {
                         ? 'No sigues a ningún perfil. Explora la plataforma para encontrar perfiles interesantes.'
                         : 'No tienes seguidores. Comparte tu perfil para que otros usuarios puedan descubrirte.'}
                 </div>
+            ) : filteredProfiles.length === 0 && searchTerm ? (
+                <div className="mycomunity-empty">
+                    No se encontraron resultados para "{searchTerm}"
+                </div>
             ) : (
                 <>
                     {/* Contenedor de perfiles usando flex */}
                     <div className="mycomunity-flex">
-                        {profiles.map((user) => (
+                        {filteredProfiles.map((user) => (
                             <div
                                 key={user._id}
                                 className="mycomunity-card"
