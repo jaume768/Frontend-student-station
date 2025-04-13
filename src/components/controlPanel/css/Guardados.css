@@ -1,40 +1,594 @@
 .guardados-container {
-    display: flex;
-    gap: 2rem;
-    padding: 2rem;
     width: 100%;
-    box-sizing: border-box;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
-.guardados-left,
-.guardados-right {
-    flex: 1;
+.guardados-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.guardados-header h1 {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.profile-info {
+    display: flex;
+    align-items: center;
+}
+
+.ver-perfil-btn {
+    background: none;
+    border: none;
+    padding: 8px 15px;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.ver-perfil-btn:hover {
+    text-decoration: underline;
+}
+
+/* Tabs */
+.guardados-tabs {
+    display: flex;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 30px;
+}
+
+.tab {
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    position: relative;
+}
+
+.tab.active {
+    color: #000;
+}
+
+.tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #000;
+}
+
+.tab:not(.active) {
+    color: #767676;
+}
+
+/* Pins Grid */
+.pines-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 40px;
+}
+
+.pin-item {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    break-inside: avoid;
+}
+
+.pin-image {
+    width: 100%;
+    display: block;
+    transition: transform 0.2s;
+}
+
+.pin-hover-actions {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.pin-item:hover .pin-hover-actions {
+    opacity: 1;
+}
+
+.pin-edit-button {
+    background: white;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.pin-edit-button:hover {
+    background: #f0f0f0;
+}
+
+/* Tableros */
+.tableros-container {
+    padding: 10px 0;
+}
+
+.tableros-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.new-tablero-button {
+    background: #e9e9e9;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.new-tablero-button:hover {
+    background: #d9d9d9;
+}
+
+.create-tablero-form {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+.tablero-name-input {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
     border-radius: 8px;
-    padding: 1.5rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    font-size: 14px;
+    margin-bottom: 15px;
 }
 
-.guardados-left {
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.confirm-button, .cancel-button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+}
+
+.confirm-button {
+    background: #0066ff;
+    color: white;
+}
+
+.confirm-button:disabled {
+    background: #91b7f2;
+    cursor: not-allowed;
+}
+
+.cancel-button {
+    background: #e9e9e9;
+    color: #333;
+}
+
+.tableros-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.tablero-item {
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.tablero-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.tablero-preview {
+    background: #f5f5f5;
+    padding: 16px;
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tablero-images {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 8px;
+    width: 100%;
+    height: 100%;
+}
+
+.tablero-image-container {
+    overflow: hidden;
+    border-radius: 4px;
+}
+
+.tablero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.empty-tablero {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    align-items: center;
+    justify-content: center;
+    color: #aaa;
+    text-align: center;
 }
 
-.guardados-step {
-    margin-top: 1rem;
+.empty-tablero p {
+    margin-top: 10px;
+    font-size: 14px;
 }
 
-.guardados-step h3 {
-    margin-bottom: 0.5rem;
-    font-size: 1rem;
-    color: #333;
-    background-color: #e0e0e0;
-    display: inline-block;
-    padding: 0.3rem 0.8rem;
+.tablero-info {
+    padding: 16px;
+    position: relative;
+}
+
+.tablero-info h3 {
+    margin: 0 0 5px 0;
+    font-size: 16px;
+}
+
+.tablero-info p {
+    margin: 0;
+    color: #767676;
+    font-size: 14px;
+}
+
+.tablero-actions {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    display: flex;
+    gap: 8px;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.tablero-item:hover .tablero-actions {
+    opacity: 1;
+}
+
+.edit-tablero-button, .delete-tablero-button {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: #f0f0f0;
+}
+
+.edit-tablero-button:hover, .delete-tablero-button:hover {
+    background: #e0e0e0;
+}
+
+/* Ideas sin organizar */
+.ideas-sin-organizar {
+    margin-top: 40px;
+}
+
+.ideas-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.ideas-header h2 {
+    font-size: 20px;
+    margin: 0;
+}
+
+.organizar-button {
+    background: #e9e9e9;
+    border: none;
     border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
 }
 
-/* Estilos para las etiquetas de carpetas */
+.ideas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.idea-item {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.idea-image {
+    width: 100%;
+    display: block;
+}
+
+.idea-hover-actions {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.idea-item:hover .idea-hover-actions {
+    opacity: 1;
+}
+
+.idea-edit-button {
+    background: white;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Modal de edición */
+.edit-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.edit-modal {
+    background: white;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 500px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.edit-modal h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-image {
+    margin-bottom: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.modal-image img {
+    width: 100%;
+    display: block;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.modal-save-button,
+.modal-cancel-button {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.modal-save-button {
+    background: #0066ff;
+    color: white;
+}
+
+.modal-save-button:hover {
+    background: #0055dd;
+}
+
+.modal-cancel-button {
+    background: #e9e9e9;
+    color: #333;
+}
+
+.modal-cancel-button:hover {
+    background: #d9d9d9;
+}
+
+/* Confirm Delete Modal */
+.confirm-delete-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.confirm-delete-modal {
+    background: white;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 400px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.confirm-delete-modal h3 {
+    margin-top: 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.confirm-delete-modal p {
+    margin-bottom: 20px;
+    color: #666;
+}
+
+.confirm-actions {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+}
+
+.confirm-delete-button,
+.cancel-delete-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.confirm-delete-button {
+    background: #ff3b30;
+    color: white;
+}
+
+.confirm-delete-button:hover {
+    background: #e0352b;
+}
+
+.cancel-delete-button {
+    background: #e9e9e9;
+    color: #333;
+}
+
+.cancel-delete-button:hover {
+    background: #d9d9d9;
+}
+
+/* Notification */
+.notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    color: white;
+    font-size: 14px;
+    z-index: 1001;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    animation: fadeIn 0.3s, fadeOut 0.3s 2.7s;
+    max-width: 300px;
+}
+
+.notification.success {
+    background-color: #4CAF50;
+}
+
+.notification.error {
+    background-color: #f44336;
+}
+
+.notification.info {
+    background-color: #2196F3;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(20px); }
+}
 .guardados-folders-tags {
     display: flex;
     flex-wrap: wrap;
