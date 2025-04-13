@@ -17,6 +17,11 @@ const Guardados = () => {
     const [selectedPost, setSelectedPost] = useState(null);
     const [hoveredPost, setHoveredPost] = useState(null);
     const [ideasSinOrganizar, setIdeasSinOrganizar] = useState([]);
+    
+    // Estados para la multiselección
+    const [selectedImages, setSelectedImages] = useState([]);
+    const [showOrganizeModal, setShowOrganizeModal] = useState(false);
+    const [showSelectFolderModal, setShowSelectFolderModal] = useState(false);
 
     const navigate = useNavigate();
     const folderSelectRef = useRef(null);
@@ -33,6 +38,127 @@ const Guardados = () => {
         if (!post) return;
         const postIdToNavigate = post.postId || post._id;
         navigate(`/ControlPanel/post/${postIdToNavigate}`);
+    };
+    
+    // Función para manejar la selección de imágenes en el modal
+    const handleImageSelection = (post) => {
+        if (selectedImages.some(img => img._id === post._id)) {
+            // Si ya está seleccionada, la quitamos de la selección
+            setSelectedImages(prev => prev.filter(img => img._id !== post._id));
+        } else {
+            // Si no está seleccionada, la añadimos a la selección
+            setSelectedImages(prev => [...prev, post]);
+        }
+    };
+    
+    // Función para abrir el modal de organización
+    const openOrganizeModal = () => {
+        setSelectedImages([]);
+        setShowOrganizeModal(true);
+    };
+    
+    // Función para cerrar el modal de organización
+    const closeOrganizeModal = () => {
+        setShowOrganizeModal(false);
+        setSelectedImages([]);
+    };
+    
+    // Función para abrir el modal de selección de tablero
+    const openSelectFolderModal = () => {
+        if (selectedImages.length > 0) {
+            setShowSelectFolderModal(true);
+        } else {
+            setNotification({
+                show: true,
+                message: 'Selecciona al menos una imagen',
+                type: 'error'
+            });
+            setTimeout(() => setNotification({ show: false, message: '', type: '' }), 3000);
+        }
+    };
+    
+    // Función para mover las imágenes seleccionadas a un tablero
+    const moveSelectedImagesToFolder = async (folderId) => {
+        if (!folderId || selectedImages.length === 0) return;
+        
+        try {
+            const token = localStorage.getItem('authToken');
+            if (!token) return;
+            const backendUrl = import.meta.env.VITE_BACKEND_URL;
+            
+            setNotification({
+                show: true,
+                message: 'Moviendo imágenes...',
+                type: 'info'
+            });
+            
+            // Mover cada imagen seleccionada al tablero
+            for (const image of selectedImages) {
+                const imageUrl = image.imageUrl || image.savedImage || image.mainImage;
+                await axios.post(
+                    `${backendUrl}/api/folders/add`,
+                    { 
+                        folderId: folderId, 
+                        postId: image.postId || image._id,
+                        imageUrl: imageUrl
+                    },
+                    { headers: { Authorization: `Bearer ${token}` } }
+                );
+            }
+            
+            // Actualizar los datos
+            const savedImagesRes = await axios.get(`${backendUrl}/api/users/favorites`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            
+            const foldersRes = await axios.get(`${backendUrl}/api/folders`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            
+            if (savedImagesRes.data.favorites && foldersRes.data.folders) {
+                const allSavedImages = savedImagesRes.data.favorites;
+                const allFolders = foldersRes.data.folders;
+                
+                // Procesar imágenes
+                const processedImages = allSavedImages.map(item => {
+                    if (!item.imageUrl && (item.savedImage || item.mainImage)) {
+                        return {
+                            ...item,
+                            imageUrl: item.savedImage || item.mainImage
+                        };
+                    }
+                    return item;
+                });
+                
+                setSavedPosts(processedImages);
+                setFolders(allFolders);
+                
+                // Filtrar imágenes no organizadas
+                const unorganizedImages = filterOrganizedImages(processedImages, allFolders);
+                setIdeasSinOrganizar(unorganizedImages);
+            }
+            
+            setNotification({
+                show: true,
+                message: `${selectedImages.length} ${selectedImages.length === 1 ? 'imagen movida' : 'imágenes movidas'} correctamente`,
+                type: 'success'
+            });
+            
+            // Cerrar los modales
+            setShowSelectFolderModal(false);
+            setShowOrganizeModal(false);
+            setSelectedImages([]);
+            
+            setTimeout(() => setNotification({ show: false, message: '', type: '' }), 3000);
+        } catch (error) {
+            console.error('Error al mover imágenes:', error);
+            setNotification({
+                show: true,
+                message: 'Error al mover las imágenes',
+                type: 'error'
+            });
+            setTimeout(() => setNotification({ show: false, message: '', type: '' }), 3000);
+        }
     };
     
     // Función para abrir el contenido de una carpeta/tablero
@@ -457,7 +583,12 @@ const Guardados = () => {
                 <div className="ideas-sin-organizar">
                     <div className="ideas-header">
                         <h2>Ideas sin organizar</h2>
-                        <button className="organizar-button">Organizar</button>
+                        <button 
+                            className="organizar-button"
+                            onClick={openOrganizeModal}
+                        >
+                            Organizar
+                        </button>
                     </div>
                     <div className="ideas-grid">
                         {ideasSinOrganizar.map(post => (
@@ -551,6 +682,131 @@ const Guardados = () => {
                             >
                                 Cancelar
                             </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Modal de organización */}
+            {showOrganizeModal && (
+                <div className="organize-modal-overlay">
+                    <div className="organize-modal">
+                        <div className="organize-modal-header">
+                            <h2>Organizar imágenes</h2>
+                            <button 
+                                className="close-modal-button"
+                                onClick={closeOrganizeModal}
+                            >
+                                <FaTimes />
+                            </button>
+                        </div>
+                        
+                        <div className="organize-modal-content">
+                            <p className="organize-instructions">Selecciona las imágenes que quieres organizar</p>
+                            
+                            <div className="organize-images-grid">
+                                {ideasSinOrganizar.map(post => (
+                                    <div 
+                                        key={post._id} 
+                                        className={`organize-image-item ${selectedImages.some(img => img._id === post._id) ? 'selected' : ''}`}
+                                        onClick={() => handleImageSelection(post)}
+                                    >
+                                        <img 
+                                            src={post.imageUrl || post.savedImage || post.mainImage} 
+                                            alt="Idea sin organizar" 
+                                            className="organize-image"
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                            
+                            <div className="organize-modal-footer">
+                                <div className="selected-count">
+                                    {selectedImages.length} seleccionado{selectedImages.length !== 1 ? 's' : ''}
+                                </div>
+                                <div className="organize-modal-actions">
+                                    <button 
+                                        className="cancel-button"
+                                        onClick={closeOrganizeModal}
+                                    >
+                                        Cancelar
+                                    </button>
+                                    <button 
+                                        className="next-button"
+                                        onClick={openSelectFolderModal}
+                                        disabled={selectedImages.length === 0}
+                                    >
+                                        Siguiente
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Modal de selección de tablero */}
+            {showSelectFolderModal && (
+                <div className="folder-select-modal-overlay">
+                    <div className="folder-select-modal">
+                        <div className="folder-select-modal-header">
+                            <h2>{selectedImages.length} seleccionado{selectedImages.length !== 1 ? 's' : ''}</h2>
+                            <button 
+                                className="close-modal-button"
+                                onClick={() => setShowSelectFolderModal(false)}
+                            >
+                                <FaTimes />
+                            </button>
+                        </div>
+                        
+                        <div className="selected-images-preview">
+                            {selectedImages.map(image => (
+                                <div key={image._id} className="selected-image-preview">
+                                    <img 
+                                        src={image.imageUrl || image.savedImage || image.mainImage} 
+                                        alt="Imagen seleccionada" 
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                        
+                        <div className="folder-selection">
+                            <h3>Guardar en tablero</h3>
+                            <select className="folder-select" defaultValue="">
+                                <option value="" disabled>Selecciona un tablero</option>
+                                {folders.map(folder => (
+                                    <option key={folder._id} value={folder._id}>
+                                        {folder.name}
+                                    </option>
+                                ))}
+                            </select>
+                            
+                            <div className="folder-select-modal-actions">
+                                <button 
+                                    className="cancel-button"
+                                    onClick={() => setShowSelectFolderModal(false)}
+                                >
+                                    Cancelar
+                                </button>
+                                <button 
+                                    className="confirm-button"
+                                    onClick={() => {
+                                        const select = document.querySelector('.folder-select');
+                                        if (select && select.value) {
+                                            moveSelectedImagesToFolder(select.value);
+                                        } else {
+                                            setNotification({
+                                                show: true,
+                                                message: 'Selecciona un tablero',
+                                                type: 'error'
+                                            });
+                                            setTimeout(() => setNotification({ show: false, message: '', type: '' }), 3000);
+                                        }
+                                    }}
+                                >
+                                    Guardar
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
