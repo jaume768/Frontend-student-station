@@ -54,15 +54,18 @@ const SearchResults = ({ results, onResultClick, isLoading, onViewAll }) => {
                             >
                                 <div className="result-image">
                                     {user.profile && user.profile.profilePicture ? (
-                                        <img src={user.profile.profilePicture} alt={user.username} />
+                                        <img src={user.profile.profilePicture} alt={user.fullName || user.companyName || 'Usuario'} />
                                     ) : (
                                         <div className="placeholder-image"><FaUser /></div>
                                     )}
                                 </div>
                                 <div className="result-info">
-                                    <h4>{user.username}</h4>
-                                    <p>{user.companyName || user.fullName || ''}</p>
-                                    {user.professionalTitle && <p className="subtitle">{user.professionalTitle}</p>}
+                                    <h4>{user.fullName || user.companyName || 'Usuario'}</h4>
+                                    <p className="subtitle">{user.professionalTitle || user.username}</p>
+                                    {user.professionalType === 1 && <span className="user-badge creative">Creativo</span>}
+                                    {user.professionalType === 2 && <span className="user-badge company">Empresa</span>}
+                                    {user.professionalType === 3 && <span className="user-badge institution">Institución</span>}
+                                    {user.professionalType === 4 && <span className="user-badge expert">Experto</span>}
                                 </div>
                             </div>
                         ))}
@@ -97,8 +100,8 @@ const SearchResults = ({ results, onResultClick, isLoading, onViewAll }) => {
                                 </div>
                                 <div className="result-info">
                                     <h4>{post.title}</h4>
-                                    {post.user && <p>Por: {post.user.username}</p>}
-                                    <p className="description">{post.description?.substring(0, 60)}...</p>
+                                    {post.user && <p>Por: {post.user.fullName || post.user.companyName || post.user.username}</p>}
+                                    <p className="description">{post.description?.substring(0, 60)}{post.description?.length > 60 ? '...' : ''}</p>
                                 </div>
                             </div>
                         ))}

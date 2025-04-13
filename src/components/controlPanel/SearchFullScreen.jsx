@@ -101,17 +101,20 @@ const SearchFullScreen = ({ initialResults, initialQuery, onClose, onSearch, onR
                     className="grid-result-item user-grid-item"
                     onClick={() => onResultClick('user', user)}
                 >
-                    <div className="grid-result-image">
+                    <div className="grid-img-container">
                         {user.profile && user.profile.profilePicture ? (
-                            <img src={user.profile.profilePicture} alt={user.username} />
+                            <img src={user.profile.profilePicture} alt={user.fullName || user.companyName || 'Usuario'} />
                         ) : (
-                            <div className="placeholder-image"><FaUser size={32} /></div>
+                            <div className="placeholder-image"><FaUser /></div>
                         )}
                     </div>
                     <div className="grid-result-info">
-                        <h4>{user.fullName}</h4>
-                        <p>{user.companyName || ''}</p>
-                        {user.professionalTitle && <p className="subtitle">{user.professionalTitle}</p>}
+                        <h3>{user.fullName || user.companyName || 'Usuario'}</h3>
+                        <p className="subtitle">{user.professionalTitle || user.username}</p>
+                        {user.professionalType === 1 && <span className="user-badge creative">Creativo</span>}
+                        {user.professionalType === 2 && <span className="user-badge company">Empresa</span>}
+                        {user.professionalType === 3 && <span className="user-badge institution">Institución</span>}
+                        {user.professionalType === 4 && <span className="user-badge expert">Experto</span>}
                         {user.professionalType && [1, 2, 4].includes(user.professionalType) ? (
                             <p className="subtitle">Empresa</p>
                         ) : (
@@ -145,7 +148,7 @@ const SearchFullScreen = ({ initialResults, initialQuery, onClose, onSearch, onR
                     className="grid-result-item"
                     onClick={() => onResultClick('post', post)}
                 >
-                    <div className="grid-result-image">
+                    <div className="grid-img-container">
                         {post.mainImage ? (
                             <img src={post.mainImage} alt={post.title} />
                         ) : (
@@ -153,9 +156,9 @@ const SearchFullScreen = ({ initialResults, initialQuery, onClose, onSearch, onR
                         )}
                     </div>
                     <div className="grid-result-info">
-                        <h4>{post.title}</h4>
-                        {post.user && <p>Por: {post.user.username}</p>}
-                        <p className="subtitle">{post.tags ? post.tags.slice(0, 3).join(', ') : ''}</p>
+                        <h3>{post.title}</h3>
+                        {post.user && <p>Por: {post.user.fullName || post.user.companyName || post.user.username}</p>}
+                        <p className="grid-description">{post.description?.substring(0, 100)}{post.description?.length > 100 ? '...' : ''}</p>
                     </div>
                 </div>
             ));
@@ -184,7 +187,7 @@ const SearchFullScreen = ({ initialResults, initialQuery, onClose, onSearch, onR
                     className="grid-result-item"
                     onClick={() => onResultClick('offer', offer)}
                 >
-                    <div className="grid-result-image">
+                    <div className="grid-img-container">
                         {offer.companyLogo ? (
                             <img src={offer.companyLogo} alt={offer.companyName} />
                         ) : (
@@ -192,7 +195,7 @@ const SearchFullScreen = ({ initialResults, initialQuery, onClose, onSearch, onR
                         )}
                     </div>
                     <div className="grid-result-info">
-                        <h4>{offer.position}</h4>
+                        <h3>{offer.position}</h3>
                         <p>{offer.companyName}</p>
                         <p className="subtitle">{offer.city} • {new Date(offer.publicationDate).toLocaleDateString()}</p>
                     </div>
@@ -223,7 +226,7 @@ const SearchFullScreen = ({ initialResults, initialQuery, onClose, onSearch, onR
                     className="grid-result-item"
                     onClick={() => onResultClick('educationalOffer', eduOffer)}
                 >
-                    <div className="grid-result-image">
+                    <div className="grid-img-container">
                         {eduOffer.images && eduOffer.images.length > 0 ? (
                             <img src={eduOffer.images[0].url} alt={eduOffer.programName} />
                         ) : (
@@ -231,7 +234,7 @@ const SearchFullScreen = ({ initialResults, initialQuery, onClose, onSearch, onR
                         )}
                     </div>
                     <div className="grid-result-info">
-                        <h4>{eduOffer.programName}</h4>
+                        <h3>{eduOffer.programName}</h3>
                         <p>{eduOffer.studyType} • {eduOffer.knowledgeArea}</p>
                         <p className="subtitle">{eduOffer.modality} • Inicia: {new Date(eduOffer.startDate).toLocaleDateString()}</p>
                     </div>
@@ -278,20 +281,22 @@ const SearchFullScreen = ({ initialResults, initialQuery, onClose, onSearch, onR
                 <button className="back-button" onClick={onClose}>
                     <FaArrowLeft />
                 </button>
-                <div className="fullscreen-search-input">
-                    <FaSearch style={{ color: '#777' }} />
+                <div className="search-input-container full-screen">
+                    <FaSearch className="search-icon" />
                     <input 
-                        type="text"
-                        placeholder="Buscar usuarios, publicaciones, ofertas..."
+                        type="text" 
+                        placeholder="Buscar personas, publicaciones, ofertas..." 
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                        onKeyDown={(e) => e.key === 'Enter' && handleSearch(e)}
                         ref={searchInputRef}
+                        className="modern-search-input"
                     />
                     {searchQuery && (
                         <FaTimes 
-                            style={{ cursor: 'pointer', color: '#777' }}
+                            className="search-clear-icon" 
                             onClick={clearSearch}
+                            style={{ cursor: 'pointer', position: 'absolute', right: '15px', top: '50%', transform: 'translateY(-50%)', color: '#666' }}
                         />
                     )}
                 </div>

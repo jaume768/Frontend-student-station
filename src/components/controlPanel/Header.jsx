@@ -52,7 +52,13 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
             setIsSearching(true);
             const backendUrl = import.meta.env.VITE_BACKEND_URL;
             const response = await axios.get(`${backendUrl}/api/users/search`, {
-                params: { query: term.trim() }
+                params: { 
+                    query: term.trim(),
+                    searchByFullName: true,     // Buscar por nombre completo
+                    searchByUsername: true,     // Buscar también por username
+                    includePosts: true,         // Incluir posts de los usuarios encontrados
+                    includeUserPosts: true      // Incluir posts creados por los usuarios encontrados
+                }
             });
             setSearchResults(response.data.results);
             setIsSearching(false);
@@ -225,17 +231,18 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
                     <FaSearch className="search-icon" />
                     <input 
                         type="text" 
-                        placeholder="Buscar" 
+                        placeholder="Buscar personas, publicaciones, ofertas..." 
                         value={searchQuery}
                         onChange={handleSearchInputChange}
                         onKeyDown={handleSearch}
                         onFocus={() => searchQuery.trim().length >= 2 && searchResults && setShowResults(true)}
+                        className="modern-search-input"
                     />
                     {searchQuery && (
                         <FaTimes 
                             className="search-clear-icon" 
                             onClick={clearSearch}
-                            style={{ cursor: 'pointer', position: 'absolute', right: '10px', top: '10px' }}
+                            style={{ cursor: 'pointer', position: 'absolute', right: '15px', top: '50%', transform: 'translateY(-50%)', color: '#666' }}
                         />
                     )}
                 </div>
