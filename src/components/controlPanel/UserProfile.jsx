@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
-import './css/UserProfile.css';
-import { FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
+import './css/UserProfileExtern.css';
+import { FaCheckCircle, FaExclamationCircle, FaArrowLeft, FaUserPlus, FaUserCheck, FaBell, FaBellSlash, FaEnvelope, FaShareAlt, FaTh, FaList, FaGlobe } from 'react-icons/fa';
 
 // Importar componentes
 import UserProfileHeader from './userProfile/UserProfileHeader';
@@ -13,7 +13,6 @@ import UserSoftwareSection from './userProfile/UserSoftwareSection';
 import UserEducationSection from './userProfile/UserEducationSection';
 import UserSocialSection from './userProfile/UserSocialSection';
 import UserDownloadableFilesSection from './userProfile/UserDownloadableFilesSection';
-import UserProjectsSection from './userProfile/UserProjectsSection';
 import UserCompanyTagsSection from './userProfile/UserCompanyTagsSection';
 import UserMilestoneSection from './userProfile/UserMilestoneSection';
 import UserCompanyOffersSection from './userProfile/UserCompanyOffersSection';
@@ -47,6 +46,7 @@ const UserProfile = () => {
                 const backendUrl = import.meta.env.VITE_BACKEND_URL;
                 const headers = { Authorization: `Bearer ${token}` };
                 const res = await axios.get(`${backendUrl}/api/users/profile/${username}`, { headers });
+                console.log('Datos del perfil:', res.data);
                 setProfile(res.data);
 
                 // Verificar si el usuario actual sigue al usuario del perfil
@@ -138,6 +138,32 @@ const UserProfile = () => {
         
         checkUserTypeAndFetchOffers();
     }, [username]);
+
+    // Efecto para manejar el scroll en dispositivos móviles
+    useEffect(() => {
+        const handleScroll = () => {
+            // Solo aplicamos esta lógica en dispositivos móviles
+            if (window.innerWidth <= 480) {
+                const leftColumn = document.querySelector('.user-extern-left-column');
+                if (leftColumn) {
+                    // Si el scroll es mayor a 100px, añadimos la clase 'scrolled'
+                    if (window.scrollY > 100) {
+                        leftColumn.classList.add('scrolled');
+                    } else {
+                        leftColumn.classList.remove('scrolled');
+                    }
+                }
+            }
+        };
+        
+        // Añadimos el evento de scroll
+        window.addEventListener('scroll', handleScroll);
+        
+        return () => {
+            // Limpiamos el evento al desmontar el componente
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
 
     useEffect(() => {
         if (!isCompany && !isEducationalInstitution) return;
@@ -307,7 +333,7 @@ const UserProfile = () => {
 
     if (loading) {
         return (
-            <div className="user-profile-loading">
+            <div className="user-extern-loading">
                 <p>Cargando perfil...</p>
             </div>
         );
@@ -315,7 +341,7 @@ const UserProfile = () => {
 
     if (error) {
         return (
-            <div className="user-profile-error">
+            <div className="user-extern-error">
                 <h2>Error</h2>
                 <p>{error}</p>
                 <button onClick={() => navigate('/ControlPanel/explorer')}>Volver al explorador</button>
@@ -324,134 +350,243 @@ const UserProfile = () => {
     }
 
     return (
-        <div className="user-profile-container">
+        <div className="user-extern-container">
             {notification.show && (
-                <div className={`notification ${notification.type}`}>
+                <div className={`user-extern-notification ${notification.type}`}>
                     {notification.type === 'success' ? (
-                        <FaCheckCircle className="notification-icon" />
+                        <FaCheckCircle className="user-extern-notification-icon" />
                     ) : (
-                        <FaExclamationCircle className="notification-icon" />
+                        <FaExclamationCircle className="user-extern-notification-icon" />
                     )}
                     <span>{notification.message}</span>
                 </div>
             )}
-            <UserProfileHeader
-                profile={profile}
-                activeTab={activeTab}
-                setActiveTab={setActiveTab}
-                isFollowing={isFollowing}
-                handleFollow={handleFollow}
-                handleUnfollow={handleUnfollow}
-                isNotificationActive={isNotificationActive}
-                toggleNotification={toggleNotification}
-            />
-
-            <div className="user-profile-content">
-                <div className={`user-profile-left-content ${activeTab === 'perfil' ? 'active' : ''}`}>
-                    {isCompany ? (
-                        <>
-                            <UserCompanyTagsSection companyTags={profile?.companyTags} offersPractices={profile?.offersPractices} />
-                            <UserBiographySection biography={profile?.biography} />
-                            <UserMilestoneSection professionalMilestones={profile?.professionalMilestones} />
-                            <UserSkillsSection skills={profile?.skills} />
-                            <UserSocialSection social={profile?.social} />
-                        </>
-                    ) : isEducationalInstitution ? (
-                        <>
-                            <UserBiographySection biography={profile?.biography} />
-                            <UserSkillsSection skills={profile?.skills} />
-                            <UserSocialSection social={profile?.social} />
-                        </>
-                    ) : (
-                        <>
-                            <UserBiographySection biography={profile?.biography} />
-
-                            {profile?.professionalFormation && profile.professionalFormation.some(item =>
-                                item.trainingName?.trim() || item.institution?.trim()
-                            ) && (
-                                    <UserProfessionalExperienceSection professionalFormation={profile.professionalFormation} />
-                                )}
-
-                            <UserSoftwareSection software={profile?.software} />
-
-                            {profile?.education && profile.education.some(item =>
-                                item.formationName?.trim() || item.institution?.trim() || item.otherInstitution?.trim()
-                            ) && (
-                                    <UserEducationSection education={profile.education} />
-                                )}
-
-                            <UserSkillsSection skills={profile?.skills} />
-
-                            {(profile?.cvUrl || profile?.portfolioUrl) && (
-                                <UserDownloadableFilesSection cvUrl={profile.cvUrl} portfolioUrl={profile.portfolioUrl} />
-                            )}
-                            <UserSocialSection social={profile?.social} />
-                        </>
-                    )}
-                </div>
-
-                <div className={`user-profile-right-content ${activeTab === 'publicaciones' || activeTab === 'ofertas' ? 'active' : ''}`}>
-                    {isCompany ? (
-                        <>
-                            <div className="company-tabs-user-profile">
-                                <button
-                                    className={`company-tab-user-profile ${companyRightTab === 'ofertas' ? 'active' : ''}`}
-                                    onClick={() => setCompanyRightTab('ofertas')}
-                                >
-                                    Ofertas de trabajo ({companyOffers.length})
-                                </button>
-                                <button
-                                    className={`company-tab-user-profile ${companyRightTab === 'publicaciones' ? 'active' : ''}`}
-                                    onClick={() => setCompanyRightTab('publicaciones')}
-                                >
-                                    Publicaciones ({userPosts.length})
-                                </button>
-                            </div>
-
-                            {companyRightTab === 'publicaciones' ? (
-                                <UserProjectsSection
-                                    isGalleryView={isGalleryView}
-                                    toggleView={toggleView}
-                                    userPosts={userPosts}
-                                />
-                            ) : (
-                                <UserCompanyOffersSection offers={companyOffers} />
-                            )}
-                        </>
-                    ) : isEducationalInstitution ? (
-                        <>
-                            <div className="company-tabs-user-profile">
-                                <button
-                                    className={`company-tab-user-profile ${companyRightTab === 'ofertas' ? 'active' : ''}`}
-                                    onClick={() => setCompanyRightTab('ofertas')}
-                                >
-                                    Ofertas educativas ({companyOffers.length})
-                                </button>
-                                <button
-                                    className={`company-tab-user-profile ${companyRightTab === 'publicaciones' ? 'active' : ''}`}
-                                    onClick={() => setCompanyRightTab('publicaciones')}
-                                >
-                                    Publicaciones ({userPosts.length})
-                                </button>
-                            </div>
-
-                            {companyRightTab === 'publicaciones' ? (
-                                <UserProjectsSection
-                                    isGalleryView={isGalleryView}
-                                    toggleView={toggleView}
-                                    userPosts={userPosts}
-                                />
-                            ) : (
-                                <UserEducationalOffersSection offers={companyOffers} />
-                            )}
-                        </>
-                    ) : (
-                        <UserProjectsSection
-                            isGalleryView={isGalleryView}
-                            toggleView={toggleView}
-                            userPosts={userPosts}
+            
+            {/* Cabecera con botón de volver */}
+            <header className="user-extern-navigation">
+                <button className="user-extern-back-btn" onClick={() => navigate(-1)}>
+                    <FaArrowLeft size={20} />
+                    <span>Volver</span>
+                </button>
+            </header>
+            
+            <div className="user-extern-content">
+                {/* Columna izquierda con información del perfil */}
+                <div className="user-extern-left-column">
+                    {/* Foto de perfil */}
+                    <div className="user-extern-profile-photo-container">
+                        <img
+                            src={profile?.profile?.profilePicture || "/multimedia/usuarioDefault.jpg"}
+                            alt={profile?.fullName || "Usuario"}
+                            className="user-extern-profile-photo"
                         />
+                    </div>
+                    
+                    {/* Información básica del perfil */}
+                    <div className="user-extern-profile-info">
+                        <h1 className="user-extern-fullname">{profile?.fullName || "Nombre Completo"}</h1>
+                        <p className="user-extern-username">@{profile?.username || "username"}</p>
+                        
+                        {(profile?.city || profile?.country) && (
+                            <p className="user-extern-location">
+                                {profile?.city && profile?.country 
+                                    ? `${profile.city}, ${profile.country}` 
+                                    : profile?.city || profile?.country}
+                            </p>
+                        )}
+                        
+                        {profile?.professionalTitle && (
+                            <p className="user-extern-title">{profile.professionalTitle}</p>
+                        )}
+                        
+                        {/* Sitio web */}
+                        {profile?.social?.website && (
+                            <div className="user-extern-website">
+                                <a href={profile.social.website} target="_blank" rel="noopener noreferrer">
+                                    <FaGlobe /> {profile.social.website}
+                                </a>
+                            </div>
+                        )}
+                        
+                        {/* Botones de acción */}
+                        <div className="user-extern-action-buttons">
+                            <button 
+                                className={`user-extern-follow-button ${isFollowing ? 'following' : ''}`}
+                                onClick={isFollowing ? handleUnfollow : handleFollow}
+                                disabled={followLoading}
+                            >
+                                {followLoading ? (
+                                    "Cargando..."
+                                ) : isFollowing ? (
+                                    <>
+                                        <FaUserCheck /> Siguiendo
+                                    </>
+                                ) : (
+                                    <>
+                                        <FaUserPlus /> Seguir
+                                    </>
+                                )}
+                            </button>
+                            
+                            {isFollowing && (
+                                <button 
+                                    className={`user-extern-notification-button ${isNotificationActive ? 'active' : ''}`}
+                                    onClick={toggleNotification}
+                                    title={isNotificationActive ? "Desactivar notificaciones" : "Activar notificaciones"}
+                                >
+                                    {isNotificationActive ? <FaBell /> : <FaBellSlash />}
+                                </button>
+                            )}
+                        </div>
+                        
+                        {/* Iconos de contacto y compartir */}
+                        <div className="user-extern-contact-share">
+                            <button className="user-extern-contact-button" title="Contactar">
+                                <FaEnvelope />
+                            </button>
+                            <button className="user-extern-share-button" title="Compartir perfil">
+                                <FaShareAlt />
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                {/* Columna derecha con pestañas */}
+                <div className="user-extern-right-column">
+                    {/* Pestañas superiores */}
+                    <div className="user-extern-tabs">
+                        <button 
+                            className={`user-extern-tab ${activeTab === 'publicaciones' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('publicaciones')}
+                        >
+                            Portfolio
+                        </button>
+                        <button 
+                            className={`user-extern-tab ${activeTab === 'perfil' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('perfil')}
+                        >
+                            About
+                        </button>
+                        {(isCompany || isEducationalInstitution) && (
+                            <button 
+                                className={`user-extern-tab ${activeTab === 'ofertas' ? 'active' : ''}`}
+                                onClick={() => setActiveTab('ofertas')}
+                            >
+                                {isEducationalInstitution ? 'Ofertas educativas' : 'Ofertas de trabajo'}
+                            </button>
+                        )}
+                    </div>
+                    
+                    {/* Opciones de visualización para Portfolio */}
+                    {activeTab === 'publicaciones' && (
+                        <div className="user-extern-view-options">
+                            <div className="user-extern-view-container">
+                                <button 
+                                    className={`user-extern-view-button ${isGalleryView ? 'active' : ''}`}
+                                    onClick={() => setIsGalleryView(true)}
+                                    title="Vista de galería"
+                                >
+                                    <FaTh />
+                                    <span>Galería</span>
+                                </button>
+                                <button 
+                                    className={`user-extern-view-button ${!isGalleryView ? 'active' : ''}`}
+                                    onClick={() => setIsGalleryView(false)}
+                                    title="Vista individual"
+                                >
+                                    <FaList />
+                                    <span>Individual</span>
+                                </button>
+                            </div>
+                        </div>
                     )}
+                    
+                    {/* Contenido de las pestañas */}
+                    <div className="user-extern-tab-content">
+                        {/* Contenido de Portfolio */}
+                        {activeTab === 'publicaciones' && (
+                            <div className="user-extern-portfolio-content">
+                                {postsLoading ? (
+                                    <div className="user-extern-loading">Cargando publicaciones...</div>
+                                ) : userPosts.length === 0 ? (
+                                    <div className="user-extern-no-content">No hay publicaciones disponibles</div>
+                                ) : (
+                                    <div className={`user-extern-projects ${isGalleryView ? 'gallery-view' : 'list-view'}`}>
+                                        {userPosts.map((post, index) => (
+                                            <div
+                                                key={index}
+                                                className="user-extern-project-card"
+                                                onClick={() => navigate(`/ControlPanel/post/${post._id}`)}
+                                            >
+                                                <img
+                                                    src={post.mainImage}
+                                                    alt={`Publicación ${index + 1}`}
+                                                    className="user-extern-project-image"
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                        
+                        {/* Contenido de About */}
+                        {activeTab === 'perfil' && (
+                            <div className="user-extern-about-content">
+                                {isCompany ? (
+                                    <>
+                                        <UserCompanyTagsSection companyTags={profile?.companyTags} offersPractices={profile?.offersPractices} />
+                                        <UserBiographySection biography={profile?.biography} />
+                                        <UserMilestoneSection professionalMilestones={profile?.professionalMilestones} />
+                                        <UserSkillsSection skills={profile?.skills} />
+                                        <UserSocialSection social={profile?.social} />
+                                    </>
+                                ) : isEducationalInstitution ? (
+                                    <>
+                                        <UserBiographySection biography={profile?.biography} />
+                                        <UserSkillsSection skills={profile?.skills} />
+                                        <UserSocialSection social={profile?.social} />
+                                    </>
+                                ) : (
+                                    <>
+                                        <UserBiographySection biography={profile?.biography} />
+
+                                        {profile?.professionalFormation && profile.professionalFormation.some(item =>
+                                            item.trainingName?.trim() || item.institution?.trim()
+                                        ) && (
+                                            <UserProfessionalExperienceSection professionalFormation={profile.professionalFormation} />
+                                        )}
+
+                                        <UserSoftwareSection software={profile?.software} />
+
+                                        {profile?.education && profile.education.some(item =>
+                                            item.formationName?.trim() || item.institution?.trim() || item.otherInstitution?.trim()
+                                        ) && (
+                                            <UserEducationSection education={profile.education} />
+                                        )}
+
+                                        <UserSkillsSection skills={profile?.skills} />
+
+                                        {(profile?.cvUrl || profile?.portfolioUrl) && (
+                                            <UserDownloadableFilesSection cvUrl={profile.cvUrl} portfolioUrl={profile.portfolioUrl} />
+                                        )}
+                                        <UserSocialSection social={profile?.social} />
+                                    </>
+                                )}
+                            </div>
+                        )}
+                        
+                        {/* Contenido de Ofertas */}
+                        {activeTab === 'ofertas' && (
+                            <div className="user-extern-offers-content">
+                                {isCompany ? (
+                                    <UserCompanyOffersSection offers={companyOffers} />
+                                ) : isEducationalInstitution ? (
+                                    <UserEducationalOffersSection offers={companyOffers} />
+                                ) : null}
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

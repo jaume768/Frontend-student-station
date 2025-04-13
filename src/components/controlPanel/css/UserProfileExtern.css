@@ -1,0 +1,677 @@
+/* 
+   UserProfileExtern.css
+   Estilos para el nuevo diseño del perfil de usuario externo
+   Basado en la imagen de referencia compartida
+*/
+
+/* Contenedor principal */
+.user-extern-container {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'Inter', sans-serif;
+    color: #333;
+}
+
+/* Navegación y botón de volver */
+.user-extern-navigation {
+    margin-bottom: 20px;
+}
+
+.user-extern-back-btn {
+    display: flex;
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #333;
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+    font-size: 14px;
+}
+
+.user-extern-back-btn:hover {
+    background-color: #f0f0f0;
+}
+
+.user-extern-back-btn span {
+    margin-left: 8px;
+}
+
+/* Estructura de contenido principal - layout de dos columnas */
+.user-extern-content {
+    display: flex;
+    gap: 30px;
+}
+
+/* Columna izquierda - Información del perfil */
+.user-extern-left-column {
+    flex: 0 0 300px;
+    position: sticky;
+    top: 20px;
+    align-self: flex-start;
+}
+
+/* Foto de perfil */
+.user-extern-profile-photo-container {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.user-extern-profile-photo {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Información básica del perfil */
+.user-extern-profile-info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+}
+
+.user-extern-fullname {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.user-extern-username {
+    font-size: 16px;
+    color: #666;
+    margin: 0;
+    margin-bottom: 10px;
+}
+
+.user-extern-location {
+    font-size: 14px;
+    color: #666;
+    margin: 0;
+}
+
+.user-extern-title {
+    font-size: 16px;
+    font-weight: 500;
+    margin: 5px 0 15px;
+}
+
+/* Habilidades destacadas */
+.user-extern-skills {
+    margin: 15px 0;
+}
+
+.user-extern-skills h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.user-extern-skills-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.user-extern-skill-tag {
+    background-color: #f0f0f0;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: #333;
+}
+
+/* Sitio web */
+.user-extern-website {
+    margin: 15px 0;
+}
+
+.user-extern-website a {
+    color: #1a73e8;
+    text-decoration: none;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.user-extern-website a:hover {
+    text-decoration: underline;
+}
+
+/* Botones de acción */
+.user-extern-action-buttons {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0 15px;
+}
+
+.user-extern-follow-button {
+    flex: 1;
+    background-color: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background-color 0.2s;
+}
+
+.user-extern-follow-button:hover {
+    background-color: #1557b0;
+}
+
+.user-extern-follow-button.following {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.user-extern-notification-button {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #666;
+    transition: background-color 0.2s;
+}
+
+.user-extern-notification-button:hover {
+    background-color: #e0e0e0;
+}
+
+.user-extern-notification-button.active {
+    color: #1a73e8;
+}
+
+/* Iconos de contacto y compartir */
+.user-extern-contact-share {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.user-extern-contact-button,
+.user-extern-share-button {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #666;
+    transition: background-color 0.2s;
+}
+
+.user-extern-contact-button:hover,
+.user-extern-share-button:hover {
+    background-color: #e0e0e0;
+}
+
+/* Columna derecha - Contenido de pestañas */
+.user-extern-right-column {
+    flex: 1;
+    min-width: 0; /* Para evitar desbordamiento */
+}
+
+/* Pestañas superiores */
+.user-extern-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    justify-content: center;
+}
+
+.user-extern-tab {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 25px;
+    padding: 8px 0;
+    width: 180px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #666;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s;
+}
+
+.user-extern-tab:hover {
+    border-color: #d0d0d0;
+    color: #333;
+}
+
+.user-extern-tab.active {
+    background-color: #e8f0fe;
+    color: #1a73e8;
+    border-color: #e8f0fe;
+}
+
+/* Opciones de visualización para Portfolio */
+.user-extern-view-options {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    gap: 10px;
+}
+
+.user-extern-view-container {
+    display: flex;
+    border: 1px solid #e0e0e0;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.user-extern-view-button {
+    background: white;
+    border: none;
+    padding: 8px 16px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    color: #666;
+    transition: all 0.2s;
+}
+
+.user-extern-view-button:hover {
+    background-color: #f5f5f5;
+}
+
+.user-extern-view-button.active {
+    background-color: #e8f0fe;
+    color: #1a73e8;
+}
+
+/* Contenido de Portfolio */
+.user-extern-portfolio-content {
+    margin-top: 20px;
+}
+
+.user-extern-projects {
+    display: grid;
+    gap: 15px;
+}
+
+.user-extern-projects.gallery-view {
+    grid-template-columns: repeat(3, 1fr);
+    margin-left: 8em;
+    margin-right: 4em;
+}
+
+.user-extern-projects.list-view {
+    grid-template-columns: 1fr;
+}
+
+.user-extern-project-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.user-extern-project-card:hover {
+    transform: translateY(-5px);
+}
+
+.user-extern-project-image {
+    display: block;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+}
+
+.gallery-view .user-extern-project-image {
+    width: 100%;
+}
+
+.list-view .user-extern-project-image {
+    width: 65%;
+    margin: 0 auto;
+}
+
+/* Estados de carga y sin contenido */
+.user-extern-loading,
+.user-extern-no-content {
+    padding: 30px;
+    text-align: center;
+    color: #666;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+/* Contenido de About */
+.user-extern-about-content {
+    padding: 10px;
+    margin-left: 10em;
+}
+
+/* Estilos para las secciones de About */
+.user-extern-section {
+    margin-bottom: 30px;
+}
+
+.user-extern-section h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.user-extern-section p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+/* Experiencia profesional */
+.user-extern-experience-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.user-extern-experience-item {
+    display: flex;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.user-extern-experience-icon {
+    flex: 0 0 30px;
+    margin-right: 15px;
+    color: #666;
+}
+
+.user-extern-experience-content {
+    flex: 1;
+}
+
+.user-extern-experience-title {
+    font-weight: 600;
+    font-size: 15px;
+    margin-bottom: 5px;
+}
+
+.user-extern-experience-company {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.user-extern-experience-date {
+    font-size: 13px;
+    color: #777;
+    margin-bottom: 5px;
+}
+
+.user-extern-experience-description {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.5;
+}
+
+/* Formación educativa */
+.user-extern-education-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.user-extern-education-item {
+    display: flex;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.user-extern-education-icon {
+    flex: 0 0 30px;
+    margin-right: 15px;
+    color: #666;
+}
+
+.user-extern-education-content {
+    flex: 1;
+}
+
+.user-extern-education-title {
+    font-weight: 600;
+    font-size: 15px;
+    margin-bottom: 5px;
+}
+
+.user-extern-education-institution {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.user-extern-education-date {
+    font-size: 13px;
+    color: #777;
+    margin-bottom: 5px;
+}
+
+/* Habilidades */
+.user-extern-skills-container {
+    margin-top: 10px;
+}
+
+.user-extern-skills-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.user-extern-skill-tag {
+    background-color: #f0f0f0;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    color: #333;
+    display: inline-block;
+}
+
+/* Software */
+.user-extern-software-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.user-extern-software-item {
+    background-color: #f0f0f0;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    color: #333;
+    display: inline-block;
+}
+
+/* Redes sociales */
+.user-extern-social-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.user-extern-social-item {
+    display: flex;
+    align-items: center;
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.user-extern-social-item:hover {
+    color: #1a73e8;
+}
+
+.user-extern-social-icon {
+    margin-right: 8px;
+}
+
+/* Archivos descargables */
+.user-extern-files-container {
+    margin-top: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.user-extern-file-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    font-size: 13px;
+    color: #333;
+    background-color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.user-extern-file-button:hover {
+    background-color: #f5f5f5;
+    border-color: #ccc;
+}
+
+.user-extern-file-icon {
+    margin-right: 8px;
+}
+
+/* Contenido de Ofertas */
+.user-extern-offers-content {
+    padding: 10px;
+}
+
+/* Notificaciones */
+.user-extern-notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: white;
+    border-radius: 8px;
+    padding: 12px 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 1000;
+    max-width: 300px;
+    animation: user-extern-notification-slide-in 0.3s ease-out forwards;
+}
+
+.user-extern-notification.success {
+    border-left: 4px solid #4caf50;
+}
+
+.user-extern-notification.error {
+    border-left: 4px solid #f44336;
+}
+
+.user-extern-notification-icon {
+    color: #4caf50;
+}
+
+.user-extern-notification.error .user-extern-notification-icon {
+    color: #f44336;
+}
+
+@keyframes user-extern-notification-slide-in {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .user-extern-content {
+        flex-direction: column;
+    }
+
+    .user-extern-about-content{
+        margin-left: 0;
+    }
+    
+    .user-extern-profile-info {
+        text-align: center;
+    }
+    
+    .user-extern-left-column {
+        position: static;
+        width: 100%;
+        flex: none;
+    }
+    
+    .user-extern-profile-photo {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .user-extern-projects.gallery-view {
+        grid-template-columns: repeat(2, 1fr);
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .user-extern-left-column {
+        position: relative;
+        transform: translateY(0);
+        transition: transform 0.3s ease;
+    }
+    
+    /* Clase que se añadirá con JavaScript cuando se haga scroll */
+    .user-extern-left-column.scrolled {
+        transform: translateY(-100px);
+    }
+    .user-extern-projects.gallery-view {
+        grid-template-columns: repeat(2,1fr);
+    }
+    
+    .user-extern-tabs {
+        overflow-x: auto;
+        white-space: nowrap;
+        padding-bottom: 5px;
+    }
+    
+    .user-extern-tab {
+        padding: 10px 15px;
+    }
+    
+    .user-extern-action-buttons {
+        flex-direction: column;
+    }
+}
