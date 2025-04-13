@@ -116,11 +116,6 @@ const Guardados = () => {
         fetchData();
     }, []);
 
-    // Ya no necesitamos este useEffect para carpetas porque lo hemos combinado con el de arriba
-
-    // Eliminamos la función duplicada
-
-    // Crear nueva carpeta (tablero)
     const handleCreateFolder = async () => {
         if (!newFolderName.trim()) return;
 
@@ -478,16 +473,12 @@ const Guardados = () => {
                                     alt="Idea sin organizar" 
                                     className="idea-image"
                                 />
-                                {hoveredPost === `unorganized-${post._id}` && (
-                                    <div className="idea-hover-actions">
-                                        <button
-                                            className="idea-edit-button"
-                                            onClick={(e) => handleEditPost(post, e)}
-                                        >
-                                            <FaEdit /> Editar
-                                        </button>
-                                    </div>
-                                )}
+                                <button
+                                    className="idea-edit-button"
+                                    onClick={(e) => handleEditPost(post, e)}
+                                >
+                                    <FaPencilAlt />
+                                </button>
                             </div>
                         ))}
                     </div>
