@@ -40,29 +40,29 @@ const Guardados = () => {
         navigate(`/ControlPanel/guardados/folder/${folderId}`);
     };
 
-    // Función para filtrar posts que ya están en carpetas
-    const filterOrganizedPosts = (allPosts, allFolders) => {
-        // Crear un conjunto con todos los IDs de posts que están en carpetas
-        const organizedPostIds = new Set();
+    // Función para filtrar imágenes que ya están en carpetas
+    const filterOrganizedImages = (allSavedImages, allFolders) => {
+        // Crear un conjunto con todas las URLs de imágenes que están en carpetas
+        const organizedImageUrls = new Set();
         
         allFolders.forEach(folder => {
             if (folder.items && folder.items.length > 0) {
                 folder.items.forEach(item => {
-                    if (item.postId) {
-                        organizedPostIds.add(item.postId.toString());
+                    if (item.imageUrl) {
+                        organizedImageUrls.add(item.imageUrl);
                     }
                 });
             }
         });
         
-        // Filtrar los posts que NO están en carpetas
-        return allPosts.filter(post => {
-            const postId = post.postId || post._id;
-            return !organizedPostIds.has(postId.toString());
+        // Filtrar las imágenes que NO están en carpetas
+        return allSavedImages.filter(image => {
+            const imageUrl = image.savedImage || image.mainImage || (image.imageUrl ? image.imageUrl : null);
+            return imageUrl && !organizedImageUrls.has(imageUrl);
         });
     };
 
-    // Cargamos los datos (posts y carpetas)
+    // Cargamos los datos (imágenes guardadas y carpetas)
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -70,8 +70,8 @@ const Guardados = () => {
                 if (!token) return;
                 const backendUrl = import.meta.env.VITE_BACKEND_URL;
                 
-                // Obtener posts guardados
-                const postsRes = await axios.get(`${backendUrl}/api/users/favorites`, {
+                // Obtener imágenes guardadas
+                const savedImagesRes = await axios.get(`${backendUrl}/api/users/favorites`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 
@@ -80,16 +80,28 @@ const Guardados = () => {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 
-                if (postsRes.data.favorites && foldersRes.data.folders) {
-                    const allPosts = postsRes.data.favorites;
+                if (savedImagesRes.data.favorites && foldersRes.data.folders) {
+                    const allSavedImages = savedImagesRes.data.favorites;
                     const allFolders = foldersRes.data.folders;
                     
-                    setSavedPosts(allPosts);
+                    // Asegurarse de que cada imagen tenga la propiedad imageUrl
+                    const processedImages = allSavedImages.map(item => {
+                        // Si ya tiene imageUrl específica guardada, usarla
+                        if (!item.imageUrl && (item.savedImage || item.mainImage)) {
+                            return {
+                                ...item,
+                                imageUrl: item.savedImage || item.mainImage
+                            };
+                        }
+                        return item;
+                    });
+                    
+                    setSavedPosts(processedImages);
                     setFolders(allFolders);
                     
-                    // Filtrar solo los posts que no están en carpetas
-                    const unorganizedPosts = filterOrganizedPosts(allPosts, allFolders);
-                    setIdeasSinOrganizar(unorganizedPosts);
+                    // Filtrar solo las imágenes que no están en carpetas
+                    const unorganizedImages = filterOrganizedImages(processedImages, allFolders);
+                    setIdeasSinOrganizar(unorganizedImages);
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -105,6 +117,8 @@ const Guardados = () => {
     }, []);
 
     // Ya no necesitamos este useEffect para carpetas porque lo hemos combinado con el de arriba
+
+    // Eliminamos la función duplicada
 
     // Crear nueva carpeta (tablero)
     const handleCreateFolder = async () => {
@@ -267,25 +281,31 @@ const Guardados = () => {
             if (!token) return;
             const backendUrl = import.meta.env.VITE_BACKEND_URL;
             
+            // Cerrar el modal
+            setShowEditModal(false);
+            
             setNotification({
                 show: true,
                 message: 'Moviendo la imagen al tablero...',
                 type: 'info'
             });
             
+            // Obtener la URL de la imagen específica
+            const imageUrl = selectedPost.imageUrl || selectedPost.savedImage || selectedPost.mainImage;
+            
             await axios.post(
                 `${backendUrl}/api/folders/add`,
                 { 
                     folderId: selectedFolderId, 
                     postId: selectedPost.postId || selectedPost._id,
-                    imageUrl: selectedPost.mainImage || selectedPost.savedImage
+                    imageUrl: imageUrl
                 },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             
             // Obtener datos actualizados
-            // Obtener posts guardados
-            const postsRes = await axios.get(`${backendUrl}/api/users/favorites`, {
+            // Obtener imágenes guardadas
+            const savedImagesRes = await axios.get(`${backendUrl}/api/users/favorites`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             
@@ -294,16 +314,28 @@ const Guardados = () => {
                 headers: { Authorization: `Bearer ${token}` },
             });
             
-            if (postsRes.data.favorites && foldersRes.data.folders) {
-                const allPosts = postsRes.data.favorites;
+            if (savedImagesRes.data.favorites && foldersRes.data.folders) {
+                const allSavedImages = savedImagesRes.data.favorites;
                 const allFolders = foldersRes.data.folders;
                 
-                setSavedPosts(allPosts);
+                // Asegurarse de que cada imagen tenga la propiedad imageUrl
+                const processedImages = allSavedImages.map(item => {
+                    // Si ya tiene imageUrl específica guardada, usarla
+                    if (!item.imageUrl && (item.savedImage || item.mainImage)) {
+                        return {
+                            ...item,
+                            imageUrl: item.savedImage || item.mainImage
+                        };
+                    }
+                    return item;
+                });
+                
+                setSavedPosts(processedImages);
                 setFolders(allFolders);
                 
-                // Filtrar solo los posts que no están en carpetas
-                const unorganizedPosts = filterOrganizedPosts(allPosts, allFolders);
-                setIdeasSinOrganizar(unorganizedPosts);
+                // Filtrar solo las imágenes que no están en carpetas
+                const unorganizedImages = filterOrganizedImages(processedImages, allFolders);
+                setIdeasSinOrganizar(unorganizedImages);
             }
             
             setNotification({
@@ -442,7 +474,7 @@ const Guardados = () => {
                                 onMouseLeave={() => setHoveredPost(null)}
                             >
                                 <img 
-                                    src={post.mainImage || post.savedImage} 
+                                    src={post.imageUrl || post.savedImage || post.mainImage} 
                                     alt="Idea sin organizar" 
                                     className="idea-image"
                                 />
