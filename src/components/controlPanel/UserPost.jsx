@@ -13,6 +13,10 @@ import {
     FaTimes
 } from 'react-icons/fa';
 import './css/UserPost.css';
+import './css/MorePosts.css';
+import './css/explorer.css';
+import './css/MasonryGallery.css';
+import Masonry from 'react-masonry-css';
 
 const UserPost = () => {
     const navigate = useNavigate();
@@ -27,13 +31,14 @@ const UserPost = () => {
     const [touchEnd, setTouchEnd] = useState(null);
     const minSwipeDistance = 50;
 
-    const [savedImages, setSavedImages] = useState(new Map());
-    const [saveFeedback, setSaveFeedback] = useState({ show: false, imageUrl: null, text: "" });
+    const [isOwner, setIsOwner] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
-
-    // Obtener el ID del usuario autenticado.
     const [currentUserId, setCurrentUserId] = useState(null);
     const [showFullScreenPreview, setShowFullScreenPreview] = useState(false);
+    const [randomPosts, setRandomPosts] = useState([]);
+    const [savedPosts, setSavedPosts] = useState(new Map());
+    const [savedImages, setSavedImages] = useState(new Map());
+    const [saveFeedback, setSaveFeedback] = useState({ show: false, postId: null, imageUrl: null, text: "", message: '' });
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -56,7 +61,62 @@ const UserPost = () => {
         };
 
         fetchUserData();
-    }, []);
+        
+        // Cargar posts aleatorios para la sección "Más posts"
+        const fetchRandomPosts = async () => {
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) return;
+                const backendUrl = import.meta.env.VITE_BACKEND_URL;
+                
+                // Obtener posts aleatorios excluyendo el post actual
+                const response = await axios.get(`${backendUrl}/api/posts/random?limit=20&exclude=${id}`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                
+                if (response.data && response.data.posts) {
+                    // Mezclar los posts para mayor aleatoriedad
+                    const shuffledPosts = [...response.data.posts].sort(() => Math.random() - 0.5);
+                    setRandomPosts(shuffledPosts);
+                }
+            } catch (error) {
+                console.error('Error al cargar posts aleatorios:', error);
+            }
+        };
+        
+        // Cargar posts guardados
+        const fetchSavedPosts = async () => {
+            const token = localStorage.getItem('authToken');
+            if (!token) return;
+
+            try {
+                const backendUrl = import.meta.env.VITE_BACKEND_URL;
+                const response = await axios.get(`${backendUrl}/api/users/favorites`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                
+                // Crear un mapa de imágenes guardadas por postId e imageUrl
+                const savedImagesMap = new Map();
+                
+                if (response.data.favorites) {
+                    response.data.favorites.forEach(fav => {
+                        if (fav.postId && fav.mainImage) {
+                            // Usar una clave compuesta de postId + imageUrl
+                            const key = `${fav.postId}-${fav.mainImage}`;
+                            savedImagesMap.set(key, true);
+                        }
+                    });
+                }
+                
+                setSavedPosts(savedImagesMap);
+            } catch (error) {
+                console.error('Error al cargar posts guardados:', error);
+            }
+        };
+        
+        fetchRandomPosts();
+        fetchSavedPosts();
+    }, [id]);
 
     useEffect(() => {
         const fetchPost = async () => {
@@ -97,6 +157,9 @@ const UserPost = () => {
                 });
                 
                 setSavedImages(savedImagesMap);
+                
+                // También actualizar savedPosts para la sección de "Más posts"
+                setSavedPosts(savedImagesMap);
                 
                 console.log("Imágenes guardadas:", Array.from(savedImagesMap.keys()));
                 console.log("Post ID actual:", id);
@@ -187,6 +250,55 @@ const UserPost = () => {
             }, 2000);
         } catch (error) {
             console.error('Error al actualizar favoritos:', error);
+        }
+    };
+
+    const handleSavePost = async (e, postId, imageUrl) => {
+        e.stopPropagation(); // Evitar que se propague el clic al contenedor
+        
+        try {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                navigate('/login');
+                return;
+            }
+            
+            const backendUrl = import.meta.env.VITE_BACKEND_URL;
+            const key = `${postId}-${imageUrl}`;
+            const isSaved = savedPosts.has(key);
+            
+            // Llamar a la API para guardar/desguardar
+            await axios.post(
+                `${backendUrl}/api/users/favorites/${postId}`,
+                { savedImage: imageUrl },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            
+            // Actualizar el estado local
+            if (isSaved) {
+                setSavedPosts(prev => {
+                    const newMap = new Map(prev);
+                    newMap.delete(key);
+                    return newMap;
+                });
+                
+                setSaveFeedback({ show: true, postId, imageUrl, text: "¡Eliminado!", message: "¡Eliminado!" });
+            } else {
+                setSavedPosts(prev => {
+                    const newMap = new Map(prev);
+                    newMap.set(key, true);
+                    return newMap;
+                });
+                
+                setSaveFeedback({ show: true, postId, imageUrl, text: "¡Guardado!", message: "¡Guardado!" });
+            }
+            
+            // Ocultar el feedback después de 2 segundos
+            setTimeout(() => {
+                setSaveFeedback({ show: false, postId: null, imageUrl: null, text: "", message: "" });
+            }, 2000);
+        } catch (error) {
+            console.error('Error al guardar/desguardar post:', error);
         }
     };
 
@@ -383,6 +495,64 @@ const UserPost = () => {
                         </div>
                     )}
                 </div>
+            </section>
+
+            {/* Sección de Más Posts */}
+            <section className="more-posts-section">
+                <h2 className="more-posts-title">Más posts</h2>
+                <Masonry
+                    breakpointCols={{
+                        default: 4,
+                        1100: 3,
+                        768: 2,
+                        480: 2
+                    }}
+                    className="my-masonry-grid"
+                    columnClassName="my-masonry-grid_column"
+                >
+                    {randomPosts.map((post, index) => {
+                        const imageUrl = post.mainImage || (post.images && post.images.length > 0 ? post.images[0] : '');
+                        const key = `${post._id}-${imageUrl}`;
+                        return (
+                            <div
+                                className="masonry-item"
+                                key={`random-${post._id}-${index}`}
+                                onClick={() => navigate(`/ControlPanel/post/${post._id}`)}
+                            >
+                                <img
+                                    src={imageUrl}
+                                    alt={post.title || 'Imagen de post'}
+                                    loading="lazy"
+                                />
+                                <button
+                                    className={`save-button-explorer ${savedPosts.has(key) ? 'saved' : ''}`}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleSavePost(e, post._id, imageUrl);
+                                    }}
+                                    title={savedPosts.has(key) ? "Quitar de guardados" : "Guardar"}
+                                >
+                                    {savedPosts.has(key) ? <FaBookmark /> : <FaRegBookmark />}
+                                </button>
+                                {saveFeedback.show && saveFeedback.postId === post._id && saveFeedback.imageUrl === imageUrl && (
+                                    <div className={`save-feedback ${saveFeedback.show ? 'show' : ''}`}>
+                                        {saveFeedback.text}
+                                    </div>
+                                )}
+                                <div className="overlay">
+                                    <div className="user-info">
+                                        <img
+                                            src={post.user.profileImage || "/multimedia/usuarioDefault.jpg"}
+                                            alt={post.user.username}
+                                            loading="lazy"
+                                        />
+                                        <span>{post.user.username}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    })}
+                </Masonry>
             </section>
 
             {/* Modal de confirmación para eliminar el post */}
