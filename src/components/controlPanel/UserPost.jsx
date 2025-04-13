@@ -247,9 +247,6 @@ const UserPost = () => {
                         onTouchMove={onTouchMove}
                         onTouchEnd={onTouchEnd}
                     >
-                        <button className="anterior" onClick={handlePrevious}>
-                            <FaChevronLeft size={24} />
-                        </button>
                         <img
                             src={mainImage}
                             alt="Imagen principal"
@@ -257,68 +254,68 @@ const UserPost = () => {
                             onClick={() => setShowFullScreenPreview(true)}
                             style={{ cursor: 'pointer' }}
                         />
-                        <div className="options">
-                            <button
-                                className={`save-button-post ${savedImages.has(`${id}-${mainImage}`) ? 'saved' : ''}`}
-                                onClick={handleSave}
-                                title={savedImages.has(`${id}-${mainImage}`) ? "Quitar de guardados" : "Guardar"}
-                            >
-                                {savedImages.has(`${id}-${mainImage}`) ? <FaBookmark size={20} /> : <FaRegBookmark size={20} />}
-                                {saveFeedback.show && saveFeedback.imageUrl === mainImage && (
-                                    <span className="saved-text">{saveFeedback.text}</span>
-                                )}
-                            </button>
-                            <button className="compartir" onClick={handleShare}>
-                                <FaShareAlt size={20} />
-                            </button>
-                            {post.user?._id === currentUserId && (
-                                <button
-                                    className="delete-button"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        setShowDeleteModal(true);
-                                    }}
-                                >
-                                    <FaTrash size={20} />
-                                </button>
-                            )}
-                        </div>
-                        <button className="siguiente" onClick={handleNext}>
-                            <FaChevronRight size={24} />
-                        </button>
                     </div>
-                    <div className="perfil__galeria">
+                    <div className="perfil__galeria masonry-gallery">
                         {images.map((img, index) => (
-                            <img
-                                key={index}
-                                src={img}
-                                alt={`Miniatura ${index + 1}`}
-                                className={`perfil__miniatura ${index === currentImageIndex ? 'active' : ''}`}
-                                onClick={() => handleThumbnailClick(index)}
-                            />
+                            <div key={index} className="gallery-item">
+                                <img
+                                    src={img}
+                                    alt={`Miniatura ${index + 1}`}
+                                    className={`perfil__miniatura ${index === currentImageIndex ? 'active' : ''}`}
+                                    onClick={() => handleThumbnailClick(index)}
+                                />
+                            </div>
                         ))}
                     </div>
                 </div>
                 <div className="perfil__info">
-                    <div 
-                        className="perfil__usuario" 
-                        onClick={() => navigate(`/ControlPanel/profile/${post.user.username}`)}
-                        style={{ cursor: 'pointer' }}
-                    >
-                        {post.user?.profile?.profilePicture ? (
-                            <img
-                                src={post.user.profile.profilePicture}
-                                alt="Avatar"
-                                className="perfil__avatar"
-                            />
-                        ) : (
-                            <FaUserCircle size={50} />
+                    <div className="post-actions">
+                        <button
+                            className={`save-button-post ${savedImages.has(`${id}-${mainImage}`) ? 'saved' : ''}`}
+                            onClick={handleSave}
+                            title={savedImages.has(`${id}-${mainImage}`) ? "Quitar de guardados" : "Guardar"}
+                        >
+                            {savedImages.has(`${id}-${mainImage}`) ? <FaBookmark size={18} /> : <FaRegBookmark size={18} />}
+                            {saveFeedback.show && saveFeedback.imageUrl === mainImage && (
+                                <span className="saved-text">{saveFeedback.text}</span>
+                            )}
+                        </button>
+                        <button className="compartir" onClick={handleShare}>
+                            <FaShareAlt size={18} />
+                        </button>
+                        {post.user?._id === currentUserId && (
+                            <button
+                                className="delete-button"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setShowDeleteModal(true);
+                                }}
+                            >
+                                <FaTrash size={18} />
+                            </button>
                         )}
-                        <div className="perfil__datos">
-                            <h2 className="perfil__nombre">@{post.user.username}</h2>
-                            <p className="perfil__ubicacion">
-                                {post.user.city}, {post.user.country}
-                            </p>
+                    </div>
+                    <div className="info-header">
+                        <div 
+                            className="perfil__usuario" 
+                            onClick={() => navigate(`/ControlPanel/profile/${post.user.username}`)}
+                            style={{ cursor: 'pointer' }}
+                        >
+                            {post.user?.profile?.profilePicture ? (
+                                <img
+                                    src={post.user.profile.profilePicture}
+                                    alt="Avatar"
+                                    className="perfil__avatar"
+                                />
+                            ) : (
+                                <FaUserCircle size={50} />
+                            )}
+                            <div className="perfil__datos">
+                                <h2 className="perfil__nombre">{post.user.fullName || post.user.companyName || `@${post.user.username}`}</h2>
+                                <p className="perfil__ubicacion">
+                                    {post.user.city && post.user.country ? `${post.user.city}, ${post.user.country}` : ''}
+                                </p>
+                            </div>
                         </div>
                     </div>
                     <div 
