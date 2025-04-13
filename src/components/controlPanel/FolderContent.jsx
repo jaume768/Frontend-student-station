@@ -79,8 +79,11 @@ const FolderContent = () => {
         navigate(-1);
     };
 
-    const openPost = (postId) => {
-        navigate(`/ControlPanel/post/${postId}`);
+    const openPost = (postId, imageUrl) => {
+        // Pasar la URL de la imagen clickeada como state para que se muestre como principal
+        navigate(`/ControlPanel/post/${postId}`, { 
+            state: { clickedImageUrl: imageUrl } 
+        });
     };
 
     const toggleItemMenu = (itemId, e) => {
@@ -182,7 +185,7 @@ const FolderContent = () => {
                         <div
                             key={`${item.postId}-${item.imageUrl}`}
                             className="masonry-item"
-                            onClick={() => openPost(item.postId)}
+                            onClick={() => openPost(item.postId, item.imageUrl)}
                         >
                             <img
                                 src={item.imageUrl}

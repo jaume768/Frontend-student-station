@@ -37,7 +37,11 @@ const Guardados = () => {
     const navigateToPost = (post) => {
         if (!post) return;
         const postIdToNavigate = post.postId || post._id;
-        navigate(`/ControlPanel/post/${postIdToNavigate}`);
+        // Pasar la URL de la imagen clickeada como state para que se muestre como principal
+        const clickedImageUrl = post.imageUrl || post.savedImage || post.mainImage;
+        navigate(`/ControlPanel/post/${postIdToNavigate}`, { 
+            state: { clickedImageUrl: clickedImageUrl } 
+        });
     };
     
     // Función para manejar la selección de imágenes en el modal
