@@ -146,11 +146,29 @@ const Explorer = () => {
                     { headers: { 'Cache-Control': 'no-cache' } } // Add cache control header
                 );
                 
+                // Agregar los posts a la lista de vistos
                 response.data.images.forEach(img => {
                     addViewedPost(img.postId);
                 });
-
-                const newImages = page === 1 ? response.data.images : [...postImages, ...response.data.images];
+                
+                // Función para mezclar aleatoriamente un array
+                const shuffleArray = (array) => {
+                    // Crear una copia para no modificar el original
+                    const shuffled = [...array];
+                    // Algoritmo Fisher-Yates para mezcla aleatoria
+                    for (let i = shuffled.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+                    }
+                    return shuffled;
+                };
+                
+                // Aplicar mezcla aleatoria a las nuevas imágenes recibidas
+                const randomizedNewImages = shuffleArray(response.data.images);
+                
+                // Si es la primera página, usar solo las nuevas imágenes mezcladas
+                // Si no, añadir las nuevas imágenes mezcladas a las existentes
+                const newImages = page === 1 ? randomizedNewImages : [...postImages, ...randomizedNewImages];
                 setPostImages(newImages);
                 setHasMore(response.data.hasMore);
 
@@ -187,7 +205,7 @@ const Explorer = () => {
             if (entries[0].isIntersecting && hasMore && !loading) {
                 setPage(prev => prev + 1);
             }
-        }, { rootMargin: '500px' });
+        }, { rootMargin: '1000px' });  // Aumentado de 500px a 1000px para cargar contenido más anticipadamente
 
         if (sentinelRef.current) {
             observerRef.current.observe(sentinelRef.current);
