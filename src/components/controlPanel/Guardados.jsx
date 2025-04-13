@@ -818,8 +818,17 @@ const Guardados = () => {
 
             {/* Notificación */}
             {notification.show && (
-                <div className={`notification ${notification.type}`}>
-                    <p>{notification.message}</p>
+                <div className={`guardados-notification ${notification.type}`}>
+                    <div className="guardados-notification-icon">
+                        {notification.type === 'success' ? (
+                            <FaCheck />
+                        ) : notification.type === 'error' ? (
+                            <FaTimes />
+                        ) : (
+                            <FaFolder />
+                        )}
+                    </div>
+                    <p className="guardados-notification-message">{notification.message}</p>
                 </div>
             )}
         </div>

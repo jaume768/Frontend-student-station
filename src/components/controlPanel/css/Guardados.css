@@ -1349,6 +1349,105 @@
     color: #666;
 }
 
+/* Estilos para la notificación moderna */
+.guardados-notification {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    border-radius: 12px;
+    background-color: #ffffff;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1), 0 3px 6px rgba(0, 0, 0, 0.05);
+    z-index: 1000;
+    min-width: 280px;
+    max-width: 400px;
+    animation: guardados-notification-slide-in 0.3s ease-out forwards, guardados-notification-fade-out 0.3s ease-in forwards 2.7s;
+    backdrop-filter: blur(10px);
+    border-left: 4px solid #06b6a0;
+    transform: translateY(100px);
+    opacity: 0;
+}
+
+.guardados-notification.success {
+    border-left-color: #06b6a0;
+}
+
+.guardados-notification.error {
+    border-left-color: #ff4d4f;
+}
+
+.guardados-notification.info {
+    border-left-color: #1890ff;
+}
+
+.guardados-notification-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.guardados-notification.success .guardados-notification-icon {
+    color: #06b6a0;
+    background-color: rgba(6, 182, 160, 0.1);
+}
+
+.guardados-notification.error .guardados-notification-icon {
+    color: #ff4d4f;
+    background-color: rgba(255, 77, 79, 0.1);
+}
+
+.guardados-notification.info .guardados-notification-icon {
+    color: #1890ff;
+    background-color: rgba(24, 144, 255, 0.1);
+}
+
+.guardados-notification-message {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    margin: 0;
+    line-height: 1.4;
+}
+
+@keyframes guardados-notification-slide-in {
+    0% {
+        transform: translateY(100px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes guardados-notification-fade-out {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .guardados-notification {
+        bottom: 20px;
+        right: 20px;
+        left: 20px;
+        min-width: auto;
+        max-width: none;
+    }
+}
+
 .edit-folder-button.cancel:hover {
     background-color: #e0e0e0;
     color: #333;
@@ -1447,12 +1546,12 @@
 }
 
 .confirm-button {
-    background-color: #e53935;
+    background-color: #535353;
     color: white;
 }
 
 .confirm-button:hover {
-    background-color: #c62828;
+    background-color: #535353;
 }
 
 .cancel-button {

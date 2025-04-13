@@ -277,12 +277,12 @@
 }
 
 .confirm-button {
-    background-color: #e53935;
+    background-color: #535353;
     color: white;
 }
 
 .confirm-button:hover {
-    background-color: #c62828;
+    background-color: #535353;
 }
 
 .folder-content-loading {
