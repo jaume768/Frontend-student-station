@@ -135,7 +135,58 @@ const MisOfertasSection = ({ userRole, professionalType }) => {
             
             // Extraer los candidatos de las aplicaciones
             if (offer && offer.applications && offer.applications.length > 0) {
-                setCandidates(offer.applications);
+                console.log('Aplicaciones recibidas:', offer.applications);
+                
+                // Asegurarse de que cada aplicación tenga toda la información del usuario
+                const applicationsWithUserDetails = offer.applications.map(app => {
+                    // Crear una copia segura de la aplicación
+                    const appCopy = { ...app };
+                    
+                    // Verificar si app.user es un objeto o un string (ID)
+                    if (typeof appCopy.user === 'string' || appCopy.user instanceof String) {
+                        // Si es un ID, crear un objeto de usuario básico
+                        appCopy.user = {
+                            _id: appCopy.user,
+                            fullName: 'Usuario',
+                            city: 'Sin ubicación',
+                            profile: {
+                                profilePicture: '/default-avatar.png'
+                            }
+                        };
+                    } else if (appCopy.user && typeof appCopy.user === 'object') {
+                        // Si es un objeto, asegurarse de que tenga todos los campos necesarios
+                        if (!appCopy.user.profile || !appCopy.user.profile.profilePicture) {
+                            appCopy.user.profile = {
+                                ...((appCopy.user.profile) || {}),
+                                profilePicture: '/default-avatar.png'
+                            };
+                        }
+                        
+                        // Si no hay nombre completo, usar el nombre de usuario
+                        if (!appCopy.user.fullName) {
+                            appCopy.user.fullName = appCopy.user.username || 'Usuario';
+                        }
+                        
+                        // Si no hay ciudad, usar 'Sin ubicación'
+                        if (!appCopy.user.city) {
+                            appCopy.user.city = 'Sin ubicación';
+                        }
+                    } else {
+                        // Si no hay usuario, crear uno por defecto
+                        appCopy.user = {
+                            _id: 'unknown',
+                            fullName: 'Usuario desconocido',
+                            city: 'Sin ubicación',
+                            profile: {
+                                profilePicture: '/default-avatar.png'
+                            }
+                        };
+                    }
+                    
+                    return appCopy;
+                });
+                
+                setCandidates(applicationsWithUserDetails);
             } else {
                 setCandidates([]);
             }
@@ -448,24 +499,26 @@ const MisOfertasSection = ({ userRole, professionalType }) => {
                     </div>
                     
                     <div className="candidatos-filters">
-                        <button 
-                            className={`candidatos-filter ${candidatesFilter === 'todos' ? 'active' : ''}`}
-                            onClick={() => setCandidatesFilter('todos')}
-                        >
-                            Todos
-                        </button>
-                        <button 
-                            className={`candidatos-filter ${candidatesFilter === 'seleccionados' ? 'active' : ''}`}
-                            onClick={() => setCandidatesFilter('seleccionados')}
-                        >
-                            Seleccionados
-                        </button>
-                        <button 
-                            className={`candidatos-filter ${candidatesFilter === 'descartados' ? 'active' : ''}`}
-                            onClick={() => setCandidatesFilter('descartados')}
-                        >
-                            Descartados
-                        </button>
+                        <div className="candidatos-filter-group">
+                            <button 
+                                className={`candidatos-filter ${candidatesFilter === 'todos' ? 'active' : ''}`}
+                                onClick={() => setCandidatesFilter('todos')}
+                            >
+                                Todos
+                            </button>
+                            <button 
+                                className={`candidatos-filter ${candidatesFilter === 'seleccionados' ? 'active' : ''}`}
+                                onClick={() => setCandidatesFilter('seleccionados')}
+                            >
+                                Seleccionados
+                            </button>
+                            <button 
+                                className={`candidatos-filter ${candidatesFilter === 'descartados' ? 'active' : ''}`}
+                                onClick={() => setCandidatesFilter('descartados')}
+                            >
+                                Descartados
+                            </button>
+                        </div>
                         
                         <div className="candidatos-response-toggle">
                             <button 
@@ -502,22 +555,22 @@ const MisOfertasSection = ({ userRole, professionalType }) => {
                                         <div className="candidatos-info">
                                             <h3 className="candidatos-name">{candidate.user.fullName}</h3>
                                             <p className="candidatos-location">{candidate.user.city || 'Sin ubicación'}</p>
-                                            <div className="candidatos-actions">
-                                                <button 
-                                                    className={`candidatos-action-btn select-btn ${candidate.status === 'accepted' ? 'selected' : ''}`}
-                                                    onClick={() => handleCandidateAction(candidate._id, 'accepted')}
-                                                    disabled={candidate.status === 'accepted'}
-                                                >
-                                                    <FaCheck /> {candidate.status === 'accepted' ? 'Seleccionado' : 'Seleccionar'}
-                                                </button>
-                                                <button 
-                                                    className={`candidatos-action-btn reject-btn ${candidate.status === 'rejected' ? 'rejected' : ''}`}
-                                                    onClick={() => handleCandidateAction(candidate._id, 'rejected')}
-                                                    disabled={candidate.status === 'rejected'}
-                                                >
-                                                    <FaTimesCircle /> {candidate.status === 'rejected' ? 'Descartado' : 'Descartar'}
-                                                </button>
-                                            </div>
+                                        </div>
+                                        <div className="candidatos-actions">
+                                            <button 
+                                                className={`candidatos-action-btn select-btn ${candidate.status === 'accepted' ? 'selected' : ''}`}
+                                                onClick={() => handleCandidateAction(candidate._id, 'accepted')}
+                                                disabled={candidate.status === 'accepted'}
+                                            >
+                                                <FaCheck />
+                                            </button>
+                                            <button 
+                                                className={`candidatos-action-btn reject-btn ${candidate.status === 'rejected' ? 'rejected' : ''}`}
+                                                onClick={() => handleCandidateAction(candidate._id, 'rejected')}
+                                                disabled={candidate.status === 'rejected'}
+                                            >
+                                                <FaTimesCircle />
+                                            </button>
                                         </div>
                                         <button 
                                             className="candidatos-view-profile"
