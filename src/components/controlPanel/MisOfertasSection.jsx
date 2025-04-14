@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { FaTimes } from 'react-icons/fa';
+import { FaTimes, FaCheck, FaTimesCircle } from 'react-icons/fa';
 import './css/MisOfertasSection.css';
 
 const MisOfertasSection = ({ userRole, professionalType }) => {
@@ -30,6 +30,13 @@ const MisOfertasSection = ({ userRole, professionalType }) => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [showDeactivateModal, setShowDeactivateModal] = useState(false);
     const [selectedOfferId, setSelectedOfferId] = useState(null);
+    
+    // Estado para revisar candidatos
+    const [reviewingCandidates, setReviewingCandidates] = useState(false);
+    const [currentOffer, setCurrentOffer] = useState(null);
+    const [candidates, setCandidates] = useState([]);
+    const [candidatesFilter, setCandidatesFilter] = useState('todos');
+    const [showResponses, setShowResponses] = useState(true);
 
     useEffect(() => {
         if (isCompanyOrInstitution) {
@@ -107,6 +114,82 @@ const MisOfertasSection = ({ userRole, professionalType }) => {
         }
     };
 
+    // Función para obtener candidatos de una oferta específica
+    const fetchOfferCandidates = async (offerId) => {
+        setLoading(true);
+        try {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                setError('Necesitas iniciar sesión para ver los candidatos');
+                return;
+            }
+
+            const backendUrl = import.meta.env.VITE_BACKEND_URL;
+            const response = await axios.get(`${backendUrl}/api/offers/${offerId}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            
+            // Obtener la oferta con sus aplicaciones
+            const offer = response.data.offer;
+            setCurrentOffer(offer);
+            
+            // Extraer los candidatos de las aplicaciones
+            if (offer && offer.applications && offer.applications.length > 0) {
+                setCandidates(offer.applications);
+            } else {
+                setCandidates([]);
+            }
+        } catch (error) {
+            console.error('Error al obtener candidatos:', error);
+            setError('No se pudieron cargar los candidatos. Inténtalo de nuevo más tarde.');
+        } finally {
+            setLoading(false);
+        }
+    };
+    
+    // Función para manejar la selección o descarte de un candidato
+    const handleCandidateAction = async (candidateId, action) => {
+        try {
+            const token = localStorage.getItem('authToken');
+            if (!token) return;
+            
+            const backendUrl = import.meta.env.VITE_BACKEND_URL;
+            const response = await axios.put(
+                `${backendUrl}/api/offers/${currentOffer._id}/applications/${candidateId}/status`,
+                { status: action },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            
+            // Actualizar el estado local de los candidatos
+            setCandidates(prevCandidates => 
+                prevCandidates.map(candidate => 
+                    candidate._id === candidateId 
+                        ? { ...candidate, status: action }
+                        : candidate
+                )
+            );
+            
+        } catch (error) {
+            console.error(`Error al ${action === 'accepted' ? 'seleccionar' : 'descartar'} candidato:`, error);
+        }
+    };
+    
+    // Función para manejar la revisión de candidatos
+    const handleReviewCandidates = (offerId, e) => {
+        e.preventDefault();
+        setReviewingCandidates(true);
+        setSelectedOfferId(offerId);
+        fetchOfferCandidates(offerId);
+    };
+    
+    // Función para volver a la lista de ofertas
+    const handleBackToOffers = () => {
+        setReviewingCandidates(false);
+        setCurrentOffer(null);
+        setCandidates([]);
+        setCandidatesFilter('todos');
+    };
+    
     // Función para obtener ofertas publicadas por la empresa
     const fetchCompanyOffers = async () => {
         setLoading(true);
@@ -172,10 +255,7 @@ const MisOfertasSection = ({ userRole, professionalType }) => {
         navigate('/ControlPanel/CreateOffer');
     };
     
-    const handleReviewCandidates = (offerId, e) => {
-        e.stopPropagation();
-        navigate(`/ControlPanel/offers/${offerId}/candidates`);
-    };
+    // Esta función ha sido reemplazada por la nueva implementación arriba
     
     const handleChangeOfferStatus = async (newStatus) => {
         try {
@@ -345,6 +425,137 @@ const MisOfertasSection = ({ userRole, professionalType }) => {
 
     // Renderizar interfaz para empresas
     if (isCompanyOrInstitution) {
+        // Si está revisando candidatos, mostrar la interfaz de candidatos
+        if (reviewingCandidates && currentOffer) {
+            // Filtrar candidatos según la selección
+            const filteredCandidates = candidates.filter(candidate => {
+                if (candidatesFilter === 'todos') return true;
+                if (candidatesFilter === 'seleccionados') return candidate.status === 'accepted';
+                if (candidatesFilter === 'descartados') return candidate.status === 'rejected';
+                return true;
+            });
+            
+            return (
+                <div className="candidatos-section">
+                    <div className="candidatos-header">
+                        <button 
+                            className="candidatos-back-button"
+                            onClick={handleBackToOffers}
+                        >
+                            &larr; Volver a ofertas
+                        </button>
+                        <h2 className="candidatos-title">Candidatos para: {currentOffer.position}</h2>
+                    </div>
+                    
+                    <div className="candidatos-filters">
+                        <button 
+                            className={`candidatos-filter ${candidatesFilter === 'todos' ? 'active' : ''}`}
+                            onClick={() => setCandidatesFilter('todos')}
+                        >
+                            Todos
+                        </button>
+                        <button 
+                            className={`candidatos-filter ${candidatesFilter === 'seleccionados' ? 'active' : ''}`}
+                            onClick={() => setCandidatesFilter('seleccionados')}
+                        >
+                            Seleccionados
+                        </button>
+                        <button 
+                            className={`candidatos-filter ${candidatesFilter === 'descartados' ? 'active' : ''}`}
+                            onClick={() => setCandidatesFilter('descartados')}
+                        >
+                            Descartados
+                        </button>
+                        
+                        <div className="candidatos-response-toggle">
+                            <button 
+                                className={`candidatos-response-button ${showResponses ? 'active' : ''}`}
+                                onClick={() => setShowResponses(true)}
+                            >
+                                Mostrar respuestas
+                            </button>
+                            <button 
+                                className={`candidatos-response-button ${!showResponses ? 'active' : ''}`}
+                                onClick={() => setShowResponses(false)}
+                            >
+                                Ocultar respuestas
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div className="candidatos-count">
+                        {filteredCandidates.length} Resultados
+                    </div>
+                    
+                    <div className="candidatos-list">
+                        {filteredCandidates.length > 0 ? (
+                            filteredCandidates.map((candidate) => (
+                                <div className="candidatos-card" key={candidate._id}>
+                                    <div className="candidatos-profile">
+                                        <div className="candidatos-avatar">
+                                            <img 
+                                                src={candidate.user.profile?.profilePicture || '/default-avatar.png'} 
+                                                alt={candidate.user.fullName} 
+                                                className="candidatos-avatar-img"
+                                            />
+                                        </div>
+                                        <div className="candidatos-info">
+                                            <h3 className="candidatos-name">{candidate.user.fullName}</h3>
+                                            <p className="candidatos-location">{candidate.user.city || 'Sin ubicación'}</p>
+                                            <div className="candidatos-actions">
+                                                <button 
+                                                    className={`candidatos-action-btn select-btn ${candidate.status === 'accepted' ? 'selected' : ''}`}
+                                                    onClick={() => handleCandidateAction(candidate._id, 'accepted')}
+                                                    disabled={candidate.status === 'accepted'}
+                                                >
+                                                    <FaCheck /> {candidate.status === 'accepted' ? 'Seleccionado' : 'Seleccionar'}
+                                                </button>
+                                                <button 
+                                                    className={`candidatos-action-btn reject-btn ${candidate.status === 'rejected' ? 'rejected' : ''}`}
+                                                    onClick={() => handleCandidateAction(candidate._id, 'rejected')}
+                                                    disabled={candidate.status === 'rejected'}
+                                                >
+                                                    <FaTimesCircle /> {candidate.status === 'rejected' ? 'Descartado' : 'Descartar'}
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <button 
+                                            className="candidatos-view-profile"
+                                            onClick={() => navigate(`/ControlPanel/UserProfile/${candidate.user._id}`)}
+                                        >
+                                            Ver perfil
+                                        </button>
+                                    </div>
+                                    
+                                    {showResponses && currentOffer.extraQuestions && currentOffer.extraQuestions.length > 0 && (
+                                        <div className="candidatos-responses">
+                                            <h4 className="candidatos-responses-title">Respuestas a preguntas adicionales:</h4>
+                                            <div className="candidatos-responses-list">
+                                                {candidate.answers && candidate.answers.map((answer, index) => (
+                                                    <div className="candidatos-response-item" key={index}>
+                                                        <p className="candidatos-response-question">{answer.question}</p>
+                                                        <p className="candidatos-response-answer">{answer.answer}</p>
+                                                    </div>
+                                                ))}
+                                                {(!candidate.answers || candidate.answers.length === 0) && (
+                                                    <p className="candidatos-no-responses">No hay respuestas disponibles</p>
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            ))
+                        ) : (
+                            <div className="candidatos-no-results">
+                                <p>No hay candidatos que coincidan con los filtros seleccionados.</p>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+        
+        // Interfaz normal de gestión de ofertas
         return (
             <>
                 <div className="company-offers-section">
