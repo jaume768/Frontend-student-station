@@ -4,38 +4,40 @@ import { FaAward } from 'react-icons/fa';
 const UserMilestoneSection = ({ professionalMilestones }) => {
     if (!Array.isArray(professionalMilestones) || professionalMilestones.length === 0) {
         return (
-            <div className="profile-section-userP">
-                <h3 className="section-title-userP">
-                    <FaAward className="section-icon-userP" />
+            <section className="user-extern-section">
+                <h2>
+                    <FaAward style={{marginRight: '8px'}} />
                     Hitos profesionales
-                </h3>
-                <p className="no-data-message-userP">No hay hitos profesionales registrados.</p>
-            </div>
+                </h2>
+                <p>No hay hitos profesionales registrados.</p>
+            </section>
         );
     }
 
     return (
-        <div className="profile-section-userP">
-            <h3 className="section-title-userP">
-                <FaAward className="section-icon-userP" />
+        <section className="user-extern-section">
+            <h2>
+                <FaAward style={{marginRight: '8px'}} />
                 Hitos profesionales
-            </h3>
-            <div className="milestones-container-userP">
+            </h2>
+            <ul className="user-extern-experience-list">
                 {professionalMilestones.map((milestone, index) => (
-                    <div key={index} className="milestone-item-userP">
-                        <div className="milestone-header-userP">
-                            <h4 className="milestone-title-userP">{milestone.name}</h4>
-                            <span className="milestone-date-userP">{milestone.date}</span>
+                    <li key={index} className="user-extern-experience-item">
+                        <div className="user-extern-experience-icon">
+                            <FaAward />
                         </div>
-                        <div className="milestone-entity-userP">{milestone.entity}</div>
-                        {milestone.description && (
-                            <p className="milestone-description-userP">{milestone.description}</p>
-                        )}
-                        {index < professionalMilestones.length - 1 && <hr className="milestone-divider-userP" />}
-                    </div>
+                        <div className="user-extern-experience-content">
+                            <div className="user-extern-experience-title">{milestone.name}</div>
+                            <div className="user-extern-experience-company">{milestone.entity}</div>
+                            <div className="user-extern-experience-date">{milestone.date}</div>
+                            {milestone.description && (
+                                <div className="user-extern-experience-description">{milestone.description}</div>
+                            )}
+                        </div>
+                    </li>
                 ))}
-            </div>
-        </div>
+            </ul>
+        </section>
     );
 };
 

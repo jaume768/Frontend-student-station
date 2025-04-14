@@ -423,7 +423,11 @@ const UserPost = () => {
                                 <FaUserCircle size={50} />
                             )}
                             <div className="perfil__datos">
-                                <h2 className="perfil__nombre">{post.user.fullName || post.user.companyName || `@${post.user.username}`}</h2>
+                                <h2 className="perfil__nombre">
+                                    {post.user.professionalType === 1 || post.user.professionalType === 2 || post.user.professionalType === 4 
+                                        ? post.user.companyName || `@${post.user.username}` 
+                                        : post.user.fullName || `@${post.user.username}`}
+                                </h2>
                                 <p className="perfil__ubicacion">
                                     {post.user.city && post.user.country ? `${post.user.city}, ${post.user.country}` : ''}
                                 </p>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaGraduationCap, FaCalendarAlt, FaMapMarkerAlt, FaFilter } from 'react-icons/fa';
+import { FaGraduationCap, FaCalendarAlt, FaMapMarkerAlt, FaFilter, FaTag } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 const UserEducationalOffersSection = ({ offers = [] }) => {
@@ -7,8 +7,8 @@ const UserEducationalOffersSection = ({ offers = [] }) => {
 
     if (!Array.isArray(offers) || offers.length === 0) {
         return (
-            <div className="company-offers-empty">
-                <div className="offers-empty-icon">
+            <div className="user-extern-offers-empty">
+                <div className="user-extern-offers-empty-icon">
                     <FaGraduationCap />
                 </div>
                 <h3>No hay ofertas educativas publicadas</h3>
@@ -23,7 +23,8 @@ const UserEducationalOffersSection = ({ offers = [] }) => {
             case 'pending': return 'Pendiente';
             case 'accepted': return 'Aceptada';
             case 'cancelled': return 'Cancelada';
-            default: return 'Desconocido';
+            case 'active': return 'Activa';
+            default: return 'Activa';
         }
     };
 
@@ -38,71 +39,120 @@ const UserEducationalOffersSection = ({ offers = [] }) => {
         return `${duration.value} ${duration.unit}`;
     };
 
+    // Función para formatear la fecha
+    const formatDate = (dateString) => {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        return date.toLocaleDateString('es-ES', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
+    };
+
     return (
-        <div className="company-offers-container">
-            <div className="offers-filter-section">
-                <div className="filter-header">
-                    <FaFilter className="filter-icon" />
-                    <span>Filtrar por estado:</span>
-                </div>
-                <div className="filter-options">
-                    <button
-                        className={`filter-button ${statusFilter === 'all' ? 'active' : ''}`}
+        <div className="user-extern-offers-section">
+            {statusFilter !== 'all' && (
+                <div className="user-extern-offers-filter">
+                    <div className="user-extern-filter-header">
+                        <FaFilter className="user-extern-filter-icon" />
+                        <span>Filtro activo: {translateStatus(statusFilter)}</span>
+                    </div>
+                    <button 
+                        className="user-extern-clear-filter" 
                         onClick={() => setStatusFilter('all')}
                     >
-                        Todas
-                    </button>
-                    <button
-                        className={`filter-button ${statusFilter === 'pending' ? 'active' : ''}`}
-                        onClick={() => setStatusFilter('pending')}
-                    >
-                        Pendientes
-                    </button>
-                    <button
-                        className={`filter-button ${statusFilter === 'accepted' ? 'active' : ''}`}
-                        onClick={() => setStatusFilter('accepted')}
-                    >
-                        Aceptadas
-                    </button>
-                    <button
-                        className={`filter-button ${statusFilter === 'cancelled' ? 'active' : ''}`}
-                        onClick={() => setStatusFilter('cancelled')}
-                    >
-                        Canceladas
+                        Mostrar todas
                     </button>
                 </div>
-            </div>
+            )}
 
-            <div className="offers-list">
+            <div className="user-extern-offers-container">
                 {filteredOffers.length === 0 ? (
-                    <div className="no-filtered-offers">
+                    <div className="user-extern-no-filtered-offers">
                         No hay ofertas educativas con el filtro seleccionado
                     </div>
                 ) : (
-                    filteredOffers.map((offer) => (
-                        <div key={offer._id} className={`offer-card status-${offer.status}`}>
-                            <div className="offer-status-tag">{translateStatus(offer.status)}</div>
-                            <h3 className="offer-title">{offer.programName}</h3>
-                            <div className="offer-details">
-                                <div className="offer-detail">
-                                    <FaGraduationCap />
-                                    <span>{offer.studyType}</span>
+                    filteredOffers.map((offer, index) => (
+                        <div key={offer._id || index} className="user-extern-offer-card">
+                            <div className="user-extern-offer-header">
+                                <span className="user-extern-offer-type">{offer.programName || offer.title || 'Oferta educativa'}</span>
+                                <div className="user-extern-offer-metadata">
+                                    {offer.duration && (
+                                        <>
+                                            <span className="user-extern-offer-years">{formatDuration(offer.duration)}</span>
+                                            <span className="user-extern-offer-separator">|</span>
+                                        </>
+                                    )}
+                                    {offer.schedule && (
+                                        <>
+                                            <span className="user-extern-offer-schedule">{offer.schedule}</span>
+                                            <span className="user-extern-offer-separator">|</span>
+                                        </>
+                                    )}
+                                    {offer.modality && (
+                                        <span className="user-extern-offer-modality">{offer.modality}</span>
+                                    )}
+                                    {offer.practices && (
+                                        <>
+                                            <span className="user-extern-offer-separator">|</span>
+                                            <span className="user-extern-offer-practices">Prácticas</span>
+                                        </>
+                                    )}
+                                    {offer.publicationDate && (
+                                        <>
+                                            <span className="user-extern-offer-separator">|</span>
+                                            <span className="user-extern-offer-date">
+                                                <FaCalendarAlt style={{marginRight: '4px'}} />
+                                                {formatDate(offer.publicationDate)}
+                                            </span>
+                                        </>
+                                    )}
                                 </div>
-                                <div className="offer-detail">
-                                    <FaCalendarAlt />
-                                    <span>{formatDuration(offer.duration)}</span>
+                            </div>
+                            
+                            <div className="user-extern-offer-description">
+                                <p>{offer.description && offer.description.length > 150 
+                                    ? `${offer.description.substring(0, 150)}...` 
+                                    : offer.description || 'No hay descripción disponible.'}</p>
+                            </div>
+                            
+                            {offer.location && (
+                                <div className="user-extern-offer-location">
+                                    <FaMapMarkerAlt style={{marginRight: '4px'}} />
+                                    <span>
+                                        {typeof offer.location === 'string' 
+                                            ? offer.location 
+                                            : offer.location.city 
+                                                ? `${offer.location.city}${offer.location.country ? `, ${offer.location.country}` : ''}` 
+                                                : 'Ubicación no especificada'}
+                                    </span>
                                 </div>
-                                {offer.location && offer.location.city && (
-                                    <div className="offer-detail">
-                                        <FaMapMarkerAlt />
-                                        <span>{`${offer.location.city}, ${offer.location.country || ''}`}</span>
-                                    </div>
+                            )}
+                            
+                            <div className="user-extern-offer-tags">
+                                {offer.tags && offer.tags.length > 0 ? (
+                                    offer.tags.map((tag, tagIndex) => (
+                                        <span key={tagIndex} className="user-extern-offer-tag">{tag}</span>
+                                    ))
+                                ) : offer.categories && offer.categories.length > 0 ? (
+                                    offer.categories.map((category, catIndex) => (
+                                        <span key={catIndex} className="user-extern-offer-tag">{category}</span>
+                                    ))
+                                ) : offer.studyType ? (
+                                    <span className="user-extern-offer-tag">{offer.studyType}</span>
+                                ) : (
+                                    <span className="user-extern-offer-tag">Sin categorías</span>
                                 )}
                             </div>
-                            <div className="offer-actions">
-                                <Link to={`/ControlPanel/EducationalOfferDetail/${offer._id}`} className="view-offer-button">
-                                    Ver oferta
+                            
+                            <div className="user-extern-offer-footer">
+                                <Link to={`/ControlPanel/EducationalOfferDetail/${offer._id}`} className="user-extern-offer-button">
+                                    Más información
                                 </Link>
+                                {statusFilter === 'all' && (
+                                    <span className="user-extern-offer-status">{translateStatus(offer.status)}</span>
+                                )}
                             </div>
                         </div>
                     ))

@@ -43,39 +43,6 @@ const EducationalOffersSection = ({ offers = [] }) => {
 
     return (
         <div className="company-offers-container-company">
-            <div className="offers-filter-section">
-                <div className="filter-header">
-                    <FaFilter className="filter-icon" />
-                    <span>Filtrar por estado:</span>
-                </div>
-                <div className="filter-options">
-                    <button
-                        className={`filter-button-company ${statusFilter === 'all' ? 'active' : ''}`}
-                        onClick={() => setStatusFilter('all')}
-                    >
-                        Todas
-                    </button>
-                    <button
-                        className={`filter-button-company ${statusFilter === 'pending' ? 'active' : ''}`}
-                        onClick={() => setStatusFilter('pending')}
-                    >
-                        Pendientes
-                    </button>
-                    <button
-                        className={`filter-button-company ${statusFilter === 'accepted' ? 'active' : ''}`}
-                        onClick={() => setStatusFilter('accepted')}
-                    >
-                        Aceptadas
-                    </button>
-                    <button
-                        className={`filter-button-company ${statusFilter === 'cancelled' ? 'active' : ''}`}
-                        onClick={() => setStatusFilter('cancelled')}
-                    >
-                        Canceladas
-                    </button>
-                </div>
-            </div>
-
             {filteredOffers.length === 0 ? (
                 <div className="no-filtered-offers">
                     <p>No hay ofertas educativas con el filtro seleccionado.</p>

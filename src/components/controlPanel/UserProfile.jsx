@@ -92,23 +92,28 @@ const UserProfile = () => {
             }
         };
 
-        const fetchCompanyOffers = async () => {
+        const fetchCompanyOffers = async (userId) => {
             try {
                 const backendUrl = import.meta.env.VITE_BACKEND_URL;
-                const { data } = await axios.get(`${backendUrl}/api/offers/user/${username}`);
-                setCompanyOffers(data);
+                const { data } = await axios.get(`${backendUrl}/api/job-offers/company/${userId}`);
+                setProfile(prev => ({
+                    ...prev,
+                    jobOffers: data
+                }));
             } catch (error) {
                 console.error("Error al cargar las ofertas de trabajo", error);
             }
         };
         
         // Nueva función para obtener ofertas educativas
-        const fetchEducationalOffers = async () => {
+        const fetchEducationalOffers = async (userId) => {
             try {
                 const backendUrl = import.meta.env.VITE_BACKEND_URL;
-                console.log("Fetching educational offers for user:", username);
-                const { data } = await axios.get(`${backendUrl}/api/offers/educational/user-external/${username}`);
-                setCompanyOffers(data); // Usamos el mismo estado para ofertas educativas
+                const { data } = await axios.get(`${backendUrl}/api/educational-offers/institution/${userId}`);
+                setProfile(prev => ({
+                    ...prev,
+                    educationalOffers: data
+                }));
             } catch (error) {
                 console.error("Error al cargar las ofertas educativas", error);
             }
@@ -119,20 +124,14 @@ const UserProfile = () => {
         
         // Verificamos qué tipo de ofertas debemos cargar según el tipo de usuario
         const checkUserTypeAndFetchOffers = async () => {
-            try {
-                const token = localStorage.getItem('authToken');
-                if (!token) return;
-                const backendUrl = import.meta.env.VITE_BACKEND_URL;
-                const headers = { Authorization: `Bearer ${token}` };
-                const res = await axios.get(`${backendUrl}/api/users/profile/${username}`, { headers });
-                
-                if (res.data.professionalType === 4) {
-                    fetchEducationalOffers();
-                } else if ([1, 2, 3].includes(res.data.professionalType)) {
-                    fetchCompanyOffers();
+            if (profile) {
+                if (profile.professionalType === 1 || profile.professionalType === 2 || profile.professionalType === 3) {
+                    // Es una empresa, cargamos ofertas de trabajo
+                    fetchCompanyOffers(profile._id);
+                } else if (profile.professionalType === 4) {
+                    // Es una institución educativa, cargamos ofertas educativas
+                    fetchEducationalOffers(profile._id);
                 }
-            } catch (error) {
-                console.error("Error al verificar tipo de usuario", error);
             }
         };
         
@@ -384,7 +383,11 @@ const UserProfile = () => {
                     
                     {/* Información básica del perfil */}
                     <div className="user-extern-profile-info">
-                        <h1 className="user-extern-fullname">{profile?.fullName || "Nombre Completo"}</h1>
+                        <h1 className="user-extern-fullname">
+                            {isCompany || isEducationalInstitution 
+                                ? profile?.companyName || "Nombre de la Empresa/Institución"
+                                : profile?.fullName || "Nombre Completo"}
+                        </h1>
                         <p className="user-extern-username">@{profile?.username || "username"}</p>
                         
                         {(profile?.city || profile?.country) && (
@@ -534,21 +537,21 @@ const UserProfile = () => {
                         {activeTab === 'perfil' && (
                             <div className="user-extern-about-content">
                                 {isCompany ? (
-                                    <>
+                                    <div className="user-extern-company-profile">
                                         <UserCompanyTagsSection companyTags={profile?.companyTags} offersPractices={profile?.offersPractices} />
                                         <UserBiographySection biography={profile?.biography} />
                                         <UserMilestoneSection professionalMilestones={profile?.professionalMilestones} />
                                         <UserSkillsSection skills={profile?.skills} />
                                         <UserSocialSection social={profile?.social} />
-                                    </>
+                                    </div>
                                 ) : isEducationalInstitution ? (
-                                    <>
+                                    <div className="user-extern-institution-profile">
                                         <UserBiographySection biography={profile?.biography} />
                                         <UserSkillsSection skills={profile?.skills} />
                                         <UserSocialSection social={profile?.social} />
-                                    </>
+                                    </div>
                                 ) : (
-                                    <>
+                                    <div className="user-extern-creative-profile">
                                         <UserBiographySection biography={profile?.biography} />
 
                                         {profile?.professionalFormation && profile.professionalFormation.some(item =>
@@ -571,7 +574,7 @@ const UserProfile = () => {
                                             <UserDownloadableFilesSection cvUrl={profile.cvUrl} portfolioUrl={profile.portfolioUrl} />
                                         )}
                                         <UserSocialSection social={profile?.social} />
-                                    </>
+                                    </div>
                                 )}
                             </div>
                         )}

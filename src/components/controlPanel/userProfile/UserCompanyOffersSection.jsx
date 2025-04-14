@@ -1,12 +1,12 @@
 import React from 'react';
-import { FaBriefcase, FaCalendarAlt, FaMapMarkerAlt } from 'react-icons/fa';
+import { FaBriefcase, FaCalendarAlt, FaMapMarkerAlt, FaTag } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 const UserCompanyOffersSection = ({ offers = [] }) => {
     if (!Array.isArray(offers) || offers.length === 0) {
         return (
-            <div className="company-offers-empty-userP">
-                <div className="offers-empty-icon-userP">
+            <div className="user-extern-offers-empty">
+                <div className="user-extern-offers-empty-icon">
                     <FaBriefcase />
                 </div>
                 <h3>No hay ofertas publicadas</h3>
@@ -15,40 +15,87 @@ const UserCompanyOffersSection = ({ offers = [] }) => {
         );
     }
 
+    // Función para formatear la fecha
+    const formatDate = (dateString) => {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        return date.toLocaleDateString('es-ES', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
+    };
+
     return (
-        <div className="company-offers-container-userP">
+        <div className="user-extern-offers-container">
             {offers.map((offer, index) => (
-                <div key={index} className="company-offer-item-userP">
-                    <div className="offer-header-userP">
-                        <h3 className="offer-title-userP">{offer.title}</h3>
-                        <span className="offer-status-userP">{offer.status === 'active' ? 'Activa' : 'Cerrada'}</span>
-                    </div>
-                    
-                    <div className="offer-details-userP">
-                        <div className="offer-detail-userP">
-                            <FaCalendarAlt className="offer-icon-userP" />
-                            <span>{new Date(offer.publicationDate).toLocaleDateString('es-ES', { 
-                                year: 'numeric', 
-                                month: 'short', 
-                                day: 'numeric' 
-                            })}</span>
+                <div key={offer._id || index} className="user-extern-offer-card">
+                    <div className="user-extern-offer-header">
+                        <span className="user-extern-offer-type">{offer.position || 'Oferta de trabajo'}</span>
+                        <div className="user-extern-offer-metadata">
+                            {offer.yearsExperience && (
+                                <>
+                                    <span className="user-extern-offer-years">{offer.yearsExperience} años</span>
+                                    <span className="user-extern-offer-separator">|</span>
+                                </>
+                            )}
+                            {offer.schedule && (
+                                <>
+                                    <span className="user-extern-offer-schedule">{offer.schedule}</span>
+                                    <span className="user-extern-offer-separator">|</span>
+                                </>
+                            )}
+                            {offer.modality && (
+                                <span className="user-extern-offer-modality">{offer.modality}</span>
+                            )}
+                            {offer.practices && (
+                                <>
+                                    <span className="user-extern-offer-separator">|</span>
+                                    <span className="user-extern-offer-practices">Prácticas</span>
+                                </>
+                            )}
+                            {offer.publicationDate && (
+                                <>
+                                    <span className="user-extern-offer-separator">|</span>
+                                    <span className="user-extern-offer-date">
+                                        <FaCalendarAlt style={{marginRight: '4px'}} />
+                                        {formatDate(offer.publicationDate)}
+                                    </span>
+                                </>
+                            )}
                         </div>
-                        
-                        <div className="offer-detail-userP">
-                            <FaMapMarkerAlt className="offer-icon-userP" />
-                            <span>{offer.location || 'Ubicación no especificada'}</span>
+                    </div>
+                    
+                    <div className="user-extern-offer-description">
+                        <p>{offer.description && offer.description.length > 150 
+                            ? `${offer.description.substring(0, 150)}...` 
+                            : offer.description || 'No hay descripción disponible.'}</p>
+                    </div>
+                    
+                    {offer.location && (
+                        <div className="user-extern-offer-location">
+                            <FaMapMarkerAlt style={{marginRight: '4px'}} />
+                            <span>{offer.location}</span>
                         </div>
+                    )}
+                    
+                    <div className="user-extern-offer-tags">
+                        {offer.tags && offer.tags.length > 0 ? (
+                            offer.tags.map((tag, tagIndex) => (
+                                <span key={tagIndex} className="user-extern-offer-tag">{tag}</span>
+                            ))
+                        ) : offer.categories && offer.categories.length > 0 ? (
+                            offer.categories.map((category, catIndex) => (
+                                <span key={catIndex} className="user-extern-offer-tag">{category}</span>
+                            ))
+                        ) : (
+                            <span className="user-extern-offer-tag">Sin categorías</span>
+                        )}
                     </div>
                     
-                    <div className="offer-description-userP">
-                        {offer.description && offer.description.length > 120 
-                            ? `${offer.description.substring(0, 120)}...` 
-                            : offer.description || 'Sin descripción'}
-                    </div>
-                    
-                    <div className="offer-actions-userP">
-                        <Link to={`/ControlPanel/offer/${offer._id}`} className="view-offer-button-userP">
-                            Ver detalles
+                    <div className="user-extern-offer-footer">
+                        <Link to={`/ControlPanel/JobOfferDetail/${offer._id}`} className="user-extern-offer-button">
+                            Más información
                         </Link>
                     </div>
                 </div>
