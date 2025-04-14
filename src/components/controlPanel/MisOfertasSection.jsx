@@ -495,7 +495,7 @@ const MisOfertasSection = ({ userRole, professionalType }) => {
                         >
                             &larr; Volver a ofertas
                         </button>
-                        <h2 className="candidatos-title">Candidatos para: {currentOffer.position}</h2>
+                        <h2 className="candidatos-title">{currentOffer.position}</h2>
                     </div>
                     
                     <div className="candidatos-filters">
@@ -519,21 +519,21 @@ const MisOfertasSection = ({ userRole, professionalType }) => {
                                 Descartados
                             </button>
                         </div>
-                        
-                        <div className="candidatos-response-toggle">
-                            <button 
-                                className={`candidatos-response-button ${showResponses ? 'active' : ''}`}
-                                onClick={() => setShowResponses(true)}
-                            >
-                                Mostrar respuestas
-                            </button>
-                            <button 
-                                className={`candidatos-response-button ${!showResponses ? 'active' : ''}`}
-                                onClick={() => setShowResponses(false)}
-                            >
-                                Ocultar respuestas
-                            </button>
-                        </div>
+                    </div>
+                    
+                    <div className="candidatos-response-toggle">
+                        <button 
+                            className={`candidatos-response-button ${showResponses ? 'active' : ''}`}
+                            onClick={() => setShowResponses(true)}
+                        >
+                            Mostrar respuestas
+                        </button>
+                        <button 
+                            className={`candidatos-response-button ${!showResponses ? 'active' : ''}`}
+                            onClick={() => setShowResponses(false)}
+                        >
+                            Ocultar respuestas
+                        </button>
                     </div>
                     
                     <div className="candidatos-count">
@@ -544,17 +544,22 @@ const MisOfertasSection = ({ userRole, professionalType }) => {
                         {filteredCandidates.length > 0 ? (
                             filteredCandidates.map((candidate) => (
                                 <div className="candidatos-card" key={candidate._id}>
-                                    <div className="candidatos-profile">
-                                        <div className="candidatos-avatar">
-                                            <img 
-                                                src={candidate.user.profile?.profilePicture || '/default-avatar.png'} 
-                                                alt={candidate.user.fullName} 
-                                                className="candidatos-avatar-img"
-                                            />
-                                        </div>
-                                        <div className="candidatos-info">
-                                            <h3 className="candidatos-name">{candidate.user.fullName}</h3>
-                                            <p className="candidatos-location">{candidate.user.city || 'Sin ubicación'}</p>
+                                    <div className="candidatos-left-column">
+                                        <div className="candidatos-profile">
+                                            <div className="candidatos-avatar">
+                                                <img 
+                                                    src={candidate.user.profile?.profilePicture || '/default-avatar.png'} 
+                                                    alt={candidate.user.fullName} 
+                                                    className="candidatos-avatar-img"
+                                                />
+                                            </div>
+                                            <div className="candidatos-info">
+                                                <h3 className="candidatos-name">{candidate.user.fullName}</h3>
+                                                <p className="candidatos-location">{candidate.user.city || 'Sin ubicación'}</p>
+                                                {candidate.matchPercentage && (
+                                                    <div className="candidatos-match">{candidate.matchPercentage}% Match</div>
+                                                )}
+                                            </div>
                                         </div>
                                         <div className="candidatos-actions">
                                             <button 
@@ -572,30 +577,36 @@ const MisOfertasSection = ({ userRole, professionalType }) => {
                                                 <FaTimesCircle />
                                             </button>
                                         </div>
+                                    </div>
+                                    
+                                    <div className="candidatos-right-column">
+                                        {showResponses && currentOffer.extraQuestions && currentOffer.extraQuestions.length > 0 && (
+                                            <div className="candidatos-responses">
+                                                <div className="candidatos-responses-list">
+                                                    {candidate.answers && candidate.answers.map((answer, index) => (
+                                                        <div className="candidatos-response-item" key={index}>
+                                                            <p className="candidatos-response-question">{answer.question}</p>
+                                                            <p className="candidatos-response-answer">
+                                                                {typeof answer.answer === 'boolean' 
+                                                                    ? (answer.answer ? 'Sí' : 'No')
+                                                                    : answer.answer
+                                                                }
+                                                            </p>
+                                                        </div>
+                                                    ))}
+                                                    {(!candidate.answers || candidate.answers.length === 0) && (
+                                                        <p className="candidatos-no-responses">No hay respuestas disponibles</p>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        )}
                                         <button 
                                             className="candidatos-view-profile"
-                                            onClick={() => navigate(`/ControlPanel/UserProfile/${candidate.user._id}`)}
+                                            onClick={() => navigate(`/ControlPanel/profile/${candidate.user.username}`)}
                                         >
                                             Ver perfil
                                         </button>
                                     </div>
-                                    
-                                    {showResponses && currentOffer.extraQuestions && currentOffer.extraQuestions.length > 0 && (
-                                        <div className="candidatos-responses">
-                                            <h4 className="candidatos-responses-title">Respuestas a preguntas adicionales:</h4>
-                                            <div className="candidatos-responses-list">
-                                                {candidate.answers && candidate.answers.map((answer, index) => (
-                                                    <div className="candidatos-response-item" key={index}>
-                                                        <p className="candidatos-response-question">{answer.question}</p>
-                                                        <p className="candidatos-response-answer">{answer.answer}</p>
-                                                    </div>
-                                                ))}
-                                                {(!candidate.answers || candidate.answers.length === 0) && (
-                                                    <p className="candidatos-no-responses">No hay respuestas disponibles</p>
-                                                )}
-                                            </div>
-                                        </div>
-                                    )}
                                 </div>
                             ))
                         ) : (
