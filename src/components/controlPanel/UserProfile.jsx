@@ -245,17 +245,27 @@ const UserProfile = () => {
             const token = localStorage.getItem('authToken');
             if (!token) return;
             const backendUrl = import.meta.env.VITE_BACKEND_URL;
-            await axios.delete(`${backendUrl}/api/users/unfollow/${profile._id}`, {
+            // Corregir la URL para usar la ruta correcta: /follow/ en lugar de /unfollow/
+            await axios.delete(`${backendUrl}/api/users/follow/${profile._id}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setIsFollowing(false);
             setIsNotificationActive(false);
 
-            // Actualizar el contador de seguidores
+            // Actualizar el contador de seguidores de manera segura
             const updatedProfile = { ...profile };
-            updatedProfile.followers = updatedProfile.followers.filter(
-                id => id !== "currentUserId" // Placeholder
-            );
+            // Verificar que followers existe y es un array antes de filtrar
+            if (updatedProfile.followers && Array.isArray(updatedProfile.followers)) {
+                // Obtener el ID del usuario actual para filtrar correctamente
+                const currentUserResponse = await axios.get(`${backendUrl}/api/users/profile`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                const currentUserId = currentUserResponse.data._id;
+                
+                updatedProfile.followers = updatedProfile.followers.filter(
+                    id => id !== currentUserId
+                );
+            }
             setProfile(updatedProfile);
 
             // Mostrar mensaje de éxito al usuario
