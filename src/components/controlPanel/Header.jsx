@@ -214,7 +214,7 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
                 navigate(`/ControlPanel/post/${item._id}`);
                 break;
             case 'offer':
-                navigate(`/ControlPanel/offer/${item._id}`);
+                navigate(`/ControlPanel/JobOfferDetail/${item._id}`);
                 break;
             case 'educationalOffer':
                 navigate(`/ControlPanel/educational-offer/${item._id}`);

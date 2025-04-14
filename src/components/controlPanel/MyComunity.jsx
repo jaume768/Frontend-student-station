@@ -127,12 +127,14 @@ const MyComunity = () => {
         
         const filtered = profiles.filter(user => {
             const fullName = (user.fullName || '').toLowerCase();
+            const companyName = (user.companyName || '').toLowerCase(); // Añadir companyName
             const username = (user.username || '').toLowerCase();
             const professionalTitle = (user.professionalTitle || '').toLowerCase();
             const city = (user.city || '').toLowerCase();
             const country = (user.country || '').toLowerCase();
             
             return fullName.includes(term) || 
+                   companyName.includes(term) || // Incluir companyName en la búsqueda
                    username.includes(term) || 
                    professionalTitle.includes(term) ||
                    city.includes(term) ||
@@ -207,7 +209,11 @@ const MyComunity = () => {
                                     alt={user.fullName}
                                     className="mycomunity-profile-img"
                                 />
-                                <h3 className="mycomunity-user-name">{user.fullName || user.username}</h3>
+                                <h3 className="mycomunity-user-name">
+                                    {user.professionalType === 1 || user.professionalType === 2 || user.professionalType === 4 
+                                        ? user.companyName || `@${user.username}` 
+                                        : user.fullName || `@${user.username}`}
+                                </h3>
                                 <p className="mycomunity-user-role">
                                     {user.professionalTitle || (user.role === 'Creativo' ? 'Creativo' : 'Profesional')}
                                 </p>
