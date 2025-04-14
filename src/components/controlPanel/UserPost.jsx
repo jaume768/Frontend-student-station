@@ -24,6 +24,8 @@ const UserPost = () => {
     const location = useLocation();
     const clickedImageUrl = location.state?.clickedImageUrl;
     
+
+    
     const [post, setPost] = useState(null);
     const [loading, setLoading] = useState(true);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -117,6 +119,27 @@ const UserPost = () => {
         fetchRandomPosts();
         fetchSavedPosts();
     }, [id]);
+
+    // Efecto específico para desplazar al inicio cuando cambia el ID del post
+    useEffect(() => {
+        // Forzar desplazamiento al inicio con un pequeño retraso para asegurar que funcione
+        window.scrollTo(0, 0);
+        
+        // Técnica adicional para forzar el desplazamiento al inicio
+        setTimeout(() => {
+            window.scrollTo(0, 0);
+            document.documentElement.scrollTop = 0;
+            document.body.scrollTop = 0;
+        }, 100);
+    }, [id]);
+
+    // Efecto que se ejecuta una vez al montar el componente
+    useEffect(() => {
+        // Forzar desplazamiento al inicio inmediatamente cuando se monta el componente
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+    }, []);
 
     useEffect(() => {
         const fetchPost = async () => {
@@ -410,7 +433,11 @@ const UserPost = () => {
                     <div className="info-header">
                         <div 
                             className="perfil__usuario" 
-                            onClick={() => navigate(`/ControlPanel/profile/${post.user.username}`)}
+                            onClick={() => {
+                                navigate(`/ControlPanel/profile/${post.user.username}`);
+                                // Desplazar al inicio de la página
+                                window.scrollTo(0, 0);
+                            }}
                             style={{ cursor: 'pointer' }}
                         >
                             {post.user?.profile?.profilePicture ? (
@@ -460,6 +487,8 @@ const UserPost = () => {
                                                         onClick={(e) => {
                                                             e.preventDefault();
                                                             navigate(`/ControlPanel/profile/${person.name}`);
+                                                            // Desplazar al inicio de la página
+                                                            window.scrollTo(0, 0);
                                                         }}
                                                         className="personas__enlace"
                                                         style={{ cursor: 'pointer' }}
@@ -521,7 +550,21 @@ const UserPost = () => {
                             <div
                                 className="masonry-item"
                                 key={`random-${post._id}-${index}`}
-                                onClick={() => navigate(`/ControlPanel/post/${post._id}`)}
+                                onClick={() => {
+                                    // Usar un enfoque diferente para la navegación
+                                    // Primero, guardar el ID del post al que queremos navegar
+                                    const targetPostId = post._id;
+                                    
+                                    // Desplazar al inicio antes de navegar
+                                    window.scrollTo(0, 0);
+                                    
+                                    // Usar setTimeout para asegurar que la navegación ocurra después del desplazamiento
+                                    setTimeout(() => {
+                                        navigate(`/ControlPanel/post/${targetPostId}`, {
+                                            state: { scrollToTop: true, timestamp: Date.now() }
+                                        });
+                                    }, 10);
+                                }}
                             >
                                 <img
                                     src={imageUrl}

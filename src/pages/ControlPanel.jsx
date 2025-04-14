@@ -29,6 +29,11 @@ const ControlPanel = () => {
     const navigate = useNavigate();
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [activeMenu, setActiveMenu] = useState('explorer');
+    
+    // Efecto para desplazar al inicio de la página cuando cambia la ruta
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [location.pathname, location.search, location.hash]);
 
     useEffect(() => {
         const token = localStorage.getItem('authToken');
@@ -41,6 +46,9 @@ const ControlPanel = () => {
         } else if (savedActiveMenu) {
             setActiveMenu(savedActiveMenu);
         }
+        
+        // Desplazar al inicio de la página cuando cambia la ruta dentro del ControlPanel
+        window.scrollTo(0, 0);
     }, [location.pathname, location.state]);
 
     useEffect(() => {

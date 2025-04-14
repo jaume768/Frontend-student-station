@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import ScrollToTop from './components/ScrollToTop';
 import Home from './pages/Home';
 import CompleteRegistration from './pages/CompleteRegistration';
 
@@ -30,6 +31,7 @@ import UserPost from './components/controlPanel/UserPost';
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <Routes>
         <Route path="/token-handler" element={<TokenHandler />} />
         <Route path="/ControlPanel/*" element={<ControlPanel />} />
