@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { FaMapMarkerAlt } from 'react-icons/fa';
+import { FaMapMarkerAlt, FaSearch } from 'react-icons/fa';
 import './css/Creatives.css';
 
 const Creatives = () => {
@@ -12,13 +12,19 @@ const Creatives = () => {
     const [hasMore, setHasMore] = useState(true);
     const [error, setError] = useState(null);
     const [filters, setFilters] = useState({
+        search: '',
+        city: '',
         country: '',
-        category: '',
         school: '',
-        level: '',
-        workWithStudents: false,
-        openToInternships: false
+        skills: '',
+        graduationYear: '',
+        professionalProfile: '',
+        software: '',
+        availability: '',
+        internships: false
     });
+    
+    const [appliedFilters, setAppliedFilters] = useState({});
 
     const navigate = useNavigate();
     const observer = useRef();
@@ -49,8 +55,17 @@ const Creatives = () => {
                 params.append('page', page);
                 params.append('limit', 9);
 
-                if (filters.country) params.append('country', filters.country);
-                if (filters.category) params.append('category', filters.category);
+                // Aplicar filtros activos
+                if (appliedFilters.search) params.append('search', appliedFilters.search);
+                if (appliedFilters.city) params.append('city', appliedFilters.city);
+                if (appliedFilters.country) params.append('country', appliedFilters.country);
+                if (appliedFilters.school) params.append('school', appliedFilters.school);
+                if (appliedFilters.skills) params.append('skills', appliedFilters.skills);
+                if (appliedFilters.graduationYear) params.append('graduationYear', appliedFilters.graduationYear);
+                if (appliedFilters.professionalProfile) params.append('professionalProfile', appliedFilters.professionalProfile);
+                if (appliedFilters.software) params.append('software', appliedFilters.software);
+                if (appliedFilters.availability) params.append('availability', appliedFilters.availability);
+                if (appliedFilters.internships) params.append('internships', appliedFilters.internships);
 
                 const response = await axios.get(
                     `${backendUrl}/api/users/creatives?${params.toString()}`
@@ -89,18 +104,19 @@ const Creatives = () => {
         };
 
         fetchCreatives();
-    }, [page, filters.country, filters.category]);
+    }, [page, appliedFilters]);
 
-    // Manejar cambios en los filtros
+    // Manejar cambios en los filtros (solo actualiza el estado, no aplica los filtros)
     const handleFilterChange = (filterName, value) => {
-        setFilters(prev => {
-            // Si el valor es el mismo, quitar el filtro
-            if (prev[filterName] === value && typeof value !== 'boolean') {
-                return { ...prev, [filterName]: '' };
-            } else {
-                return { ...prev, [filterName]: value };
-            }
-        });
+        setFilters(prev => ({
+            ...prev,
+            [filterName]: value
+        }));
+    };
+    
+    // Aplicar filtros cuando se hace clic en el botón
+    const applyFilters = () => {
+        setAppliedFilters({...filters});
         setPage(1); // Reiniciar paginación
     };
 
@@ -116,14 +132,20 @@ const Creatives = () => {
 
     // Función para limpiar todos los filtros
     const clearFilters = () => {
-        setFilters({
+        const emptyFilters = {
+            search: '',
+            city: '',
             country: '',
-            category: '',
             school: '',
-            level: '',
-            workWithStudents: false,
-            openToInternships: false
-        });
+            skills: '',
+            graduationYear: '',
+            professionalProfile: '',
+            software: '',
+            availability: '',
+            internships: false
+        };
+        setFilters(emptyFilters);
+        setAppliedFilters(emptyFilters);
         setPage(1);
     };
 
@@ -131,104 +153,135 @@ const Creatives = () => {
     const renderFilters = () => {
         return (
             <div className="creatives-filters">
-                <div className="filter-section">
-                    <h4>Filtros:</h4>
-                    <button
-                        className="clear-filters-btn"
-                        onClick={clearFilters}
-                    >
-                        Limpiar filtros
-                    </button>
+                <h3>Filtros</h3>
+                
+                {/* Buscador */}
+                <div className="filter-search">
+                    <FaSearch className="search-icon" />
+                    <input 
+                        type="text" 
+                        placeholder="Buscador" 
+                        value={filters.search}
+                        onChange={(e) => handleFilterChange('search', e.target.value)}
+                    />
                 </div>
-
-                <div className="filter-section">
-                    <label>Ordenar</label>
-                    <select
-                        value={filters.sort || ''}
-                        onChange={(e) => handleFilterChange('sort', e.target.value)}
-                        className="filter-select"
-                    >
-                        <option value="">Relevancia</option>
-                        <option value="newest">Más recientes</option>
-                        <option value="oldest">Más antiguos</option>
-                    </select>
+                
+                {/* Ciudad */}
+                <div className="filter-input">
+                    <input 
+                        type="text" 
+                        placeholder="Ciudad" 
+                        value={filters.city}
+                        onChange={(e) => handleFilterChange('city', e.target.value)}
+                    />
                 </div>
-
-                <div className="filter-section">
-                    <label>Escuelas</label>
+                
+                {/* País - Usando los países disponibles del backend */}
+                <div className="filter-select">
                     <select
-                        value={filters.school || ''}
-                        onChange={(e) => handleFilterChange('school', e.target.value)}
-                        className="filter-select"
-                    >
-                        <option value="">Todas</option>
-                        <option value="ESDi">ESDi</option>
-                        <option value="IED">IED</option>
-                        <option value="LCI">LCI</option>
-                    </select>
-                </div>
-
-                <div className="filter-section">
-                    <label>Nivel educativo</label>
-                    <select
-                        value={filters.level || ''}
-                        onChange={(e) => handleFilterChange('level', e.target.value)}
-                        className="filter-select"
-                    >
-                        <option value="">Todos</option>
-                        <option value="Grado">Grado</option>
-                        <option value="Máster">Máster</option>
-                        <option value="Postgrado">Postgrado</option>
-                    </select>
-                </div>
-
-                <div className="filter-section">
-                    <label>Otros</label>
-                    <select
-                        value={filters.category || ''}
-                        onChange={(e) => handleFilterChange('category', e.target.value)}
-                        className="filter-select"
-                    >
-                        <option value="">Todos</option>
-                        <option value="Moda">Moda</option>
-                        <option value="Diseño">Diseño</option>
-                        <option value="Fotografía">Fotografía</option>
-                    </select>
-                </div>
-
-                <div className="filter-section">
-                    <label>País</label>
-                    <select
-                        value={filters.country || ''}
+                        value={filters.country}
                         onChange={(e) => handleFilterChange('country', e.target.value)}
-                        className="filter-select"
                     >
-                        <option value="">Todos</option>
+                        <option value="">País</option>
                         {countries.map((country, index) => (
                             <option key={index} value={country}>{country}</option>
                         ))}
                     </select>
                 </div>
-
-                <div className="filter-checkbox">
-                    <input
-                        type="checkbox"
-                        id="workWithStudents"
-                        checked={filters.workWithStudents}
-                        onChange={() => handleFilterChange('workWithStudents', !filters.workWithStudents)}
+                
+                {/* Centro de estudios */}
+                <div className="filter-input">
+                    <input 
+                        type="text" 
+                        placeholder="Centro de estudios" 
+                        value={filters.school}
+                        onChange={(e) => handleFilterChange('school', e.target.value)}
                     />
-                    <label htmlFor="workWithStudents">Trabaja con estudiantes</label>
                 </div>
-
-                <div className="filter-checkbox">
-                    <input
-                        type="checkbox"
-                        id="openToInternships"
-                        checked={filters.openToInternships}
-                        onChange={() => handleFilterChange('openToInternships', !filters.openToInternships)}
+                
+                {/* Habilidades */}
+                <div className="filter-input">
+                    <input 
+                        type="text" 
+                        placeholder="Habilidades" 
+                        value={filters.skills}
+                        onChange={(e) => handleFilterChange('skills', e.target.value)}
                     />
-                    <label htmlFor="openToInternships">Abierto a prácticas</label>
                 </div>
+                
+                {/* Año de graduación */}
+                <div className="filter-select">
+                    <select
+                        value={filters.graduationYear}
+                        onChange={(e) => handleFilterChange('graduationYear', e.target.value)}
+                    >
+                        <option value="">Año de graduación</option>
+                        <option value="2025">2025</option>
+                        <option value="2024">2024</option>
+                        <option value="2023">2023</option>
+                        <option value="2022">2022</option>
+                        <option value="2021">2021</option>
+                        <option value="2020">2020</option>
+                    </select>
+                </div>
+                
+                {/* Perfil profesional */}
+                <div className="filter-select">
+                    <select
+                        value={filters.professionalProfile}
+                        onChange={(e) => handleFilterChange('professionalProfile', e.target.value)}
+                    >
+                        <option value="">Perfil profesional</option>
+                        <option value="Diseñador">Diseñador</option>
+                        <option value="Fotógrafo">Fotógrafo</option>
+                        <option value="Estilista">Estilista</option>
+                        <option value="Modelista">Modelista</option>
+                    </select>
+                </div>
+                
+                {/* Software */}
+                <div className="filter-select">
+                    <select
+                        value={filters.software}
+                        onChange={(e) => handleFilterChange('software', e.target.value)}
+                    >
+                        <option value="">Software</option>
+                        <option value="Photoshop">Photoshop</option>
+                        <option value="Illustrator">Illustrator</option>
+                        <option value="InDesign">InDesign</option>
+                        <option value="CLO 3D">CLO 3D</option>
+                    </select>
+                </div>
+                
+                {/* Disponibilidad */}
+                <div className="filter-select">
+                    <select
+                        value={filters.availability}
+                        onChange={(e) => handleFilterChange('availability', e.target.value)}
+                    >
+                        <option value="">Disponibilidad</option>
+                        <option value="Inmediata">Inmediata</option>
+                        <option value="1 mes">1 mes</option>
+                        <option value="3 meses">3 meses</option>
+                    </select>
+                </div>
+                
+                {/* Prácticas */}
+                <div className="filter-select">
+                    <select
+                        value={filters.internships ? "true" : ""}
+                        onChange={(e) => handleFilterChange('internships', e.target.value === "true")}
+                    >
+                        <option value="">Prácticas</option>
+                        <option value="true">Disponible para prácticas</option>
+                        <option value="false">No disponible para prácticas</option>
+                    </select>
+                </div>
+                
+                {/* Botón para aplicar filtros */}
+                <button className="apply-filters-btn" onClick={applyFilters}>
+                    Aplicar filtros
+                </button>
             </div>
         );
     };
