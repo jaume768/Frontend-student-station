@@ -8,7 +8,9 @@ import './css/explorer.css';
 const Explorer = () => {
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('explorer'); // Opciones: 'explorer', 'staffPicks', 'following'
+    const [tabDisabled, setTabDisabled] = useState(false); // Para evitar cambios rápidos de pestaña
 
+    // Al montar el componente se limpian algunos storage (esto solo se hace una vez)
     useEffect(() => {
         sessionStorage.removeItem('explorerImages');
         sessionStorage.removeItem('explorerPage');
@@ -65,8 +67,9 @@ const Explorer = () => {
         }
     };
 
-    // Resetear paginación al cambiar de pestaña
+    // Al cambiar la pestaña, reiniciamos la paginación, la lista de posts y limpiamos los posts vistos
     useEffect(() => {
+        sessionStorage.removeItem('viewedPosts');
         setPage(1);
         setPostImages([]);
         setHasMore(true);
@@ -74,18 +77,21 @@ const Explorer = () => {
 
     // Cargar imágenes según la pestaña activa
     useEffect(() => {
+        let cancelled = false; // Bandera para ignorar respuestas si la pestaña cambia rápidamente
+
         const fetchImages = async () => {
             if (!hasMore) return;
             setLoading(true);
             const backendUrl = import.meta.env.VITE_BACKEND_URL;
             const limit = 8;
+            // Para "explorer" y "following" usamos el parámetro exclude; en Staff Picks lo dejamos vacío
             const viewedPosts = getViewedPosts();
             let url = '';
 
             if (activeTab === 'explorer') {
                 url = `${backendUrl}/api/posts/explorer?page=${page}&limit=${limit}&exclude=${viewedPosts.join(',')}`;
             } else if (activeTab === 'staffPicks') {
-                url = `${backendUrl}/api/posts/staff-picks?page=${page}&limit=${limit}&exclude=${viewedPosts.join(',')}`;
+                url = `${backendUrl}/api/posts/staff-picks?page=${page}&limit=${limit}&exclude=`;
             } else if (activeTab === 'following') {
                 url = `${backendUrl}/api/posts/following?page=${page}&limit=${limit}&exclude=${viewedPosts.join(',')}`;
             }
@@ -94,8 +100,11 @@ const Explorer = () => {
                 const response = await axios.get(url, {
                     headers: { 'Cache-Control': 'no-cache' }
                 });
-                response.data.images.forEach(img => addViewedPost(img.postId));
-                // Mezclar aleatoriamente
+                if (cancelled) return;
+                if (activeTab === 'explorer' || activeTab === 'following') {
+                    response.data.images.forEach(img => addViewedPost(img.postId));
+                }
+                // Función para mezclar aleatoriamente
                 const shuffleArray = (array) => {
                     const shuffled = [...array];
                     for (let i = shuffled.length - 1; i > 0; i--) {
@@ -107,12 +116,16 @@ const Explorer = () => {
                 const randomizedNewImages = shuffleArray(response.data.images);
                 const newImages = page === 1 ? randomizedNewImages : [...postImages, ...randomizedNewImages];
                 setPostImages(newImages);
-                setHasMore(response.data.hasMore);
+                // En Staff Picks queremos cargar una sola "página", así que forzamos hasMore a false.
+                if (activeTab === 'staffPicks') {
+                    setHasMore(false);
+                } else {
+                    setHasMore(response.data.hasMore);
+                }
             } catch (error) {
                 console.error('Error cargando imágenes:', error);
                 if (error.response && error.response.status === 401) {
                     setHasMore(false);
-                    // Opcional: redirigir al usuario o mostrar un mensaje
                 }
             } finally {
                 setLoading(false);
@@ -120,8 +133,13 @@ const Explorer = () => {
         };
 
         fetchImages();
+
+        return () => {
+            cancelled = true;
+        };
     }, [page, activeTab]);
 
+    // Configuración del IntersectionObserver para el infinite scroll
     useEffect(() => {
         if (loading) return;
         if (observerRef.current) observerRef.current.disconnect();
@@ -200,25 +218,42 @@ const Explorer = () => {
             <div className="explorer-header">
                 <h1>Explorador</h1>
                 <p className="explorer-description">
-                    Explora las imágenes subidas por creativos. Selecciona <span className="highlight">Staff Picks</span> para ver las imágenes destacadas 
-                    por nuestro equipo o <span className="highlight">Fotos aleatorias</span> para ver todo el contenido. Usa <span className="highlight">los filtros</span> para hacer tu búsqueda más precisa.
+                    Explora las imágenes subidas por creativos. Selecciona <span className="highlight">Staff Picks</span> para ver las imágenes destacadas o <span className="highlight">Fotos aleatorias</span> para ver todo el contenido. Usa <span className="highlight">los filtros</span> para refinar la búsqueda.
                 </p>
-                
+
                 <div className="explorer-tabs-container">
-                    <button className="explorer-filter-button" onClick={() => alert("Filtros sin funcionalidad por ahora")}>
+                    <button 
+                        className="explorer-filter-button" 
+                        onClick={() => alert("Filtros sin funcionalidad por ahora")}
+                        disabled={tabDisabled}
+                    >
                         <FaFilter />
                     </button>
-                    
+
                     <div className="explorer-tabs">
                         <button 
                             className={`user-extern-tab ${activeTab === 'staffPicks' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('staffPicks')}
+                            disabled={tabDisabled}
+                            onClick={() => {
+                                if (!tabDisabled) {
+                                    setTabDisabled(true);
+                                    setActiveTab('staffPicks');
+                                    setTimeout(() => setTabDisabled(false), 2000);
+                                }
+                            }}
                         >
                             Staff Picks
                         </button>
                         <button 
                             className={`user-extern-tab ${activeTab === 'explorer' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('explorer')}
+                            disabled={tabDisabled}
+                            onClick={() => {
+                                if (!tabDisabled) {
+                                    setTabDisabled(true);
+                                    setActiveTab('explorer');
+                                    setTimeout(() => setTabDisabled(false), 2000);
+                                }
+                            }}
                         >
                             Fotos aleatorias
                         </button>
