@@ -2,7 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Masonry from 'react-masonry-css';
-import { FaBookmark, FaRegBookmark, FaFilter } from 'react-icons/fa';
+import { FaBookmark, FaRegBookmark } from 'react-icons/fa';
+import { MdTune } from 'react-icons/md';
 import './css/explorer.css';
 
 const Explorer = () => {
@@ -227,7 +228,7 @@ const Explorer = () => {
                         onClick={() => alert("Filtros sin funcionalidad por ahora")}
                         disabled={tabDisabled}
                     >
-                        <FaFilter />
+                        <MdTune />
                     </button>
 
                     <div className="explorer-tabs">
