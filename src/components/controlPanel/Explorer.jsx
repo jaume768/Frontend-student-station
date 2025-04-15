@@ -11,6 +11,8 @@ const Explorer = () => {
     const [activeTab, setActiveTab] = useState('explorer'); // Opciones: 'explorer', 'staffPicks', 'following'
     const [tabDisabled, setTabDisabled] = useState(false); // Para evitar cambios rápidos de pestaña
     const [showFilters, setShowFilters] = useState(false); // Para mostrar/ocultar el panel de filtros
+    const [showMobileFilters, setShowMobileFilters] = useState(false); // Para mostrar/ocultar el modal de filtros en móvil
+    const [isMobile, setIsMobile] = useState(false); // Para detectar si estamos en móvil
 
     // Al montar el componente se limpian algunos storage (esto solo se hace una vez)
     useEffect(() => {
@@ -28,6 +30,21 @@ const Explorer = () => {
     const observerRef = useRef(null);
     const sentinelRef = useRef(null);
 
+    // Detectar si estamos en móvil
+    useEffect(() => {
+        const checkIfMobile = () => {
+            setIsMobile(window.innerWidth <= 768);
+        };
+        
+        // Comprobar al cargar y al cambiar el tamaño de la ventana
+        checkIfMobile();
+        window.addEventListener('resize', checkIfMobile);
+        
+        return () => {
+            window.removeEventListener('resize', checkIfMobile);
+        };
+    }, []);
+    
     // Cargar posts guardados
     useEffect(() => {
         const fetchSavedPosts = async () => {
@@ -226,7 +243,7 @@ const Explorer = () => {
                 <div className="explorer-tabs-container">
                     <button 
                         className="explorer-filter-button" 
-                        onClick={() => setShowFilters(!showFilters)}
+                        onClick={() => isMobile ? setShowMobileFilters(!showMobileFilters) : setShowFilters(!showFilters)}
                         disabled={tabDisabled}
                     >
                         <MdTune />
@@ -263,7 +280,7 @@ const Explorer = () => {
                 </div>
             </div>
 
-            {/* Panel de filtros */}
+            {/* Panel de filtros para desktop */}
             <div className={`explorer-filters-panel ${showFilters ? 'show' : ''}`}>
                 <div className="explorer-filters-container">
                     <h3>Filtros</h3>
@@ -299,14 +316,69 @@ const Explorer = () => {
                                     <option value="elisava">Elisava</option>
                                 </select>
                             </div>
-                            
-                            
                         </div>
                         
                         <button className="explorer-apply-filters-btn">Aplicar filtros</button>
                     </div>
                 </div>
             </div>
+            
+            {/* Modal de filtros para móvil */}
+            {showMobileFilters && (
+                <div className="explorer-mobile-filters-modal">
+                    <div className="explorer-mobile-filters-content">
+                        <div className="explorer-mobile-filters-header">
+                            <h3>Filtros</h3>
+                            <button 
+                                className="explorer-mobile-filters-close" 
+                                onClick={() => setShowMobileFilters(false)}
+                            >
+                                &times;
+                            </button>
+                        </div>
+                        
+                        <div className="explorer-filter-group">
+                            <div className="explorer-filter-search">
+                                <input type="text" placeholder="Buscador" />
+                            </div>
+                            
+                            <div className="explorer-filter-select">
+                                <select defaultValue="">
+                                    <option value="" disabled>Pais</option>
+                                    <option value="espana">España</option>
+                                    <option value="francia">Francia</option>
+                                    <option value="alemania">Alemania</option>
+                                </select>
+                            </div>
+                            
+                            <div className="explorer-filter-select">
+                                <select defaultValue="">
+                                    <option value="" disabled>Ciudad</option>
+                                    <option value="madrid">Madrid</option>
+                                    <option value="barcelona">Barcelona</option>
+                                    <option value="valencia">Valencia</option>
+                                </select>
+                            </div>
+                            
+                            <div className="explorer-filter-select">
+                                <select defaultValue="">
+                                    <option value="" disabled>Centro de estudios</option>
+                                    <option value="ied">IED</option>
+                                    <option value="esdemga">ESDEMGA</option>
+                                    <option value="elisava">Elisava</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <button 
+                            className="explorer-apply-filters-btn"
+                            onClick={() => setShowMobileFilters(false)}
+                        >
+                            Aplicar filtros
+                        </button>
+                    </div>
+                </div>
+            )}
 
             <div className={`explorer-content ${showFilters ? 'with-filters' : ''}`}>
                 <Masonry

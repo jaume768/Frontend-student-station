@@ -99,7 +99,7 @@
     font-size: 25px;
 }
 
-/* Panel de filtros */
+/* Panel de filtros para desktop */
 .explorer-filters-panel {
     position: fixed;
     top: 13em;
@@ -112,6 +112,18 @@
     z-index: 5;
     overflow-y: auto;
     padding-top: 80px;
+}
+
+/* Ocultar el panel de filtros en móvil */
+@media (max-width: 768px) {
+    .explorer-filters-panel {
+        display: none;
+    }
+
+    .explorer-filter-button{
+        left: 23em;
+        top: 25em;
+    }
 }
 
 .explorer-filters-panel.show {
@@ -167,6 +179,7 @@
     border-radius: 25px;
     padding: 12px 0;
     font-size: 15px;
+    width: 100%;
     font-weight: 500;
     cursor: pointer;
     margin-top: 20px;
@@ -184,6 +197,59 @@
 
 .explorer-content.with-filters {
     margin-left: 320px;
+}
+
+/* En móvil no aplicamos margen al contenido */
+@media (max-width: 768px) {
+    .explorer-content.with-filters {
+        margin-left: 0;
+    }
+}
+
+/* Modal de filtros para móvil */
+.explorer-mobile-filters-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.explorer-mobile-filters-content {
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    background-color: white;
+    border-radius: 15px;
+    padding: 20px;
+    overflow-y: auto;
+    position: relative;
+}
+
+.explorer-mobile-filters-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.explorer-mobile-filters-header h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.explorer-mobile-filters-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
 }
 
 
