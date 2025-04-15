@@ -10,6 +10,7 @@ const Explorer = () => {
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('explorer'); // Opciones: 'explorer', 'staffPicks', 'following'
     const [tabDisabled, setTabDisabled] = useState(false); // Para evitar cambios rápidos de pestaña
+    const [showFilters, setShowFilters] = useState(false); // Para mostrar/ocultar el panel de filtros
 
     // Al montar el componente se limpian algunos storage (esto solo se hace una vez)
     useEffect(() => {
@@ -225,7 +226,7 @@ const Explorer = () => {
                 <div className="explorer-tabs-container">
                     <button 
                         className="explorer-filter-button" 
-                        onClick={() => alert("Filtros sin funcionalidad por ahora")}
+                        onClick={() => setShowFilters(!showFilters)}
                         disabled={tabDisabled}
                     >
                         <MdTune />
@@ -262,11 +263,57 @@ const Explorer = () => {
                 </div>
             </div>
 
-            <Masonry
-                breakpointCols={breakpointColumns}
-                className="my-masonry-grid"
-                columnClassName="my-masonry-grid_column"
-            >
+            {/* Panel de filtros */}
+            <div className={`explorer-filters-panel ${showFilters ? 'show' : ''}`}>
+                <div className="explorer-filters-container">
+                    <h3>Filtros</h3>
+                    <div className="explorer-filters-content">
+                        <div className="explorer-filter-group">
+                            <div className="explorer-filter-search">
+                                <input type="text" placeholder="Buscar" />
+                            </div>
+
+                            <div className="explorer-filter-select">
+                                <select defaultValue="">
+                                    <option value="" disabled>Pais</option>
+                                    <option value="espana">España</option>
+                                    <option value="francia">Francia</option>
+                                    <option value="alemania">Alemania</option>
+                                </select>
+                            </div>
+                            
+                            <div className="explorer-filter-select">
+                                <select defaultValue="">
+                                    <option value="" disabled>Ciudad</option>
+                                    <option value="madrid">Madrid</option>
+                                    <option value="barcelona">Barcelona</option>
+                                    <option value="valencia">Valencia</option>
+                                </select>
+                            </div>
+                            
+                            <div className="explorer-filter-select">
+                                <select defaultValue="">
+                                    <option value="" disabled>Centro de estudios</option>
+                                    <option value="ied">IED</option>
+                                    <option value="esdemga">ESDEMGA</option>
+                                    <option value="elisava">Elisava</option>
+                                </select>
+                            </div>
+                            
+                            
+                        </div>
+                        
+                        <button className="explorer-apply-filters-btn">Aplicar filtros</button>
+                    </div>
+                </div>
+            </div>
+
+            <div className={`explorer-content ${showFilters ? 'with-filters' : ''}`}>
+                <Masonry
+                    breakpointCols={breakpointColumns}
+                    className="my-masonry-grid"
+                    columnClassName="my-masonry-grid_column"
+                >
                 {postImages.map((item, index) => (
                     <div
                         className="masonry-item"
@@ -309,15 +356,16 @@ const Explorer = () => {
                         )}
                     </div>
                 ))}
-            </Masonry>
+                </Masonry>
 
-            <div ref={sentinelRef} style={{ height: '1px' }} />
+                <div ref={sentinelRef} style={{ height: '1px' }} />
 
-            {loading && (
-                <div className="loading-spinner">
-                    <i className="fas fa-spinner fa-spin"></i>
-                </div>
-            )}
+                {loading && (
+                    <div className="loading-spinner">
+                        <i className="fas fa-spinner fa-spin"></i>
+                    </div>
+                )}
+            </div>
         </div>
     );
 };

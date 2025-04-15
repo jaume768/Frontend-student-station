@@ -73,8 +73,8 @@
 
 /* Botón de filtro */
 .explorer-filter-button {
-    position: absolute;
-    left: 0;
+    position: fixed;
+    left: 7em;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -87,6 +87,7 @@
     cursor: pointer;
     font-size: 14px;
     transition: all 0.2s ease;
+    z-index: 10;
 }
 
 .explorer-filter-button:hover {
@@ -96,6 +97,93 @@
 
 .explorer-filter-button svg {
     font-size: 25px;
+}
+
+/* Panel de filtros */
+.explorer-filters-panel {
+    position: fixed;
+    top: 13em;
+    left: 5em;
+    width: 270px;
+    height: 100vh;
+    background-color: #fff;
+    transform: translate(-100%);
+    transition: transform .3s ease;
+    z-index: 5;
+    overflow-y: auto;
+    padding-top: 80px;
+}
+
+.explorer-filters-panel.show {
+    transform: translateX(0);
+}
+
+.explorer-filters-container {
+    padding: 20px;
+}
+
+.explorer-filters-container h3 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.explorer-filters-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.explorer-filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.explorer-filter-search input {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    font-size: 14px;
+    background-color: white;
+}
+
+.explorer-filter-select select {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 26px;
+    font-size: 14px;
+    color: black;
+    background-color: white;
+    appearance: menulist;
+}
+
+.explorer-apply-filters-btn {
+    background-color: #000;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 12px 0;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.2s ease;
+}
+
+.explorer-apply-filters-btn:hover {
+    background-color: #333;
+}
+
+/* Contenido principal con transición */
+.explorer-content {
+    transition: margin-left 0.3s ease;
+}
+
+.explorer-content.with-filters {
+    margin-left: 320px;
 }
 
 
