@@ -325,7 +325,15 @@ const Explorer = () => {
             
             {/* Modal de filtros para móvil */}
             {showMobileFilters && (
-                <div className="explorer-mobile-filters-modal">
+                <div 
+                    className="explorer-mobile-filters-modal"
+                    onClick={(e) => {
+                        // Cerrar el modal si se hace clic fuera del contenido
+                        if (e.target.className === 'explorer-mobile-filters-modal') {
+                            setShowMobileFilters(false);
+                        }
+                    }}
+                >
                     <div className="explorer-mobile-filters-content">
                         <div className="explorer-mobile-filters-header">
                             <h3>Filtros</h3>
