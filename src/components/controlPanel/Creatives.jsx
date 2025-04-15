@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { FaMapMarkerAlt, FaSearch } from 'react-icons/fa';
+import { MdTune } from 'react-icons/md';
 import './css/Creatives.css';
 
 const Creatives = () => {
@@ -11,6 +12,8 @@ const Creatives = () => {
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
     const [error, setError] = useState(null);
+    const [showMobileFilters, setShowMobileFilters] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
     const [filters, setFilters] = useState({
         search: '',
         city: '',
@@ -29,6 +32,21 @@ const Creatives = () => {
     const navigate = useNavigate();
     const observer = useRef();
 
+    // Detectar si estamos en móvil
+    useEffect(() => {
+        const checkIfMobile = () => {
+            setIsMobile(window.innerWidth <= 768);
+        };
+        
+        // Comprobar al cargar y al cambiar el tamaño de la ventana
+        checkIfMobile();
+        window.addEventListener('resize', checkIfMobile);
+        
+        return () => {
+            window.removeEventListener('resize', checkIfMobile);
+        };
+    }, []);
+    
     // Referencia al último elemento para la paginación infinita
     const lastCreativeElementRef = useCallback(node => {
         if (loading) return;
@@ -166,6 +184,16 @@ const Creatives = () => {
                     />
                 </div>
                 
+                {/* País */}
+                <div className="filter-input">
+                    <input 
+                        type="text" 
+                        placeholder="País" 
+                        value={filters.country}
+                        onChange={(e) => handleFilterChange('country', e.target.value)}
+                    />
+                </div>
+                
                 {/* Ciudad */}
                 <div className="filter-input">
                     <input 
@@ -176,19 +204,6 @@ const Creatives = () => {
                     />
                 </div>
                 
-                {/* País - Usando los países disponibles del backend */}
-                <div className="filter-select">
-                    <select
-                        value={filters.country}
-                        onChange={(e) => handleFilterChange('country', e.target.value)}
-                    >
-                        <option value="">País</option>
-                        {countries.map((country, index) => (
-                            <option key={index} value={country}>{country}</option>
-                        ))}
-                    </select>
-                </div>
-                
                 {/* Centro de estudios */}
                 <div className="filter-input">
                     <input 
@@ -196,16 +211,6 @@ const Creatives = () => {
                         placeholder="Centro de estudios" 
                         value={filters.school}
                         onChange={(e) => handleFilterChange('school', e.target.value)}
-                    />
-                </div>
-                
-                {/* Habilidades */}
-                <div className="filter-input">
-                    <input 
-                        type="text" 
-                        placeholder="Habilidades" 
-                        value={filters.skills}
-                        onChange={(e) => handleFilterChange('skills', e.target.value)}
                     />
                 </div>
                 
@@ -225,57 +230,36 @@ const Creatives = () => {
                     </select>
                 </div>
                 
-                {/* Perfil profesional */}
-                <div className="filter-select">
-                    <select
-                        value={filters.professionalProfile}
-                        onChange={(e) => handleFilterChange('professionalProfile', e.target.value)}
-                    >
-                        <option value="">Perfil profesional</option>
-                        <option value="Diseñador">Diseñador</option>
-                        <option value="Fotógrafo">Fotógrafo</option>
-                        <option value="Estilista">Estilista</option>
-                        <option value="Modelista">Modelista</option>
-                    </select>
+                {/* Softskills */}
+                <div className="filter-input">
+                    <input 
+                        type="text" 
+                        placeholder="Softskills" 
+                        value={filters.skills}
+                        onChange={(e) => handleFilterChange('skills', e.target.value)}
+                    />
                 </div>
                 
-                {/* Software */}
-                <div className="filter-select">
-                    <select
+                {/* Hardskills / Software */}
+                <div className="filter-input">
+                    <input 
+                        type="text" 
+                        placeholder="Hardskills / Software" 
                         value={filters.software}
                         onChange={(e) => handleFilterChange('software', e.target.value)}
-                    >
-                        <option value="">Software</option>
-                        <option value="Photoshop">Photoshop</option>
-                        <option value="Illustrator">Illustrator</option>
-                        <option value="InDesign">InDesign</option>
-                        <option value="CLO 3D">CLO 3D</option>
-                    </select>
-                </div>
-                
-                {/* Disponibilidad */}
-                <div className="filter-select">
-                    <select
-                        value={filters.availability}
-                        onChange={(e) => handleFilterChange('availability', e.target.value)}
-                    >
-                        <option value="">Disponibilidad</option>
-                        <option value="Inmediata">Inmediata</option>
-                        <option value="1 mes">1 mes</option>
-                        <option value="3 meses">3 meses</option>
-                    </select>
+                    />
                 </div>
                 
                 {/* Prácticas */}
-                <div className="filter-select">
-                    <select
-                        value={filters.internships ? "true" : ""}
-                        onChange={(e) => handleFilterChange('internships', e.target.value === "true")}
-                    >
-                        <option value="">Prácticas</option>
-                        <option value="true">Disponible para prácticas</option>
-                        <option value="false">No disponible para prácticas</option>
-                    </select>
+                <div className="filter-checkbox">
+                    <label>
+                        Prácticas
+                        <input 
+                            type="checkbox" 
+                            checked={filters.internships}
+                            onChange={(e) => handleFilterChange('internships', e.target.checked)}
+                        />
+                    </label>
                 </div>
                 
                 {/* Botón para aplicar filtros */}
@@ -353,7 +337,46 @@ const Creatives = () => {
                     Descubre los nuevos talentos de la industria de la moda. Usa los filtros para descubrir perfiles según
                     tus estudios, ciudad, especialización, disponibilidad para prácticas, colaboraciones y más.
                 </p>
+                
+                {/* Botón de filtro para móvil */}
+                {isMobile && (
+                    <button 
+                        className="creatives-filter-button" 
+                        onClick={() => setShowMobileFilters(!showMobileFilters)}
+                    >
+                        <MdTune />
+                    </button>
+                )}
             </div>
+            
+            {/* Modal de filtros para móvil */}
+            {showMobileFilters && (
+                <div 
+                    className="creatives-mobile-filters-modal"
+                    onClick={(e) => {
+                        // Cerrar el modal si se hace clic fuera del contenido
+                        if (e.target.className === 'creatives-mobile-filters-modal') {
+                            setShowMobileFilters(false);
+                        }
+                    }}
+                >
+                    <div className="creatives-mobile-filters-content">
+                        <div className="creatives-mobile-filters-header">
+                            <h3>Filtros</h3>
+                            <button 
+                                className="creatives-mobile-filters-close" 
+                                onClick={() => setShowMobileFilters(false)}
+                            >
+                                &times;
+                            </button>
+                        </div>
+                        <div className="creatives-filters-modal-content">
+                            {renderFilters()}
+                        </div>
+                    </div>
+                </div>
+            )}
+            
             <div className="creatives-content">
                 <aside className="creatives-sidebar">
                     {renderFilters()}
