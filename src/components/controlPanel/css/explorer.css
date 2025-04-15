@@ -1,47 +1,101 @@
 .explorer-container {
     padding: 20px;
+    max-width: 1920px;
+    margin: 0 auto;
 }
 
+/* Header y descripción */
 .explorer-header {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 }
 
-.explorer-title {
-    font-size: 1.25rem;
+.explorer-header h1 {
+    font-size: 32px;
     margin-bottom: 15px;
-    line-height: 1.4;
+    font-weight: 600;
+}
+
+.explorer-description {
+    max-width: 800px;
+    margin: 0 auto 20px;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #555;
+}
+
+.highlight {
+    font-weight: 600;
     color: #333;
 }
 
-.explorer-buttons {
+/* Tabs y botón de filtro */
+.explorer-tabs-container {
     display: flex;
     justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+    gap: 20px;
+    position: relative;
+}
+
+.explorer-tabs {
+    display: flex;
     gap: 10px;
+    justify-content: center;
 }
 
-.explorer-buttons button {
-    padding: 8px 16px;
-    background: #E0E0E0;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+/* Estilo de tab basado en user-extern-tab */
+.user-extern-tab {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 8px 0;
+    width: 160px;
+    font-size: 14px;
     font-weight: 500;
-    transition: background 0.2s;
+    color: #666;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s;
 }
 
-.explorer-buttons button.active {
-    background: #06b6a0;
-    color: #fff;
+.user-extern-tab:hover {
+    border-color: #d0d0d0;
+    color: #333;
 }
 
-.explorer-buttons button:hover {
-    background: #ccc;
+.user-extern-tab.active {
+    background-color: #e8f0fe;
+    color: #1a73e8;
+    border-color: #1a73e8;
 }
 
-.filter-btn-black {
-    background: #000 !important;
-    color: #fff !important;
+/* Botón de filtro */
+.explorer-filter-button {
+    position: absolute;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background-color: #000;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.explorer-filter-button:hover {
+    background-color: #333;
+    transform: scale(1.05);
+}
+
+.explorer-filter-button svg {
+    font-size: 14px;
 }
 
 

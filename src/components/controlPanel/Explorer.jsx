@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Masonry from 'react-masonry-css';
-import { FaBookmark, FaRegBookmark } from 'react-icons/fa';
+import { FaBookmark, FaRegBookmark, FaFilter } from 'react-icons/fa';
 import './css/explorer.css';
 
 const Explorer = () => {
@@ -198,28 +198,31 @@ const Explorer = () => {
         <div className="explorer-container">
             {/* Encabezado */}
             <div className="explorer-header">
-                <h2 className="explorer-title">
-                    Explora imágenes subidas por creativos. Selecciona “Staff Picks” para ver las imágenes destacadas, “Fotos aleatorias” para el feed normal o “Mis seguidos” para ver contenido de quienes sigues. Usa el botón de filtros (por ahora sin funcionalidad) para refinar la búsqueda.
-                </h2>
-                <div className="explorer-buttons">
-                    <button
-                        onClick={() => setActiveTab('staffPicks')}
-                        className={activeTab === 'staffPicks' ? 'active' : ''}
-                    >
-                        Staff Picks
+                <h1>Explorador</h1>
+                <p className="explorer-description">
+                    Explora las imágenes subidas por creativos. Selecciona <span className="highlight">Staff Picks</span> para ver las imágenes destacadas 
+                    por nuestro equipo o <span className="highlight">Fotos aleatorias</span> para ver todo el contenido. Usa <span className="highlight">los filtros</span> para hacer tu búsqueda más precisa.
+                </p>
+                
+                <div className="explorer-tabs-container">
+                    <button className="explorer-filter-button" onClick={() => alert("Filtros sin funcionalidad por ahora")}>
+                        <FaFilter />
                     </button>
-                    <button
-                        onClick={() => setActiveTab('explorer')}
-                        className={activeTab === 'explorer' ? 'active' : ''}
-                    >
-                        Fotos aleatorias
-                    </button>
-                    <button
-                        className="filter-btn-black"
-                        onClick={() => alert("Filtros sin funcionalidad por ahora")}
-                    >
-                        Filtros
-                    </button>
+                    
+                    <div className="explorer-tabs">
+                        <button 
+                            className={`user-extern-tab ${activeTab === 'staffPicks' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('staffPicks')}
+                        >
+                            Staff Picks
+                        </button>
+                        <button 
+                            className={`user-extern-tab ${activeTab === 'explorer' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('explorer')}
+                        >
+                            Fotos aleatorias
+                        </button>
+                    </div>
                 </div>
             </div>
 
