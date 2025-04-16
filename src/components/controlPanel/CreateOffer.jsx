@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import ExtraQuestionsForm from './ExtraQuestionsForm';
+import VerificationRequiredModal from '../modals/VerificationRequiredModal';
 import './css/create-offer.css';
 
 const CreateOffer = () => {
@@ -38,6 +39,8 @@ const CreateOffer = () => {
     const [newHardSkill, setNewHardSkill] = useState('');
     const [newSoftSkill, setNewSoftSkill] = useState('');
     const [companyName, setCompanyName] = useState('');
+    const [isVerificatedProfesional, setIsVerificatedProfesional] = useState(false);
+    const [showVerificationModal, setShowVerificationModal] = useState(false);
 
     // Determinar si estamos creando o editando una oferta
     useEffect(() => {
@@ -59,6 +62,17 @@ const CreateOffer = () => {
             const response = await axios.get(`${backendUrl}/api/users/profile`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
+
+            // Verificar si el usuario es una empresa/institución y si está verificado
+            const user = response.data;
+            if (user.role === 'Profesional') {
+                setIsVerificatedProfesional(user.isVerificatedProfesional || false);
+                
+                // Si no es una edición y el usuario no está verificado, mostrar el modal
+                if (!offerId && !user.isVerificatedProfesional) {
+                    setShowVerificationModal(true);
+                }
+            }
             
             if (response.data) {
                 setFormData(prev => ({
@@ -189,6 +203,13 @@ const CreateOffer = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        // Verificar si el usuario es una empresa/institución y si está verificado
+        if (!isVerificatedProfesional && !isEditing) {
+            setShowVerificationModal(true);
+            return;
+        }
+        
         setLoading(true);
         setError('');
     
@@ -297,7 +318,10 @@ const CreateOffer = () => {
 
     return (
         <div className="create-offer-container">
-            <h1 className="page-title">{isEditing ? 'Editar oferta de empleo' : 'Publica una oferta de empleo'}</h1>
+            {showVerificationModal && (
+                <VerificationRequiredModal onClose={() => setShowVerificationModal(false)} />
+            )}
+            <h1 className="create-offer-title">{isEditing ? 'Editar oferta de trabajo' : 'Crear oferta de trabajo'}</h1>
             {error && <div className="error-message">{error}</div>}
             
             <form onSubmit={handleSubmit} className="offer-form">

@@ -11,6 +11,7 @@ import SchoolYearForm from './CreateEducationalOffer/SchoolYearForm';
 import WebsiteForm from './CreateEducationalOffer/WebsiteForm';
 import DescriptionForm from './CreateEducationalOffer/DescriptionForm';
 import ExtraQuestionsForm from './CreateEducationalOffer/ExtraQuestionsForm';
+import VerificationRequiredModal from '../modals/VerificationRequiredModal';
 import { validateForm } from './CreateEducationalOffer/utils';
 import './css/create-educational-offer.css';
 
@@ -49,6 +50,8 @@ const CreateEducationalOffer = () => {
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState({});
     const [newRequirement, setNewRequirement] = useState('');
+    const [isVerificatedProfesional, setIsVerificatedProfesional] = useState(false);
+    const [showVerificationModal, setShowVerificationModal] = useState(false);
 
     // Validación de campos al cambiar
     useEffect(() => {
@@ -60,18 +63,36 @@ const CreateEducationalOffer = () => {
         const fetchProfile = async () => {
             try {
                 const token = localStorage.getItem('authToken');
-                if (!token) return;
+                if (!token) {
+                    navigate('/login');
+                    return;
+                }
+
                 const backendUrl = import.meta.env.VITE_BACKEND_URL;
-                const res = await axios.get(`${backendUrl}/api/users/profile`, {
-                    headers: { Authorization: `Bearer ${token}` },
+                const response = await axios.get(`${backendUrl}/api/users/profile`, {
+                    headers: { Authorization: `Bearer ${token}` }
                 });
-                setProfile(res.data);
+
+                setProfile(response.data);
+                
+                // Verificar si el usuario es una empresa/institución y si está verificado
+                const user = response.data;
+                if (user.role === 'Profesional') {
+                    setIsVerificatedProfesional(user.isVerificatedProfesional || false);
+                    
+                    // Si el usuario no está verificado, mostrar el modal
+                    if (!user.isVerificatedProfesional) {
+                        setShowVerificationModal(true);
+                    }
+                }
             } catch (error) {
-                console.error("Error al cargar el perfil", error);
+                console.error('Error al cargar el perfil:', error);
+                toast.error('Error al cargar el perfil');
             }
         };
+
         fetchProfile();
-    }, []);
+    }, [navigate]);
 
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -130,12 +151,19 @@ const CreateEducationalOffer = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
-        // Validación final antes de enviar
-        const newErrors = validateForm(formData);
-        if (Object.keys(newErrors).length > 0) {
-            setErrors(newErrors);
-            toast.error('Por favor, corrige los errores antes de continuar');
+
+        // Verificar si el usuario es una empresa/institución y si está verificado
+        if (!isVerificatedProfesional) {
+            setShowVerificationModal(true);
+            return;
+        }
+
+        // Validar el formulario
+        const formErrors = validateForm(formData);
+        if (Object.keys(formErrors).length > 0) {
+            setErrors(formErrors);
+            const firstErrorField = Object.keys(formErrors)[0];
+            toast.error(`Por favor corrige el campo: ${firstErrorField}`);
             return;
         }
         
@@ -208,6 +236,9 @@ const CreateEducationalOffer = () => {
 
     return (
         <div className="create-educational-offer">
+            {showVerificationModal && (
+                <VerificationRequiredModal onClose={() => setShowVerificationModal(false)} />
+            )}
             <h2>Publica una oferta educativa</h2>
             <form onSubmit={handleSubmit}>
                 <HeaderSection 
