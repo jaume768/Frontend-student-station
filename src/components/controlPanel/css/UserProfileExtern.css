@@ -919,7 +919,7 @@
     
     .user-extern-tabs {
         overflow-x: auto;
-        white-space: nowrap;
+        flex-wrap: wrap;
         padding-bottom: 5px;
     }
     

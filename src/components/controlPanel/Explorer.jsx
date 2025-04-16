@@ -10,8 +10,8 @@ const Explorer = () => {
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('explorer'); // Opciones: 'explorer', 'staffPicks', 'following'
     const [tabDisabled, setTabDisabled] = useState(false); // Para evitar cambios rápidos de pestaña
-    const [showFilters, setShowFilters] = useState(false); // Para mostrar/ocultar el panel de filtros
-    const [showMobileFilters, setShowMobileFilters] = useState(false); // Para mostrar/ocultar el modal de filtros en móvil
+    const [showFilters, setShowFilters] = useState(false); // Panel de filtros para desktop
+    const [showMobileFilters, setShowMobileFilters] = useState(false); // Modal de filtros en móvil
     const [isMobile, setIsMobile] = useState(false); // Para detectar si estamos en móvil
 
     // Al montar el componente se limpian algunos storage
@@ -81,9 +81,9 @@ const Explorer = () => {
         }
     };
 
-    // Al cambiar de pestaña, reiniciamos la paginación, la lista de posts y limpiamos los posts vistos
+    // Reiniciar paginación y limpiar posts vistos al cambiar de pestaña
     useEffect(() => {
-        sessionStorage.removeItem('viewedPosts'); // Resetea los posts vistos
+        sessionStorage.removeItem('viewedPosts');
         setPage(1);
         setPostImages([]);
         setHasMore(true);
@@ -91,14 +91,13 @@ const Explorer = () => {
 
     // Cargar imágenes según la pestaña activa
     useEffect(() => {
-        let cancelled = false; // Bandera para ignorar respuestas si la pestaña cambia rápidamente
-
+        let cancelled = false;
         const fetchImages = async () => {
             if (!hasMore) return;
             setLoading(true);
             const backendUrl = import.meta.env.VITE_BACKEND_URL;
             const limit = 8;
-            // Para "explorer" y "following" usamos el parámetro exclude; en Staff Picks lo dejamos vacío
+            // En "explorer" y "following" se usa exclude; en "staffPicks" se deja vacío
             const viewedPosts = getViewedPosts();
             let url = '';
 
@@ -118,7 +117,6 @@ const Explorer = () => {
                 if (activeTab === 'explorer' || activeTab === 'following') {
                     response.data.images.forEach(img => addViewedPost(img.postId));
                 }
-                // Función para mezclar aleatoriamente
                 const shuffleArray = (array) => {
                     const shuffled = [...array];
                     for (let i = shuffled.length - 1; i > 0; i--) {
@@ -130,7 +128,7 @@ const Explorer = () => {
                 const randomizedNewImages = shuffleArray(response.data.images);
                 const newImages = page === 1 ? randomizedNewImages : [...postImages, ...randomizedNewImages];
                 setPostImages(newImages);
-                // En Staff Picks, para que solo se cargue una vez y se reinicie (sin infinite scroll)...
+                // En Staff Picks, deshabilitamos infinite scroll
                 if (activeTab === 'staffPicks') {
                     setHasMore(false);
                 } else {
@@ -147,17 +145,14 @@ const Explorer = () => {
         };
 
         fetchImages();
-
         return () => {
             cancelled = true;
         };
     }, [page, activeTab]);
 
-    // Configurar IntersectionObserver para el infinite scroll
+    // Configurar IntersectionObserver para infinite scroll, solo en pestañas que lo permitan
     useEffect(() => {
-        // Si estamos en Staff Picks, no configuramos el observer para evitar más peticiones
         if (activeTab === 'staffPicks') return;
-
         if (loading) return;
         if (observerRef.current) observerRef.current.disconnect();
 
@@ -239,8 +234,8 @@ const Explorer = () => {
                 </p>
 
                 <div className="explorer-tabs-container">
-                    <button
-                        className="explorer-filter-button"
+                    <button 
+                        className="explorer-filter-button" 
                         onClick={() => isMobile ? setShowMobileFilters(!showMobileFilters) : setShowFilters(!showFilters)}
                         disabled={tabDisabled}
                     >
@@ -248,7 +243,7 @@ const Explorer = () => {
                     </button>
 
                     <div className="explorer-tabs">
-                        <button
+                        <button 
                             className={`user-extern-tab ${activeTab === 'staffPicks' ? 'active' : ''}`}
                             disabled={tabDisabled}
                             onClick={() => {
@@ -261,7 +256,7 @@ const Explorer = () => {
                         >
                             Staff Picks
                         </button>
-                        <button
+                        <button 
                             className={`user-extern-tab ${activeTab === 'explorer' ? 'active' : ''}`}
                             disabled={tabDisabled}
                             onClick={() => {
@@ -278,8 +273,103 @@ const Explorer = () => {
                 </div>
             </div>
 
-            {/* Panel de filtros (puedes mantenerlo igual) */}
-            {/* … Código del panel de filtros … */}
+            {/* Panel de filtros para desktop */}
+            <div className={`explorer-filters-panel ${showFilters ? 'show' : ''}`}>
+                <div className="explorer-filters-container">
+                    <h3>Filtros</h3>
+                    <div className="explorer-filters-content">
+                        <div className="explorer-filter-group">
+                            <div className="explorer-filter-search">
+                                <input type="text" placeholder="Buscar" />
+                            </div>
+                            <div className="explorer-filter-select">
+                                <select defaultValue="">
+                                    <option value="" disabled>País</option>
+                                    <option value="espana">España</option>
+                                    <option value="francia">Francia</option>
+                                    <option value="alemania">Alemania</option>
+                                </select>
+                            </div>
+                            <div className="explorer-filter-select">
+                                <select defaultValue="">
+                                    <option value="" disabled>Ciudad</option>
+                                    <option value="madrid">Madrid</option>
+                                    <option value="barcelona">Barcelona</option>
+                                    <option value="valencia">Valencia</option>
+                                </select>
+                            </div>
+                            <div className="explorer-filter-select">
+                                <select defaultValue="">
+                                    <option value="" disabled>Centro de estudios</option>
+                                    <option value="ied">IED</option>
+                                    <option value="esdemga">ESDEMGA</option>
+                                    <option value="elisava">Elisava</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button className="explorer-apply-filters-btn">Aplicar filtros</button>
+                    </div>
+                </div>
+            </div>
+
+            {/* Modal de filtros para móvil */}
+            {showMobileFilters && (
+                <div 
+                    className="explorer-mobile-filters-modal"
+                    onClick={(e) => {
+                        if (e.target.className === 'explorer-mobile-filters-modal') {
+                            setShowMobileFilters(false);
+                        }
+                    }}
+                >
+                    <div className="explorer-mobile-filters-content">
+                        <div className="explorer-mobile-filters-header">
+                            <h3>Filtros</h3>
+                            <button 
+                                className="explorer-mobile-filters-close" 
+                                onClick={() => setShowMobileFilters(false)}
+                            >
+                                &times;
+                            </button>
+                        </div>
+                        <div className="explorer-filter-group">
+                            <div className="explorer-filter-search">
+                                <input type="text" placeholder="Buscador" />
+                            </div>
+                            <div className="explorer-filter-select">
+                                <select defaultValue="">
+                                    <option value="" disabled>País</option>
+                                    <option value="espana">España</option>
+                                    <option value="francia">Francia</option>
+                                    <option value="alemania">Alemania</option>
+                                </select>
+                            </div>
+                            <div className="explorer-filter-select">
+                                <select defaultValue="">
+                                    <option value="" disabled>Ciudad</option>
+                                    <option value="madrid">Madrid</option>
+                                    <option value="barcelona">Barcelona</option>
+                                    <option value="valencia">Valencia</option>
+                                </select>
+                            </div>
+                            <div className="explorer-filter-select">
+                                <select defaultValue="">
+                                    <option value="" disabled>Centro de estudios</option>
+                                    <option value="ied">IED</option>
+                                    <option value="esdemga">ESDEMGA</option>
+                                    <option value="elisava">Elisava</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button 
+                            className="explorer-apply-filters-btn"
+                            onClick={() => setShowMobileFilters(false)}
+                        >
+                            Aplicar filtros
+                        </button>
+                    </div>
+                </div>
+            )}
 
             <div className={`explorer-content ${showFilters ? 'with-filters' : ''}`}>
                 <Masonry
@@ -311,7 +401,7 @@ const Explorer = () => {
                                     <div className={`save-feedback ${saveFeedback.show ? 'show' : ''}`}>
                                         {saveFeedback.text}
                                     </div>
-                                )}
+                            )}
                             <div className="overlay">
                                 <div className="user-info">
                                     <img
