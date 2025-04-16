@@ -362,7 +362,6 @@ const Creatives = () => {
                 >
                     <div className="creatives-mobile-filters-content">
                         <div className="creatives-mobile-filters-header">
-                            <h3>Filtros</h3>
                             <button 
                                 className="creatives-mobile-filters-close" 
                                 onClick={() => setShowMobileFilters(false)}

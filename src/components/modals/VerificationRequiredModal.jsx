@@ -20,7 +20,7 @@ const VerificationRequiredModal = ({ onClose }) => {
                     
                     <div className="verification-modal-info">
                         <p className="verification-modal-title">Para poder verificar tu perfil, envíanos un correo a:</p>
-                        <p className="verification-modal-email">email@gmail.com</p>
+                        <p className="verification-modal-email">m.reinabolanos@gmail.com</p>
                         
                         <div className="verification-modal-requirements">
                             <p>con los siguientes datos:</p>
