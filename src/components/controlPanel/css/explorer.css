@@ -71,6 +71,31 @@
     border-color: #1a73e8;
 }
 
+.user-extern-tab:disabled {
+    background-color: #f5f5f5;
+    color: #aaa;
+    border-color: #ddd;
+    cursor: not-allowed;
+    position: relative;
+    overflow: hidden;
+}
+
+.user-extern-tab:disabled::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    width: 100%;
+    background-size: 200% 100%;
+    animation: loading 2s infinite linear;
+}
+
+@keyframes loading {
+    0% { background-position: 100% 0; }
+    100% { background-position: 0 0; }
+}
+
 /* Botón de filtro */
 .explorer-filter-button {
     position: fixed;
