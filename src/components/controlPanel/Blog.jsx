@@ -20,8 +20,6 @@ const Blog = () => {
         { id: 'other', name: 'Otros' }
     ];
 
-    // Ya no necesitamos los datos de muestra, ahora usamos datos reales del backend
-
     useEffect(() => {
         const fetchArticles = async () => {
             try {
@@ -53,16 +51,18 @@ const Blog = () => {
         fetchArticles();
     }, [activeCategory]);
 
-    // Ya no necesitamos filtrar los artículos aquí, ya que lo hacemos en la API
-    const filteredArticles = articles;
-    
     // Separar los dos artículos más recientes para mostrarlos en la parte superior
-    const featuredArticles = filteredArticles.slice(0, 2);
-    const regularArticles = filteredArticles.slice(2);
+    const featuredArticles = articles.slice(0, 2);
+    const regularArticles = articles.slice(2);
 
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
         return new Date(dateString).toLocaleDateString('es-ES', options);
+    };
+
+    // Función para prevenir la propagación del evento click en elementos dentro de la tarjeta
+    const handleInnerClick = (e) => {
+        e.stopPropagation();
     };
 
     if (loading) {
@@ -108,7 +108,7 @@ const Blog = () => {
                 </div>
             </div>
 
-            {filteredArticles.length === 0 ? (
+            {articles.length === 0 ? (
                 <div className="blog-empty-state">
                     <FaSearch />
                     <p>No se encontraron artículos en esta categoría</p>
@@ -118,7 +118,8 @@ const Blog = () => {
                     {/* Sección de artículos destacados (los 2 más recientes) */}
                     <div className="blog-featured-section">
                         {featuredArticles.map(article => (
-                            <div 
+                            <Link 
+                                to={`/ControlPanel/article/${article._id}`}
                                 key={article._id} 
                                 className="blog-featured-card"
                             >
@@ -143,20 +144,21 @@ const Blog = () => {
                                         <h3 className="blog-card-title">{article.title}</h3>
                                         <p className="blog-card-excerpt">{article.excerpt}</p>
                                     </div>
-                                    <div>
-                                        <Link to={`/ControlPanel/article/${article._id}`} className="blog-card-link">
+                                    <div className="blog-card-footer">
+                                        <span className="blog-card-link">
                                             Leer más <FaArrowRight style={{ marginLeft: '5px', fontSize: '12px' }} />
-                                        </Link>
+                                        </span>
                                     </div>
                                 </div>
-                            </div>
+                            </Link>
                         ))}
                     </div>
 
                     {/* Sección de artículos regulares (el resto) */}
                     <div className="blog-regular-section">
                         {regularArticles.map(article => (
-                            <div 
+                            <Link 
+                                to={`/ControlPanel/article/${article._id}`}
                                 key={article._id} 
                                 className="blog-regular-card"
                             >
@@ -181,13 +183,13 @@ const Blog = () => {
                                         <h3 className="blog-card-title">{article.title}</h3>
                                         <p className="blog-card-excerpt">{article.excerpt}</p>
                                     </div>
-                                    <div>
-                                        <Link to={`/ControlPanel/article/${article._id}`} className="blog-card-link">
+                                    <div className="blog-card-footer">
+                                        <span className="blog-card-link">
                                             Leer más <FaArrowRight style={{ marginLeft: '5px', fontSize: '12px' }} />
-                                        </Link>
+                                        </span>
                                     </div>
                                 </div>
-                            </div>
+                            </Link>
                         ))}
                     </div>
                 </>
