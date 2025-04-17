@@ -282,7 +282,7 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
                         className="create-post-btn"
                         onClick={handleCreateClick}
                     >
-                        <FaPlus style={{ color: 'white' }} /> {getCreateButtonText()}
+                        <FaPlus style={{ color: '##555' }} /> {getCreateButtonText()}
                     </button>
                     {showCreateOptions && (
                         <CreateOptionsModal
