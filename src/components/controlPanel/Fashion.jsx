@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { FaSearch, FaChevronDown, FaMapMarkerAlt } from 'react-icons/fa';
 import './css/fashion.css';
 
 const Fashion = () => {
@@ -10,412 +11,328 @@ const Fashion = () => {
     const [error, setError] = useState(null);
     const [filters, setFilters] = useState({
         search: '',
-        location: [],
-        studyType: [],
-        modality: [],
-        years: [],
-        visibility: 'all' // 'all', 'public', 'private'
+        country: '',
+        city: '',
+        centerType: 'all',
+        educationLevel: '',
+        modality: '',
+        category: '',
+        visibility: 'all',       // <-- añadido
     });
-    const [locations, setLocations] = useState([]);
-    const [studyTypes, setStudyTypes] = useState([]);
+    const [countries, setCountries] = useState([]);
+    const [cities, setCities] = useState([]);
     const [hoveredInstitution, setHoveredInstitution] = useState(null);
-    const hoverPanelRef = useRef(null);
-    
-    // Obtener datos del backend
+
+    const educationLevelsList = [
+        'Grado o licenciatura',
+        'Máster o posgrado',
+        'Doctorado o investigación',
+        'FP',
+        'Cursos talleres',
+        'Certificaciones',
+    ];
+    const modalityList = ['Presencial', 'Online', 'Híbrido'];
+    const categoriesList = ['Moda', 'Diseño gráfico', 'Fotografía'];
+
     useEffect(() => {
         const fetchData = async () => {
             try {
                 setLoading(true);
                 const backendUrl = import.meta.env.VITE_BACKEND_URL;
-                
-                // Obtener ofertas educativas agrupadas por institución
-                const response = await axios.get(`${backendUrl}/api/offers/educational/institutions`);
-                console.log("Datos recibidos:", response.data);
-                
-                // Procesar los datos
-                if (response.data && response.data.institutions) {
-                    setInstitutions(response.data.institutions);
-                    
-                    // Extraer ubicaciones únicas para filtros
-                    const uniqueLocations = [...new Set(
-                        response.data.institutions
-                            .filter(inst => inst.location && inst.location.city)
-                            .map(inst => inst.location.city)
-                    )];
-                    setLocations(uniqueLocations);
-                    
-                    // Extraer tipos de estudio únicos para filtros
-                    const uniqueStudyTypes = [...new Set(
-                        response.data.institutions.flatMap(inst => 
-                            inst.programs.map(prog => prog.educationType)
-                        ).filter(Boolean)
-                    )];
-                    setStudyTypes(uniqueStudyTypes);
-                } else {
-                    console.error("Formato de respuesta inválido:", response.data);
-                    setError("No se pudieron cargar los datos correctamente");
-                }
-                
-                setLoading(false);
+                const res = await axios.get(
+                    `${backendUrl}/api/offers/educational/institutions`
+                );
+                const data = res.data.institutions || [];
+                setInstitutions(data);
+
+                setCountries([
+                    ...new Set(
+                        data.map((i) => i.location?.country).filter(Boolean)
+                    ),
+                ]);
+                setCities([
+                    ...new Set(data.map((i) => i.location?.city).filter(Boolean)),
+                ]);
             } catch (err) {
-                console.error("Error al obtener los datos:", err);
-                setError("Ocurrió un error al cargar los datos");
+                console.error(err);
+                setError('No se pudieron cargar las instituciones.');
+            } finally {
                 setLoading(false);
             }
         };
-        
         fetchData();
     }, []);
-    
-    // Función para actualizar filtros
-    const handleFilterChange = (type, value) => {
-        if (type === 'search') {
-            setFilters(prev => ({ ...prev, search: value }));
-            return;
-        }
-        
-        if (type === 'visibility') {
-            setFilters(prev => ({ ...prev, visibility: value }));
-            return;
-        }
-        
-        // Para filtros de tipo array (location, studyType, etc.)
-        setFilters(prev => {
-            const currentValues = [...prev[type]];
-            
-            if (currentValues.includes(value)) {
-                return { ...prev, [type]: currentValues.filter(v => v !== value) };
-            } else {
-                return { ...prev, [type]: [...currentValues, value] };
-            }
-        });
+
+    const handleFilterChange = (field, value) => {
+        setFilters((f) => ({ ...f, [field]: value }));
     };
-    
-    // Aplicar filtros a las instituciones
-    const filteredInstitutions = institutions.filter(institution => {
-        console.log("Evaluando institución:", institution.name);
-        
-        // Filtro de búsqueda por texto
-        if (filters.search && filters.search.trim() !== '') {
-            const searchTerm = filters.search.toLowerCase();
-            const nameMatch = institution.name?.toLowerCase().includes(searchTerm);
-            const locationMatch = institution.location?.city?.toLowerCase().includes(searchTerm);
-            
-            if (!nameMatch && !locationMatch) {
-                console.log(`${institution.name} no pasó el filtro de búsqueda`);
-                return false;
-            }
-        }
-        
-        // Filtro por visibilidad (público/privado)
-        if (filters.visibility !== 'all') {
-            if (institution.type !== filters.visibility) {
-                console.log(`${institution.name} no pasó el filtro de visibilidad`);
-                return false;
-            }
-        }
-        
-        // Filtro por ubicación
-        if (filters.location.length > 0) {
-            if (!institution.location || !filters.location.includes(institution.location.city)) {
-                console.log(`${institution.name} no pasó el filtro de ubicación`);
-                return false;
-            }
-        }
-        
-        // Filtro por tipo de estudio (verifica si la institución ofrece algún programa del tipo seleccionado)
-        if (filters.studyType.length > 0) {
-            const hasMatchingProgram = institution.programs.some(program => 
-                filters.studyType.includes(program.educationType)
-            );
-            if (!hasMatchingProgram) {
-                console.log(`${institution.name} no pasó el filtro de tipo de estudio`);
-                return false;
-            }
-        }
-        
-        // Filtro por modalidad
-        if (filters.modality.length > 0) {
-            const hasMatchingModality = institution.programs.some(program => 
-                filters.modality.includes(program.modality)
-            );
-            if (!hasMatchingModality) {
-                console.log(`${institution.name} no pasó el filtro de modalidad`);
-                return false;
-            }
-        }
-        
-        console.log(`${institution.name} pasó todos los filtros`);
-        return true;
-    });
-    
-    // Función para limpiar todos los filtros
+
+    const applyFilters = () => {
+        // Si quisieras volver a llamar al backend, aquí iría.
+    };
+
     const clearAllFilters = () => {
         setFilters({
             search: '',
-            location: [],
-            studyType: [],
-            modality: [],
-            years: [],
-            visibility: 'all'
+            country: '',
+            city: '',
+            centerType: 'all',
+            educationLevel: '',
+            modality: '',
+            category: '',
+            visibility: 'all',
         });
     };
-    
-    // Funciones para manejar el hover
-    const handleMouseEnter = (institution) => {
-        setHoveredInstitution(institution);
-    };
-    
-    const handleMouseLeave = () => {
-        setHoveredInstitution(null);
-    };
-    
-    // Función para navegar al perfil de la institución
-    const navigateToProfile = (institution) => {
-        // Comprobar primero si hay un username asociado
-        console.log(institution);
-        if (institution.username) {
-            navigate(`/ControlPanel/profile/${institution.username}`);
-        } 
-    };
 
-    if (loading) {
-        return <div className="loading">Cargando...</div>;
-    }
-    
-    if (error) {
-        return <div className="error">{error}</div>;
-    }
-    
+    const filteredInstitutions = institutions.filter((inst) => {
+        const {
+            search,
+            country,
+            city,
+            centerType,
+            educationLevel,
+            modality,
+            category,
+            visibility,
+        } = filters;
+        if (
+            search &&
+            !`${inst.name} ${inst.location?.city}`
+                .toLowerCase()
+                .includes(search.toLowerCase())
+        )
+            return false;
+        if (country && inst.location?.country !== country) return false;
+        if (city && inst.location?.city !== city) return false;
+        if (centerType !== 'all' && inst.type !== centerType) return false;
+        if (
+            educationLevel &&
+            !inst.programs.some((p) => p.educationType === educationLevel)
+        )
+            return false;
+        if (modality && !inst.programs.some((p) => p.modality === modality))
+            return false;
+        if (category && !inst.programs.some((p) => p.category === category))
+            return false;
+        if (visibility !== 'all' && inst.type !== visibility) return false;
+        return true;
+    });
+
+    if (loading) return <div className="loading">Cargando...</div>;
+    if (error) return <div className="error">{error}</div>;
+
     return (
         <div className="fashion-container">
-            {/* Sección de filtros */}
+            {/* ------------------ FILTROS ------------------ */}
             <div className="filters-section">
                 <h3>Filtros</h3>
-                
+
                 {/* Buscador */}
-                <div className="search-box">
-                    <i className="fas fa-search"></i>
-                    <input 
-                        type="text" 
-                        placeholder="Buscar" 
+                <div className="filter-search">
+                    <FaSearch className="search-icon" />
+                    <input
+                        type="text"
+                        placeholder="Buscador"
                         value={filters.search}
                         onChange={(e) => handleFilterChange('search', e.target.value)}
                     />
                 </div>
-                
-                {/* Filtro de visibilidad */}
-                <div className="toggle-group">
-                    <button 
-                        className={`toggle-button ${filters.visibility === 'all' ? 'active' : ''}`}
+
+                {/* País */}
+                <div className="filter-input">
+                    <input
+                        list="countries"
+                        placeholder="País"
+                        value={filters.country}
+                        onChange={(e) => handleFilterChange('country', e.target.value)}
+                    />
+                    <datalist id="countries">
+                        {countries.map((c) => (
+                            <option key={c} value={c} />
+                        ))}
+                    </datalist>
+                </div>
+
+                {/* Ciudad */}
+                <div className="filter-input">
+                    <input
+                        list="cities"
+                        placeholder="Ciudad"
+                        value={filters.city}
+                        onChange={(e) => handleFilterChange('city', e.target.value)}
+                    />
+                    <datalist id="cities">
+                        {cities.map((c) => (
+                            <option key={c} value={c} />
+                        ))}
+                    </datalist>
+                </div>
+
+                {/* Tipo de centro */}
+                <div className="filter-select">
+                    <select
+                        value={filters.centerType}
+                        onChange={(e) =>
+                            handleFilterChange('centerType', e.target.value)
+                        }
+                    >
+                        <option value="all">Tipo de centro</option>
+                        <option value="all">Todos</option>
+                        <option value="public">Público</option>
+                        <option value="private">Privado</option>
+                    </select>
+                    <FaChevronDown className="chevron-icon" />
+                </div>
+
+                {/* Nivel de estudios */}
+                <div className="filter-select">
+                    <select
+                        value={filters.educationLevel}
+                        onChange={(e) =>
+                            handleFilterChange('educationLevel', e.target.value)
+                        }
+                    >
+                        <option value="">Nivel de estudios</option>
+                        {educationLevelsList.map((l) => (
+                            <option key={l} value={l}>
+                                {l}
+                            </option>
+                        ))}
+                    </select>
+                    <FaChevronDown className="chevron-icon" />
+                </div>
+
+                {/* Tipo de formación */}
+                <div className="filter-select">
+                    <select
+                        value={filters.modality}
+                        onChange={(e) => handleFilterChange('modality', e.target.value)}
+                    >
+                        <option value="">Tipo de formación</option>
+                        {modalityList.map((m) => (
+                            <option key={m} value={m}>
+                                {m}
+                            </option>
+                        ))}
+                    </select>
+                    <FaChevronDown className="chevron-icon" />
+                </div>
+
+                {/* Categoría */}
+                <div className="filter-select">
+                    <select
+                        value={filters.category}
+                        onChange={(e) => handleFilterChange('category', e.target.value)}
+                    >
+                        <option value="">Categoría</option>
+                        {categoriesList.map((c) => (
+                            <option key={c} value={c}>
+                                {c}
+                            </option>
+                        ))}
+                    </select>
+                    <FaChevronDown className="chevron-icon" />
+                </div>
+
+                <button className="apply-filters-btn" onClick={applyFilters}>
+                    Aplicar filtros
+                </button>
+            </div>
+
+            {/* ============= CONTENIDO PRINCIPAL ============= */}
+            <main className="main-content">
+                <h1 className="page-title">Estudiar moda</h1>
+                <p className="page-description">
+                    Explora opciones para estudiar moda y filtra por nivel, modalidad y
+                    ubicación para encontrar la formación que mejor se adapte a ti.
+                </p>
+
+                {/* Toggle de visibilidad */}
+                <div className="view-toggle-group">
+                    <button
+                        className={`toggle ${filters.visibility === 'all' ? 'active' : ''
+                            }`}
                         onClick={() => handleFilterChange('visibility', 'all')}
                     >
                         Todo
                     </button>
-                    <button 
-                        className={`toggle-button ${filters.visibility === 'public' ? 'active' : ''}`}
+                    <button
+                        className={`toggle ${filters.visibility === 'public' ? 'active' : ''
+                            }`}
                         onClick={() => handleFilterChange('visibility', 'public')}
                     >
                         Pública
                     </button>
-                    <button 
-                        className={`toggle-button ${filters.visibility === 'private' ? 'active' : ''}`}
+                    <button
+                        className={`toggle ${filters.visibility === 'private' ? 'active' : ''
+                            }`}
                         onClick={() => handleFilterChange('visibility', 'private')}
                     >
                         Privada
                     </button>
                 </div>
-                
-                {/* Filtro de ubicación */}
-                <div className="filter-group">
-                    <div className="filter-title">
-                        <span>Localización</span>
-                        {filters.location.length > 0 && (
-                            <small onClick={() => setFilters(prev => ({ ...prev, location: [] }))}>
-                                Limpiar
-                            </small>
-                        )}
-                    </div>
-                    <div className="filter-tags">
-                        {locations.map(location => (
-                            <div 
-                                key={location} 
-                                className={`filter-tag ${filters.location.includes(location) ? 'active' : ''}`}
-                                onClick={() => handleFilterChange('location', location)}
-                            >
-                                {location}
-                                {filters.location.includes(location) && <i className="fas fa-times"></i>}
-                            </div>
-                        ))}
-                    </div>
-                </div>
-                
-                {/* Filtro de tipo de estudio */}
-                <div className="filter-group">
-                    <div className="filter-title">
-                        <span>Centro de estudios</span>
-                        {filters.studyType.length > 0 && (
-                            <small onClick={() => setFilters(prev => ({ ...prev, studyType: [] }))}>
-                                Limpiar
-                            </small>
-                        )}
-                    </div>
-                    <div className="filter-tags">
-                        {studyTypes.map(type => (
-                            <div 
-                                key={type} 
-                                className={`filter-tag ${filters.studyType.includes(type) ? 'active' : ''}`}
-                                onClick={() => handleFilterChange('studyType', type)}
-                            >
-                                {type}
-                                {filters.studyType.includes(type) && <i className="fas fa-times"></i>}
-                            </div>
-                        ))}
-                    </div>
-                </div>
-                
-                {/* Filtro de modalidad */}
-                <div className="filter-group">
-                    <div className="filter-title">
-                        <span>Modalidad</span>
-                        {filters.modality.length > 0 && (
-                            <small onClick={() => setFilters(prev => ({ ...prev, modality: [] }))}>
-                                Limpiar
-                            </small>
-                        )}
-                    </div>
-                    <div className="filter-tags">
-                        {['Presencial', 'Online', 'Híbrido'].map(modality => (
-                            <div 
-                                key={modality} 
-                                className={`filter-tag ${filters.modality.includes(modality) ? 'active' : ''}`}
-                                onClick={() => handleFilterChange('modality', modality)}
-                            >
-                                {modality}
-                                {filters.modality.includes(modality) && <i className="fas fa-times"></i>}
-                            </div>
-                        ))}
-                    </div>
-                </div>
-                
-                {/* Filtro de año */}
-                <div className="filter-group">
-                    <div className="filter-title">
-                        <span>Año de grado</span>
-                    </div>
-                    <div className="year-filter">
-                        {['Antes de 2020', '2020', '2021', '2022', '2023', '2024', '2025', '2026', '2027', '2028', '+ 2028'].map(year => (
-                            <label key={year}>
-                                <input 
-                                    type="checkbox"
-                                    checked={filters.years.includes(year)}
-                                    onChange={() => handleFilterChange('years', year)}
-                                />
-                                {year}
-                            </label>
-                        ))}
-                    </div>
-                </div>
-                
-                {/* Botón para aplicar filtros */}
-                <button className="filter-button" onClick={clearAllFilters}>
-                    Aplicar filtros
-                </button>
-            </div>
-            
-            {/* Contenido principal */}
-            <div className="main-content">
-                <h1 className="page-title">Estudiar moda</h1>
-                <p className="page-description">
-                    Explora opciones para estudiar moda a nivel local, internacional y ubicación para encontrar la
-                    formación en moda que se adapte a ti.
-                </p>
-                
-                {/* Grid de instituciones */}
-                <div className="institutions-grid">
+
+                {/* Lista de instituciones */}
+                <div className="institutions-list">
                     {filteredInstitutions.length === 0 ? (
-                        <div className="no-results">No se encontraron instituciones con los filtros seleccionados</div>
+                        <div className="no-results">
+                            No se encontraron instituciones con los filtros seleccionados
+                        </div>
                     ) : (
-                        filteredInstitutions.map(institution => (
-                            <div 
-                                key={institution._id} 
-                                className="institution-card"
-                                onMouseEnter={() => handleMouseEnter(institution)}
-                                onMouseLeave={handleMouseLeave}
-                                onClick={() => navigateToProfile(institution)}
-                                style={{ cursor: 'pointer' }}
-                            >
-                                <img 
-                                    src={institution.logo || 'https://via.placeholder.com/150'} 
-                                    alt={institution.name} 
-                                    className="institution-logo" 
-                                />
-                                <div className="institution-details">
-                                    <h3 className="institution-name">{institution.name}</h3>
-                                    <div className="institution-location">
-                                        <i className="fas fa-map-marker-alt"></i>
-                                        {institution.location.city}, {institution.location.country}
-                                    </div>
-                                    <div className="institution-tags">
-                                        <div className={`institution-tag ${institution.type}`}>
-                                            {institution.type === 'public' ? 'Público' : 'Privado'}
+                        filteredInstitutions.map((inst) => {
+                            // preparar tags de categoría
+                            const cats = [
+                                ...new Set(inst.programs.map((p) => p.category).filter(Boolean)),
+                            ];
+                            const visibleCats = cats.slice(0, 2);
+                            const extra = cats.length - visibleCats.length;
+
+                            return (
+                                <article
+                                    key={inst._id}
+                                    className="institution-card"
+                                    onMouseEnter={() => setHoveredInstitution(inst._id)}
+                                    onMouseLeave={() => setHoveredInstitution(null)}
+                                    onClick={() =>
+                                        inst.username &&
+                                        navigate(`/ControlPanel/profile/${inst.username}`)
+                                    }
+                                >
+                                    <img
+                                        src={inst.logo || 'https://via.placeholder.com/80'}
+                                        alt={inst.name}
+                                        className="institution-logo"
+                                    />
+                                    <div className="institution-info">
+                                        <h3>{inst.name}</h3>
+                                        <div className="subtitle">
+                                            <FaMapMarkerAlt />
+                                            {inst.location.city}, {inst.location.country} ·{' '}
+                                            {inst.type === 'public' ? 'Presencial' : 'Híbrido'}
                                         </div>
-                                        {institution.programs.length > 0 && (
-                                            <div className="institution-tag">
-                                                {institution.programs.length} programas
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                                
-                                {/* Panel de hover */}
-                                {hoveredInstitution && hoveredInstitution._id === institution._id && (
-                                    <div className="hover-panel" ref={hoverPanelRef}>
-                                        <div className="panel-header">
-                                            <img 
-                                                src={institution.logo || 'https://via.placeholder.com/150'} 
-                                                alt={institution.name} 
-                                                className="panel-logo" 
-                                            />
-                                            <div className="panel-info">
-                                                <h3>{institution.name}</h3>
-                                                <p>{institution.location.city}, {institution.location.country}</p>
-                                            </div>
-                                        </div>
-                                        
-                                        <div className="panel-courses">
-                                            {institution.programs.map((program, index) => (
-                                                <div key={program._id || index} className="course-card">
-                                                    <div className="course-level">
-                                                        {program.educationType}
-                                                    </div>
-                                                    <h4 className="course-title">{program.programName}</h4>
-                                                    <p className="course-description">
-                                                        {program.description?.substring(0, 80) || 'Estudia moda y eleva tu carrera profesional con este programa formativo especializado.'}...
-                                                    </p>
-                                                    <div className="course-links">
-                                                        <a href="#" className="course-link" onClick={(e) => {
-                                                            e.preventDefault();
-                                                            navigate(`/educational-offer/${program._id}`);
-                                                        }}>
-                                                            Más información
-                                                        </a>
-                                                        {program.websiteUrl && (
-                                                            <a href={program.websiteUrl} target="_blank" rel="noopener noreferrer" className="course-link">
-                                                                Web oficial
-                                                            </a>
-                                                        )}
-                                                    </div>
-                                                </div>
+                                        <div className="tags">
+                                            {visibleCats.map((c) => (
+                                                <span key={c} className="tag">
+                                                    {c}
+                                                </span>
                                             ))}
+                                            {extra > 0 && (
+                                                <span className="tag more">+ {extra} más</span>
+                                            )}
                                         </div>
                                     </div>
-                                )}
-                            </div>
-                        ))
+                                    <span
+                                        className={`institution-tag ${inst.type === 'public' ? 'public' : 'private'
+                                            }`}
+                                    >
+                                        {inst.type === 'public' ? 'Pública' : 'Privada'}
+                                    </span>
+                                </article>
+                            );
+                        })
                     )}
                 </div>
-            </div>
+            </main>
         </div>
     );
 };
