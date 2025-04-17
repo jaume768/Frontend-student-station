@@ -16,6 +16,7 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
     const [isSearching, setIsSearching] = useState(false);
     const [showResults, setShowResults] = useState(false);
     const [showFullScreenSearch, setShowFullScreenSearch] = useState(false);
+    const [isSearchExpanded, setIsSearchExpanded] = useState(false);
     const [searchTimeout, setSearchTimeout] = useState(null);
     const searchRef = useRef(null);
     const navigate = useNavigate();
@@ -148,10 +149,10 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
                 navigate('/ControlPanel/community');
                 break;
             case 'misOfertas':
-                navigate('/ControlPanel/misOfertas');
+                navigate('/ControlPanel/editProfile', { state: { activeMenu: 'misOfertas' } });
                 break;
             case 'configuracion':
-                navigate('/ControlPanel/configuracion');
+                navigate('/ControlPanel/editProfile', { state: { activeMenu: 'configuracion' } });
                 break;
             case 'logout':
                 localStorage.removeItem('authToken');
@@ -226,16 +227,26 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
 
     return (
         <header className="dashboard-header">
-            <div className="dahsboard-search" ref={searchRef}>
+            <div className={`dahsboard-search ${isSearchExpanded ? 'expanded' : ''}`} ref={searchRef}>
                 <div className="search-input-container">
                     <FaSearch className="search-icon" />
                     <input 
                         type="text" 
-                        placeholder="Buscar personas, publicaciones, ofertas..." 
+                        placeholder={isSearchExpanded ? "Buscar personas, publicaciones, ofertas..." : "Buscar..."} 
                         value={searchQuery}
                         onChange={handleSearchInputChange}
                         onKeyDown={handleSearch}
-                        onFocus={() => searchQuery.trim().length >= 2 && searchResults && setShowResults(true)}
+                        onFocus={() => {
+                            setIsSearchExpanded(true);
+                            if (searchQuery.trim().length >= 2 && searchResults) {
+                                setShowResults(true);
+                            }
+                        }}
+                        onBlur={() => {
+                            if (!searchQuery) {
+                                setIsSearchExpanded(false);
+                            }
+                        }}
                         className="modern-search-input"
                     />
                     {searchQuery && (
@@ -259,13 +270,13 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
                 )}
             </div>
             <div className="header-right">
-                <div
-                    className="saved"
+                <button
+                    className={`sidebar-menu-item saved-button ${location.pathname.includes('guardados') ? 'active' : ''}`}
                     onClick={() => navigate('/ControlPanel/guardados')}
                 >
-                    <FaBookmark className="nav-icon-save" title="Guardados" />
+                    <FaBookmark className="sidebar-icon" />
                     <span>Guardados</span>
-                </div>
+                </button>
                 <div className="create-button-container" ref={createButtonRef} style={{ position: 'relative' }}>
                     <button
                         className="create-post-btn"
