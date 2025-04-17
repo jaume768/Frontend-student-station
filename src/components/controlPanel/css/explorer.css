@@ -99,7 +99,7 @@
 /* Botón de filtro */
 .explorer-filter-button {
     position: fixed;
-    left: 7em;
+    left: 14em;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -128,7 +128,7 @@
 .explorer-filters-panel {
     position: fixed;
     top: 13em;
-    left: 6.2em;
+    left: 13em;
     width: 270px;
     height: 100vh;
     background-color: #fff;

@@ -74,10 +74,11 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 80px;
-    height: 100vh;
+    width: 189px;
+    height: 108vh;
     display: flex;
     flex-direction: column;
+    overflow: auto;
     justify-content: space-between;
     align-items: center;
     padding: 20px 0;
@@ -93,7 +94,7 @@
 }
 
 .dashboard-sidebar .logo-dashboard {
-    margin-bottom: 8em;
+    margin-bottom: 2em;
 }
 
 /* Eliminamos el fondo del contenedor de íconos */
@@ -288,6 +289,7 @@
 .dashboard-content {
     flex: 1;
     padding: 20px;
+    margin-left: 6em;
     background-color: rgb(255, 255, 255);
 }
 
@@ -295,6 +297,7 @@
     .dashboard-content {
         flex: 1;
         padding: 0;
+        margin-left: 0;
         background-color: rgb(255, 255, 255);
     }
 }
