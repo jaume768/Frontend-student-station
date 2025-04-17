@@ -15,6 +15,13 @@
     margin-left: 17em;
 }
 
+@media (max-width: 768px) {
+    .offers-header {
+        margin-left: 0;
+        width: 100%;
+    }
+}
+
 .creatives-header h1 {
     font-size: 2rem;
     margin-bottom: 10px;
