@@ -55,6 +55,16 @@ const Sidebar = ({ onLinkClick }) => {
                 setActiveSection('explorer');
             } else if (path === 'creatives') {
                 setActiveSection('creatives');
+            } else if (path === 'fashion') {
+                setActiveSection('fashion');
+            } else if (path === 'offers') {
+                setActiveSection('offers');
+            } else if (path === 'blog') {
+                setActiveSection('blog');
+            } else if (path === 'magazine') {
+                setActiveSection('magazine');
+            } else {
+                setActiveSection('explorer');
             }
         }
     }, [location]);
