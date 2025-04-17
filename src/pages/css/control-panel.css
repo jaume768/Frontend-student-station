@@ -238,6 +238,16 @@
     margin-right: 15px;
 }
 
+@media (max-width: 769px) {
+    .dahsboard-search {
+        width: 100%;
+    }
+
+    .dashboard-header .saved-button{
+        display: none;
+    }
+}
+
 .dahsboard-search.expanded {
     width: 75%;
 }
