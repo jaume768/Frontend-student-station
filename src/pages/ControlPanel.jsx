@@ -38,30 +38,13 @@ const ControlPanel = () => {
     useEffect(() => {
         const token = localStorage.getItem('authToken');
         setIsAuthenticated(!!token);
-
-        const savedActiveMenu = sessionStorage.getItem('activeMenu');
-        if (location.state?.activeMenu) {
-            setActiveMenu(location.state.activeMenu);
-            sessionStorage.setItem('activeMenu', location.state.activeMenu);
-        } else if (savedActiveMenu) {
-            setActiveMenu(savedActiveMenu);
-        }
-        
-        // Desplazar al inicio de la página cuando cambia la ruta dentro del ControlPanel
+        const path = location.pathname.split('/').pop() || 'explorer';
+        setActiveMenu(path);
+        sessionStorage.setItem('activeMenu', path);
         window.scrollTo(0, 0);
-    }, [location.pathname, location.state]);
+    }, [location.pathname]);
 
-    useEffect(() => {
-        const token = localStorage.getItem('authToken');
-        const protectedMenus = [
-            'editProfile', 'misOfertas', 'configuracion',
-            'profile', 'community', 'createPost', 'guardados'
-        ];
-        if (protectedMenus.includes(activeMenu) && !token) {
-            navigate('/', { state: { showRegister: true } });
-            return;
-        }
-    }, [activeMenu, navigate]);
+    // Eliminada la redirección automática a registro para secciones públicas
 
     const renderContent = () => {
         const ProtectedRoute = ({ children }) => {
