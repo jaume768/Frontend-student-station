@@ -112,6 +112,7 @@
     overflow: hidden;
     background-color: #fff;
     transition: transform 0.3s ease;
+    text-decoration: none;
     display: flex;
     flex-direction: row-reverse; /* Changed from row to row-reverse */
     height: 250px;

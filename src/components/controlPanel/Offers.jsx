@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { FaSearch, FaChevronDown, FaMapMarkerAlt } from 'react-icons/fa';
+import { FaSearch, FaChevronDown } from 'react-icons/fa';
 import './css/offers.css';
 
 const Offers = () => {
@@ -14,7 +14,7 @@ const Offers = () => {
         search: '',
         country: '',
         city: '',
-        studyField: '', // Nombre de empresa
+        companyName: '',
         jobType: 'all',
         locationType: '',
         onlyInternships: false,
@@ -32,12 +32,8 @@ const Offers = () => {
                     (a, b) => new Date(b.publicationDate) - new Date(a.publicationDate)
                 );
                 setOffers(sorted);
-                setUniqueCountries([
-                    ...new Set(sorted.map(o => o.country).filter(Boolean))
-                ]);
-                setUniqueCities([
-                    ...new Set(sorted.map(o => o.city).filter(Boolean))
-                ]);
+                setUniqueCountries([...new Set(sorted.map(o => o.country).filter(Boolean))]);
+                setUniqueCities([...new Set(sorted.map(o => o.city).filter(Boolean))]);
             } catch (e) {
                 console.error(e);
                 setError('No se pudieron cargar las ofertas.');
@@ -49,29 +45,24 @@ const Offers = () => {
     }, []);
 
     const handleFilterChange = (field, value) => {
-        setFilters(f => ({ ...f, [field]: value }));
+        setFilters(prev => ({ ...prev, [field]: value }));
     };
 
     const applyFilters = () => {
-        // Aquí podrías volver a llamar o solo usar filtered en render
+        // Los filtros se aplican dinámicamente
     };
 
     const filteredOffers = offers.filter(o => {
-        const { search, country, city, studyField, jobType, locationType, onlyInternships } = filters;
+        const { search, country, city, companyName, jobType, locationType, onlyInternships } = filters;
         if (onlyInternships && o.jobType !== 'Prácticas') return false;
         if (jobType !== 'all' && o.jobType !== jobType) return false;
         if (locationType && o.locationType !== locationType) return false;
         if (country && o.country !== country) return false;
         if (city && o.city !== city) return false;
-        if (studyField && !o.companyName.toLowerCase().includes(studyField.toLowerCase())) return false;
+        if (companyName && !o.companyName.toLowerCase().includes(companyName.toLowerCase())) return false;
         if (search) {
             const q = search.toLowerCase();
-            if (
-                !(
-                    o.position.toLowerCase().includes(q) ||
-                    o.companyName.toLowerCase().includes(q)
-                )
-            ) return false;
+            if (!o.position.toLowerCase().includes(q) && !o.companyName.toLowerCase().includes(q)) return false;
         }
         return true;
     });
@@ -87,7 +78,7 @@ const Offers = () => {
     if (error) return <div className="error">{error}</div>;
 
     return (
-        <div className="fashion-container">
+        <div className="offers-page-container">
             {/* ------------------ FILTROS ------------------ */}
             <div className="filters-section">
                 <h3>Filtros</h3>
@@ -126,12 +117,11 @@ const Offers = () => {
                     </datalist>
                 </div>
 
-                {/* Nombre de empresa en lugar de Centro de estudios */}
                 <div className="filter-input">
                     <input
                         placeholder="Nombre de empresa"
-                        value={filters.studyField}
-                        onChange={e => handleFilterChange('studyField', e.target.value)}
+                        value={filters.companyName}
+                        onChange={e => handleFilterChange('companyName', e.target.value)}
                     />
                 </div>
 
@@ -176,54 +166,45 @@ const Offers = () => {
                 </button>
             </div>
 
-            {/* ============= CONTENIDO PRINCIPAL ============= */}
-            <main className="main-content">
+            {/* ------------------ CONTENIDO PRINCIPAL ------------------ */}
+            <div className="offers-main-content">
                 <h1 className="page-title">Ofertas de empleo</h1>
                 <p className="page-description">
-                    Descubre nuevos talentos y oportunidades. Filtra por ubicación, tipo y más.
+                    Descubre los nuevos talentos de la industria de la moda. Usa los filtros para encontrar la oferta que más te interese.
                 </p>
 
-                <div className="institutions-list">
+                <div className="offers-grid">
                     {filteredOffers.length === 0 ? (
-                        <div className="no-results">
+                        <div className="no-offers-message">
                             No se encontraron ofertas con los filtros seleccionados
                         </div>
                     ) : (
                         filteredOffers.map(o => (
                             <article
                                 key={o._id}
-                                className="institution-card"
-                                onClick={() =>
-                                    navigate(`/ControlPanel/JobOfferDetail/${o._id}`)
-                                }
+                                className="offer-card"
+                                onClick={() => navigate(`/ControlPanel/JobOfferDetail/${o._id}`)}
                             >
-                                <img
-                                    src={o.companyLogo || 'https://via.placeholder.com/80'}
-                                    alt={o.companyName}
-                                    className="institution-logo"
-                                />
-                                <div className="institution-info">
-                                    <h3>{o.position}</h3>
-                                    <div className="subtitle">
-                                        <FaMapMarkerAlt /> {o.city}, {o.country} ·{' '}
-                                        {formatDate(o.publicationDate)}
-                                    </div>
-                                    <div className="tags">
-                                        <span className="tag">{o.jobType}</span>
-                                        <span className="tag">{o.companyName}</span>
-                                    </div>
+                                <div className="offer-card-logo">
+                                    <img
+                                        src={o.companyLogo || '/multimedia/company-default.png'}
+                                        alt={o.companyName}
+                                    />
                                 </div>
-                                <span
-                                    className={`institution-tag ${o.jobType === 'Prácticas' ? 'public' : 'private'
-                                        }`}
-                                >
-                                    {o.jobType === 'Prácticas' ? 'Prácticas' : 'Contrato'}
-                                </span>
+                                <div className="offer-card-content">
+                                    <div className="offer-card-user">{o.publisherName || o.companyName}</div>
+                                    <h2 className="offer-card-title">{o.position}</h2>
+                                    <div className="offer-card-meta">
+                                        {o.city}, {o.country} <span>│</span> {o.jobType} <span>│</span> {o.locationType}
+                                    </div>
+                                    <div className="offer-card-date">{formatDate(o.publicationDate)}</div>
+                                </div>
+                                <div className="offer-card-badge">{o.jobType}</div>
                             </article>
                         ))
                     )}
                 </div>
-            </main>
+            </div>
         </div>
     );
 };

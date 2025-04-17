@@ -8,6 +8,13 @@
     text-align: center;
 }
 
+.offers-header{
+    text-align: center;
+    width: 80%;
+    margin-bottom: 15px;
+    margin-left: 17em;
+}
+
 .creatives-header h1 {
     font-size: 2rem;
     margin-bottom: 10px;

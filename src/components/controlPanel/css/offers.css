@@ -1,31 +1,14 @@
 /* src/css/offers.css */
 
-/* 1) Importamos todo fashion.css */
+/* -------------------------------------------------- */
+/* Importa todos los estilos base desde fashion.css      */
+/* -------------------------------------------------- */
 @import './fashion.css';
 
-.filters-section .filter-input input,
-.filters-section .filter-search input {
-    border-radius: 25px;
-}
-
-/* Ajuste para el checkbox de prácticas */
-.filter-checkbox {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 12px;
-    font-size: 14px;
-    color: #333;
-}
-
-.filter-checkbox input {
-    width: 16px;
-    height: 16px;
-}
-
-/* Asegúrate de que el contenedor principal use el layout de fashion */
+/* -------------------------------------------------- */
+/* Contenedor general: sidebar de filtros + contenido   */
+/* -------------------------------------------------- */
 .offers-page-container {
-    /* si quieres aplicar exactamente el mismo padding/gap */
     display: flex;
     padding: 20px;
     gap: 20px;
@@ -33,11 +16,154 @@
     background-color: white;
 }
 
-/* Y el main-content igual */
-.offers-main-content {
-    flex: 1;
-    margin-left: 270px;
-    /* para dejar espacio a filters-section fija */
+/* -------------------------------------------------- */
+/* Sidebar de filtros (idéntica a la de fashion.css)   */
+/* -------------------------------------------------- */
+.filters-section {
+    width: 250px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 12px;
+    position: fixed;
+    top: 245px;
 }
 
-/* Fíjate en fashion.css: .filters-section ya está fixada */
+/* -------------------------------------------------- */
+/* Contenido principal: reutiliza .main-content de fashion.css */
+/* -------------------------------------------------- */
+.offers-main-content {
+    flex: 1;
+    margin-left: 0;
+    /* sin margen extra, gap del padre aplica separación */
+}
+
+/* si usas <main className="main-content">, no necesitarías .offers-main-content */
+/* -------------------------------------------------- */
+/* Encabezados (pueden venir de fashion.css)         */
+/* -------------------------------------------------- */
+/* .page-title, .page-description definidos en fashion.css */
+
+/* -------------------------------------------------- */
+/* Grilla de ofertas                                  */
+/* -------------------------------------------------- */
+.offers-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-left: 58px;
+}
+
+/* -------------------------------------------------- */
+/* Tarjeta de oferta                                  */
+/* -------------------------------------------------- */
+.offer-card {
+    position: relative;
+    display: flex;
+    width: 50%;
+    margin: auto;
+    align-items: center;
+    background: #f9f9f9;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+@media (max-width: 768px) {
+    .offers-grid {
+        width: 100%;
+        margin: 0;
+    }
+}
+
+.offer-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.offer-card-logo {
+    flex: 0 0 80px;
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f9f9f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 16px;
+}
+
+.offer-card-logo img {
+    width: 140px;
+    height: 140px;
+    object-fit: contain;
+}
+
+.offer-card-content {
+    flex: 1;
+}
+
+.offer-card-user {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 4px;
+}
+
+.offer-card-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 6px 0;
+}
+
+.offer-card-meta {
+    font-size: 14px;
+    color: #666;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 4px;
+}
+
+.offer-card-meta span {
+    margin: 0 4px;
+    color: #ccc;
+}
+
+.offer-card-date {
+    font-size: 12px;
+    color: #aaa;
+}
+
+.offer-card-badge {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    background: #e8f0fe;
+    color: #1a73e8;
+}
+
+/* -------------------------------------------------- */
+/* Responsive: ocultar sidebar en móvil                */
+/* -------------------------------------------------- */
+@media (max-width: 768px) {
+    .filters-section {
+        display: none;
+    }
+
+    .offers-page-container {
+        flex-direction: column;
+        padding: 16px;
+        margin-bottom: 5em;
+    }
+
+    .offers-grid {
+        margin-left: 0;
+    }
+}
