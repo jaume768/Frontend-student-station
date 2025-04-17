@@ -74,8 +74,8 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 189px;
-    height: 108vh;
+    width: 204px;
+    height: 112vh;
     display: flex;
     flex-direction: column;
     overflow: auto;

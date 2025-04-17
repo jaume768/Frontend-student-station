@@ -9,7 +9,7 @@
 
 /* Section styles */
 .sidebar-section {
-    margin-bottom: 24px;
+    margin-bottom: 10px;
     padding: 0 15px;
 }
 
@@ -41,12 +41,13 @@
     padding: 8px;
     border-radius: 8px;
     background: transparent;
-    border: none;
+    border: 1px solid;
+    border-color: white;
     font-size: 14px;
     color: #333;
     cursor: pointer;
     text-align: left;
-    transition: all 0.2s ease;
+    transition: all .2s ease;
     gap: 12px;
 }
 

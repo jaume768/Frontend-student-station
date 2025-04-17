@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
 import {
     FaCompass,
@@ -12,14 +12,11 @@ import {
     FaUser,
     FaEdit,
     FaUserFriends,
-    FaBriefcase as FaJobOffers,
     FaCog,
-    FaPhoneAlt,
-    FaFileAlt,
-    FaCookieBite,
-    FaUserSecret,
-    FaSignOutAlt,
-    FaPlus
+    FaPlus,
+    FaHandshake,
+    FaGraduationCap,
+    FaSuitcase
 } from 'react-icons/fa';
 import logo from '../../assets/st-isotipo-temporal.png';
 import './css/sidebar.css';
@@ -27,19 +24,108 @@ import './css/sidebar.css';
 const Sidebar = ({ onLinkClick }) => {
     const location = useLocation();
     const navigate = useNavigate();
-    // Obtener el activeMenu de la URL actual
-    const currentPath = location.pathname.split('/').pop();
-    const activeMenu = currentPath || 'explorer';
+    const [activeSection, setActiveSection] = useState('explorer');
     
     // Función para manejar la navegación y cerrar sidebar en móvil si es necesario
-    const handleNavigation = (path) => {
-        navigate(`/ControlPanel/${path}`);
+    const handleNavigation = (path, stateObj = null) => {
+        if (stateObj) {
+            navigate(`/ControlPanel/${path}`, { state: stateObj });
+        } else {
+            navigate(`/ControlPanel/${path}`);
+        }
         if (onLinkClick) onLinkClick();
+    };
+    
+    // Detectar la sección activa basada en la URL y el estado
+    useEffect(() => {
+        // Comprobar si hay estado en la localización actual
+        const currentState = location.state?.activeMenu;
+        
+        if (currentState) {
+            setActiveSection(currentState);
+        } else {
+            const path = location.pathname.split('/').pop() || 'explorer';
+            if (path === 'profile') {
+                setActiveSection('profile');
+            } else if (path === 'editProfile') {
+                setActiveSection('editProfile');
+            } else if (path === 'community') {
+                setActiveSection('community');
+            } else if (path === 'explorer') {
+                setActiveSection('explorer');
+            } else if (path === 'creatives') {
+                setActiveSection('creatives');
+            }
+        }
+    }, [location]);
+
+    const onSelectOption = (option) => {
+        setActiveSection(option);
+        
+        switch (option) {
+            case 'profile':
+                handleNavigation('profile');
+                break;
+            case 'editProfile':
+                handleNavigation('editProfile', { activeMenu: 'editProfile' });
+                break;
+            case 'community':
+                handleNavigation('community');
+                break;
+            case 'misOfertas':
+                handleNavigation('editProfile', { activeMenu: 'misOfertas' });
+                break;
+            case 'configuracion':
+                handleNavigation('editProfile', { activeMenu: 'configuracion' });
+                break;
+            case 'explorer':
+                handleNavigation('explorer');
+                break;
+            case 'creatives':
+                handleNavigation('creatives');
+                break;
+            case 'fashion':
+                handleNavigation('fashion');
+                break;
+            case 'offers':
+                handleNavigation('offers');
+                break;
+            case 'blog':
+                handleNavigation('blog');
+                break;
+            case 'magazine':
+                handleNavigation('magazine');
+                break;
+            case 'random':
+                handleNavigation('random');
+                break;
+            case 'about':
+                handleNavigation('about');
+                break;
+            case 'contact':
+                handleNavigation('contact');
+                break;
+            case 'legal':
+                handleNavigation('legal');
+                break;
+            case 'cookies':
+                handleNavigation('cookies');
+                break;
+            case 'privacy':
+                handleNavigation('privacy');
+                break;
+            case 'logout':
+                handleLogout();
+                break;
+            default:
+                break;
+        }
     };
     
     // Función para cerrar sesión
     const handleLogout = () => {
         localStorage.removeItem('authToken');
+        localStorage.removeItem('user');
         navigate('/login');
     };
 
@@ -56,8 +142,8 @@ const Sidebar = ({ onLinkClick }) => {
                     <ul className="sidebar-menu">
                         <li>
                             <button 
-                                className="sidebar-menu-item" 
-                                onClick={() => handleNavigation('profile')}
+                                className={`sidebar-menu-item ${activeSection === 'profile' ? 'active' : ''}`}
+                                onClick={() => onSelectOption('profile')}
                             >
                                 <FaUser className="sidebar-icon" />
                                 <span>Ver mi perfil</span>
@@ -65,8 +151,8 @@ const Sidebar = ({ onLinkClick }) => {
                         </li>
                         <li>
                             <button 
-                                className="sidebar-menu-item" 
-                                onClick={() => handleNavigation('edit-profile')}
+                                className={`sidebar-menu-item ${activeSection === 'editProfile' ? 'active' : ''}`}
+                                onClick={() => onSelectOption('editProfile')}
                             >
                                 <FaEdit className="sidebar-icon" />
                                 <span>Editar perfil</span>
@@ -74,8 +160,8 @@ const Sidebar = ({ onLinkClick }) => {
                         </li>
                         <li>
                             <button 
-                                className="sidebar-menu-item" 
-                                onClick={() => handleNavigation('community')}
+                                className={`sidebar-menu-item ${activeSection === 'community' ? 'active' : ''}`}
+                                onClick={() => onSelectOption('community')}
                             >
                                 <FaUserFriends className="sidebar-icon" />
                                 <span>Mi comunidad</span>
@@ -83,17 +169,17 @@ const Sidebar = ({ onLinkClick }) => {
                         </li>
                         <li>
                             <button 
-                                className={`sidebar-menu-item ${activeMenu === 'mis-ofertas' ? 'active' : ''}`}
-                                onClick={() => handleNavigation('mis-ofertas')}
+                                className={`sidebar-menu-item ${activeSection === 'misOfertas' ? 'active' : ''}`}
+                                onClick={() => onSelectOption('misOfertas')}
                             >
-                                <FaJobOffers className="sidebar-icon" />
+                                <FaSuitcase className="sidebar-icon" />
                                 <span>Mis ofertas</span>
                             </button>
                         </li>
                         <li>
                             <button 
-                                className="sidebar-menu-item" 
-                                onClick={() => handleNavigation('settings')}
+                                className={`sidebar-menu-item ${activeSection === 'configuracion' ? 'active' : ''}`}
+                                onClick={() => onSelectOption('configuracion')}
                             >
                                 <FaCog className="sidebar-icon" />
                                 <span>Configuración</span>
@@ -104,11 +190,12 @@ const Sidebar = ({ onLinkClick }) => {
                 
                 {/* Menú principal */}
                 <div className="sidebar-section">
+                    <div className="sidebar-section-title">Menú</div>
                     <ul className="sidebar-menu">
                         <li>
                             <button 
-                                className={`sidebar-menu-item ${activeMenu === 'explorer' ? 'active' : ''}`}
-                                onClick={() => handleNavigation('explorer')}
+                                className={`sidebar-menu-item ${activeSection === 'explorer' ? 'active' : ''}`}
+                                onClick={() => onSelectOption('explorer')}
                             >
                                 <FaCompass className="sidebar-icon" />
                                 <span>Explorador</span>
@@ -116,8 +203,8 @@ const Sidebar = ({ onLinkClick }) => {
                         </li>
                         <li>
                             <button 
-                                className={`sidebar-menu-item ${activeMenu === 'creatives' ? 'active' : ''}`}
-                                onClick={() => handleNavigation('creatives')}
+                                className={`sidebar-menu-item ${activeSection === 'creatives' ? 'active' : ''}`}
+                                onClick={() => onSelectOption('creatives')}
                             >
                                 <FaUsers className="sidebar-icon" />
                                 <span>Creativos</span>
@@ -125,8 +212,8 @@ const Sidebar = ({ onLinkClick }) => {
                         </li>
                         <li>
                             <button 
-                                className={`sidebar-menu-item ${activeMenu === 'fashion' ? 'active' : ''}`}
-                                onClick={() => handleNavigation('fashion')}
+                                className={`sidebar-menu-item ${activeSection === 'fashion' ? 'active' : ''}`}
+                                onClick={() => onSelectOption('fashion')}
                             >
                                 <FaTshirt className="sidebar-icon" />
                                 <span>Estudiar moda</span>
@@ -134,8 +221,8 @@ const Sidebar = ({ onLinkClick }) => {
                         </li>
                         <li>
                             <button 
-                                className={`sidebar-menu-item ${activeMenu === 'offers' ? 'active' : ''}`}
-                                onClick={() => handleNavigation('offers')}
+                                className={`sidebar-menu-item ${activeSection === 'offers' ? 'active' : ''}`}
+                                onClick={() => onSelectOption('offers')}
                             >
                                 <FaBriefcase className="sidebar-icon" />
                                 <span>Ofertas de trabajo</span>
@@ -143,8 +230,8 @@ const Sidebar = ({ onLinkClick }) => {
                         </li>
                         <li>
                             <button 
-                                className={`sidebar-menu-item ${activeMenu === 'blog' ? 'active' : ''}`}
-                                onClick={() => handleNavigation('blog')}
+                                className={`sidebar-menu-item ${activeSection === 'blog' ? 'active' : ''}`}
+                                onClick={() => onSelectOption('blog')}
                             >
                                 <FaRegNewspaper className="sidebar-icon" />
                                 <span>Blog</span>
@@ -152,8 +239,8 @@ const Sidebar = ({ onLinkClick }) => {
                         </li>
                         <li>
                             <button 
-                                className={`sidebar-menu-item ${activeMenu === 'magazine' ? 'active' : ''}`}
-                                onClick={() => handleNavigation('magazine')}
+                                className={`sidebar-menu-item ${activeSection === 'magazine' ? 'active' : ''}`}
+                                onClick={() => onSelectOption('magazine')}
                             >
                                 <FaBookOpen className="sidebar-icon" />
                                 <span>Revista</span>
@@ -161,8 +248,8 @@ const Sidebar = ({ onLinkClick }) => {
                         </li>
                         <li>
                             <button 
-                                className={`sidebar-menu-item ${activeMenu === 'random' ? 'active' : ''}`}
-                                onClick={() => handleNavigation('random')}
+                                className={`sidebar-menu-item ${activeSection === 'random' ? 'active' : ''}`}
+                                onClick={() => onSelectOption('random')}
                             >
                                 <FaRandom className="sidebar-icon" />
                                 <span>Random</span>
@@ -170,8 +257,8 @@ const Sidebar = ({ onLinkClick }) => {
                         </li>
                         <li>
                             <button 
-                                className={`sidebar-menu-item ${activeMenu === 'about' ? 'active' : ''}`}
-                                onClick={() => handleNavigation('about')}
+                                className={`sidebar-menu-item ${activeSection === 'about' ? 'active' : ''}`}
+                                onClick={() => onSelectOption('about')}
                             >
                                 <FaInfoCircle className="sidebar-icon" />
                                 <span>About</span>
@@ -190,7 +277,7 @@ const Sidebar = ({ onLinkClick }) => {
                         <li>
                             <button 
                                 className="sidebar-menu-item" 
-                                onClick={() => handleNavigation('contact')}
+                                onClick={() => onSelectOption('contact')}
                             >
                                 <span>Contacto</span>
                             </button>
@@ -198,7 +285,7 @@ const Sidebar = ({ onLinkClick }) => {
                         <li>
                             <button 
                                 className="sidebar-menu-item" 
-                                onClick={() => handleNavigation('legal')}
+                                onClick={() => onSelectOption('legal')}
                             >
                                 <span>Aviso legal</span>
                             </button>
@@ -206,7 +293,7 @@ const Sidebar = ({ onLinkClick }) => {
                         <li>
                             <button 
                                 className="sidebar-menu-item" 
-                                onClick={() => handleNavigation('cookies')}
+                                onClick={() => onSelectOption('cookies')}
                             >
                                 <span>Política de cookies</span>
                             </button>
@@ -214,7 +301,7 @@ const Sidebar = ({ onLinkClick }) => {
                         <li>
                             <button 
                                 className="sidebar-menu-item" 
-                                onClick={() => handleNavigation('privacy')}
+                                onClick={() => onSelectOption('privacy')}
                             >
                                 <span>Política de privacidad</span>
                             </button>
@@ -222,7 +309,7 @@ const Sidebar = ({ onLinkClick }) => {
                         <li>
                             <button 
                                 className="sidebar-menu-item" 
-                                onClick={handleLogout}
+                                onClick={() => onSelectOption('logout')}
                             >
                                 <span>Cerrar sesión</span>
                             </button>

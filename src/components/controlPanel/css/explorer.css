@@ -91,6 +91,10 @@
     animation: loading 2s infinite linear;
 }
 
+.sidebar-info-menu{
+    margin-left: 27px;
+}
+
 @keyframes loading {
     0% { background-position: 100% 0; }
     100% { background-position: 0 0; }
@@ -99,7 +103,7 @@
 /* Botón de filtro */
 .explorer-filter-button {
     position: fixed;
-    left: 14em;
+    left: 15em;
     display: flex;
     align-items: center;
     justify-content: center;
