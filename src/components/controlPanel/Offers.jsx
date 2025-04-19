@@ -1,9 +1,10 @@
 /* src/components/Offers.jsx */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { FaSearch, FaChevronDown } from 'react-icons/fa';
 import { MdTune } from 'react-icons/md';
+import Draggable from 'react-draggable';
 import './css/offers.css';
 import './css/explorer.css';
 
@@ -27,6 +28,8 @@ const Offers = () => {
     // Estados y lógica para filtros móviles
     const [isMobile, setIsMobile] = useState(false);
     const [showMobileFilters, setShowMobileFilters] = useState(false);
+    const initialPosRef = useRef({ x: 0, y: 0 });
+    const [dragging, setDragging] = useState(false);
 
     useEffect(() => {
         const fetchOffers = async () => {
@@ -94,12 +97,25 @@ const Offers = () => {
         <div className="offers-page-container">
             {/* ------------------ FILTROS ------------------ */}
             {isMobile && (
-                <button
-                    className="explorer-filter-button"
-                    onClick={() => setShowMobileFilters(!showMobileFilters)}
+                <Draggable
+                    onStart={(e) => {
+                        initialPosRef.current = { x: e.clientX, y: e.clientY };
+                        setDragging(false);
+                        return true;
+                    }}
+                    onDrag={(e) => {
+                        const dx = e.clientX - initialPosRef.current.x;
+                        const dy = e.clientY - initialPosRef.current.y;
+                        if (Math.abs(dx) > 5 || Math.abs(dy) > 5) setDragging(true);
+                    }}
+                    onStop={(e) => {
+                        if (!dragging) setShowMobileFilters((prev) => !prev);
+                    }}
                 >
-                    <MdTune />
-                </button>
+                    <button className="explorer-filter-button">
+                        <MdTune />
+                    </button>
+                </Draggable>
             )}
             {!isMobile && (
                 <div className="filters-section">

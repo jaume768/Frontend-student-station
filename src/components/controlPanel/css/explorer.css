@@ -281,6 +281,15 @@
     color: #333;
 }
 
+/* Zona para arrastrar el botón de filtros */
+.drag-handle {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    width: 20px;
+    height: 20px;
+    cursor: move;
+}
 
 .my-masonry-grid {
     display: flex;
