@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { FaMapMarkerAlt, FaSearch } from 'react-icons/fa';
 import { MdTune } from 'react-icons/md';
+import Draggable from 'react-draggable';
 import './css/Creatives.css';
 
 const Creatives = () => {
@@ -31,6 +32,8 @@ const Creatives = () => {
 
     const navigate = useNavigate();
     const observer = useRef();
+    const initialPosRef = useRef({ x: 0, y: 0 });
+    const [dragging, setDragging] = useState(false);
 
     // Detectar si estamos en móvil
     useEffect(() => {
@@ -340,12 +343,25 @@ const Creatives = () => {
                 
                 {/* Botón de filtro para móvil */}
                 {isMobile && (
-                    <button 
-                        className="creatives-filter-button" 
-                        onClick={() => setShowMobileFilters(!showMobileFilters)}
+                    <Draggable
+                        onStart={(e, data) => {
+                            initialPosRef.current = { x: data.x, y: data.y };
+                            setDragging(false);
+                            return true;
+                        }}
+                        onDrag={(e, data) => {
+                            const dx = data.x - initialPosRef.current.x;
+                            const dy = data.y - initialPosRef.current.y;
+                            if (Math.abs(dx) > 3 || Math.abs(dy) > 3) setDragging(true);
+                        }}
+                        onStop={(e, data) => {
+                            if (!dragging) setShowMobileFilters(prev => !prev);
+                        }}
                     >
-                        <MdTune />
-                    </button>
+                        <button className="creatives-filter-button">
+                            <MdTune />
+                        </button>
+                    </Draggable>
                 )}
             </div>
             

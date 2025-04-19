@@ -4,6 +4,7 @@ import axios from 'axios';
 import Masonry from 'react-masonry-css';
 import { FaBookmark, FaRegBookmark } from 'react-icons/fa';
 import { MdTune } from 'react-icons/md';
+import Draggable from 'react-draggable';
 import './css/explorer.css';
 
 const Explorer = () => {
@@ -196,6 +197,9 @@ const Explorer = () => {
         }
     };
 
+    const initialPosRef = useRef({ x: 0, y: 0 });
+    const [dragging, setDragging] = useState(false);
+
     const breakpointColumns = { default: 6, 1400: 5, 1200: 4, 992: 3, 768: 2, 480: 2 };
 
     return (
@@ -208,13 +212,28 @@ const Explorer = () => {
                 </p>
 
                 <div className="explorer-tabs-container">
-                    <button
-                        className="explorer-filter-button"
-                        onClick={() => isMobile ? setShowMobileFilters(!showMobileFilters) : setShowFilters(!showFilters)}
-                        disabled={tabDisabled}
+                    <Draggable
+                        onStart={(e, data) => {
+                            initialPosRef.current = { x: data.x, y: data.y };
+                            setDragging(false);
+                            return true;
+                        }}
+                        onDrag={(e, data) => {
+                            const dx = data.x - initialPosRef.current.x;
+                            const dy = data.y - initialPosRef.current.y;
+                            if (Math.abs(dx) > 3 || Math.abs(dy) > 3) setDragging(true);
+                        }}
+                        onStop={(e, data) => {
+                            if (!dragging) {
+                                if (isMobile) setShowMobileFilters(prev => !prev);
+                                else setShowFilters(prev => !prev);
+                            }
+                        }}
                     >
-                        <MdTune />
-                    </button>
+                        <button className="explorer-filter-button" disabled={tabDisabled}>
+                            <MdTune />
+                        </button>
+                    </Draggable>
 
                     <div className="explorer-tabs">
                         <button
