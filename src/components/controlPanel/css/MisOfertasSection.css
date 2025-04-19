@@ -990,3 +990,17 @@
 .candidatos-card.no-resp .candidatos-left-column {
     flex: 1;
 }
+
+/* Nuevos estilos para layout compacto de 3 tarjetas por fila */
+.candidatos-list.compact {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    gap: 15px;
+    justify-content: space-between;
+}
+
+.candidatos-list.compact .candidatos-card {
+    width: calc((100% / 3) - 10px);
+    margin: 0;
+}
