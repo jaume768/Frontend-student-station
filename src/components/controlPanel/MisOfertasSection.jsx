@@ -543,7 +543,7 @@ const MisOfertasSection = ({ userRole, professionalType }) => {
                     <div className="candidatos-list">
                         {filteredCandidates.length > 0 ? (
                             filteredCandidates.map((candidate) => (
-                                <div className="candidatos-card" key={candidate._id}>
+                                <div className={`candidatos-card ${!showResponses ? 'no-resp' : ''}`} key={candidate._id}>
                                     <div className="candidatos-left-column">
                                         <div className="candidatos-profile">
                                             <div className="candidatos-avatar">
