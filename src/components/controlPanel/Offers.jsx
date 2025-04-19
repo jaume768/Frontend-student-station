@@ -98,17 +98,17 @@ const Offers = () => {
             {/* ------------------ FILTROS ------------------ */}
             {isMobile && (
                 <Draggable
-                    onStart={(e) => {
-                        initialPosRef.current = { x: e.clientX, y: e.clientY };
+                    onStart={(e, data) => {
+                        initialPosRef.current = { x: data.x, y: data.y };
                         setDragging(false);
                         return true;
                     }}
-                    onDrag={(e) => {
-                        const dx = e.clientX - initialPosRef.current.x;
-                        const dy = e.clientY - initialPosRef.current.y;
-                        if (Math.abs(dx) > 5 || Math.abs(dy) > 5) setDragging(true);
+                    onDrag={(e, data) => {
+                        const dx = data.x - initialPosRef.current.x;
+                        const dy = data.y - initialPosRef.current.y;
+                        if (Math.abs(dx) > 3 || Math.abs(dy) > 3) setDragging(true);
                     }}
-                    onStop={(e) => {
+                    onStop={(e, data) => {
                         if (!dragging) setShowMobileFilters((prev) => !prev);
                     }}
                 >
