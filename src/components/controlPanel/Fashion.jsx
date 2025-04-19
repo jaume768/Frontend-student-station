@@ -2,7 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { FaSearch, FaChevronDown, FaMapMarkerAlt } from 'react-icons/fa';
+import { MdTune } from 'react-icons/md';
 import './css/fashion.css';
+import './css/explorer.css';
 
 const Fashion = () => {
     const navigate = useNavigate();
@@ -22,6 +24,17 @@ const Fashion = () => {
     const [countries, setCountries] = useState([]);
     const [cities, setCities] = useState([]);
     const [hoveredInstitution, setHoveredInstitution] = useState(null);
+
+    // Estados y lógica para mobile filters
+    const [isMobile, setIsMobile] = useState(false);
+    const [showMobileFilters, setShowMobileFilters] = useState(false);
+
+    useEffect(() => {
+        const checkIfMobile = () => setIsMobile(window.innerWidth <= 768);
+        checkIfMobile();
+        window.addEventListener('resize', checkIfMobile);
+        return () => window.removeEventListener('resize', checkIfMobile);
+    }, []);
 
     const educationLevelsList = [
         'Grado o licenciatura',
@@ -124,120 +137,244 @@ const Fashion = () => {
     return (
         <div className="fashion-container">
             {/* ------------------ FILTROS ------------------ */}
-            <div className="filters-section">
-                <h3>Filtros</h3>
-
-                {/* Buscador */}
-                <div className="filter-search">
-                    <FaSearch className="search-icon" />
-                    <input
-                        type="text"
-                        placeholder="Buscador"
-                        value={filters.search}
-                        onChange={(e) => handleFilterChange('search', e.target.value)}
-                    />
-                </div>
-
-                {/* País */}
-                <div className="filter-input">
-                    <input
-                        list="countries"
-                        placeholder="País"
-                        value={filters.country}
-                        onChange={(e) => handleFilterChange('country', e.target.value)}
-                    />
-                    <datalist id="countries">
-                        {countries.map((c) => (
-                            <option key={c} value={c} />
-                        ))}
-                    </datalist>
-                </div>
-
-                {/* Ciudad */}
-                <div className="filter-input">
-                    <input
-                        list="cities"
-                        placeholder="Ciudad"
-                        value={filters.city}
-                        onChange={(e) => handleFilterChange('city', e.target.value)}
-                    />
-                    <datalist id="cities">
-                        {cities.map((c) => (
-                            <option key={c} value={c} />
-                        ))}
-                    </datalist>
-                </div>
-
-                {/* Tipo de centro */}
-                <div className="filter-select">
-                    <select
-                        value={filters.centerType}
-                        onChange={(e) =>
-                            handleFilterChange('centerType', e.target.value)
-                        }
-                    >
-                        <option value="all">Tipo de centro</option>
-                        <option value="all">Todos</option>
-                        <option value="public">Público</option>
-                        <option value="private">Privado</option>
-                    </select>
-                    <FaChevronDown className="chevron-icon" />
-                </div>
-
-                {/* Nivel de estudios */}
-                <div className="filter-select">
-                    <select
-                        value={filters.educationLevel}
-                        onChange={(e) =>
-                            handleFilterChange('educationLevel', e.target.value)
-                        }
-                    >
-                        <option value="">Nivel de estudios</option>
-                        {educationLevelsList.map((l) => (
-                            <option key={l} value={l}>
-                                {l}
-                            </option>
-                        ))}
-                    </select>
-                    <FaChevronDown className="chevron-icon" />
-                </div>
-
-                {/* Tipo de formación */}
-                <div className="filter-select">
-                    <select
-                        value={filters.modality}
-                        onChange={(e) => handleFilterChange('modality', e.target.value)}
-                    >
-                        <option value="">Tipo de formación</option>
-                        {modalityList.map((m) => (
-                            <option key={m} value={m}>
-                                {m}
-                            </option>
-                        ))}
-                    </select>
-                    <FaChevronDown className="chevron-icon" />
-                </div>
-
-                {/* Categoría */}
-                <div className="filter-select">
-                    <select
-                        value={filters.category}
-                        onChange={(e) => handleFilterChange('category', e.target.value)}
-                    >
-                        <option value="">Categoría</option>
-                        {categoriesList.map((c) => (
-                            <option key={c} value={c}>
-                                {c}
-                            </option>
-                        ))}
-                    </select>
-                    <FaChevronDown className="chevron-icon" />
-                </div>
-
-                <button className="apply-filters-btn" onClick={applyFilters}>
-                    Aplicar filtros
+            {isMobile && (
+                <button
+                    className="explorer-filter-button"
+                    onClick={() => setShowMobileFilters(!showMobileFilters)}
+                >
+                    <MdTune />
                 </button>
-            </div>
+            )}
+            {!isMobile && (
+                <div className="filters-section">
+                    <h3>Filtros</h3>
+
+                    {/* Buscador */}
+                    <div className="filter-search">
+                        <FaSearch className="search-icon" />
+                        <input
+                            type="text"
+                            placeholder="Buscador"
+                            value={filters.search}
+                            onChange={(e) => handleFilterChange('search', e.target.value)}
+                        />
+                    </div>
+
+                    {/* País */}
+                    <div className="filter-input">
+                        <input
+                            list="countries"
+                            placeholder="País"
+                            value={filters.country}
+                            onChange={(e) => handleFilterChange('country', e.target.value)}
+                        />
+                        <datalist id="countries">
+                            {countries.map((c) => (
+                                <option key={c} value={c} />
+                            ))}
+                        </datalist>
+                    </div>
+
+                    {/* Ciudad */}
+                    <div className="filter-input">
+                        <input
+                            list="cities"
+                            placeholder="Ciudad"
+                            value={filters.city}
+                            onChange={(e) => handleFilterChange('city', e.target.value)}
+                        />
+                        <datalist id="cities">
+                            {cities.map((c) => (
+                                <option key={c} value={c} />
+                            ))}
+                        </datalist>
+                    </div>
+
+                    {/* Tipo de centro */}
+                    <div className="filter-select">
+                        <select
+                            value={filters.centerType}
+                            onChange={(e) =>
+                                handleFilterChange('centerType', e.target.value)
+                            }
+                        >
+                            <option value="all">Tipo de centro</option>
+                            <option value="all">Todos</option>
+                            <option value="public">Público</option>
+                            <option value="private">Privado</option>
+                        </select>
+                        <FaChevronDown className="chevron-icon" />
+                    </div>
+
+                    {/* Nivel de estudios */}
+                    <div className="filter-select">
+                        <select
+                            value={filters.educationLevel}
+                            onChange={(e) =>
+                                handleFilterChange('educationLevel', e.target.value)
+                            }
+                        >
+                            <option value="">Nivel de estudios</option>
+                            {educationLevelsList.map((l) => (
+                                <option key={l} value={l}>
+                                    {l}
+                                </option>
+                            ))}
+                        </select>
+                        <FaChevronDown className="chevron-icon" />
+                    </div>
+
+                    {/* Tipo de formación */}
+                    <div className="filter-select">
+                        <select
+                            value={filters.modality}
+                            onChange={(e) => handleFilterChange('modality', e.target.value)}
+                        >
+                            <option value="">Tipo de formación</option>
+                            {modalityList.map((m) => (
+                                <option key={m} value={m}>
+                                    {m}
+                                </option>
+                            ))}
+                        </select>
+                        <FaChevronDown className="chevron-icon" />
+                    </div>
+
+                    {/* Categoría */}
+                    <div className="filter-select">
+                        <select
+                            value={filters.category}
+                            onChange={(e) => handleFilterChange('category', e.target.value)}
+                        >
+                            <option value="">Categoría</option>
+                            {categoriesList.map((c) => (
+                                <option key={c} value={c}>
+                                    {c}
+                                </option>
+                            ))}
+                        </select>
+                        <FaChevronDown className="chevron-icon" />
+                    </div>
+
+                    <button className="apply-filters-btn" onClick={applyFilters}>
+                        Aplicar filtros
+                    </button>
+                </div>
+            )}
+            {isMobile && showMobileFilters && (
+                <div
+                    className="explorer-mobile-filters-modal"
+                    onClick={(e) => {
+                        if (e.target.className === 'explorer-mobile-filters-modal') {
+                            setShowMobileFilters(false);
+                        }
+                    }}
+                >
+                    <div className="explorer-mobile-filters-content">
+                        <div className="explorer-mobile-filters-header">
+                            <h3>Filtros</h3>
+                            <button
+                                className="explorer-mobile-filters-close"
+                                onClick={() => setShowMobileFilters(false)}
+                            >
+                                &times;
+                            </button>
+                        </div>
+                        <div className="explorer-filters-container">
+                            <div className="explorer-filter-group">
+                                <div className="explorer-filter-search">
+                                    <input
+                                        type="text"
+                                        placeholder="Buscador"
+                                        value={filters.search}
+                                        onChange={(e) => handleFilterChange('search', e.target.value)}
+                                    />
+                                </div>
+                                <div className="explorer-filter-select">
+                                    <select
+                                        value={filters.country}
+                                        onChange={(e) => handleFilterChange('country', e.target.value)}
+                                    >
+                                        <option value="" disabled>País</option>
+                                        {countries.map((c) => (
+                                            <option key={c} value={c}>{c}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="explorer-filter-select">
+                                    <select
+                                        value={filters.city}
+                                        onChange={(e) => handleFilterChange('city', e.target.value)}
+                                    >
+                                        <option value="" disabled>Ciudad</option>
+                                        {cities.map((c) => (
+                                            <option key={c} value={c}>{c}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="explorer-filter-select">
+                                    <select
+                                        value={filters.centerType}
+                                        onChange={(e) => handleFilterChange('centerType', e.target.value)}
+                                    >
+                                        <option value="all">Tipo de centro</option>
+                                        <option value="public">Público</option>
+                                        <option value="private">Privado</option>
+                                    </select>
+                                </div>
+                                <div className="explorer-filter-select">
+                                    <select
+                                        value={filters.educationLevel}
+                                        onChange={(e) => handleFilterChange('educationLevel', e.target.value)}
+                                    >
+                                        <option value="">Nivel de estudios</option>
+                                        {educationLevelsList.map((l) => (
+                                            <option key={l} value={l}>
+                                                {l}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="explorer-filter-select">
+                                    <select
+                                        value={filters.modality}
+                                        onChange={(e) => handleFilterChange('modality', e.target.value)}
+                                    >
+                                        <option value="">Tipo de formación</option>
+                                        {modalityList.map((m) => (
+                                            <option key={m} value={m}>
+                                                {m}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="explorer-filter-select">
+                                    <select
+                                        value={filters.category}
+                                        onChange={(e) => handleFilterChange('category', e.target.value)}
+                                    >
+                                        <option value="">Categoría</option>
+                                        {categoriesList.map((c) => (
+                                            <option key={c} value={c}>
+                                                {c}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                            <button
+                                className="explorer-apply-filters-btn"
+                                onClick={() => {
+                                    applyFilters();
+                                    setShowMobileFilters(false);
+                                }}
+                            >
+                                Aplicar filtros
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* ============= CONTENIDO PRINCIPAL ============= */}
             <main className="main-content">

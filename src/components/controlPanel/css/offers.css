@@ -71,7 +71,7 @@
 }
 
 @media (max-width: 768px) {
-    .offers-grid {
+    .offer-card {
         width: 100%;
         margin: 0;
     }
