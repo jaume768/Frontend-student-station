@@ -337,6 +337,12 @@
     background-color: #fafafa;
 }
 
+@media (max-width: 768px) {
+    .search-fullscreen-content {
+        margin-left: 0;
+    }
+}
+
 .filter-tabs {
     display: flex;
     border-bottom: 1px solid #e0e0e0;
@@ -532,6 +538,7 @@
         top: 60px;
         left: 0;
         right: 0;
+        margin-left: 0;
         max-height: calc(100vh - 60px);
         border-radius: 0;
     }

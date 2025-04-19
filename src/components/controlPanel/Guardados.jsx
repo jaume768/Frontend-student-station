@@ -17,6 +17,7 @@ const Guardados = () => {
     const [selectedPost, setSelectedPost] = useState(null);
     const [hoveredPost, setHoveredPost] = useState(null);
     const [ideasSinOrganizar, setIdeasSinOrganizar] = useState([]);
+    const [loadingData, setLoadingData] = useState(false);
     
     // Estados para la multiselección
     const [selectedImages, setSelectedImages] = useState([]);
@@ -195,6 +196,7 @@ const Guardados = () => {
     // Cargamos los datos (imágenes guardadas y carpetas)
     useEffect(() => {
         const fetchData = async () => {
+            setLoadingData(true);
             try {
                 const token = localStorage.getItem('authToken');
                 if (!token) return;
@@ -242,6 +244,7 @@ const Guardados = () => {
                 });
                 setTimeout(() => setNotification({ show: false, message: '', type: '' }), 3000);
             }
+            setLoadingData(false);
         };
         fetchData();
     }, []);
@@ -483,6 +486,8 @@ const Guardados = () => {
             setTimeout(() => setNotification({ show: false, message: '', type: '' }), 3000);
         }
     };
+
+    if (loadingData) return <div className="loading">Cargando datos...</div>;
 
     return (
         <div className="guardados-container">
