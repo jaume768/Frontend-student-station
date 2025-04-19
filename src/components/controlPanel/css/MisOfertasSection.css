@@ -981,3 +981,12 @@
         justify-content: center;
     }
 }
+
+/* Override para ocultar columna de respuestas al pulsar 'Ocultar respuestas' */
+.candidatos-card.no-resp .candidatos-right-column {
+    display: none;
+}
+
+.candidatos-card.no-resp .candidatos-left-column {
+    flex: 1;
+}

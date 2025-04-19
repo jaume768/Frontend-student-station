@@ -554,7 +554,13 @@ const MisOfertasSection = ({ userRole, professionalType }) => {
                                                 />
                                             </div>
                                             <div className="candidatos-info">
-                                                <h3 className="candidatos-name">{candidate.user.fullName}</h3>
+                                                <h3  
+                                                    className="candidatos-name"  
+                                                    onClick={() => navigate(`/ControlPanel/profile/${candidate.user.username}`)}  
+                                                    style={{ cursor: 'pointer' }}  
+                                                >  
+                                                    {candidate.user.fullName}  
+                                                </h3>  
                                                 <p className="candidatos-location">{candidate.user.city || 'Sin ubicación'}</p>
                                                 {candidate.matchPercentage && (
                                                     <div className="candidatos-match">{candidate.matchPercentage}% Match</div>
@@ -600,12 +606,14 @@ const MisOfertasSection = ({ userRole, professionalType }) => {
                                                 </div>
                                             </div>
                                         )}
-                                        <button 
-                                            className="candidatos-view-profile"
-                                            onClick={() => navigate(`/ControlPanel/profile/${candidate.user.username}`)}
-                                        >
-                                            Ver perfil
-                                        </button>
+                                        {showResponses && (
+                                            <button 
+                                                className="candidatos-view-profile"  
+                                                onClick={() => navigate(`/ControlPanel/profile/${candidate.user.username}`)}  
+                                            >  
+                                                Ver perfil  
+                                            </button>  
+                                        )}
                                     </div>
                                 </div>
                             ))
