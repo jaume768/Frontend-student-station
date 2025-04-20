@@ -59,13 +59,25 @@ const ProjectsSection = ({ isGalleryView, toggleView, userPosts = [] }) => {
 
     return (
         <div className="miPerfil-right">
-            <div
-                className="miPerfil-projects-controls"
-                style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px' }}
-            >
-                <button onClick={toggleView} className="toggle-view-btn">
-                    {isGalleryView ? <FaList size={20} /> : <FaTh size={20} />}
-                </button>
+            <div className="miPerfil-view-options">
+                <div className="miPerfil-view-container">
+                    <button
+                        className={`miPerfil-view-button ${isGalleryView ? 'active' : ''}`}
+                        onClick={() => !isGalleryView && toggleView()}
+                        title="Vista de galería"
+                    >
+                        <FaTh />
+                        <span>Galería</span>
+                    </button>
+                    <button
+                        className={`miPerfil-view-button ${!isGalleryView ? 'active' : ''}`}
+                        onClick={() => isGalleryView && toggleView()}
+                        title="Vista individual"
+                    >
+                        <FaList />
+                        <span>Individual</span>
+                    </button>
+                </div>
             </div>
             <div
                 className={`miPerfil-projects-grid ${isGalleryView ? 'gallery' : 'individual'}`}

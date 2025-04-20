@@ -104,7 +104,7 @@ const UserProfile = () => {
                 console.error("Error al cargar las ofertas de trabajo", error);
             }
         };
-        
+
         // Nueva función para obtener ofertas educativas
         const fetchEducationalOffers = async (userId) => {
             try {
@@ -121,7 +121,7 @@ const UserProfile = () => {
 
         fetchUserProfile();
         fetchUserPosts();
-        
+
         // Verificamos qué tipo de ofertas debemos cargar según el tipo de usuario
         const checkUserTypeAndFetchOffers = async () => {
             if (profile) {
@@ -134,7 +134,7 @@ const UserProfile = () => {
                 }
             }
         };
-        
+
         checkUserTypeAndFetchOffers();
     }, [username]);
 
@@ -154,10 +154,10 @@ const UserProfile = () => {
                 }
             }
         };
-        
+
         // Añadimos el evento de scroll
         window.addEventListener('scroll', handleScroll);
-        
+
         return () => {
             // Limpiamos el evento al desmontar el componente
             window.removeEventListener('scroll', handleScroll);
@@ -172,11 +172,11 @@ const UserProfile = () => {
             try {
                 const backendUrl = import.meta.env.VITE_BACKEND_URL;
                 let endpoint = `${backendUrl}/api/offers/user/${username}`;
-                
+
                 if (isEducationalInstitution) {
                     endpoint = `${backendUrl}/api/offers/educational/user-external/${username}`;
                 }
-                
+
                 const res = await axios.get(endpoint);
                 setCompanyOffers(res.data.offers || []);
             } catch (error) {
@@ -261,7 +261,7 @@ const UserProfile = () => {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 const currentUserId = currentUserResponse.data._id;
-                
+
                 updatedProfile.followers = updatedProfile.followers.filter(
                     id => id !== currentUserId
                 );
@@ -370,7 +370,7 @@ const UserProfile = () => {
                     <span>{notification.message}</span>
                 </div>
             )}
-            
+
             {/* Cabecera con botón de volver */}
             <header className="user-extern-navigation">
                 <button className="user-extern-back-btn" onClick={() => navigate(-1)}>
@@ -378,7 +378,7 @@ const UserProfile = () => {
                     <span>Volver</span>
                 </button>
             </header>
-            
+
             <div className="user-extern-content">
                 {/* Columna izquierda con información del perfil */}
                 <div className="user-extern-left-column">
@@ -390,28 +390,28 @@ const UserProfile = () => {
                             className="user-extern-profile-photo"
                         />
                     </div>
-                    
+
                     {/* Información básica del perfil */}
                     <div className="user-extern-profile-info">
                         <h1 className="user-extern-fullname">
-                            {isCompany || isEducationalInstitution 
+                            {isCompany || isEducationalInstitution
                                 ? profile?.companyName || "Nombre de la Empresa/Institución"
                                 : profile?.fullName || "Nombre Completo"}
                         </h1>
                         <p className="user-extern-username">@{profile?.username || "username"}</p>
-                        
+
                         {(profile?.city || profile?.country) && (
                             <p className="user-extern-location">
-                                {profile?.city && profile?.country 
-                                    ? `${profile.city}, ${profile.country}` 
+                                {profile?.city && profile?.country
+                                    ? `${profile.city}, ${profile.country}`
                                     : profile?.city || profile?.country}
                             </p>
                         )}
-                        
+
                         {profile?.professionalTitle && (
                             <p className="user-extern-title">{profile.professionalTitle}</p>
                         )}
-                        
+
                         {/* Sitio web */}
                         {profile?.social?.sitioWeb && (
                             <div className="user-extern-website">
@@ -420,10 +420,10 @@ const UserProfile = () => {
                                 </a>
                             </div>
                         )}
-                        
+
                         {/* Botones de acción */}
                         <div className="user-extern-action-buttons">
-                            <button 
+                            <button
                                 className={`user-extern-follow-button ${isFollowing ? 'following' : ''}`}
                                 onClick={isFollowing ? handleUnfollow : handleFollow}
                                 disabled={followLoading}
@@ -440,9 +440,9 @@ const UserProfile = () => {
                                     </>
                                 )}
                             </button>
-                            
+
                             {isFollowing && (
-                                <button 
+                                <button
                                     className={`user-extern-notification-button ${isNotificationActive ? 'active' : ''}`}
                                     onClick={toggleNotification}
                                     title={isNotificationActive ? "Desactivar notificaciones" : "Activar notificaciones"}
@@ -451,7 +451,7 @@ const UserProfile = () => {
                                 </button>
                             )}
                         </div>
-                        
+
                         {/* Iconos de contacto y compartir */}
                         <div className="user-extern-contact-share">
                             <button className="user-extern-contact-button" title="Contactar">
@@ -463,25 +463,25 @@ const UserProfile = () => {
                         </div>
                     </div>
                 </div>
-                
+
                 {/* Columna derecha con pestañas */}
                 <div className="user-extern-right-column">
                     {/* Pestañas superiores */}
                     <div className="user-extern-tabs">
-                        <button 
+                        <button
                             className={`user-extern-tab ${activeTab === 'publicaciones' ? 'active' : ''}`}
                             onClick={() => setActiveTab('publicaciones')}
                         >
                             Portfolio
                         </button>
-                        <button 
+                        <button
                             className={`user-extern-tab ${activeTab === 'perfil' ? 'active' : ''}`}
                             onClick={() => setActiveTab('perfil')}
                         >
                             About
                         </button>
                         {(isCompany || isEducationalInstitution) && (
-                            <button 
+                            <button
                                 className={`user-extern-tab ${activeTab === 'ofertas' ? 'active' : ''}`}
                                 onClick={() => setActiveTab('ofertas')}
                             >
@@ -489,12 +489,12 @@ const UserProfile = () => {
                             </button>
                         )}
                     </div>
-                    
+
                     {/* Opciones de visualización para Portfolio */}
                     {activeTab === 'publicaciones' && (
                         <div className="user-extern-view-options">
                             <div className="user-extern-view-container">
-                                <button 
+                                <button
                                     className={`user-extern-view-button ${isGalleryView ? 'active' : ''}`}
                                     onClick={() => setIsGalleryView(true)}
                                     title="Vista de galería"
@@ -502,7 +502,7 @@ const UserProfile = () => {
                                     <FaTh />
                                     <span>Galería</span>
                                 </button>
-                                <button 
+                                <button
                                     className={`user-extern-view-button ${!isGalleryView ? 'active' : ''}`}
                                     onClick={() => setIsGalleryView(false)}
                                     title="Vista individual"
@@ -513,7 +513,7 @@ const UserProfile = () => {
                             </div>
                         </div>
                     )}
-                    
+
                     {/* Contenido de las pestañas */}
                     <div className="user-extern-tab-content">
                         {/* Contenido de Portfolio */}
@@ -522,7 +522,17 @@ const UserProfile = () => {
                                 {postsLoading ? (
                                     <div className="user-extern-loading">Cargando publicaciones...</div>
                                 ) : userPosts.length === 0 ? (
-                                    <div className="user-extern-no-content">No hay publicaciones disponibles</div>
+                                    <div className="user-extern-no-content">
+                                        Este perfil todavía no tiene publicaciones.
+                                        <div className="user-extern-projects gallery-view">
+                                            {Array.from({ length: 3 }).map((_, idx) => (
+                                                <div
+                                                    key={idx}
+                                                    className="user-extern-project-card user-extern-project-card-placeholder"
+                                                />
+                                            ))}
+                                        </div>
+                                    </div>
                                 ) : (
                                     <div className={`user-extern-projects ${isGalleryView ? 'gallery-view' : 'list-view'}`}>
                                         {userPosts.map((post, index) => (
@@ -542,7 +552,7 @@ const UserProfile = () => {
                                 )}
                             </div>
                         )}
-                        
+
                         {/* Contenido de About */}
                         {activeTab === 'perfil' && (
                             <div className="user-extern-about-content">
@@ -567,16 +577,16 @@ const UserProfile = () => {
                                         {profile?.professionalFormation && profile.professionalFormation.some(item =>
                                             item.trainingName?.trim() || item.institution?.trim()
                                         ) && (
-                                            <UserProfessionalExperienceSection professionalFormation={profile.professionalFormation} />
-                                        )}
+                                                <UserProfessionalExperienceSection professionalFormation={profile.professionalFormation} />
+                                            )}
 
                                         <UserSoftwareSection software={profile?.software} />
 
                                         {profile?.education && profile.education.some(item =>
                                             item.formationName?.trim() || item.institution?.trim() || item.otherInstitution?.trim()
                                         ) && (
-                                            <UserEducationSection education={profile.education} />
-                                        )}
+                                                <UserEducationSection education={profile.education} />
+                                            )}
 
                                         <UserSkillsSection skills={profile?.skills} />
 
@@ -588,7 +598,7 @@ const UserProfile = () => {
                                 )}
                             </div>
                         )}
-                        
+
                         {/* Contenido de Ofertas */}
                         {activeTab === 'ofertas' && (
                             <div className="user-extern-offers-content">

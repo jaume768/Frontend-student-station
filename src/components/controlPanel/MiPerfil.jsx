@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './css/miPerfil.css';
 import { useNavigate } from 'react-router-dom';
+import { FaBell, FaEnvelope, FaShareAlt } from 'react-icons/fa';
 
 // Importar componentes
 import ProfileHeader from './miPerfil/ProfileHeader';
@@ -113,104 +114,127 @@ const MiPerfil = () => {
         setIsGalleryView(prev => !prev);
     };
 
+    if (!profile) {
+        return <div className="miPerfil-loading">Cargando perfil...</div>;
+    }
+
     return (
         <div className="miPerfil-container">
-            <ProfileHeader 
-                profile={profile} 
-                activeTab={activeTab} 
-                setActiveTab={setActiveTab} 
-                professionalType={profile?.professionalType}
-            />
-
+            <ProfileHeader />
             <div className="miPerfil-content">
-                <div className={`miPerfil-left-content ${activeTab === 'perfil' ? 'active' : ''}`}>
-                    {isCompany ? (
-                        <CompanyTagsSection companyTags={profile?.companyTags} offersPractices={profile?.offersPractices} />
-                    ) : isEducationalInstitution ? (
-                        <></>
-                    ) : null}
-                    <BiographySection biography={profile?.biography} />
-                    
-                    {isCompany ? (
-                        <>
-                            <MilestoneSection professionalMilestones={profile?.professionalMilestones} />
-                        </>
-                    ) : isEducationalInstitution ? (
-                        <></>
-                    ) : (
-                        <>
-                            <ProfessionalExperienceSection professionalFormation={profile?.professionalFormation} />
-                            <SoftwareSection software={profile?.software} />
-                            <EducationSection education={profile?.education} />
-                            <DownloadableFilesSection cvUrl={profile?.cvUrl} portfolioUrl={profile?.portfolioUrl} />
-                        </>
-                    )}
-                    
-                    <SkillsSection skills={profile?.skills} />
-                    <SocialSection social={profile?.social} />
-                </div>
-
-                <div className={`miPerfil-right-posts ${activeTab === 'ofertas' ? 'active' : ''}`}>
-                    {isCompany ? (
-                        <>
-                            <div className="company-tabs">
-                                <button 
-                                    className={`company-tab ${companyRightTab === 'ofertas' ? 'active' : ''}`}
-                                    onClick={() => setCompanyRightTab('ofertas')}
-                                >
-                                    Ofertas de trabajo ({companyOffers.length})
-                                </button>
-                                <button 
-                                    className={`company-tab ${companyRightTab === 'publicaciones' ? 'active' : ''}`}
-                                    onClick={() => setCompanyRightTab('publicaciones')}
-                                >
-                                    Publicaciones ({userPosts.length})
-                                </button>
-                            </div>
-                            
-                            {companyRightTab === 'publicaciones' ? (
-                                <ProjectsSection 
-                                    isGalleryView={isGalleryView} 
-                                    toggleView={toggleView} 
-                                    userPosts={userPosts}
-                                />
-                            ) : (
-                                <CompanyOffersSection offers={companyOffers} />
-                            )}
-                        </>
-                    ) : isEducationalInstitution ? (
-                        <>
-                            <div className="company-tabs">
-                                <button 
-                                    className={`company-tab ${companyRightTab === 'ofertas' ? 'active' : ''}`}
-                                    onClick={() => setCompanyRightTab('ofertas')}
-                                >
-                                    Ofertas educativas ({educationalOffers.length})
-                                </button>
-                                <button 
-                                    className={`company-tab ${companyRightTab === 'publicaciones' ? 'active' : ''}`}
-                                    onClick={() => setCompanyRightTab('publicaciones')}
-                                >
-                                    Publicaciones ({userPosts.length})
-                                </button>
-                            </div>
-                            
-                            {companyRightTab === 'publicaciones' ? (
-                                <ProjectsSection 
-                                    isGalleryView={isGalleryView} 
-                                    toggleView={toggleView} 
-                                    userPosts={userPosts}
-                                />
-                            ) : (
-                                <EducationalOffersSection offers={educationalOffers} />
-                            )}
-                        </>
-                    ) : (
-                        <ProjectsSection 
-                            isGalleryView={isGalleryView} 
-                            toggleView={toggleView} 
-                            userPosts={userPosts} 
+                {/* Columna izquierda con foto e info */}
+                <div className="miPerfil-left-column">
+                    <div className="miPerfil-profile-photo-container">
+                        <img
+                            src={profile?.profile?.profilePicture || "/multimedia/usuarioDefault.jpg"}
+                            alt={profile?.fullName || "Usuario"}
+                            className="miPerfil-profile-photo"
                         />
+                    </div>
+                    <div className="miPerfil-profile-info">
+                        <h1 className="miPerfil-fullname">{isCompany ? profile.companyName : profile.fullName}</h1>
+                        <p className="miPerfil-username">@{profile.username}</p>
+                        { (profile.city || profile.country) && (
+                            <p className="miPerfil-location">
+                                {profile.city && profile.country
+                                    ? `${profile.city}, ${profile.country}`
+                                    : profile.city || profile.country}
+                            </p>
+                        ) }
+                        { profile.professionalTitle && <p className="miPerfil-title">{profile.professionalTitle}</p> }
+                        { profile.social?.sitioWeb && (
+                            <div className="miPerfil-website">
+                                <a href={profile.social.sitioWeb} target="_blank" rel="noopener noreferrer">
+                                    {profile.social.sitioWeb}
+                                </a>
+                            </div>
+                        ) }
+                        <div className="miPerfil-action-buttons">
+                            <button className="miPerfil-follow-button">Seguir</button>
+                            <button className="miPerfil-notification-button"><FaBell /></button>
+                        </div>
+                        <div className="miPerfil-contact-share">
+                            <button className="miPerfil-contact-button"><FaEnvelope /></button>
+                            <button className="miPerfil-share-button"><FaShareAlt /></button>
+                        </div>
+                    </div>
+                </div>
+                {/* Columna derecha con pestañas y contenido */}
+                <div className="miPerfil-right-column">
+                    <div className="miPerfil-tabs">
+                        <button
+                            className={`miPerfil-tab ${activeTab === 'publicaciones' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('publicaciones')}
+                        >
+                            Portfolio
+                        </button>
+                        <button
+                            className={`miPerfil-tab ${activeTab === 'perfil' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('perfil')}
+                        >
+                            About
+                        </button>
+                        {(isCompany || isEducationalInstitution) && (
+                            <button
+                                className={`miPerfil-tab ${activeTab === 'ofertas' ? 'active' : ''}`}
+                                onClick={() => setActiveTab('ofertas')}
+                            >
+                                {isEducationalInstitution ? 'Ofertas educativas' : 'Ofertas de trabajo'}
+                            </button>
+                        )}
+                    </div>
+                    {activeTab === 'publicaciones' && (
+                        <div className="miPerfil-portfolio-content">
+                            <ProjectsSection
+                                isGalleryView={isGalleryView}
+                                toggleView={toggleView}
+                                userPosts={userPosts}
+                            />
+                        </div>
+                    )}
+                    {activeTab === 'perfil' && (
+                        <div className="miPerfil-about-content">
+                            {isCompany ? (
+                                <div className="miPerfil-company-profile">
+                                    <CompanyTagsSection companyTags={profile?.companyTags} offersPractices={profile?.offersPractices} />
+                                    <BiographySection biography={profile?.biography} />
+                                    <MilestoneSection professionalMilestones={profile?.professionalMilestones} />
+                                    <SkillsSection skills={profile?.skills} />
+                                    <SocialSection social={profile?.social} />
+                                </div>
+                            ) : isEducationalInstitution ? (
+                                <div className="miPerfil-institution-profile">
+                                    <BiographySection biography={profile?.biography} />
+                                    <SkillsSection skills={profile?.skills} />
+                                    <SocialSection social={profile?.social} />
+                                </div>
+                            ) : (
+                                <div className="miPerfil-creative-profile">
+                                    <BiographySection biography={profile?.biography} />
+                                    {profile?.professionalFormation && profile.professionalFormation.some(item => item.trainingName?.trim() || item.institution?.trim()) && (
+                                        <ProfessionalExperienceSection professionalFormation={profile.professionalFormation} />
+                                    )}
+                                    <SoftwareSection software={profile?.software} />
+                                    {profile?.education && profile.education.some(item => item.formationName?.trim() || item.institution?.trim() || item.otherInstitution?.trim()) && (
+                                        <EducationSection education={profile.education} />
+                                    )}
+                                    <SkillsSection skills={profile?.skills} />
+                                    {(profile?.cvUrl || profile?.portfolioUrl) && (
+                                        <DownloadableFilesSection cvUrl={profile.cvUrl} portfolioUrl={profile.portfolioUrl} />
+                                    )}
+                                    <SocialSection social={profile?.social} />
+                                </div>
+                            )}
+                        </div>
+                    )}
+                    {activeTab === 'ofertas' && (
+                        <div className="miPerfil-offers-content">
+                            {isCompany ? (
+                                <CompanyOffersSection offers={companyOffers} />
+                            ) : (
+                                isEducationalInstitution && <EducationalOffersSection offers={educationalOffers} />
+                            )}
+                        </div>
                     )}
                 </div>
             </div>

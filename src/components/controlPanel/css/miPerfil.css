@@ -1,716 +1,1134 @@
+/* 
+   UserProfileExtern.css
+   Estilos para el nuevo diseño del perfil de usuario externo
+   Basado en la imagen de referencia compartida
+*/
+
 /* Contenedor principal */
 .miPerfil-container {
     position: relative;
-    padding: 20px;
-    margin: 0 auto;
     max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
     font-family: 'Inter', sans-serif;
-    color: #000;
+    color: #333;
 }
 
-/* Encabezado y pestañas móviles */
-.miPerfil-header-container {
+/* Navegación y botón de volver */
+.miPerfil-navigation {
+    margin-bottom: 20px;
+}
+
+.miPerfil-back-btn {
+    display: flex;
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #333;
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+    font-size: 14px;
+}
+
+.miPerfil-back-btn:hover {
+    background-color: #f0f0f0;
+}
+
+.miPerfil-back-btn span {
+    margin-left: 8px;
+}
+
+/* Estructura de contenido principal - layout de dos columnas */
+.miPerfil-content {
+    display: flex;
+    gap: 30px;
+}
+
+/* Columna izquierda - Información del perfil */
+.miPerfil-left-column {
+    flex: 0 0 300px;
+    position: sticky;
+    top: 150px;
+    align-self: flex-start;
+}
+
+/* Foto de perfil */
+.miPerfil-profile-photo-container {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.miPerfil-profile-photo {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Información básica del perfil */
+.miPerfil-profile-info {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    text-align: center;
 }
 
-/* Encabezado: foto y datos personales */
-.miPerfil-header {
-    display: flex;
-    gap: 20px;
-    align-items: center;
+.miPerfil-fullname {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.2;
 }
 
-.miPerfil-photo {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    object-fit: cover;
+.miPerfil-username {
+    font-size: 16px;
+    color: #666;
+    margin: 0;
+    margin-bottom: 10px;
 }
 
-.miPerfil-personal-info {
-    display: flex;
-    flex-direction: column;
-}
-
-.miPerfil-name {
-    font-size: 2rem;
+.miPerfil-location {
+    font-size: 14px;
+    color: #666;
     margin: 0;
 }
 
-.miPerfil-occupations,
-.miPerfil-location {
-    font-size: 1rem;
-    color: #555;
+.miPerfil-title {
+    font-size: 16px;
+    font-weight: 500;
+    margin: 5px 0 15px;
 }
 
-/* Estadísticas de followers/following */
-.miPerfil-stats {
+/* Habilidades destacadas */
+.miPerfil-skills {
+    margin: 15px 0;
+}
+
+.miPerfil-skills h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.miPerfil-skills-list {
     display: flex;
-    gap: 20px;
-    margin-top: 10px;
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
-.miPerfil-stat {
-    font-size: 0.9rem;
-    color: #555;
-    transition: color 0.2s ease;
+.miPerfil-skill-tag {
+    background-color: #e5eeff;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: #333;
 }
 
-.miPerfil-stat:hover {
-    color: #000;
+/* Sitio web */
+.miPerfil-website {
+    margin: 15px 0;
+    display: flex;
+    justify-content: center;
+}
+
+.miPerfil-website a {
+    color: #1a73e8;
+    text-decoration: none;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.miPerfil-website a:hover {
     text-decoration: underline;
 }
 
-.miPerfil-stat strong {
-    color: #000;
-    font-weight: 600;
+/* Botones de acción */
+.miPerfil-action-buttons {
+    display: flex;
+    gap: 10px;
+    margin: 20px 10px 10px 25px;
 }
 
-/* Pestañas para vista móvil (se muestran solo en pantallas pequeñas) */
-.miPerfil-mobile-tabs {
-    display: none;
-}
-
-.miPerfil-mobile-tabs button {
+.miPerfil-follow-button {
     flex: 1;
-    padding: 10px;
+    background-color: #1a73e8;
+    color: white;
     border: none;
-    background: #e9ecef;
-    font-size: 1rem;
-    color: #989898;
-    border-radius: 6px;
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
     cursor: pointer;
-    transition: background 0.3s ease;
-}
-
-.miPerfil-mobile-tabs button.active {
-    background: #535353;
-    color: #fff;
-}
-
-/* Contenedor de contenidos (perfil y publicaciones) */
-.miPerfil-content {
     display: flex;
-    gap: 5em;
-    margin-top: 20px;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background-color 0.2s;
 }
 
-/* Contenido izquierdo (perfil) */
-.miPerfil-left-content {
+.miPerfil-follow-button:hover {
+    background-color: #1557b0;
+}
+
+.miPerfil-follow-button.following {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.miPerfil-notification-button {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #666;
+    transition: background-color 0.2s;
+}
+
+.miPerfil-notification-button:hover {
+    background-color: #e0e0e0;
+}
+
+.miPerfil-notification-button.active {
+    color: #1a73e8;
+}
+
+/* Iconos de contacto y compartir */
+.miPerfil-contact-share {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    justify-content: center;
+}
+
+.miPerfil-contact-button,
+.miPerfil-share-button {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #666;
+    transition: background-color 0.2s;
+}
+
+.miPerfil-contact-button:hover,
+.miPerfil-share-button:hover {
+    background-color: #e0e0e0;
+}
+
+/* Columna derecha - Contenido de pestañas */
+.miPerfil-right-column {
     flex: 1;
+    min-width: 0;
+    /* Para evitar desbordamiento */
 }
 
-/* Secciones internas */
-.miPerfil-section {
-    background: #fdfdfd;
-    padding: 15px;
-    border-radius: 12px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    margin-bottom: 20px;
-}
-
-.miPerfil-section.ultima-seccion {
-    margin-bottom: 20px;
-}
-
-.miPerfil-section h2 {
-    margin-bottom: 10px;
-    font-size: 1.25rem;
-}
-
-.miPerfil-section p {
-    font-size: 1rem;
-    margin-top: 5px;
-    margin-left: 10px;
-    line-height: 1.5;
-}
-
-.miPerfil-list {
-    list-style: none;
-    padding-left: 0;
-}
-
-.miPerfil-list li {
-    margin-bottom: 10px;
-    font-size: 0.95rem;
-}
-
-.miPerfil-chips {
+/* Pestañas superiores */
+.miPerfil-tabs {
     display: flex;
-    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+    justify-content: center;
+}
+
+.miPerfil-tab {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 8px 0;
+    width: 160px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #666;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s;
+}
+
+.miPerfil-tab:hover {
+    border-color: #d0d0d0;
+    color: #333;
+}
+
+.miPerfil-tab.active {
+    background-color: #e8f0fe;
+    color: #1a73e8;
+    border-color: #1a73e8;
+}
+
+/* Opciones de visualización para Portfolio */
+.miPerfil-view-options {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
     gap: 10px;
 }
 
-.miPerfil-chip {
-    background: #e9ecef;
-    padding: 5px 10px;
-    border-radius: 20px;
-    font-size: 0.9rem;
-}
-
-.miPerfil-social-links {
+.miPerfil-view-container {
     display: flex;
+    border: 1px solid #e0e0e0;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.miPerfil-view-button {
+    background: white;
+    border: none;
+    padding: 8px 16px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    color: #666;
+    transition: all 0.2s;
+}
+
+.miPerfil-view-button:hover {
+    background-color: #f5f5f5;
+}
+
+.miPerfil-view-button.active {
+    background-color: #e8f0fe;
+    color: #1a73e8;
+}
+
+/* Contenido de Portfolio */
+.miPerfil-portfolio-content {
+    margin-top: 20px;
+}
+
+.miPerfil-projects {
+    display: grid;
     gap: 15px;
-    font-size: 1.5rem;
 }
 
-.miPerfil-social-links a {
-    color: #000;
-    transition: color 0.3s ease;
+.miPerfil-projects.gallery-view {
+    grid-template-columns: repeat(3, 1fr);
+    margin-left: 8em;
+    margin-right: 4em;
 }
 
-.miPerfil-social-links a:hover {
-    color: rgba(6, 182, 160, 1);
+.miPerfil-projects.list-view {
+    grid-template-columns: 1fr;
+}
+
+.miPerfil-project-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.miPerfil-project-card:hover {
+    transform: translateY(-5px);
+}
+
+.miPerfil-project-image {
+    display: block;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+}
+
+.gallery-view .miPerfil-project-image {
+    width: 100%;
+}
+
+.list-view .miPerfil-project-image {
+    width: 65%;
+    margin: 0 auto;
+}
+
+/* Estados de carga y sin contenido */
+.miPerfil-loading,
+.miPerfil-no-content {
+    padding: 30px;
+    text-align: center;
+    color: #666;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+/* Contenido de About */
+.miPerfil-about-content {
+    padding: 10px;
+    margin-left: 10em;
+}
+
+/* Estilos específicos para perfiles de empresa e institución */
+.miPerfil-company-profile,
+.miPerfil-institution-profile,
+.miPerfil-creative-profile {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* Iconos de especialización */
+.miPerfil-section-icon {
+    color: #555;
+}
+
+/* Etiqueta de prácticas */
+.miPerfil-practice-badge {
+    background-color: #e8f4ff;
+    border-radius: 6px;
+    padding: 8px 12px;
+    display: inline-block;
+    margin-top: 15px;
+    color: #1a73e8;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* Estilos para las ofertas de trabajo y educativas */
+.miPerfil-offers-section {
+    margin-bottom: 30px;
+}
+
+.miPerfil-offers-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.miPerfil-offer-card {
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    width: 500px;
+    margin: auto;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.miPerfil-offer-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.miPerfil-offer-header {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.miPerfil-offer-type {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+}
+
+.miPerfil-offer-metadata {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    color: #666;
+}
+
+.miPerfil-offer-years,
+.miPerfil-offer-schedule,
+.miPerfil-offer-modality {
+    color: #666;
+}
+
+.miPerfil-offer-separator {
+    color: #ccc;
+}
+
+.miPerfil-offer-practices {
+    color: #1a73e8;
+    font-weight: 500;
+}
+
+.miPerfil-offer-description {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.5;
+}
+
+.miPerfil-offer-location,
+.miPerfil-offer-date {
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+    color: #666;
+    margin-top: 4px;
+}
+
+.miPerfil-offer-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.miPerfil-offer-tag {
+    background-color: #f0f0f0;
+    color: #555;
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.miPerfil-offer-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+}
+
+.miPerfil-offer-button {
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 24px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.miPerfil-offer-button:hover {
+    background-color: #1557b0;
+}
+
+.miPerfil-offer-status {
+    font-size: 14px;
+    color: #666;
+    padding: 4px 10px;
+    border-radius: 4px;
+    background-color: #f0f0f0;
+}
+
+/* Estilos para filtros */
+.miPerfil-offers-filter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f5f8ff;
+    padding: 10px 15px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+}
+
+.miPerfil-filter-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.miPerfil-filter-icon {
+    color: #1a73e8;
+}
+
+.miPerfil-clear-filter {
+    background-color: transparent;
+    color: #1a73e8;
+    border: 1px solid #1a73e8;
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.miPerfil-clear-filter:hover {
+    background-color: #e8f0fe;
+}
+
+.miPerfil-offers-filter-buttons {
+    margin-top: 10px;
+}
+
+.miPerfil-filter-label {
+    font-size: 14px;
+    color: #666;
+    margin-right: 10px;
+}
+
+.miPerfil-filter-options {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.miPerfil-filter-button {
+    background-color: #f0f0f0;
+    color: #555;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.miPerfil-filter-button:hover {
+    background-color: #e0e0e0;
+}
+
+.miPerfil-filter-button.active {
+    background-color: #1a73e8;
+    color: white;
+}
+
+/* Mensaje cuando no hay ofertas */
+.miPerfil-offers-empty {
+    text-align: center;
+    padding: 30px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.miPerfil-offers-empty-icon {
+    font-size: 40px;
+    color: #ccc;
+    margin-bottom: 15px;
+}
+
+.miPerfil-no-filtered-offers {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+}
+
+.miPerfil-section h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #333;
 }
 
 .miPerfil-downloads {
     display: flex;
-    gap: 15px;
+    justify-content: left;
+    gap: 20px;
+}
+
+.miPerfil-section-description p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #555;
+    height: 200px;
+    border-radius: 10px;
+    padding: 10px;
+    border: 1px solid #e7efff;
+    margin-bottom: 10px;
+    background-color: #f3f7ff;
+}
+
+.miPerfil-section p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #555;
     margin-bottom: 10px;
 }
 
-.miPerfil-btn {
-    background: #38c785;
-    color: #fff;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 30px;
-    text-decoration: none;
-    font-size: 0.9rem;
-    transition: background-color 0.3s ease;
-    display: inline-block;
-}
-
-.miPerfil-btn:hover {
-    background: #292929;
-}
-
-.miPerfil-view-btn {
-    background: transparent;
-    color: #38c785;
-    border: 2px solid #38c785;
-}
-
-.miPerfil-view-btn:hover {
-    background: #38c785;
-    color: #fff;
-}
-
-/* Columna derecha: grid de proyectos */
-.miPerfil-right {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-/* Transición para cambios de vista */
-.miPerfil-projects-grid {
-    transition: all 0.3s ease-in-out;
-}
-
-.miPerfil-projects-grid.gallery {
-    display: grid;
-    justify-content: center;
-    grid-template-columns: repeat(3, 0.22fr);
-    gap: 7px;
-}
-
-.miPerfil-projects-grid.individual {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-}
-
-.miPerfil-project-placeholder {
-    position: relative;
-    background: #cccccc;
-    height: 110px;
-    width: 110px;
-    overflow: hidden;
-    border-radius: 8px;
-    transition: transform 0.3s ease;
-}
-
-.miPerfil-project-placeholder img {
-    object-fit: cover;
-    border-radius: 8px;
-    transition: transform 0.3s ease;
-}
-
-.miPerfil-project-placeholder:hover {
-    transform: scale(1.05);
-    z-index: 1;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.miPerfil-projects-grid.individual .miPerfil-project-placeholder {
-    height: 20em;
-    width: 20em;
-}
-
-/* Botón para alternar vista de proyectos */
-.toggle-view-btn {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    outline: none;
-    transition: color 0.3s ease;
-    color: #000;
-}
-
-.toggle-view-btn:hover {
-    color: #000;
-}
-
-/* Para la sección de hitos profesionales */
-.milestones-container {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-top: 10px;
-}
-
-.milestone-item {
-    padding-bottom: 15px;
-}
-
-.milestone-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 5px;
-}
-
-.milestone-title {
-    font-weight: 600;
-    font-size: 1.1rem;
+/* Experiencia profesional */
+.miPerfil-experience-list {
+    list-style: none;
+    padding: 0;
     margin: 0;
-    color: #333;
 }
 
-.milestone-date {
-    font-size: 0.9rem;
-    color: #777;
+.miPerfil-experience-item {
+    display: flex;
+    margin-bottom: 20px;
+    position: relative;
 }
 
-.milestone-entity {
-    font-size: 1rem;
-    font-style: italic;
-    color: #555;
+.miPerfil-experience-icon {
+    margin-right: 15px;
+    color: #666;
+}
+
+.miPerfil-experience-content {
+    flex: 1;
+}
+
+.miPerfil-experience-title {
+    font-weight: 600;
+    font-size: 15px;
     margin-bottom: 5px;
 }
 
-.milestone-description {
-    font-size: 0.95rem;
-    line-height: 1.5;
+.miPerfil-experience-company {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.miPerfil-experience-date {
+    font-size: 13px;
+    color: #777;
+    margin-bottom: 5px;
+}
+
+.miPerfil-experience-description {
+    font-size: 14px;
     color: #555;
-    margin: 5px 0 0 0;
+    line-height: 1.5;
 }
 
-.milestone-divider {
-    border: none;
-    border-top: 1px solid #e0e0e0;
-    margin: 15px 0 5px 0;
+/* Formación educativa */
+.miPerfil-education-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
-.no-data-message {
-    color: #888;
-    font-style: italic;
+.miPerfil-education-item {
+    display: flex;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.miPerfil-education-icon {
+    flex: 0 0 30px;
+    margin-right: 15px;
+    color: #666;
+}
+
+.miPerfil-education-content {
+    flex: 1;
+}
+
+.miPerfil-education-title {
+    font-weight: 600;
+    font-size: 15px;
+    margin-bottom: 5px;
+}
+
+.miPerfil-education-institution {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.miPerfil-education-date {
+    font-size: 13px;
+    color: #777;
+    margin-bottom: 5px;
+}
+
+/* Habilidades */
+.miPerfil-skills-container {
     margin-top: 10px;
 }
 
-/* Estilos para etiquetas de especialización de empresa */
-.company-tags-container {
+.miPerfil-skills-tags {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
     margin-top: 10px;
 }
 
-.company-tag {
-    background-color: #f0f7f4;
-    color: #38a3a5;
-    padding: 5px 12px;
+.miPerfil-skill-tag {
+    background-color: #f0f0f0;
+    padding: 6px 12px;
     border-radius: 20px;
-    font-size: 0.9rem;
-    display: inline-flex;
-    align-items: center;
-}
-
-.practice-badge {
-    margin-top: 15px;
+    font-size: 13px;
+    color: #333;
     display: inline-block;
 }
 
-.practice-badge span {
-    background-color: #fef3c7;
-    color: #d97706;
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    display: inline-flex;
-    align-items: center;
-}
-
-/* Estilos para vista de escritorio */
-@media (min-width: 769px) {
-    .miPerfil-mobile-tabs {
-        display: none;
-    }
-
-    .miPerfil-content {
-        display: flex;
-    }
-
-    /* Se muestran ambos contenidos */
-    .miPerfil-left-content,
-    .miPerfil-right {
-        display: block;
-    }
-}
-
-/* Estilos para vista móvil */
-@media (max-width: 768px) {
-    .miPerfil-section.ultima-seccion {
-        margin-bottom: 50px;
-    }
-
-    .miPerfil-container {
-        padding: 7px;
-    }
-
-    .miPerfil-mobile-tabs {
-        display: flex;
-        gap: 10px;
-    }
-
-    /* En móvil, se muestra solo el contenido correspondiente a la pestaña activa */
-    .miPerfil-content {
-        display: block;
-    }
-
-    .miPerfil-left-content,
-    .miPerfil-right {
-        display: none;
-    }
-
-    .miPerfil-left-content.active,
-    .miPerfil-right.active {
-        margin-bottom: 4em;
-        display: block;
-    }
-}
-
-/* Estilos para las pestañas de empresa */
-.company-tabs {
+/* Software */
+.miPerfil-software-list {
     display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #e0e0e0;
-    justify-content: center;
-    padding-bottom: 10px;
-}
-
-.company-tab {
-    background: transparent;
-    border: none;
-    padding: 8px 16px;
-    font-size: 1rem;
-    color: #666;
-    cursor: pointer;
-    border-radius: 20px;
-    transition: all 0.3s ease;
-}
-
-.company-tab:hover {
-    background-color: #000;
-    color: white;
-}
-
-.company-tab.active {
-    background-color: #535353;
-    color: white;
-    font-weight: 500;
-}
-
-/* Estilos para la sección de ofertas de empresa */
-.company-offers-container-company {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.company-offer-item-company {
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.company-offer-item-company:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.offer-header-company {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-}
-
-.offer-title-company {
-    font-size: 1.25rem;
-    margin: 0;
-    color: #333;
-}
-
-.offer-status-company {
-    font-size: 0.85rem;
-    padding: 4px 12px;
-    border-radius: 50px;
-    background-color: #e8f5e9;
-    color: #2e7d32;
-}
-
-.offer-status-company.closed {
-    background-color: #f5f5f5;
-    color: #757575;
-}
-
-.offer-details-company {
-    display: flex;
-    gap: 20px;
-    margin-bottom: 12px;
-    font-size: 0.9rem;
-    color: #555;
-}
-
-.offer-detail-company {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.offer-icon-company {
-    color: #38c785;
-    font-size: 0.85rem;
-}
-
-.offer-description-company {
-    margin: 15px 0;
-    font-size: 0.95rem;
-    line-height: 1.5;
-    color: #444;
-}
-
-.offer-actions-company {
-    display: flex;
-    gap: 10px;
-    margin-top: 15px;
-}
-
-.view-offer-button-company, .edit-offer-button-company {
-    text-decoration: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
-}
-
-.view-offer-button-company {
-    background-color: #f5f5f5;
-    color: #333;
-}
-
-.edit-offer-button-company {
-    background-color: #eaf7ef;
-    color: #38c785;
-}
-
-.view-offer-button-company:hover {
-    background-color: #e0e0e0;
-}
-
-.edit-offer-button-company:hover {
-    background-color: #d0eadc;
-}
-
-.company-offers-empty-company {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 20px;
-    text-align: center;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    min-height: 300px;
-}
-
-.offers-empty-icon-company {
-    font-size: 3rem;
-    color: #ccc;
-    margin-bottom: 20px;
-}
-
-.company-offers-empty-company h3 {
-    margin: 0 0 10px 0;
-    color: #555;
-    font-size: 1.5rem;
-    font-weight: 500;
-}
-
-.company-offers-empty-company p {
-    color: #777;
-    margin-bottom: 25px;
-}
-
-.create-offer-button-company {
-    background-color: #38c785;
-    color: white;
-    text-decoration: none;
-    padding: 10px 20px;
-    border-radius: 30px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-}
-
-.create-offer-button-company:hover {
-    background-color: #2aa46c;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.add-offer-button-company {
-    align-self: center;
-    background-color: #38c785;
-    color: white;
-    text-decoration: none;
-    padding: 10px 20px;
-    border-radius: 30px;
-    font-weight: 500;
-    transition: all 0.3s ease;
+    flex-wrap: wrap;
+    gap: 8px;
     margin-top: 10px;
 }
 
-.add-offer-button-company:hover {
-    background-color: #2aa46c;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.miPerfil-software-item {
+    background-color: #f0f0f0;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    color: #333;
+    display: inline-block;
 }
 
-/* Estilos para la sección de filtros de ofertas */
-.offers-filter-section {
-    margin-bottom: 20px;
-    background-color: #f8f8f8;
-    padding: 15px;
-    border-radius: 8px;
+/* Redes sociales */
+.miPerfil-social-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 10px;
 }
 
-.filter-header {
+.miPerfil-social-item {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 12px;
-    font-weight: 500;
     color: #333;
+    text-decoration: none;
+    font-size: 14px;
 }
 
-.filter-icon {
-    color: #38c785;
+.miPerfil-social-item:hover {
+    color: #1a73e8;
 }
 
-.filter-options {
+.miPerfil-social-icon {
+    margin-right: 8px;
+}
+
+/* Archivos descargables */
+.miPerfil-files-container {
+    margin-top: 15px;
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
 }
 
-@media (min-width: 769px) {
-    .miPerfil-right-posts {
-      overflow-y: auto;
-      max-height: calc(100vh - 120px);
+.miPerfil-file-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    font-size: 13px;
+    color: #333;
+    background-color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.miPerfil-file-button:hover {
+    background-color: #f5f5f5;
+    border-color: #ccc;
+}
+
+.miPerfil-file-icon {
+    margin-right: 8px;
+}
+
+/* Contenido de Ofertas */
+.miPerfil-offers-content {
+    padding: 10px;
+}
+
+/* Notificaciones */
+.miPerfil-notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: white;
+    border-radius: 8px;
+    padding: 12px 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 1000;
+    max-width: 300px;
+    animation: user-extern-notification-slide-in 0.3s ease-out forwards;
+}
+
+.miPerfil-notification.success {
+    border-left: 4px solid #4caf50;
+}
+
+.miPerfil-notification.error {
+    border-left: 4px solid #f44336;
+}
+
+.miPerfil-notification-icon {
+    color: #4caf50;
+}
+
+.miPerfil-notification.error .miPerfil-notification-icon {
+    color: #f44336;
+}
+
+@keyframes user-extern-notification-slide-in {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
     }
 }
 
-.filter-button-company {
-    background-color: #fff;
-    border: 1px solid #e0e0e0;
-    color: #333;
-    padding: 6px 14px;
-    border-radius: 20px;
+/* Portfolio section alignment with UserProfile */
+.miPerfil-projects-grid {
+    display: grid;
+    gap: 15px;
+}
+.miPerfil-projects-grid.gallery {
+    grid-template-columns: repeat(3, 1fr);
+    margin-left: 8em;
+    margin-right: 4em;
+}
+.miPerfil-projects-grid.individual {
+    grid-template-columns: 1fr;
+}
+.miPerfil-project-placeholder {
+    background-color: #f3f3f3;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 8px;
     cursor: pointer;
-    transition: all 0.2s ease;
-    font-size: 0.9rem;
+    transition: transform 0.2s;
+}
+.miPerfil-projects-grid.gallery .miPerfil-project-placeholder {
+    width: 100%;
+    margin: 0;
+}
+.miPerfil-projects-grid.individual .miPerfil-project-placeholder {
+    width: 65%;
+    margin: auto;
+}
+.miPerfil-project-placeholder:hover {
+    transform: translateY(-5px);
+}
+.miPerfil-project-placeholder img {
+    display: block;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+.miPerfil-projects-grid.individual .miPerfil-project-placeholder img {
+    width: 65%;
+    margin: 0 auto;
 }
 
-.filter-button-company:hover {
-    background-color: #f0f0f0;
+/* Offers section alignment with UserProfile */
+.company-offers-container-company,
+.educational-offers-container-company {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 20px;
 }
-
-.filter-button-company.active {
-    background-color: #38c785;
-    color: white;
-    border-color: #38c785;
-}
-
-/* Estilos para los indicadores de estado */
-.offer-status-company {
-    font-size: 0.85rem;
-    padding: 4px 10px;
-    border-radius: 4px;
-    font-weight: 500;
-}
-
-.status-pending {
-    background-color: #fff3cd;
-    color: #856404;
-}
-
-.status-accepted {
-    background-color: #d4edda;
-    color: #155724;
-}
-
-.status-cancelled {
-    background-color: #f8d7da;
-    color: #721c24;
-}
-
-.no-filtered-offers {
+.company-offers-empty-company,
+.educational-offers-empty-company {
     text-align: center;
     padding: 30px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+.offers-empty-icon-company {
+    font-size: 40px;
+    color: #ccc;
+    margin-bottom: 15px;
+}
+.create-offer-button-company {
+    background-color: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 14px;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+.create-offer-button-company:hover {
+    background-color: #1557b0;
+}
+.company-offer-item-company,
+.educational-offer-item-company {
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    width: 500px;
+    margin: auto;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.company-offer-item-company:hover,
+.educational-offer-item-company:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+.offer-header-company,
+.offer-header-educational {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.offer-title-company,
+.offer-title-educational {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+}
+.offer-status-company,
+.offer-status-educational {
+    font-size: 14px;
+    color: #666;
+}
+.offer-details-company,
+.offer-details-educational {
+    display: flex;
+    gap: 12px;
+    font-size: 14px;
+    color: #666;
+    margin-top: 8px;
+}
+.offer-icon-company,
+.offer-icon-educational {
+    margin-right: 4px;
+}
+.offer-description-company,
+.offer-description-educational {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.5;
+}
+.offer-actions-company,
+.offer-actions-educational {
+    display: flex;
+    justify-content: flex-end;
+}
+.view-offer-button-company,
+.view-offer-button-educational {
+    background-color: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    font-size: 14px;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+.view-offer-button-company:hover,
+.view-offer-button-educational:hover {
+    background-color: #1557b0;
+}
+.no-filtered-offers {
+    text-align: center;
+    padding: 20px;
     color: #666;
     background-color: #f9f9f9;
     border-radius: 8px;
-    margin-top: 10px;
+    margin-bottom: 20px;
 }
 
-/* Media queries para responsive */
+/* Responsive */
 @media (max-width: 768px) {
-    .company-tabs {
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    .offer-header-company {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-    }
-    
-    .offer-details-company {
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    .offer-actions-company {
+    .miPerfil-content {
         flex-direction: column;
     }
+
+    .miPerfil-about-content {
+        margin-left: 0;
+    }
+
+    .miPerfil-container {
+        padding: 0;
+    }
+
+    .miPerfil-company-profile,
+    .miPerfil-institution-profile,
+    .miPerfil-creative-profile {
+        margin-bottom: 3em;
+        padding: 0 10px;
+    }
+
+    .miPerfil-profile-info {
+        text-align: center;
+    }
+
+    .miPerfil-left-column {
+        position: static;
+        margin: auto;
+        flex: none;
+    }
+
+    .miPerfil-profile-photo {
+        width: 100px;
+        height: 100px;
+    }
+
+    .miPerfil-projects.gallery-view {
+        grid-template-columns: repeat(2, 1fr);
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .miPerfil-left-column {
+        position: relative;
+        transform: translateY(0);
+        transition: transform 0.3s ease;
+    }
+
+    /* Clase que se añadirá con JavaScript cuando se haga scroll */
+    .miPerfil-left-column.scrolled {
+        transform: translateY(-100px);
+    }
+
+    .miPerfil-projects.gallery-view {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .miPerfil-tabs {
+        overflow-x: auto;
+        flex-wrap: wrap;
+        padding-bottom: 5px;
+    }
+
+    .miPerfil-tab {
+        padding: 10px 15px;
+    }
+
+    .miPerfil-action-buttons {
+        flex-direction: column;
+    }
+}
+
+/* Align Skills and Software tags to UserProfile style */
+.miPerfil-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 15px 0;
+}
+
+.miPerfil-chip {
+    background-color: #e5eeff;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: #333;
 }
