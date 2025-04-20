@@ -17,7 +17,6 @@ const UserMilestoneSection = ({ professionalMilestones }) => {
     return (
         <section className="user-extern-section">
             <h2>
-                <FaAward style={{marginRight: '8px'}} />
                 Hitos profesionales
             </h2>
             <ul className="user-extern-experience-list">

@@ -413,10 +413,10 @@ const UserProfile = () => {
                         )}
                         
                         {/* Sitio web */}
-                        {profile?.social?.website && (
+                        {profile?.social?.sitioWeb && (
                             <div className="user-extern-website">
-                                <a href={profile.social.website} target="_blank" rel="noopener noreferrer">
-                                    <FaGlobe /> {profile.social.website}
+                                <a href={profile.social.sitioWeb} target="_blank" rel="noopener noreferrer">
+                                    {profile.social.sitioWeb}
                                 </a>
                             </div>
                         )}

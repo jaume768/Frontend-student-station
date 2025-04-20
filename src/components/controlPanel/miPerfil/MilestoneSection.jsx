@@ -17,7 +17,6 @@ const MilestoneSection = ({ professionalMilestones }) => {
     return (
         <div className="profile-section">
             <h3 className="section-title">
-                <FaAward className="section-icon" />
                 Hitos profesionales
             </h3>
             <div className="milestones-container">

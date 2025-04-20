@@ -106,7 +106,7 @@ const Explorer = () => {
             if (!hasMore) return;
             setLoading(true);
             const backendUrl = import.meta.env.VITE_BACKEND_URL;
-            const limit = 8;
+            const limit = 14;
             const viewed = getViewedPosts();
             let url = '';
 
