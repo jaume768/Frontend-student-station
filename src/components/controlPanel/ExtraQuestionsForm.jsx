@@ -1,6 +1,7 @@
+// src/components/ExtraQuestionsForm.jsx
 import React from 'react';
 
-const ExtraQuestionsForm = ({ formData, setFormData }) => {
+const ExtraQuestionsForm = ({ formData, setFormData, className }) => {
     // Añadir una nueva pregunta vacía
     const addQuestion = () => {
         if (!formData.extraQuestions) {
@@ -40,7 +41,7 @@ const ExtraQuestionsForm = ({ formData, setFormData }) => {
             updatedQuestions[index] = { question: '', responseType: 'text' };
         }
         updatedQuestions[index][field] = value;
-        
+
         setFormData(prev => ({
             ...prev,
             extraQuestions: updatedQuestions
@@ -48,26 +49,28 @@ const ExtraQuestionsForm = ({ formData, setFormData }) => {
     };
 
     return (
-        <div className="form-section">
-            <h3 className="section-title">Preguntas extra</h3>
-            <p className="section-description">
+        <div className={`form-section ${className || ''}`}>
+            {/* Título y subtítulo con las clases de create-offer */}
+            <span className="createoffer-subtitle">
                 ¿Te gustaría preguntar algo concreto a los candidatos que se interesen por tu oferta?
-            </p>
+            </span>
+            <h2 className="createoffer-section-title">Preguntas extra</h2>
 
             {formData.extraQuestions && formData.extraQuestions.length > 0 && (
                 <div className="questions-list">
                     {formData.extraQuestions.map((question, index) => (
                         <div key={index} className="question-item">
-                            <div className="question-header">
+                            <div className="question-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                 <h4>Pregunta {index + 1}</h4>
-                                <button 
-                                    type="button" 
+                                <button
+                                    type="button"
                                     className="remove-question-btn"
                                     onClick={() => removeQuestion(index)}
                                 >
-                                    <i className="fas fa-times"></i>
+                                    ×
                                 </button>
                             </div>
+
                             <div className="form-group">
                                 <input
                                     type="text"
@@ -77,6 +80,7 @@ const ExtraQuestionsForm = ({ formData, setFormData }) => {
                                     className="question-input"
                                 />
                             </div>
+
                             <div className="form-group">
                                 <label>Selecciona el tipo de respuesta</label>
                                 <select
@@ -96,12 +100,12 @@ const ExtraQuestionsForm = ({ formData, setFormData }) => {
             )}
 
             {(!formData.extraQuestions || formData.extraQuestions.length < 3) && (
-                <button 
-                    type="button" 
+                <button
+                    type="button"
                     className="add-question-btn"
                     onClick={addQuestion}
                 >
-                    <i className="fas fa-plus"></i> Añadir pregunta
+                    + Añadir pregunta
                 </button>
             )}
         </div>

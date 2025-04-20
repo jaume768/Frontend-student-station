@@ -1,3 +1,4 @@
+// src/components/CreateOffer.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -10,27 +11,23 @@ const CreateOffer = () => {
     const { offerId } = useParams();
     const [formData, setFormData] = useState({
         title: '',
-        // Especificaciones
         jobType: 'Tiempo completo',
         locationType: 'Presencial',
         duration: '',
-        // Ubicación
         city: '',
         country: '',
-        // Experiencia
         experienceYears: '',
-        // Descripción y funciones
+        website: '',
+        contactName: '',
+        descriptionEmployer: '',
         description: '',
         functions: '',
-        // Perfil requerido
+        offered: '',
         requiredProfile: '',
-        // Habilidades
         hardSkills: [],
         softSkills: [],
-        // Preguntas extra
         extraQuestions: []
     });
-
     const [companyLogo, setCompanyLogo] = useState(null);
     const [previewLogo, setPreviewLogo] = useState(null);
     const [error, setError] = useState('');
@@ -38,78 +35,48 @@ const CreateOffer = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [newHardSkill, setNewHardSkill] = useState('');
     const [newSoftSkill, setNewSoftSkill] = useState('');
-    const [companyName, setCompanyName] = useState('');
+    const [formDataCompanyName, setFormDataCompanyName] = useState('');
     const [isVerificatedProfesional, setIsVerificatedProfesional] = useState(false);
     const [showVerificationModal, setShowVerificationModal] = useState(false);
 
-    // Determinar si estamos creando o editando una oferta
     useEffect(() => {
         if (offerId) {
             setIsEditing(true);
             loadOfferData();
         }
-        
         loadUserData();
     }, [offerId]);
 
-    // Cargar datos del usuario
     const loadUserData = async () => {
         try {
             const token = localStorage.getItem('authToken');
             if (!token) return;
-            
             const backendUrl = import.meta.env.VITE_BACKEND_URL;
-            const response = await axios.get(`${backendUrl}/api/users/profile`, {
+            const { data: user } = await axios.get(`${backendUrl}/api/users/profile`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-
-            // Verificar si el usuario es una empresa/institución y si está verificado
-            const user = response.data;
             if (user.role === 'Profesional') {
                 setIsVerificatedProfesional(user.isVerificatedProfesional || false);
-                
-                // Si no es una edición y el usuario no está verificado, mostrar el modal
                 if (!offerId && !user.isVerificatedProfesional) {
                     setShowVerificationModal(true);
                 }
             }
-            
-            if (response.data) {
-                setFormData(prev => ({
-                    ...prev,
-                    companyName: response.data.companyName || ''
-                }));
-            }
-        } catch (error) {
-            console.error('Error al cargar datos del usuario:', error);
+            setFormDataCompanyName(user.companyName || '');
+        } catch (err) {
+            console.error('Error al cargar datos del usuario:', err);
         }
     };
 
-    // Cargar datos de la oferta para edición
     const loadOfferData = async () => {
         try {
             setLoading(true);
             const backendUrl = import.meta.env.VITE_BACKEND_URL;
-            const response = await axios.get(`${backendUrl}/api/offers/${offerId}`);
-            
-            const offer = response.data;
-            
-            // Determinar qué habilidades son técnicas y cuáles son blandas
-            // Esta es una lógica simple, puedes ajustarla según tus necesidades
-            const hardSkills = [];
-            const softSkills = [];
-            
-            if (offer.tags && offer.tags.length > 0) {
-                // Simple heurística: consideramos que las habilidades técnicas suelen tener menos de 15 caracteres
-                offer.tags.forEach(tag => {
-                    if (tag.length <= 15) {
-                        hardSkills.push(tag);
-                    } else {
-                        softSkills.push(tag);
-                    }
-                });
-            }
-            
+            const { data: offer } = await axios.get(`${backendUrl}/api/offers/${offerId}`);
+            const hard = [];
+            const soft = [];
+            (offer.tags || []).forEach(tag => {
+                tag.length <= 15 ? hard.push(tag) : soft.push(tag);
+            });
             setFormData({
                 title: offer.position || '',
                 jobType: offer.jobType || 'Tiempo completo',
@@ -118,34 +85,37 @@ const CreateOffer = () => {
                 city: offer.city || '',
                 country: offer.country || '',
                 experienceYears: offer.experienceYears || '',
+                website: offer.website || '',
+                contactName: offer.contactName || '',
+                descriptionEmployer: offer.descriptionEmployer || '',
                 description: offer.description || '',
                 functions: offer.functions || '',
+                offered: offer.offered || '',
                 requiredProfile: offer.requiredProfile || '',
-                hardSkills,
-                softSkills
+                hardSkills: hard,
+                softSkills: soft,
+                extraQuestions: offer.extraQuestions || []
             });
-            
             if (offer.companyLogo) {
                 setPreviewLogo(offer.companyLogo);
             }
-            
-        } catch (error) {
-            console.error('Error al cargar datos de la oferta:', error);
-            setError('No se pudo cargar la información de la oferta. Por favor, inténtalo de nuevo.');
+        } catch (err) {
+            console.error('Error al cargar oferta:', err);
+            setError('No se pudo cargar la oferta. Intenta de nuevo.');
         } finally {
             setLoading(false);
         }
     };
 
-    const handleChange = (e) => {
+    const handleChange = e => {
         const { name, value, type, checked } = e.target;
-        setFormData(prev => ({
-            ...prev,
+        setFormData(f => ({
+            ...f,
             [name]: type === 'checkbox' ? checked : value
         }));
     };
 
-    const handleLogoChange = (e) => {
+    const handleLogoChange = e => {
         const file = e.target.files[0];
         if (file) {
             setCompanyLogo(file);
@@ -154,403 +124,426 @@ const CreateOffer = () => {
     };
 
     const handleAddHardSkill = () => {
-        if (newHardSkill.trim() && !formData.hardSkills.includes(newHardSkill.trim())) {
-            setFormData(prev => ({
-                ...prev,
-                hardSkills: [...prev.hardSkills, newHardSkill.trim()]
+        const skill = newHardSkill.trim();
+        if (skill && !formData.hardSkills.includes(skill)) {
+            setFormData(f => ({
+                ...f,
+                hardSkills: [...f.hardSkills, skill]
             }));
             setNewHardSkill('');
         }
     };
-
-    const handleHardSkillKeyDown = (e) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            handleAddHardSkill();
-        }
-    };
-
     const handleAddSoftSkill = () => {
-        if (newSoftSkill.trim() && !formData.softSkills.includes(newSoftSkill.trim())) {
-            setFormData(prev => ({
-                ...prev,
-                softSkills: [...prev.softSkills, newSoftSkill.trim()]
+        const skill = newSoftSkill.trim();
+        if (skill && !formData.softSkills.includes(skill)) {
+            setFormData(f => ({
+                ...f,
+                softSkills: [...f.softSkills, skill]
             }));
             setNewSoftSkill('');
         }
     };
-
-    const handleSoftSkillKeyDown = (e) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            handleAddSoftSkill();
-        }
+    const handleRemoveHardSkill = skill => {
+        setFormData(f => ({
+            ...f,
+            hardSkills: f.hardSkills.filter(s => s !== skill)
+        }));
     };
-
-    const handleRemoveHardSkill = (skill) => {
-        setFormData(prev => ({
-            ...prev,
-            hardSkills: prev.hardSkills.filter(s => s !== skill)
+    const handleRemoveSoftSkill = skill => {
+        setFormData(f => ({
+            ...f,
+            softSkills: f.softSkills.filter(s => s !== skill)
         }));
     };
 
-    const handleRemoveSoftSkill = (skill) => {
-        setFormData(prev => ({
-            ...prev,
-            softSkills: prev.softSkills.filter(s => s !== skill)
-        }));
-    };
-
-    const handleSubmit = async (e) => {
+    const handleSubmit = async e => {
         e.preventDefault();
-        
-        // Verificar si el usuario es una empresa/institución y si está verificado
         if (!isVerificatedProfesional && !isEditing) {
             setShowVerificationModal(true);
             return;
         }
-        
         setLoading(true);
         setError('');
-    
         try {
             const token = localStorage.getItem('authToken');
             if (!token) {
                 navigate('/', { state: { showRegister: true } });
                 return;
             }
-    
             const backendUrl = import.meta.env.VITE_BACKEND_URL;
-            const userResponse = await axios.get(`${backendUrl}/api/users/profile`, {
+            const { data: user } = await axios.get(`${backendUrl}/api/users/profile`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-    
-            if (userResponse.data.role !== 'Profesional') {
-                setError('Solo los usuarios profesionales pueden crear ofertas.');
+            if (user.role !== 'Profesional') {
+                setError('Solo profesionales pueden crear ofertas.');
                 setLoading(false);
                 return;
             }
-    
-            const formDataToSend = new FormData();
-            
-            // Validar campos requeridos
-            const requiredFields = {
-                title: formData.title,
-                jobType: formData.jobType,
-                locationType: formData.locationType,
-                city: formData.city,
-                country: formData.country,
-                description: formData.description,
-                requiredProfile: formData.requiredProfile
-            };
-    
-            const missingFields = Object.entries(requiredFields)
-                .filter(([_, value]) => !value)
-                .map(([key]) => key);
-    
-            if (missingFields.length > 0) {
-                setError(`Faltan campos requeridos: ${missingFields.join(', ')}`);
+
+            const required = [
+                'title', 'jobType', 'locationType', 'city', 'country',
+                'descriptionEmployer', 'description', 'requiredProfile'
+            ].filter(key => !formData[key]);
+            if (required.length) {
+                setError(`Faltan campos: ${required.join(', ')}`);
                 setLoading(false);
                 return;
             }
-    
-            // Preparar datos para enviar al backend
-            const offerData = {
+
+            const fd = new FormData();
+            const payload = {
                 ...formData,
-                position: formData.title, // Para mantener compatibilidad con el backend
-                companyName: userResponse.data.companyName
+                position: formData.title,
+                companyName: user.companyName,
+                tags: [...formData.hardSkills, ...formData.softSkills]
             };
-            
-            // Convertir habilidades a formato de tags
-            offerData.tags = [
-                ...formData.hardSkills,
-                ...formData.softSkills
-            ];
-            
-            // Añadir todos los campos al FormData
-            Object.keys(offerData).forEach(key => {
-                if (key === 'hardSkills' || key === 'softSkills') {
-                    // Estos ya se han añadido como tags
-                } else if (key === 'tags' || key === 'extraQuestions') {
-                    formDataToSend.append(key, JSON.stringify(offerData[key]));
-                } else {
-                    formDataToSend.append(key, offerData[key]);
+            Object.entries(payload).forEach(([k, v]) => {
+                if (k === 'tags' || k === 'extraQuestions') {
+                    fd.append(k, JSON.stringify(v));
+                } else if (k !== 'hardSkills' && k !== 'softSkills') {
+                    fd.append(k, v);
                 }
             });
-    
-            if (companyLogo) {
-                formDataToSend.append('logo', companyLogo);
-            }
-    
-            let response;
+            if (companyLogo) fd.append('logo', companyLogo);
+
+            const axiosConfig = { headers: { Authorization: `Bearer ${token}` } };
             if (isEditing) {
-                response = await axios.put(
-                    `${backendUrl}/api/offers/${offerId}`,
-                    formDataToSend,
-                    {
-                        headers: { 
-                            Authorization: `Bearer ${token}`
-                        }
-                    }
-                );
+                await axios.put(`${backendUrl}/api/offers/${offerId}`, fd, axiosConfig);
             } else {
-                response = await axios.post(
-                    `${backendUrl}/api/offers/create`,
-                    formDataToSend,
-                    {
-                        headers: { 
-                            Authorization: `Bearer ${token}`
-                        }
-                    }
-                );
+                await axios.post(`${backendUrl}/api/offers/create`, fd, axiosConfig);
             }
-    
-            if (response.data) {
-                navigate('/ControlPanel/misOfertas');
-            }
+            navigate('/ControlPanel/misOfertas');
         } catch (err) {
-            console.error('Error completo:', err);
-            setError(err.response?.data?.message || 'Error al crear la oferta');
+            console.error(err);
+            setError(err.response?.data?.message || 'Error al enviar la oferta');
         } finally {
             setLoading(false);
         }
-    };    
+    };
 
     return (
-        <div className="create-offer-container">
+        <div className="createoffer-page">
             {showVerificationModal && (
                 <VerificationRequiredModal onClose={() => setShowVerificationModal(false)} />
             )}
-            <h1 className="create-offer-title">{isEditing ? 'Editar oferta de trabajo' : 'Crear oferta de trabajo'}</h1>
-            {error && <div className="error-message">{error}</div>}
-            
-            <form onSubmit={handleSubmit} className="offer-form">
-                <div className="form-logo-section">
-                    <div className="logo-upload-container">
-                        {previewLogo ? (
-                            <img src={previewLogo} alt="Logo preview" className="logo-preview" />
-                        ) : (
-                            <div className="logo-placeholder">
-                                <span>+</span>
-                            </div>
-                        )}
-                        <input
-                            type="file"
-                            accept="image/*"
-                            onChange={handleLogoChange}
-                            className="logo-input"
-                            id="logo-input"
-                        />
-                        <label htmlFor="logo-input" className="logo-label">Subir imagen de portada</label>
-                    </div>
-                    
-                    <div className="company-name-container">
-                        <span className="company-label">Nombre de la marca</span>
-                        <strong className="company-name">{formData.companyName}</strong>
-                    </div>
-                </div>
+            <h1 className="createoffer-page-title">
+                {isEditing ? 'Editar oferta de trabajo' : 'Publica una oferta de empleo'}
+            </h1>
+            <div className="createoffer-container">
+                <aside className="createoffer-sidebar">
+                    <ul>
+                        <li><a href="#imagen-cabecera">Imagen de cabecera</a></li>
+                        <li><a href="#titulo-oferta">Título</a></li>
+                        <li><a href="#especificaciones">Especificaciones</a></li>
+                        <li><a href="#descripcion-ofertante">Descripción ofertante</a></li>
+                        <li><a href="#descripcion-puesto">Descripción puesto</a></li>
+                        <li><a href="#funciones">Funciones</a></li>
+                        <li><a href="#se-ofrece">Se ofrece</a></li>
+                        <li><a href="#perfil-ideal">Perfil ideal</a></li>
+                        <li><a href="#hard-skills">Hard Skills</a></li>
+                        <li><a href="#soft-skills">Soft Skills</a></li>
+                        <li><a href="#extra-questions">Preguntas extra</a></li>
+                    </ul>
+                </aside>
 
-                <div className="form-section">
-                    <h2 className="section-title">Título de la oferta</h2>
-                    <input
-                        type="text"
-                        name="title"
-                        value={formData.title}
-                        onChange={handleChange}
-                        className="full-width-input"
-                        placeholder="Título de la oferta"
-                        required
-                    />
-                </div>
+                <form onSubmit={handleSubmit} className="createoffer-form">
+                    {error && <div className="createoffer-error-message">{error}</div>}
 
-                <div className="form-section">
-                    <h2 className="section-title">Especificaciones</h2>
-                    <div className="specifications-grid">
-                        <div className="spec-item">
-                            <label>Duración</label>
+                    {/* --- Cabecera y logo */}
+                    <section id="imagen-cabecera" className="createoffer-form-section logo-section">
+                        <div className="createoffer-header-image">
+                            {previewLogo ? (
+                                <img src={previewLogo} alt="Cabecera" />
+                            ) : (
+                                <div className="upload-placeholder">
+                                    <span className="upload-icon">⤴︎</span>
+                                    <p>Sube tu imagen de cabecera</p>
+                                </div>
+                            )}
                             <input
-                                type="text"
-                                name="duration"
-                                value={formData.duration}
-                                onChange={handleChange}
-                                placeholder="Ej: 6 meses"
+                                type="file"
+                                accept="image/*"
+                                onChange={handleLogoChange}
+                                className="createoffer-header-input"
                             />
                         </div>
-                        <div className="spec-item">
-                            <label>Ubicación</label>
-                            <input
-                                type="text"
-                                name="city"
-                                value={formData.city}
-                                onChange={handleChange}
-                                placeholder="Ciudad"
-                                required
-                            />
+                        <div className="createoffer-company-name-container">
+                            <strong className="createoffer-company-name">{formDataCompanyName}</strong>
                         </div>
-                        <div className="spec-item">
-                            <label>País</label>
-                            <input
-                                type="text"
-                                name="country"
-                                value={formData.country}
-                                onChange={handleChange}
-                                placeholder="País"
-                                required
-                            />
-                        </div>
-                        <div className="spec-item">
-                            <label>Modalidad</label>
-                            <select
-                                name="locationType"
-                                value={formData.locationType}
-                                onChange={handleChange}
-                            >
-                                <option value="Presencial">Presencial</option>
-                                <option value="Remoto">Remoto</option>
-                                <option value="Híbrido">Híbrido</option>
-                            </select>
-                        </div>
-                        <div className="spec-item">
-                            <label>Contrato</label>
-                            <select
-                                name="jobType"
-                                value={formData.jobType}
-                                onChange={handleChange}
-                            >
-                                <option value="Tiempo completo">Tiempo completo</option>
-                                <option value="Tiempo parcial">Tiempo parcial</option>
-                                <option value="Prácticas">Prácticas</option>
-                            </select>
-                        </div>
-                        <div className="spec-item">
-                            <label>Experiencia</label>
-                            <input
-                                type="text"
-                                name="experienceYears"
-                                value={formData.experienceYears}
-                                onChange={handleChange}
-                                placeholder="Años de experiencia"
-                            />
-                        </div>
-                    </div>
-                </div>
+                    </section>
 
-                <div className="form-section">
-                    <h2 className="section-title">Funciones</h2>
-                    <textarea
-                        name="functions"
-                        value={formData.functions}
-                        onChange={handleChange}
-                        placeholder="Detalla las funciones principales del puesto"
-                        className="full-width-textarea"
-                    ></textarea>
-                </div>
-
-                <div className="form-section">
-                    <h2 className="section-title">Descripción</h2>
-                    <textarea
-                        name="description"
-                        value={formData.description}
-                        onChange={handleChange}
-                        placeholder="Describe el puesto de trabajo y tus expectativas"
-                        className="full-width-textarea"
-                        required
-                    ></textarea>
-                </div>
-
-                <div className="form-section">
-                    <h2 className="section-title">Describe el perfil ideal</h2>
-                    <textarea
-                        name="requiredProfile"
-                        value={formData.requiredProfile}
-                        onChange={handleChange}
-                        placeholder="Describe el perfil ideal para el puesto"
-                        className="full-width-textarea"
-                        required
-                    ></textarea>
-                </div>
-
-                <div className="form-section">
-                    <h2 className="section-title">Hard Skills (Habilidades técnicas)</h2>
-                    <div className="skills-input-container">
+                    {/* --- Título oferta */}
+                    <section id="titulo-oferta" className="createoffer-form-section">
+                        <h2 className="createoffer-section-title">Título de la oferta</h2>
                         <input
                             type="text"
-                            value={newHardSkill}
-                            onChange={(e) => setNewHardSkill(e.target.value)}
-                            onKeyDown={handleHardSkillKeyDown}
-                            placeholder="Añadir habilidad técnica"
-                            className="skill-input"
+                            name="title"
+                            value={formData.title}
+                            onChange={handleChange}
+                            className="createoffer-full-width-input"
+                            placeholder="Título de la oferta"
+                            required
                         />
-                        <button 
-                            type="button" 
-                            className="add-skill-btn"
-                            onClick={handleAddHardSkill}
+                    </section>
+
+                    {/* --- Especificaciones */}
+                    <section id="especificaciones" className="createoffer-form-section">
+                        <h2 className="createoffer-section-title">Especificaciones</h2>
+                        <div className="createoffer-specifications-grid">
+                            <div className="createoffer-spec-item">
+                                <label>Duración</label>
+                                <input
+                                    type="text"
+                                    name="duration"
+                                    value={formData.duration}
+                                    onChange={handleChange}
+                                    placeholder="Ej: 6 meses"
+                                />
+                            </div>
+                            <div className="createoffer-spec-item">
+                                <label>Ciudad</label>
+                                <input
+                                    type="text"
+                                    name="city"
+                                    value={formData.city}
+                                    onChange={handleChange}
+                                    placeholder="Ciudad"
+                                    required
+                                />
+                            </div>
+                            <div className="createoffer-spec-item">
+                                <label>País</label>
+                                <input
+                                    type="text"
+                                    name="country"
+                                    value={formData.country}
+                                    onChange={handleChange}
+                                    placeholder="País"
+                                    required
+                                />
+                            </div>
+                            <div className="createoffer-spec-item">
+                                <label>Modalidad</label>
+                                <select
+                                    name="locationType"
+                                    value={formData.locationType}
+                                    onChange={handleChange}
+                                >
+                                    <option>Presencial</option>
+                                    <option>Remoto</option>
+                                    <option>Híbrido</option>
+                                </select>
+                            </div>
+                            <div className="createoffer-spec-item">
+                                <label>Contrato</label>
+                                <select
+                                    name="jobType"
+                                    value={formData.jobType}
+                                    onChange={handleChange}
+                                >
+                                    <option>Tiempo completo</option>
+                                    <option>Tiempo parcial</option>
+                                    <option>Prácticas</option>
+                                </select>
+                            </div>
+                            <div className="createoffer-spec-item">
+                                <label>Experiencia</label>
+                                <input
+                                    type="text"
+                                    name="experienceYears"
+                                    value={formData.experienceYears}
+                                    onChange={handleChange}
+                                    placeholder="Años de experiencia"
+                                />
+                            </div>
+                            <div className="createoffer-spec-item full-width">
+                                <label>Página web</label>
+                                <input
+                                    type="text"
+                                    name="website"
+                                    value={formData.website}
+                                    onChange={handleChange}
+                                    placeholder="Escribe aquí tu enlace"
+                                    className="createoffer-full-width-input"
+                                />
+                            </div>
+                            <div className="createoffer-spec-item full-width">
+                                <label>Nombre de la persona de contacto</label>
+                                <input
+                                    type="text"
+                                    name="contactName"
+                                    value={formData.contactName}
+                                    onChange={handleChange}
+                                    placeholder="Nombre"
+                                    className="createoffer-full-width-input"
+                                />
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* --- Descripción del ofertante */}
+                    <section id="descripcion-ofertante" className="createoffer-form-section">
+                        <span className="createoffer-subtitle">
+                            Sobre ({formDataCompanyName || 'el profesional'})
+                        </span>
+                        <h2 className="createoffer-section-title">Descripción del ofertante</h2>
+                        <textarea
+                            name="descriptionEmployer"
+                            value={formData.descriptionEmployer}
+                            onChange={handleChange}
+                            placeholder="Escribe aquí la descripción."
+                            className="createoffer-full-width-textarea"
+                            required
+                        />
+                    </section>
+
+                    {/* --- Descripción del puesto */}
+                    <section id="descripcion-puesto" className="createoffer-form-section">
+                        <span className="createoffer-subtitle">Sobre el puesto de empleo</span>
+                        <h2 className="createoffer-section-title">Descripción</h2>
+                        <textarea
+                            name="description"
+                            value={formData.description}
+                            onChange={handleChange}
+                            placeholder="Escribe aquí la descripción."
+                            className="createoffer-full-width-textarea"
+                            required
+                        />
+                    </section>
+
+                    {/* --- Funciones */}
+                    <section id="funciones" className="createoffer-form-section">
+                        <h2 className="createoffer-section-title">Funciones</h2>
+                        <textarea
+                            name="functions"
+                            value={formData.functions}
+                            onChange={handleChange}
+                            placeholder="Escribe aquí la descripción."
+                            className="createoffer-full-width-textarea"
+                        />
+                    </section>
+
+                    {/* --- Se ofrece */}
+                    <section id="se-ofrece" className="createoffer-form-section">
+                        <h2 className="createoffer-section-title">Se ofrece</h2>
+                        <textarea
+                            name="offered"
+                            value={formData.offered}
+                            onChange={handleChange}
+                            placeholder="Escribe aquí la descripción."
+                            className="createoffer-full-width-textarea"
+                        />
+                    </section>
+
+                    {/* --- Perfil ideal */}
+                    <section id="perfil-ideal" className="createoffer-form-section">
+                        <span className="createoffer-subtitle">Sobre el perfil ideal</span>
+                        <h2 className="createoffer-section-title">Describe el perfil ideal</h2>
+                        <textarea
+                            name="requiredProfile"
+                            value={formData.requiredProfile}
+                            onChange={handleChange}
+                            placeholder="Escribe aquí la descripción."
+                            className="createoffer-full-width-textarea"
+                            required
+                        />
+                    </section>
+
+                    {/* --- Hard Skills */}
+                    <section id="hard-skills" className="createoffer-form-section">
+                        <h2 className="createoffer-section-title">Hard Skills (Técnicas)</h2>
+                        <div className="createoffer-skills-input-container">
+                            <input
+                                type="text"
+                                value={newHardSkill}
+                                onChange={e => setNewHardSkill(e.target.value)}
+                                onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), handleAddHardSkill())}
+                                placeholder="Añadir habilidad técnica"
+                                className="createoffer-skill-input"
+                            />
+                            <button
+                                type="button"
+                                onClick={handleAddHardSkill}
+                                className="createoffer-add-skill-btn"
+                            >
+                                +
+                            </button>
+                        </div>
+                        <div className="createoffer-skills-tags">
+                            {formData.hardSkills.map((s, i) => (
+                                <div key={i} className="createoffer-skill-tag">
+                                    {s}
+                                    <button
+                                        type="button"
+                                        onClick={() => handleRemoveHardSkill(s)}
+                                        className="createoffer-remove-skill-btn"
+                                    >
+                                        ×
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+
+                    {/* --- Soft Skills */}
+                    <section id="soft-skills" className="createoffer-form-section">
+                        <h2 className="createoffer-section-title">Soft Skills (Blandas)</h2>
+                        <div className="createoffer-skills-input-container">
+                            <input
+                                type="text"
+                                value={newSoftSkill}
+                                onChange={e => setNewSoftSkill(e.target.value)}
+                                onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), handleAddSoftSkill())}
+                                placeholder="Añadir habilidad blanda"
+                                className="createoffer-skill-input"
+                            />
+                            <button
+                                type="button"
+                                onClick={handleAddSoftSkill}
+                                className="createoffer-add-skill-btn"
+                            >
+                                +
+                            </button>
+                        </div>
+                        <div className="createoffer-skills-tags">
+                            {formData.softSkills.map((s, i) => (
+                                <div key={i} className="createoffer-skill-tag">
+                                    {s}
+                                    <button
+                                        type="button"
+                                        onClick={() => handleRemoveSoftSkill(s)}
+                                        className="createoffer-remove-skill-btn"
+                                    >
+                                        ×
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+
+                    {/* --- Extra preguntas */}
+                    <section id="extra-questions" className="createoffer-form-section">
+                        <ExtraQuestionsForm
+                            className="createoffer-extra-questions"
+                            formData={formData}
+                            setFormData={setFormData}
+                        />
+                    </section>
+
+                    {/* --- Botón final */}
+                    <div className="createoffer-form-actions-final">
+                        <button
+                            type="submit"
+                            className="createoffer-submit-btn"
+                            disabled={loading}
                         >
-                            +
+                            {loading
+                                ? isEditing ? 'Actualizando…' : 'Publicando…'
+                                : isEditing ? 'Actualizar oferta' : 'Crear oferta'}
                         </button>
                     </div>
-                    <div className="skills-tags">
-                        {formData.hardSkills.map((skill, index) => (
-                            <div key={index} className="skill-tag">
-                                {skill}
-                                <button 
-                                    type="button" 
-                                    className="remove-skill-btn"
-                                    onClick={() => handleRemoveHardSkill(skill)}
-                                >
-                                    ×
-                                </button>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                <div className="form-section">
-                    <h2 className="section-title">Soft Skills (Habilidades blandas)</h2>
-                    <div className="skills-input-container">
-                        <input
-                            type="text"
-                            value={newSoftSkill}
-                            onChange={(e) => setNewSoftSkill(e.target.value)}
-                            onKeyDown={handleSoftSkillKeyDown}
-                            placeholder="Añadir habilidad blanda"
-                            className="skill-input"
-                        />
-                        <button 
-                            type="button" 
-                            className="add-skill-btn"
-                            onClick={handleAddSoftSkill}
-                        >
-                            +
-                        </button>
-                    </div>
-                    <div className="skills-tags">
-                        {formData.softSkills.map((skill, index) => (
-                            <div key={index} className="skill-tag">
-                                {skill}
-                                <button 
-                                    type="button" 
-                                    className="remove-skill-btn"
-                                    onClick={() => handleRemoveSoftSkill(skill)}
-                                >
-                                    ×
-                                </button>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                <ExtraQuestionsForm 
-                    formData={formData} 
-                    setFormData={setFormData} 
-                />
-
-                <div className="form-actions-final">
-                    <button type="submit" className="submit-btn" disabled={loading}>
-                        {loading ? (isEditing ? 'Actualizando oferta...' : 'Publicando oferta...') : (isEditing ? 'Actualizar oferta de trabajo' : 'Crear oferta de trabajo')}
-                    </button>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     );
 };
