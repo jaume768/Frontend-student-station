@@ -232,7 +232,7 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
                     <FaSearch className="search-icon" />
                     <input 
                         type="text" 
-                        placeholder={isSearchExpanded ? "Buscar personas, publicaciones, ofertas..." : "Buscar..."} 
+                        placeholder={isSearchExpanded ? "Buscar personas, publicaciones, ofertas..." : "Buscador"} 
                         value={searchQuery}
                         onChange={handleSearchInputChange}
                         onKeyDown={handleSearch}

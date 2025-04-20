@@ -329,26 +329,6 @@ const MisOfertasSection = ({ userRole, professionalType }) => {
         }
     };
     
-    const handleActivateOffer = async (offerId, e) => {
-        e.stopPropagation();
-        try {
-            const token = localStorage.getItem('authToken');
-            if (!token) return;
-            
-            const backendUrl = import.meta.env.VITE_BACKEND_URL;
-            await axios.put(
-                `${backendUrl}/api/offers/${offerId}/status`,
-                { status: 'accepted' },
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
-            
-            // Actualizar la lista
-            fetchCompanyOffers();
-        } catch (error) {
-            console.error(`Error al activar la oferta:`, error);
-        }
-    };
-    
     // Funciones para manejar los modales
     const openDeleteModal = (offerId, e) => {
         if (e) e.stopPropagation();
@@ -728,21 +708,12 @@ const MisOfertasSection = ({ userRole, professionalType }) => {
                                         Revisar candidatos
                                     </button>
                                     
-                                    {offer.status === 'accepted' ? (
-                                        <button 
-                                            className="action-btn deactivate-btn"
-                                            onClick={(e) => openDeactivateModal(offer._id, e)}
-                                        >
-                                            Desactivar oferta
-                                        </button>
-                                    ) : (
-                                        <button 
-                                            className="action-btn activate-btn"
-                                            onClick={(e) => handleActivateOffer(offer._id, e)}
-                                        >
-                                            Activar oferta
-                                        </button>
-                                    )}
+                                    <button 
+                                        className="action-btn deactivate-btn"
+                                        onClick={(e) => openDeactivateModal(offer._id, e)}
+                                    >
+                                        Desactivar oferta
+                                    </button>
                                     
                                     <button 
                                         className="action-btn delete-btn"

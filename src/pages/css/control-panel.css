@@ -247,9 +247,9 @@
 }
 
 .dahsboard-search {
-    width: 240px;
+    width: 115px;
     transition: width 0.3s ease;
-    margin-right: 15px;
+    margin-right: 5px;
 }
 
 @media (max-width: 769px) {
@@ -266,6 +266,12 @@
     width: 75%;
 }
 
+@media (max-width: 1660px) {
+    .dahsboard-search.expanded {
+        width: 65%;
+    }
+}
+
 .search-input-container {
     position: relative;
     width: 100%;
@@ -274,7 +280,6 @@
 
 .search-input-container input {
     width: 100%;
-    padding: 12px 10px 12px 40px;
     border-radius: 40px;
     border: none;
     color: black;
