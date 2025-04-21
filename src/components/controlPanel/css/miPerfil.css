@@ -206,29 +206,43 @@
 /* Iconos de contacto y compartir */
 .miPerfil-contact-share {
     display: flex;
-    gap: 10px;
+    gap: 28px;
     margin-top: 10px;
-    justify-content: center;
+    justify-content: flex-start;
+    align-items: center;
 }
 
 .miPerfil-contact-button,
 .miPerfil-share-button {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background-color: #f0f0f0;
-    border: none;
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 20px;
+    font-family: inherit;
+    font-weight: 400;
+    box-shadow: none;
+    border-radius: 0;
+    padding: 0 8px;
+    height: 32px;
     cursor: pointer;
-    color: #666;
-    transition: background-color 0.2s;
+    transition: none;
+}
+
+.miPerfil-contact-button span,
+.miPerfil-share-button span {
+    font-size: 14px;
+    color: #888;
+    font-weight: 400;
+    margin-left: 6px;
 }
 
 .miPerfil-contact-button:hover,
 .miPerfil-share-button:hover {
-    background-color: #e0e0e0;
+    background: none;
+    color: #555;
 }
 
 /* Columna derecha - Contenido de pestañas */
@@ -1115,6 +1129,59 @@
     .miPerfil-action-buttons {
         flex-direction: column;
     }
+}
+
+/* Hitos profesionales - Experiencia profesional */
+.miPerfil-section h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.miPerfil-experience-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.miPerfil-experience-item {
+    display: flex;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.miPerfil-experience-icon {
+    margin-right: 15px;
+    color: #666;
+}
+
+.miPerfil-experience-content {
+    flex: 1;
+}
+
+.miPerfil-experience-title {
+    font-weight: 600;
+    font-size: 15px;
+    margin-bottom: 5px;
+}
+
+.miPerfil-experience-company {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.miPerfil-experience-date {
+    font-size: 13px;
+    color: #777;
+    margin-bottom: 5px;
+}
+
+.miPerfil-experience-description {
+    font-size: 13px;
+    line-height: 1.5;
+    color: #555;
+    margin-top: 5px;
 }
 
 /* Align Skills and Software tags to UserProfile style */

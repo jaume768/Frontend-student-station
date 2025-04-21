@@ -4,37 +4,39 @@ import { FaAward } from 'react-icons/fa';
 const MilestoneSection = ({ professionalMilestones }) => {
     if (!Array.isArray(professionalMilestones) || professionalMilestones.length === 0) {
         return (
-            <div className="profile-section">
-                <h3 className="section-title">
-                    <FaAward className="section-icon" />
+            <section className="miPerfil-section">
+                <h2>
+                    <FaAward style={{marginRight: '8px'}} />
                     Hitos profesionales
-                </h3>
-                <p className="no-data-message">No hay hitos profesionales registrados.</p>
-            </div>
+                </h2>
+                <p>No hay hitos profesionales registrados.</p>
+            </section>
         );
     }
 
     return (
-        <div className="profile-section">
-            <h3 className="section-title">
+        <section className="miPerfil-section">
+            <h2>
                 Hitos profesionales
-            </h3>
-            <div className="milestones-container">
+            </h2>
+            <ul className="miPerfil-experience-list">
                 {professionalMilestones.map((milestone, index) => (
-                    <div key={index} className="milestone-item">
-                        <div className="milestone-header">
-                            <h4 className="milestone-title">{milestone.name}</h4>
-                            <span className="milestone-date">{milestone.date}</span>
+                    <li key={index} className="miPerfil-experience-item">
+                        <div className="miPerfil-experience-icon">
+                            <FaAward />
                         </div>
-                        <div className="milestone-entity">{milestone.entity}</div>
-                        {milestone.description && (
-                            <p className="milestone-description">{milestone.description}</p>
-                        )}
-                        {index < professionalMilestones.length - 1 && <hr className="milestone-divider" />}
-                    </div>
+                        <div className="miPerfil-experience-content">
+                            <div className="miPerfil-experience-title">{milestone.name}</div>
+                            <div className="miPerfil-experience-company">{milestone.entity}</div>
+                            <div className="miPerfil-experience-date">{milestone.date}</div>
+                            {milestone.description && (
+                                <div className="miPerfil-experience-description">{milestone.description}</div>
+                            )}
+                        </div>
+                    </li>
                 ))}
-            </div>
-        </div>
+            </ul>
+        </section>
     );
 };
 

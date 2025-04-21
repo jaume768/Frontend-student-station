@@ -206,30 +206,45 @@
 /* Iconos de contacto y compartir */
 .user-extern-contact-share {
     display: flex;
-    gap: 10px;
+    gap: 28px;
     margin-top: 10px;
-    justify-content: center;
+    justify-content: flex-start;
+    align-items: center;
 }
 
 .user-extern-contact-button,
 .user-extern-share-button {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background-color: #f0f0f0;
-    border: none;
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 20px;
+    font-family: inherit;
+    font-weight: 400;
+    box-shadow: none;
+    border-radius: 0;
+    padding: 0 8px;
+    height: 32px;
     cursor: pointer;
-    color: #666;
-    transition: background-color 0.2s;
+    transition: none;
+}
+
+.user-extern-contact-button span,
+.user-extern-share-button span {
+    font-size: 14px;
+    color: #888;
+    font-weight: 400;
+    margin-left: 6px;
 }
 
 .user-extern-contact-button:hover,
 .user-extern-share-button:hover {
-    background-color: #e0e0e0;
+    background: none;
+    color: #555;
 }
+
 
 /* Columna derecha - Contenido de pestañas */
 .user-extern-right-column {

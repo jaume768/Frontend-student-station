@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import './css/UserProfileExtern.css';
-import { FaCheckCircle, FaExclamationCircle, FaArrowLeft, FaUserPlus, FaUserCheck, FaBell, FaBellSlash, FaEnvelope, FaShareAlt, FaTh, FaList, FaGlobe } from 'react-icons/fa';
+import { FaCheckCircle, FaExclamationCircle, FaArrowLeft, FaUserPlus, FaUserCheck, FaBell, FaBellSlash, FaEnvelope, FaShareAlt, FaTh, FaList, FaGlobe, FaUpload, FaExternalLinkAlt } from 'react-icons/fa';
 
 // Importar componentes
 import UserProfileHeader from './userProfile/UserProfileHeader';
@@ -454,11 +454,41 @@ const UserProfile = () => {
 
                         {/* Iconos de contacto y compartir */}
                         <div className="user-extern-contact-share">
-                            <button className="user-extern-contact-button" title="Contactar">
+                            <button 
+                                className="user-extern-contact-button" 
+                                title="Contactar"
+                                onClick={() => {
+                                    if (profile?.email) {
+                                        window.location.href = `mailto:${profile.email}`;
+                                    } else {
+                                        setNotification({
+                                            show: true,
+                                            type: 'error',
+                                            message: 'No hay dirección de correo disponible para este usuario.'
+                                        });
+                                        setTimeout(() => setNotification({ show: false }), 3000);
+                                    }
+                                }}
+                            >
                                 <FaEnvelope />
+                                <span>Contactar</span>
                             </button>
-                            <button className="user-extern-share-button" title="Compartir perfil">
-                                <FaShareAlt />
+                            <button 
+                                className="user-extern-share-button" 
+                                title="Compartir perfil"
+                                onClick={() => {
+                                    const profileUrl = window.location.href;
+                                    navigator.clipboard.writeText(profileUrl);
+                                    setNotification({
+                                        show: true,
+                                        type: 'success',
+                                        message: 'URL del perfil copiada al portapapeles'
+                                    });
+                                    setTimeout(() => setNotification({ show: false }), 3000);
+                                }}
+                            >
+                                <FaExternalLinkAlt />
+                                <span>Compartir perfil</span>
                             </button>
                         </div>
                     </div>

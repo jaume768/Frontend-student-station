@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './css/miPerfil.css';
 import { useNavigate } from 'react-router-dom';
-import { FaBell, FaEnvelope, FaShareAlt } from 'react-icons/fa';
+import { FaBell, FaEnvelope, FaShareAlt, FaExternalLinkAlt } from 'react-icons/fa';
 
 // Importar componentes
 import ProfileHeader from './miPerfil/ProfileHeader';
@@ -154,8 +154,34 @@ const MiPerfil = () => {
                             <button className="miPerfil-notification-button"><FaBell /></button>
                         </div>
                         <div className="miPerfil-contact-share">
-                            <button className="miPerfil-contact-button"><FaEnvelope /></button>
-                            <button className="miPerfil-share-button"><FaShareAlt /></button>
+                            <button 
+                                className="miPerfil-contact-button" 
+                                title="Contactar"
+                                onClick={() => {
+                                    if (profile?.email) {
+                                        window.location.href = `mailto:${profile.email}`;
+                                    } else {
+                                        // Mostrar notificación (puedes implementar un sistema de notificaciones similar al de UserProfile)
+                                        alert('No hay dirección de correo disponible para este usuario.');
+                                    }
+                                }}
+                            >
+                                <FaEnvelope />
+                                <span>Contactar</span>
+                            </button>
+                            <button 
+                                className="miPerfil-share-button" 
+                                title="Compartir perfil"
+                                onClick={() => {
+                                    const profileUrl = window.location.href;
+                                    navigator.clipboard.writeText(profileUrl);
+                                    // Mostrar notificación (puedes implementar un sistema de notificaciones similar al de UserProfile)
+                                    alert('URL del perfil copiada al portapapeles');
+                                }}
+                            >
+                                <FaExternalLinkAlt />
+                                <span>Compartir perfil</span>
+                            </button>
                         </div>
                     </div>
                 </div>
