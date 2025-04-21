@@ -1104,6 +1104,7 @@
     .miPerfil-left-column {
         position: relative;
         transform: translateY(0);
+        top: 0px;
         transition: transform 0.3s ease;
     }
 
