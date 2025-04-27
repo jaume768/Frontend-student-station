@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { FaBookmark, FaSearch, FaBars, FaPlus, FaTimes } from 'react-icons/fa';
+import { FaSearch, FaBars, FaPlus, FaTimes, FaChevronDown } from 'react-icons/fa';
 import axios from 'axios';
 import ProfileOptionsModal from './ProfileOptionsModal';
 import CreateOptionsModal from './CreateOptionsModal';
@@ -274,7 +274,7 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
                     className={`sidebar-menu-item saved-button ${location.pathname.includes('guardados') ? 'active' : ''}`}
                     onClick={() => navigate('/ControlPanel/guardados')}
                 >
-                    <FaBookmark className="sidebar-icon" />
+                    <img src="/iconos/save.svg" alt="Guardados" className="sidebar-icon" />
                     <span>Guardados</span>
                 </button>
                 <div className="create-button-container" ref={createButtonRef} style={{ position: 'relative' }}>
@@ -298,6 +298,9 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
                         alt="Perfil"
                         onClick={handleProfileClick}
                     />
+                    <div className="profile-dropdown-icon" onClick={handleProfileClick}>
+                        <FaChevronDown className={`dropdown-arrow ${showProfileOptions ? 'open' : ''}`} />
+                    </div>
                     <FaBars className="hamburger-menu" onClick={onHamburgerClick} />
                     {showProfileOptions && (
                         <ProfileOptionsModal

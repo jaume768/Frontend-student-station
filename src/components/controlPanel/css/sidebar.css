@@ -73,8 +73,9 @@
 }
 
 /* Active icon color: blue (#1a73e8) */
-.sidebar-menu-item.active .sidebar-icon {
-    filter: invert(43%) sepia(73%) saturate(5451%) hue-rotate(202deg) brightness(93%) contrast(92%);
+.sidebar-menu-item.active .sidebar-icon,
+.saved-button.active .sidebar-icon {
+    filter: invert(43%) sepia(73%) saturate(5451%) hue-rotate(202deg) brightness(93%) contrast(92%) !important;
 }
 
 /* Info menu items */
