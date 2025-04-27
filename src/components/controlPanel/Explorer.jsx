@@ -237,19 +237,6 @@ const Explorer = () => {
 
                     <div className="explorer-tabs">
                         <button
-                            className={`user-extern-tab ${activeTab === 'staffPicks' ? 'active' : ''}`}
-                            disabled={tabDisabled}
-                            onClick={() => {
-                                if (!tabDisabled) {
-                                    setTabDisabled(true);
-                                    setActiveTab('staffPicks');
-                                    setTimeout(() => setTabDisabled(false), 500);
-                                }
-                            }}
-                        >
-                            Staff Picks
-                        </button>
-                        <button
                             className={`user-extern-tab ${activeTab === 'explorer' ? 'active' : ''}`}
                             disabled={tabDisabled}
                             onClick={() => {
@@ -261,6 +248,19 @@ const Explorer = () => {
                             }}
                         >
                             Fotos aleatorias
+                        </button>
+                        <button
+                            className={`user-extern-tab ${activeTab === 'staffPicks' ? 'active' : ''}`}
+                            disabled={tabDisabled}
+                            onClick={() => {
+                                if (!tabDisabled) {
+                                    setTabDisabled(true);
+                                    setActiveTab('staffPicks');
+                                    setTimeout(() => setTabDisabled(false), 500);
+                                }
+                            }}
+                        >
+                            Staff Picks
                         </button>
                     </div>
                 </div>

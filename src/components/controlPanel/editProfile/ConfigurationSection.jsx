@@ -53,6 +53,16 @@ const ConfigurationSection = ({
             setIsDeleteModalOpen(false);
         }
     };
+
+    // Handler para cerrar sesión
+    const handleLogout = () => {
+        // Eliminar token de autenticación y rol
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('userRole');
+        // Redirigir a la página principal
+        navigate('/');
+    };
+
     return (
         <div className="configuration-section">
             <h2>Configuración de la cuenta</h2>
@@ -128,6 +138,21 @@ const ConfigurationSection = ({
                             </div>
                         </div>
                     )}
+                </div>
+            </section>
+
+            <section className="form-section">
+                <div className="section-header-edit">
+                    <h3>Cerrar sesión</h3>
+                </div>
+                <div className="section-content">
+                    <button
+                        type="button"
+                        className="logout-button edit-data-button"
+                        onClick={handleLogout}
+                    >
+                        Cerrar sesión
+                    </button>
                 </div>
             </section>
 
