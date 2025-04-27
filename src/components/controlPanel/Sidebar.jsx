@@ -1,23 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
-import {
-    FaCompass,
-    FaUsers,
-    FaTshirt,
-    FaBriefcase,
-    FaRegNewspaper,
-    FaBookOpen,
-    FaRandom,
-    FaInfoCircle,
-    FaUser,
-    FaEdit,
-    FaUserFriends,
-    FaCog,
-    FaPlus,
-    FaHandshake,
-    FaGraduationCap,
-    FaSuitcase
-} from 'react-icons/fa';
 import logo from '../../assets/st-isotipo-temporal.png';
 import './css/sidebar.css';
 
@@ -25,6 +7,8 @@ const Sidebar = ({ onLinkClick }) => {
     const location = useLocation();
     const navigate = useNavigate();
     const [activeSection, setActiveSection] = useState('explorer');
+    const [infoOpen, setInfoOpen] = useState(false);
+    const toggleInfo = () => setInfoOpen(prev => !prev);
     
     // Función para manejar la navegación y cerrar sidebar en móvil si es necesario
     const handleNavigation = (path, stateObj = null) => {
@@ -106,9 +90,6 @@ const Sidebar = ({ onLinkClick }) => {
             case 'magazine':
                 handleNavigation('magazine');
                 break;
-            case 'random':
-                handleNavigation('random');
-                break;
             case 'about':
                 handleNavigation('about');
                 break;
@@ -146,58 +127,6 @@ const Sidebar = ({ onLinkClick }) => {
                     <img src={logo} alt="Logo" style={{ width: '50px', height: '60px' }} />
                 </div>
                 
-                {/* Mi perfil sección */}
-                <div className="sidebar-section">
-                    <div className="sidebar-section-title">Mi perfil</div>
-                    <ul className="sidebar-menu">
-                        <li>
-                            <button 
-                                className={`sidebar-menu-item ${activeSection === 'profile' ? 'active' : ''}`}
-                                onClick={() => onSelectOption('profile')}
-                            >
-                                <FaUser className="sidebar-icon" />
-                                <span>Ver mi perfil</span>
-                            </button>
-                        </li>
-                        <li>
-                            <button 
-                                className={`sidebar-menu-item ${activeSection === 'editProfile' ? 'active' : ''}`}
-                                onClick={() => onSelectOption('editProfile')}
-                            >
-                                <FaEdit className="sidebar-icon" />
-                                <span>Editar perfil</span>
-                            </button>
-                        </li>
-                        <li>
-                            <button 
-                                className={`sidebar-menu-item ${activeSection === 'community' ? 'active' : ''}`}
-                                onClick={() => onSelectOption('community')}
-                            >
-                                <FaUserFriends className="sidebar-icon" />
-                                <span>Mi comunidad</span>
-                            </button>
-                        </li>
-                        <li>
-                            <button 
-                                className={`sidebar-menu-item ${activeSection === 'misOfertas' ? 'active' : ''}`}
-                                onClick={() => onSelectOption('misOfertas')}
-                            >
-                                <FaSuitcase className="sidebar-icon" />
-                                <span>Mis ofertas</span>
-                            </button>
-                        </li>
-                        <li>
-                            <button 
-                                className={`sidebar-menu-item ${activeSection === 'configuracion' ? 'active' : ''}`}
-                                onClick={() => onSelectOption('configuracion')}
-                            >
-                                <FaCog className="sidebar-icon" />
-                                <span>Configuración</span>
-                            </button>
-                        </li>
-                    </ul>
-                </div>
-                
                 {/* Menú principal */}
                 <div className="sidebar-section">
                     <div className="sidebar-section-title">Menú</div>
@@ -207,7 +136,7 @@ const Sidebar = ({ onLinkClick }) => {
                                 className={`sidebar-menu-item ${activeSection === 'explorer' ? 'active' : ''}`}
                                 onClick={() => onSelectOption('explorer')}
                             >
-                                <FaCompass className="sidebar-icon" />
+                                <img src="/iconos/explorer.svg" alt="Explorador" className="sidebar-icon" />
                                 <span>Explorador</span>
                             </button>
                         </li>
@@ -216,7 +145,7 @@ const Sidebar = ({ onLinkClick }) => {
                                 className={`sidebar-menu-item ${activeSection === 'creatives' ? 'active' : ''}`}
                                 onClick={() => onSelectOption('creatives')}
                             >
-                                <FaUsers className="sidebar-icon" />
+                                <img src="/iconos/creatives.svg" alt="Creativos" className="sidebar-icon" />
                                 <span>Creativos</span>
                             </button>
                         </li>
@@ -225,7 +154,7 @@ const Sidebar = ({ onLinkClick }) => {
                                 className={`sidebar-menu-item ${activeSection === 'fashion' ? 'active' : ''}`}
                                 onClick={() => onSelectOption('fashion')}
                             >
-                                <FaTshirt className="sidebar-icon" />
+                                <img src="/iconos/study.svg" alt="Estudiar moda" className="sidebar-icon" />
                                 <span>Estudiar moda</span>
                             </button>
                         </li>
@@ -234,7 +163,7 @@ const Sidebar = ({ onLinkClick }) => {
                                 className={`sidebar-menu-item ${activeSection === 'offers' ? 'active' : ''}`}
                                 onClick={() => onSelectOption('offers')}
                             >
-                                <FaBriefcase className="sidebar-icon" />
+                                <img src="/iconos/job-offer.svg" alt="Ofertas de trabajo" className="sidebar-icon" />
                                 <span>Ofertas de trabajo</span>
                             </button>
                         </li>
@@ -243,7 +172,7 @@ const Sidebar = ({ onLinkClick }) => {
                                 className={`sidebar-menu-item ${activeSection === 'blog' ? 'active' : ''}`}
                                 onClick={() => onSelectOption('blog')}
                             >
-                                <FaRegNewspaper className="sidebar-icon" />
+                                <img src="/iconos/blog.svg" alt="Blog" className="sidebar-icon" />
                                 <span>Blog</span>
                             </button>
                         </li>
@@ -252,17 +181,8 @@ const Sidebar = ({ onLinkClick }) => {
                                 className={`sidebar-menu-item ${activeSection === 'magazine' ? 'active' : ''}`}
                                 onClick={() => onSelectOption('magazine')}
                             >
-                                <FaBookOpen className="sidebar-icon" />
+                                <img src="/iconos/magazine.svg" alt="Revista" className="sidebar-icon" />
                                 <span>Revista</span>
-                            </button>
-                        </li>
-                        <li>
-                            <button 
-                                className={`sidebar-menu-item ${activeSection === 'random' ? 'active' : ''}`}
-                                onClick={() => onSelectOption('random')}
-                            >
-                                <FaRandom className="sidebar-icon" />
-                                <span>Random</span>
                             </button>
                         </li>
                         <li>
@@ -270,7 +190,7 @@ const Sidebar = ({ onLinkClick }) => {
                                 className={`sidebar-menu-item ${activeSection === 'about' ? 'active' : ''}`}
                                 onClick={() => onSelectOption('about')}
                             >
-                                <FaInfoCircle className="sidebar-icon" />
+                                <img src="/iconos/about.svg" alt="About" className="sidebar-icon" />
                                 <span>About</span>
                             </button>
                         </li>
@@ -279,10 +199,11 @@ const Sidebar = ({ onLinkClick }) => {
                 
                 {/* Más información */}
                 <div className="sidebar-section">
-                    <div className="sidebar-section-title">
-                        <FaPlus className="sidebar-icon" />
+                    <div className="sidebar-section-title" onClick={toggleInfo} style={{ cursor: 'pointer' }}>
+                        <img src={infoOpen ? "/iconos/less.svg" : "/iconos/more.svg"} alt="Más información" className="sidebar-icon" />
                         <span>Más información</span>
                     </div>
+                    {infoOpen && (
                     <ul className="sidebar-menu sidebar-info-menu">
                         <li>
                             <button 
@@ -325,6 +246,7 @@ const Sidebar = ({ onLinkClick }) => {
                             </button>
                         </li>
                     </ul>
+                    )}
                 </div>
             </div>
         </aside>
