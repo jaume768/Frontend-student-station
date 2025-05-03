@@ -111,8 +111,8 @@
 }
 
 .mobile-profile-img {
-    width: 24px;
-    height: 24px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     object-fit: cover;
 }
@@ -737,8 +737,8 @@
 @media (max-width: 480px) {
     .profile-options-modal {
         position: absolute;
-        top: -226px;
-        width: 150px;
+        top: -265px;
+        width: 159px;
         text-align: left;
         right: -13px;
         background: #fff;

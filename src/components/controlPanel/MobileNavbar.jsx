@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
-import { FaCompass, FaUsers, FaBookmark, FaChevronUp, FaChevronDown } from 'react-icons/fa';
+import { FaChevronUp, FaChevronDown } from 'react-icons/fa';
 import ProfileOptionsModal from './ProfileOptionsModal';
+import './css/mobileNavbar.css';
 
 const mobileNavItems = [
-    { id: 'explorer', icon: <FaCompass size={20}/>, label: 'Explorar', route: '/ControlPanel/explorer' },
-    { id: 'creatives', icon: <FaUsers size={20}/>, label: 'Creativos', route: '/ControlPanel/creatives' },
-    { id: 'guardados', icon: <FaBookmark size={20}/>, label: 'Guardados', route: '/ControlPanel/guardados' },
+    { id: 'explorer', icon: <img src="/iconos/explorer.svg" alt="Explorar" className="mobile-nav-icon" />, label: 'Explorar', route: '/ControlPanel/explorer' },
+    { id: 'creatives', icon: <img src="/iconos/creatives.svg" alt="Creativos" className="mobile-nav-icon" />, label: 'Creativos', route: '/ControlPanel/creatives' },
+    { id: 'guardados', icon: <img src="/iconos/save.svg" alt="Guardados" className="mobile-nav-icon" />, label: 'Guardados', route: '/ControlPanel/guardados' },
     { id: 'profile', icon: null, label: 'Mi perfil', route: '/ControlPanel/profile' },
 ];
 

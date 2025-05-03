@@ -1,0 +1,13 @@
+.mobile-nav-icon {
+  width: 20px;
+  height: auto;
+  filter: grayscale(100%) brightness(70%);
+}
+
+.nav-link-container.active .mobile-nav-icon {
+  filter: invert(43%) sepia(73%) saturate(5451%) hue-rotate(202deg) brightness(93%) contrast(92%) !important;
+}
+
+.nav-link-container.active {
+  color: #1a73e8 !important;
+}
