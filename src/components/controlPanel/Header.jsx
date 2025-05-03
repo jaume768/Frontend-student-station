@@ -133,6 +133,8 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
         setShowCreateOptions(false);
         setShowResults(false);
         setShowFullScreenSearch(false);
+        setIsSearchExpanded(false);
+        setSearchQuery('');
     }, [location]);
 
     const handleOptionSelect = (option) => {
