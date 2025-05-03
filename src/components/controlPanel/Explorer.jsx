@@ -13,6 +13,7 @@ const Explorer = () => {
     const [tabDisabled, setTabDisabled] = useState(false);
     const [showFilters, setShowFilters] = useState(false);
     const [showMobileFilters, setShowMobileFilters] = useState(false);
+    const [hasActiveFilters, setHasActiveFilters] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
 
     // Para evitar recarga inicial al montar
@@ -191,6 +192,12 @@ const Explorer = () => {
         else setShowFilters(true);
     };
 
+    const applyFilters = () => {
+        // Aplicar filtros (aquí iría la lógica para filtrar)
+        setHasActiveFilters(true);
+        setShowFilters(false);
+    };
+
     const breakpointColumns = { default: 6, 1400: 5, 1200: 4, 992: 3, 768: 2, 480: 2 };
 
     return (
@@ -203,19 +210,26 @@ const Explorer = () => {
                 </p>
                 <div className="explorer-tabs-container">
                     {
-                        !showFilters && (
+                        !showFilters && !showMobileFilters && (
                             <Draggable
-                                onStart={(e, d) => { initialPosRef.current = { x: d.x, y: d.y }; setDragging(false); return true; }}
-                                onDrag={(e, d) => {
-                                    const dx = d.x - initialPosRef.current.x;
-                                    const dy = d.y - initialPosRef.current.y;
-                                    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) setDragging(true);
+                                onStart={(e, data) => {
+                                    // guardamos la posición inicial
+                                    initialPosRef.current = { x: data.x, y: data.y };
+                                }}
+                                onStop={(e, data) => {
+                                    // calculamos cuánto te has movido
+                                    const dx = data.x - initialPosRef.current.x;
+                                    const dy = data.y - initialPosRef.current.y;
+
+                                    // si no te has movido más de 3px en ninguna dirección, lo consideramos un click
+                                    if (Math.abs(dx) < 3 && Math.abs(dy) < 3) {
+                                        handleOpenFilters();
+                                    }
                                 }}
                             >
                                 <button
                                     className="explorer-filter-button"
                                     disabled={tabDisabled}
-                                    onClick={e => { e.preventDefault(); if (!dragging) handleOpenFilters(); }}
                                     title="Abrir filtros"
                                     aria-label="Abrir filtros"
                                 >
@@ -293,7 +307,7 @@ const Explorer = () => {
                                 </select>
                             </div>
                         </div>
-                        <button className="explorer-apply-filters-btn">Aplicar filtros</button>
+                        <button className="explorer-apply-filters-btn" onClick={applyFilters}>Aplicar filtros</button>
                         <button
                             className="explorer-apply-filters-btn explorer-filters-close-btn"
                             onClick={() => setShowFilters(false)}
@@ -316,6 +330,7 @@ const Explorer = () => {
                     }}
                 >
                     <div className="explorer-mobile-filters-content">
+                        {/* Cabecera con título y botón cerrar */}
                         <div className="explorer-mobile-filters-header">
                             <h3>Filtros</h3>
                             <button
@@ -325,12 +340,44 @@ const Explorer = () => {
                                 <MdClose />
                             </button>
                         </div>
+
+                        {/* Cuerpo de filtros */}
                         <div className="explorer-filter-group">
-                            {/* ... mismos selects que antes ... */}
+                            <div className="explorer-filter-search">
+                                <input type="text" placeholder="Buscar" />
+                            </div>
+                            <div className="explorer-filter-select">
+                                <select defaultValue="">
+                                    <option value="" disabled>País</option>
+                                    <option value="espana">España</option>
+                                    <option value="francia">Francia</option>
+                                    <option value="alemania">Alemania</option>
+                                </select>
+                            </div>
+                            <div className="explorer-filter-select">
+                                <select defaultValue="">
+                                    <option value="" disabled>Ciudad</option>
+                                    <option value="madrid">Madrid</option>
+                                    <option value="barcelona">Barcelona</option>
+                                    <option value="valencia">Valencia</option>
+                                </select>
+                            </div>
+                            <div className="explorer-filter-select">
+                                <select defaultValue="">
+                                    <option value="" disabled>Centro de estudios</option>
+                                    <option value="ied">IED</option>
+                                    <option value="esdemga">ESDEMGA</option>
+                                    <option value="elisava">Elisava</option>
+                                </select>
+                            </div>
                         </div>
+
                         <button
                             className="explorer-apply-filters-btn"
-                            onClick={() => setShowMobileFilters(false)}
+                            onClick={() => {
+                                applyFilters();
+                                setShowMobileFilters(false);
+                            }}
                         >
                             Aplicar filtros
                         </button>
