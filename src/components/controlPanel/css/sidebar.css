@@ -10,7 +10,7 @@
 /* Section styles */
 .sidebar-section {
     margin-bottom: 10px;
-    padding: 0 15px;
+    padding: 0 10px;
 }
 
 .sidebar-section-title {
@@ -81,7 +81,7 @@
 
 /* Info menu items */
 .sidebar-info-menu .sidebar-menu-item {
-    padding: 8px 19px;
+    padding: 8px 17px;
     color: #5f6368;
     font-size: 12px;
 }

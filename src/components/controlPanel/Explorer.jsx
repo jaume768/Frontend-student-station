@@ -195,7 +195,6 @@ const Explorer = () => {
     const applyFilters = () => {
         // Aplicar filtros (aquí iría la lógica para filtrar)
         setHasActiveFilters(true);
-        setShowFilters(false);
     };
 
     const breakpointColumns = { default: 6, 1400: 5, 1200: 4, 992: 3, 768: 2, 480: 2 };

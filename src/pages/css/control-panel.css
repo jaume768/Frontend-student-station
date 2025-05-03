@@ -737,8 +737,8 @@
 @media (max-width: 480px) {
     .profile-options-modal {
         position: absolute;
-        top: -265px;
-        width: 159px;
+        top: -245px;
+        width: 171px;
         text-align: left;
         right: -13px;
         background: #fff;
