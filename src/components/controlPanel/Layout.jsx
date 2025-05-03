@@ -3,6 +3,7 @@ import Sidebar from './Sidebar';
 import Header from './Header';
 import MobileNavbar from './MobileNavbar';
 import MobileSideMenu from './MobileSideMenu';
+import CookieConsent from './CookieConsent';
 
 const Layout = ({ children, contentClassName }) => {
     const [sideMenuOpen, setSideMenuOpen] = useState(false);
@@ -46,6 +47,7 @@ const Layout = ({ children, contentClassName }) => {
                 <MobileNavbar profilePicture={profilePicture} />
             </div>
             {sideMenuOpen && <MobileSideMenu onClose={closeSideMenu} />}
+            <CookieConsent />
         </div>
     );
 };
