@@ -54,6 +54,13 @@
     align-self: flex-start;
 }
 
+@media (max-width: 768px) {
+    
+    .user-extern-left-column {
+        top: 0;
+    }
+}
+
 /* Foto de perfil */
 .user-extern-profile-photo-container {
     margin-bottom: 20px;

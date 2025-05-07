@@ -461,8 +461,7 @@ const Fashion = () => {
                                     <div className="institution-info">
                                         <h3>{inst.name}</h3>
                                         <div className="subtitle">
-                                            <FaMapMarkerAlt />
-                                            {inst.location.city}, {inst.location.country} ·{' '}
+                                            {inst.location.city}, {inst.location.country} |
                                             {inst.type === 'public' ? 'Presencial' : 'Híbrido'}
                                         </div>
                                         <div className="tags">

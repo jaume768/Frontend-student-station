@@ -440,16 +440,6 @@ const UserProfile = () => {
                                     </>
                                 )}
                             </button>
-
-                            {isFollowing && (
-                                <button
-                                    className={`user-extern-notification-button ${isNotificationActive ? 'active' : ''}`}
-                                    onClick={toggleNotification}
-                                    title={isNotificationActive ? "Desactivar notificaciones" : "Activar notificaciones"}
-                                >
-                                    {isNotificationActive ? <FaBell /> : <FaBellSlash />}
-                                </button>
-                            )}
                         </div>
 
                         {/* Iconos de contacto y compartir */}

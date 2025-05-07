@@ -303,7 +303,7 @@ const Creatives = () => {
                                     className="profile-picture"
                                 />
                                 <div className="creative-details">
-                                    <h3>{creative.username}</h3>
+                                    <h3>{creative.fullName || creative.username}</h3>
                                     {creative.country && (
                                         <div className="creative-location">
                                             <FaMapMarkerAlt className="location-icon" />

@@ -1,6 +1,5 @@
 .creatives-container {
     width: 100%;
-    padding: 20px;
 }
 
 .creatives-header {
@@ -14,7 +13,7 @@
     align-items: center;
     display: flex;
     width: 100%;
-    margin-bottom: 15px;
+    margin-bottom: 32px;
 }
 
 .offers-description{
@@ -44,7 +43,6 @@
 
 .creatives-content {
     display: flex;
-    gap: 30px;
     transition: margin-left 0.3s ease;
 }
 
@@ -83,7 +81,7 @@
 }
 
 .creatives-filters h3 {
-    font-size: 18px;
+    font-size: 32px;
     margin-bottom: 15px;
     font-weight: 600;
     color: #333;
@@ -187,15 +185,17 @@
 /* Galería de creativos */
 .creatives-masonry {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 25px;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 16px;
+    margin-left: 3em;
+    
 }
 
 .creative-card {
-    border-radius: 15px;
+    border-radius: 6px;
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: solid 0,5px #f0f0f0;
     background-color: white;
     cursor: pointer;
     display: flex;
@@ -358,6 +358,13 @@
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
+@media (max-width: 768px) {
+    .creatives-filter-button {
+        left: 87%;
+        top: 19em;
+    }
+}
+
 .creatives-filter-button:hover {
     background-color: #333;
     transform: scale(1.05);
@@ -408,7 +415,7 @@
 .creatives-mobile-filters-close {
     background: none;
     border: none;
-    font-size: 24px;
+    font-size: 32px;
     cursor: pointer;
     color: #333;
 }

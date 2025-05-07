@@ -4,7 +4,6 @@
 .fashion-container {
   display: flex;
   padding: 20px;
-  gap: 20px;
   min-height: 100vh;
   background-color: white;
 }
@@ -31,19 +30,18 @@
 }
 
 .page-title {
-  font-size: 28px;
+  font-size: 44px;
   font-weight: 600;
-  margin-left: 1em;
   color: #333;
   margin-bottom: 8px;
   text-align: center;
 }
 
 .page-description {
-  font-size: 14px;
+  font-size: 16px;
   color: #666;
   margin-bottom: 20px;
-  width: 45%;
+  width: 50%;
   margin: auto auto 10px auto;
   text-align: center;
   line-height: 1.5;
@@ -147,7 +145,7 @@
 .view-toggle-group .toggle {
   display: flex;
   align-items: center;
-  padding: 8px;
+  padding: 8px 16px;
   border-radius: 8px;
   background: transparent;
   border: 1px solid transparent;
@@ -183,10 +181,12 @@
   align-items: center;
   background: #f9f9f9;
   border-radius: 12px;
-  width: 50%;
+  width: 100%;
   margin: auto;
-  padding: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  height: auto;
+  max-width: 600px;
+  padding: 12px;
+  border: solid 1px #dddd;
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
 }
@@ -208,10 +208,12 @@
 
 /* Logo de la institución */
 .institution-logo {
-  width: 140px;
-  height: 140px;
+  width: 80px;
+  height: 80px;
   object-fit: contain;
   border-radius: 8px;
+  border: solid 1px #dddd;
+  margin-bottom: auto;
   margin-right: 16px;
 }
 
@@ -222,7 +224,7 @@
 
 .institution-info h3 {
   margin: 0;
-  font-size: 18px;
+  font-size: 24px;
   color: #333;
 }
 
@@ -272,6 +274,11 @@
 
 .institution-tag.public {
   background: #e0f2f1;
+  margin-bottom: auto;
+  padding: 2px 16px;
+  border: solid 1px #a7cac6;
+  border-radius: 16px;
+  font-size: 14px;
   color: #00796b;
 }
 
