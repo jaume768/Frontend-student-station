@@ -113,11 +113,6 @@
     color: #333;
 }
 
-/* Estilos para los inputs de texto */
-.filter-input {
-    margin-bottom: 10px;
-}
-
 .filter-input input {
     width: 100%;
     padding: 10px 15px;
@@ -336,6 +331,10 @@
     color: #777;
     margin-top: 20px;
     font-size: 14px;
+}
+
+.offers-header h1{
+    font-size: 44px;
 }
 
 /* Botón de filtro para móvil */

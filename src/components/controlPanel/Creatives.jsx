@@ -177,7 +177,7 @@ const Creatives = () => {
     const renderFilters = () => {
         return (
             <div className="creatives-filters">
-                
+                <h3>Filtros</h3>
                 {/* Buscador */}
                 <div className="filter-search">
                     <FaSearch className="search-icon" />
@@ -372,7 +372,7 @@ const Creatives = () => {
                     </Draggable>
                 )}
                 {/* Botón de filtro para desktop */}
-                {!isMobile && (
+                {!isMobile && !showFilters && (
                     <button
                         className="creatives-filter-button"
                         title="Abrir filtros"
@@ -415,7 +415,6 @@ const Creatives = () => {
             <div className={`creatives-filters-panel ${showFilters ? 'show' : ''}`}>
                 <div className="creatives-filters-container">
                     <div className="creatives-filters-header">
-                        <h3>Filtros</h3>
                         <button
                             className="creatives-filters-header-close"
                             onClick={() => setShowFilters(false)}
