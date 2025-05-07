@@ -269,12 +269,17 @@ const Explorer = () => {
                 </div>
             </div>
 
-            {/* --- Panel de filtros (escritorio) --- */}
             <div className={`explorer-filters-panel ${showFilters ? 'show' : ''}`}>
                 <div className="explorer-filters-container">
-                    {/* Nueva cabecera con botón de cierre */}
                     <div className="explorer-filters-header">
                         <h3>Filtros</h3>
+                        <button 
+                            className="explorer-filters-header-close" 
+                            onClick={() => setShowFilters(false)}
+                            title="Cerrar filtros"
+                        >
+                            <MdClose />
+                        </button>
                     </div>
                     <div className="explorer-filters-content">
                         <div className="explorer-filter-group">
@@ -308,11 +313,16 @@ const Explorer = () => {
                         </div>
                         <button className="explorer-apply-filters-btn" onClick={applyFilters}>Aplicar filtros</button>
                         <button
-                            className="explorer-apply-filters-btn explorer-filters-close-btn"
-                            onClick={() => setShowFilters(false)}
+                            className="explorer-apply-filters-btn explorer-clear-filters-btn"
+                            onClick={() => {
+                                document.querySelectorAll('.explorer-filter-select select').forEach(select => {
+                                    select.value = "";
+                                });
+                                document.querySelector('.explorer-filter-search input').value = '';
+                                setHasActiveFilters(false);
+                            }}
                         >
-                            <MdClose style={{ marginRight: '8px' }} />
-                            Cerrar filtros
+                            Borrar Filtros
                         </button>
                     </div>
                 </div>

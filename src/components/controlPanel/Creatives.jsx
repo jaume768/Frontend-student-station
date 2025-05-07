@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { FaMapMarkerAlt, FaSearch } from 'react-icons/fa';
-import { MdTune } from 'react-icons/md';
+import { MdTune, MdClose } from 'react-icons/md';
 import Draggable from 'react-draggable';
 import './css/Creatives.css';
 
@@ -34,6 +34,9 @@ const Creatives = () => {
     const observer = useRef();
     const initialPosRef = useRef({ x: 0, y: 0 });
     const [dragging, setDragging] = useState(false);
+
+    // Estado para mostrar filtros de escritorio
+    const [showFilters, setShowFilters] = useState(false);
 
     // Detectar si estamos en móvil
     useEffect(() => {
@@ -174,7 +177,6 @@ const Creatives = () => {
     const renderFilters = () => {
         return (
             <div className="creatives-filters">
-                <h3>Filtros</h3>
                 
                 {/* Buscador */}
                 <div className="filter-search">
@@ -332,6 +334,12 @@ const Creatives = () => {
         );
     };
 
+    // Función para abrir filtros según dispositivo
+    const handleOpenFilters = () => {
+        if (isMobile) setShowMobileFilters(prev => !prev);
+        else setShowFilters(prev => !prev);
+    };
+
     return (
         <div className="creatives-container">
             <div className="offers-header">
@@ -363,6 +371,17 @@ const Creatives = () => {
                         </button>
                     </Draggable>
                 )}
+                {/* Botón de filtro para desktop */}
+                {!isMobile && (
+                    <button
+                        className="creatives-filter-button"
+                        title="Abrir filtros"
+                        aria-label="Abrir filtros"
+                        onClick={handleOpenFilters}
+                    >
+                        <MdTune />
+                    </button>
+                )}
             </div>
             
             {/* Modal de filtros para móvil */}
@@ -392,10 +411,33 @@ const Creatives = () => {
                 </div>
             )}
             
-            <div className="creatives-content">
-                <aside className="creatives-sidebar">
-                    {renderFilters()}
-                </aside>
+            {/* Panel de filtros (desktop) */}
+            <div className={`creatives-filters-panel ${showFilters ? 'show' : ''}`}>
+                <div className="creatives-filters-container">
+                    <div className="creatives-filters-header">
+                        <h3>Filtros</h3>
+                        <button
+                            className="creatives-filters-header-close"
+                            onClick={() => setShowFilters(false)}
+                            title="Cerrar filtros"
+                        >
+                            <MdClose />
+                        </button>
+                    </div>
+                    <div className="creatives-filters-content">
+                        {renderFilters()}
+                        <button
+                            className="creatives-clear-filters-btn"
+                            onClick={() => { clearFilters(); }}
+                        >
+                            Borrar Filtros
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div className={`creatives-content ${showFilters ? 'with-filters' : ''}`}>
+                {/* Sidebar de filtros en desktop eliminado, uso panel deslizable para filtros */}
                 <main className="creatives-main">
                     {renderCreativesGallery()}
                     {loading && <div className="loading-indicator">Cargando más creativos...</div>}

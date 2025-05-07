@@ -188,10 +188,38 @@
     padding: 16px;
 }
 
-.explorer-filters-container h3 {
-    font-size: 20px;
+/* Estilos para la cabecera del panel de filtros */
+.explorer-filters-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 20px;
+}
+
+.explorer-filters-header h3 {
+    font-size: 20px;
     font-weight: 600;
+    margin: 0;
+}
+
+.explorer-filters-header-close {
+    background: #000;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    padding: 0;
+    transition: background-color 0.2s ease;
+}
+
+.explorer-filters-header-close:hover {
+    background-color: #333;
 }
 
 .explorer-filters-content {
@@ -212,6 +240,7 @@
     border: 1px solid #ddd;
     border-radius: 25px;
     font-size: 14px;
+    color: black;
     background-color: white;
 }
 
@@ -301,7 +330,7 @@
 .explorer-mobile-filters-close {
     background: none;
     border: none;
-    font-size: 32   px;
+    font-size: 32px;
     cursor: pointer;
     color: #333;
 }
