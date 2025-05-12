@@ -426,9 +426,22 @@ const Explorer = () => {
                                     <div className="save-feedback show">{saveFeedback.text}</div>
                                 )}
                             <div className="overlay">
-                                {/* ... contenido overlay ... */}
+                                <div className="user-profile-hover">
+                                    {item.user && item.user.profilePicture && (
+                                        <div className="user-avatar-container">
+                                            <img 
+                                                src={item.user.profilePicture} 
+                                                alt={`${item.user.username || 'Usuario'}`} 
+                                                className="user-avatar" 
+                                            />
+                                        </div>
+                                    )}
+                                    <div className="user-info-hover">
+                                        <div className="username">@{item.user?.username || 'usuario'}</div>
+                                        {item.user?.city && <div className="user-location">{item.user.city}</div>}
+                                    </div>
+                                </div>
                             </div>
-                            {item.user.country && <div className="country-tag">{item.user.country}</div>}
                         </div>
                     ))}
                 </Masonry>

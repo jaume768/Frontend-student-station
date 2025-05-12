@@ -461,8 +461,7 @@ const Fashion = () => {
                                     <div className="institution-info">
                                         <h3>{inst.name}</h3>
                                         <div className="subtitle">
-                                            {inst.location.city}, {inst.location.country} |
-                                            {inst.type === 'public' ? 'Presencial' : 'Híbrido'}
+                                            {inst.location.city}, {inst.location.country} | {inst.type === 'public' ? 'Presencial' : 'Híbrido'}
                                         </div>
                                         <div className="tags">
                                             {visibleCats.map((c) => (
