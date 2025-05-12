@@ -408,7 +408,9 @@ const Offers = () => {
                                     </div>
                                     <div className="offer-card-date">{formatDate(o.publicationDate)}</div>
                                 </div>
-                                <div className="offer-card-badge">{o.jobType}</div>
+                                <div className={`offer-card-badge ${o.jobType === 'Prácticas' ? 'badge-internship' : o.jobType === 'Tiempo completo' ? 'badge-fulltime' : o.jobType === 'Tiempo parcial' ? 'badge-parttime' : 'badge-other'}`}>
+                                    {o.jobType}
+                                </div>
                             </article>
                         ))
                     )}

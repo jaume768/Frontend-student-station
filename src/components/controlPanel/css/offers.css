@@ -9,32 +9,32 @@
 /* Contenedor general: sidebar de filtros + contenido   */
 /* -------------------------------------------------- */
 .offers-page-container {
-    display: flex;
-    padding: 20px;
-    gap: 20px;
-    min-height: 100vh;
-    background-color: white;
+  display: flex;
+  padding: 20px;
+  gap: 20px;
+  min-height: 100vh;
+  background-color: white;
 }
 
 /* -------------------------------------------------- */
 /* Sidebar de filtros (idéntica a la de fashion.css)   */
 /* -------------------------------------------------- */
 .filters-section {
-    width: 250px;
-    padding: 20px;
-    background: #fff;
-    border-radius: 12px;
-    position: fixed;
-    top: 245px;
+  width: 250px;
+  padding: 20px;
+  background: #fff;
+  border-radius: 12px;
+  position: fixed;
+  top: 245px;
 }
 
 /* -------------------------------------------------- */
 /* Contenido principal: reutiliza .main-content de fashion.css */
 /* -------------------------------------------------- */
 .offers-main-content {
-    flex: 1;
-    margin-left: 0;
-    /* sin margen extra, gap del padre aplica separación */
+  flex: 1;
+  margin-left: 0;
+  /* sin margen extra, gap del padre aplica separación */
 }
 
 /* si usas <main className="main-content">, no necesitarías .offers-main-content */
@@ -171,7 +171,7 @@
   .offers-filters-panel {
     display: none;
   }
-  
+
   .offers-filter-button.mobile {
     left: 87%;
     top: 9em;
@@ -181,123 +181,145 @@
 /* Grilla de ofertas                                  */
 /* -------------------------------------------------- */
 .offers-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin-left: 58px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 /* -------------------------------------------------- */
 /* Tarjeta de oferta                                  */
 /* -------------------------------------------------- */
 .offer-card {
-    position: relative;
-    display: flex;
-    width: 50%;
-    margin: auto;
-    align-items: center;
-    background: #f9f9f9;
-    border-radius: 12px;
-    padding: 16px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+  display: flex;
+  width: 50%;
+  margin: auto;
+  align-items: center;
+  background: #f9f9f9;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 @media (max-width: 768px) {
-    .offer-card {
-        width: 100%;
-        margin: 0;
-    }
+  .offer-card {
+    width: 100%;
+    margin: 0;
+  }
 }
 
 .offer-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: solid 2px #b6b5b5dd;
 }
 
 .offer-card-logo {
-    flex: 0 0 80px;
-    width: 80px;
-    height: 80px;
-    border-radius: 8px;
-    overflow: hidden;
-    background: #f9f9f9;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 16px;
+  flex: 0 0 80px;
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f9f9f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 16px;
 }
 
 .offer-card-logo img {
-    width: 140px;
-    height: 140px;
-    object-fit: contain;
+  width: 140px;
+  height: 140px;
+  object-fit: contain;
 }
 
 .offer-card-content {
-    flex: 1;
+  flex: 1;
 }
 
 .offer-card-user {
-    font-size: 14px;
-    color: #888;
-    margin-bottom: 4px;
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 4px;
 }
 
 .offer-card-title {
-    font-size: 20px;
-    font-weight: 600;
-    color: #333;
-    margin: 0 0 6px 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 6px 0;
 }
 
 .offer-card-meta {
-    font-size: 14px;
-    color: #666;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    margin-bottom: 4px;
+  font-size: 14px;
+  color: #666;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 4px;
 }
 
 .offer-card-meta span {
-    margin: 0 4px;
-    color: #ccc;
+  margin: 0 4px;
+  color: #ccc;
 }
 
 .offer-card-date {
-    font-size: 12px;
-    color: #aaa;
+  font-size: 12px;
+  color: #aaa;
 }
 
 .offer-card-badge {
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    padding: 4px 12px;
-    border-radius: 12px;
-    font-size: 12px;
-    font-weight: 500;
-    background: #e8f0fe;
-    color: #1a73e8;
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Estilos específicos para cada tipo de trabajo */
+.badge-internship {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #a5d6a7;
+}
+
+.badge-fulltime {
+  background-color: #e3f2fd;
+  color: #1565c0;
+  border: 1px solid #90caf9;
+}
+
+.badge-parttime {
+  background-color: #fff8e1;
+  color: #ff8f00;
+  border: 1px solid #ffe082;
+}
+
+/* Estilo por defecto para otros tipos */
+.badge-other {
+  background-color: #f3e5f5;
+  color: #7b1fa2;
+  border: 1px solid #ce93d8;
 }
 
 /* -------------------------------------------------- */
 /* Responsive: ocultar sidebar en móvil                */
 /* -------------------------------------------------- */
 @media (max-width: 768px) {
-    .filters-section {
-        display: none;
-    }
+  .filters-section {
+    display: none;
+  }
 
-    .offers-page-container {
-        flex-direction: column;
-        padding: 16px;
-        margin-bottom: 5em;
-    }
+  .offers-page-container {
+    flex-direction: column;
+    padding: 16px;
+    margin-bottom: 5em;
+  }
 
-    .offers-grid {
-        margin-left: 0;
-    }
+  .offers-grid {
+    margin-left: 0;
+  }
 }
