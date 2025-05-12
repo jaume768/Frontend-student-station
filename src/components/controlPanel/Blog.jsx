@@ -57,7 +57,15 @@ const Blog = () => {
 
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
-        return new Date(dateString).toLocaleDateString('es-ES', options);
+        // Obtener la fecha formateada
+        let formattedDate = new Date(dateString).toLocaleDateString('es-ES', options);
+        
+        // Eliminar el punto al inicio si existe
+        if (formattedDate.startsWith('.')) {
+            formattedDate = formattedDate.substring(1).trim();
+        }
+        
+        return formattedDate;
     };
 
     // Función para prevenir la propagación del evento click en elementos dentro de la tarjeta
@@ -146,7 +154,7 @@ const Blog = () => {
                                     </div>
                                     <div className="blog-card-footer">
                                         <span className="blog-card-link">
-                                            Leer más <FaArrowRight style={{ marginLeft: '5px', fontSize: '12px' }} />
+                                            Leer más
                                         </span>
                                     </div>
                                 </div>
@@ -185,7 +193,7 @@ const Blog = () => {
                                     </div>
                                     <div className="blog-card-footer">
                                         <span className="blog-card-link">
-                                            Leer más <FaArrowRight style={{ marginLeft: '5px', fontSize: '12px' }} />
+                                            Leer más
                                         </span>
                                     </div>
                                 </div>
