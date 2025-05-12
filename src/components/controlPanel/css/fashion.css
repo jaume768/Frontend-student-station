@@ -293,6 +293,7 @@
   border: solid 1px #dddd;
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
 }
 
 @media (max-width: 768px) {
@@ -358,11 +359,38 @@
   color: #555;
 }
 
-.tag.more {
-  background: none;
-  border: none;
-  color: #4f46e5;
-  cursor: pointer;
+.professional-title {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 4px;
+  text-transform: none;
+}
+
+.official-website-btn {
+  display: inline-flex;
+  align-items: center;
+  position: absolute;
+  top: 78%;
+  right: 12px;
+  padding: 6px 12px;
+  background-color: transparent;
+  color: #333;
+  font-size: 13px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  gap: 5px;
+  z-index: 2;
+}
+
+.official-website-btn::after {
+  content: '↗';
+  font-size: 14px;
+  margin-left: 2px;
+}
+
+.official-website-btn:hover {
+  background-color: #f8f8f8;
+  border-color: #ccc;
 }
 
 /* Badge de Visibilidad */

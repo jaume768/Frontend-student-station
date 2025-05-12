@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { FaSearch, FaChevronDown, FaMapMarkerAlt } from 'react-icons/fa';
+import { FaSearch, FaChevronDown } from 'react-icons/fa';
 import { MdTune } from 'react-icons/md';
 import Draggable from 'react-draggable';
 import './css/fashion.css';
@@ -20,13 +20,10 @@ const Fashion = () => {
         educationLevel: '',
         modality: '',
         category: '',
-        visibility: 'all',       // <-- añadido
+        visibility: 'all',
     });
     const [countries, setCountries] = useState([]);
     const [cities, setCities] = useState([]);
-    const [hoveredInstitution, setHoveredInstitution] = useState(null);
-
-    // Estados y lógica para mobile filters
     const [isMobile, setIsMobile] = useState(false);
     const [showMobileFilters, setShowMobileFilters] = useState(false);
     const [showFilters, setShowFilters] = useState(false);
@@ -34,19 +31,7 @@ const Fashion = () => {
     const initialPosRef = useRef({ x: 0, y: 0 });
     const [dragging, setDragging] = useState(false);
 
-    useEffect(() => {
-        const checkIfMobile = () => setIsMobile(window.innerWidth <= 768);
-        checkIfMobile();
-        window.addEventListener('resize', checkIfMobile);
-        return () => window.removeEventListener('resize', checkIfMobile);
-    }, []);
-    
-    // Función para abrir filtros según dispositivo
-    const handleOpenFilters = () => {
-        if (isMobile) setShowMobileFilters(prev => !prev);
-        else setShowFilters(prev => !prev);
-    };
-
+    // Listas para los selects de filtros
     const educationLevelsList = [
         'Grado o licenciatura',
         'Máster o posgrado',
@@ -58,6 +43,15 @@ const Fashion = () => {
     const modalityList = ['Presencial', 'Online', 'Híbrido'];
     const categoriesList = ['Moda', 'Diseño gráfico', 'Fotografía'];
 
+    // Detectar móvil
+    useEffect(() => {
+        const checkIfMobile = () => setIsMobile(window.innerWidth <= 768);
+        checkIfMobile();
+        window.addEventListener('resize', checkIfMobile);
+        return () => window.removeEventListener('resize', checkIfMobile);
+    }, []);
+
+    // Obtener instituciones desde el backend
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -68,11 +62,8 @@ const Fashion = () => {
                 );
                 const data = res.data.institutions || [];
                 setInstitutions(data);
-
                 setCountries([
-                    ...new Set(
-                        data.map((i) => i.location?.country).filter(Boolean)
-                    ),
+                    ...new Set(data.map((i) => i.location?.country).filter(Boolean)),
                 ]);
                 setCities([
                     ...new Set(data.map((i) => i.location?.city).filter(Boolean)),
@@ -92,15 +83,11 @@ const Fashion = () => {
     };
 
     const applyFilters = () => {
-        // Si quisieras volver a llamar al backend, aquí iría.
-        
-        // Comprobar si hay algún filtro activo
-        const hasFilters = Object.entries(filters).some(([key, value]) => {
-            if (key === 'centerType' || key === 'visibility') return value !== 'all';
-            return value !== '' && value !== null && value !== undefined;
+        const has = Object.entries(filters).some(([k, v]) => {
+            if (k === 'centerType' || k === 'visibility') return v !== 'all';
+            return v !== '' && v != null;
         });
-        
-        setHasActiveFilters(hasFilters);
+        setHasActiveFilters(has);
     };
 
     const clearAllFilters = () => {
@@ -117,6 +104,12 @@ const Fashion = () => {
         setHasActiveFilters(false);
     };
 
+    const handleOpenFilters = () => {
+        if (isMobile) setShowMobileFilters((v) => !v);
+        else setShowFilters((v) => !v);
+    };
+
+    // Filtrar instituciones antes de renderizar
     const filteredInstitutions = institutions.filter((inst) => {
         const {
             search,
@@ -156,71 +149,65 @@ const Fashion = () => {
 
     return (
         <div className={`fashion-container ${showFilters ? 'with-filters' : ''}`}>
-            {/* ------------------ FILTROS ------------------ */}
-            {/* Botón de filtro para móvil */}
-            {isMobile && (
+            {/* ==================== BOTÓN FILTROS ==================== */}
+            {isMobile ? (
                 <Draggable
-                    onStart={(e, data) => {
-                        initialPosRef.current = { x: data.x, y: data.y };
+                    onStart={(e, d) => {
+                        initialPosRef.current = { x: d.x, y: d.y };
                         setDragging(false);
                         return true;
                     }}
-                    onDrag={(e, data) => {
-                        const dx = data.x - initialPosRef.current.x;
-                        const dy = data.y - initialPosRef.current.y;
+                    onDrag={(e, d) => {
+                        const dx = d.x - initialPosRef.current.x;
+                        const dy = d.y - initialPosRef.current.y;
                         if (Math.abs(dx) > 3 || Math.abs(dy) > 3) setDragging(true);
                     }}
-                    onStop={(e, data) => {
-                        if (!dragging) setShowMobileFilters(prev => !prev);
-                    }}
-                >
-                    <button className={`fashion-filter-button ${hasActiveFilters ? 'has-filters' : ''}`}>
-                        <MdTune />
-                    </button>
-                </Draggable>
-            )}
-            
-            {/* Botón de filtro para desktop */}
-            {!isMobile && !showFilters && (
-                <Draggable
-                    onStart={(e, data) => {
-                        // Guardar posición inicial
-                        initialPosRef.current = { x: data.x, y: data.y };
-                    }}
-                    onStop={(e, data) => {
-                        // Calcular cuánto se ha movido
-                        const dx = data.x - initialPosRef.current.x;
-                        const dy = data.y - initialPosRef.current.y;
-
-                        // Si no se ha movido más de 3px en ninguna dirección, considerar un click
-                        if (Math.abs(dx) < 3 && Math.abs(dy) < 3) {
-                            handleOpenFilters();
-                        }
+                    onStop={(e, d) => {
+                        if (!dragging) handleOpenFilters();
                     }}
                 >
                     <button
-                        className={`fashion-filter-button ${hasActiveFilters ? 'has-filters' : ''}`}
-                        title="Abrir filtros"
-                        aria-label="Abrir filtros"
+                        className={`fashion-filter-button ${hasActiveFilters ? 'has-filters' : ''
+                            }`}
                     >
                         <MdTune />
                     </button>
                 </Draggable>
+            ) : (
+                !showFilters && (
+                    <Draggable
+                        onStart={(e, d) => {
+                            initialPosRef.current = { x: d.x, y: d.y };
+                        }}
+                        onStop={(e, d) => {
+                            const dx = d.x - initialPosRef.current.x;
+                            const dy = d.y - initialPosRef.current.y;
+                            if (Math.abs(dx) < 3 && Math.abs(dy) < 3) handleOpenFilters();
+                        }}
+                    >
+                        <button
+                            className={`fashion-filter-button ${hasActiveFilters ? 'has-filters' : ''
+                                }`}
+                            title="Abrir filtros"
+                        >
+                            <MdTune />
+                        </button>
+                    </Draggable>
+                )
             )}
-            {/* Panel de filtros para desktop */}
+
+            {/* ==================== PANEL FILTROS DESKTOP ==================== */}
             <div className={`fashion-filters-panel ${showFilters ? 'show' : ''}`}>
                 <div className="fashion-filters-container">
                     <div className="fashion-filters-header">
                         <h3>Filtros</h3>
-                        <button 
-                            className="fashion-filters-close" 
+                        <button
+                            className="fashion-filters-close"
                             onClick={() => setShowFilters(false)}
-                            title="Cerrar filtros"
                         >
                             &times;
                         </button>
                     </div>
-
                     {/* Buscador */}
                     <div className="filter-search">
                         <FaSearch className="search-icon" />
@@ -231,7 +218,6 @@ const Fashion = () => {
                             onChange={(e) => handleFilterChange('search', e.target.value)}
                         />
                     </div>
-
                     {/* País */}
                     <div className="filter-input">
                         <input
@@ -246,7 +232,6 @@ const Fashion = () => {
                             ))}
                         </datalist>
                     </div>
-
                     {/* Ciudad */}
                     <div className="filter-input">
                         <input
@@ -261,7 +246,6 @@ const Fashion = () => {
                             ))}
                         </datalist>
                     </div>
-
                     {/* Tipo de centro */}
                     <div className="filter-select">
                         <select
@@ -271,13 +255,11 @@ const Fashion = () => {
                             }
                         >
                             <option value="all">Tipo de centro</option>
-                            <option value="all">Todos</option>
                             <option value="public">Público</option>
                             <option value="private">Privado</option>
                         </select>
                         <FaChevronDown className="chevron-icon" />
                     </div>
-
                     {/* Nivel de estudios */}
                     <div className="filter-select">
                         <select
@@ -295,8 +277,7 @@ const Fashion = () => {
                         </select>
                         <FaChevronDown className="chevron-icon" />
                     </div>
-
-                    {/* Tipo de formación */}
+                    {/* Modalidad */}
                     <div className="filter-select">
                         <select
                             value={filters.modality}
@@ -311,7 +292,6 @@ const Fashion = () => {
                         </select>
                         <FaChevronDown className="chevron-icon" />
                     </div>
-
                     {/* Categoría */}
                     <div className="filter-select">
                         <select
@@ -327,7 +307,6 @@ const Fashion = () => {
                         </select>
                         <FaChevronDown className="chevron-icon" />
                     </div>
-
                     <button className="apply-filters-btn" onClick={applyFilters}>
                         Aplicar filtros
                     </button>
@@ -456,32 +435,25 @@ const Fashion = () => {
                     ubicación para encontrar la formación que mejor se adapte a ti.
                 </p>
 
-                {/* Toggle de visibilidad */}
+                {/* Vista: todo / pública / privada */}
                 <div className="view-toggle-group">
-                    <button
-                        className={`toggle ${filters.visibility === 'all' ? 'active' : ''
-                            }`}
-                        onClick={() => handleFilterChange('visibility', 'all')}
-                    >
-                        Todo
-                    </button>
-                    <button
-                        className={`toggle ${filters.visibility === 'public' ? 'active' : ''
-                            }`}
-                        onClick={() => handleFilterChange('visibility', 'public')}
-                    >
-                        Pública
-                    </button>
-                    <button
-                        className={`toggle ${filters.visibility === 'private' ? 'active' : ''
-                            }`}
-                        onClick={() => handleFilterChange('visibility', 'private')}
-                    >
-                        Privada
-                    </button>
+                    {['all', 'public', 'private'].map((v) => (
+                        <button
+                            key={v}
+                            className={`toggle ${filters.visibility === v ? 'active' : ''
+                                }`}
+                            onClick={() => handleFilterChange('visibility', v)}
+                        >
+                            {v === 'all'
+                                ? 'Todo'
+                                : v === 'public'
+                                    ? 'Pública'
+                                    : 'Privada'}
+                        </button>
+                    ))}
                 </div>
 
-                {/* Lista de instituciones */}
+                {/* Lista */}
                 <div className="institutions-list">
                     {filteredInstitutions.length === 0 ? (
                         <div className="no-results">
@@ -489,19 +461,22 @@ const Fashion = () => {
                         </div>
                     ) : (
                         filteredInstitutions.map((inst) => {
-                            // preparar tags de categoría
-                            const cats = [
-                                ...new Set(inst.programs.map((p) => p.category).filter(Boolean)),
-                            ];
-                            const visibleCats = cats.slice(0, 2);
-                            const extra = cats.length - visibleCats.length;
+                            // Etiquetas: skills > programas
+                            const sourceTags =
+                                inst.skills && inst.skills.length > 0
+                                    ? inst.skills
+                                    : [
+                                        ...new Set(
+                                            inst.programs.map((p) => p.category).filter(Boolean)
+                                        ),
+                                    ];
+                            const visibleTags = sourceTags.slice(0, 4);
+                            const extra = sourceTags.length - visibleTags.length;
 
                             return (
                                 <article
                                     key={inst._id}
                                     className="institution-card"
-                                    onMouseEnter={() => setHoveredInstitution(inst._id)}
-                                    onMouseLeave={() => setHoveredInstitution(null)}
                                     onClick={() =>
                                         inst.username &&
                                         navigate(`/ControlPanel/profile/${inst.username}`)
@@ -513,20 +488,37 @@ const Fashion = () => {
                                         className="institution-logo"
                                     />
                                     <div className="institution-info">
+                                        {inst.professionalTitle && (
+                                            <div className="professional-title">
+                                                {inst.professionalTitle}
+                                            </div>
+                                        )}
                                         <h3>{inst.name}</h3>
                                         <div className="subtitle">
-                                            {inst.location.city}, {inst.location.country} | {inst.type === 'public' ? 'Presencial' : 'Híbrido'}
+                                            {inst.location.city}, {inst.location.country} |{' '}
+                                            {inst.type === 'public' ? 'Presencial' : 'Híbrido'}
                                         </div>
                                         <div className="tags">
-                                            {visibleCats.map((c) => (
-                                                <span key={c} className="tag">
-                                                    {c}
+                                            {visibleTags.map((tag) => (
+                                                <span key={tag} className="tag">
+                                                    {tag}
                                                 </span>
                                             ))}
                                             {extra > 0 && (
                                                 <span className="tag more">+ {extra} más</span>
                                             )}
                                         </div>
+                                        {inst.website && (
+                                            <a
+                                                href={inst.website}
+                                                className="official-website-btn"
+                                                onClick={(e) => e.stopPropagation()}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                Web oficial
+                                            </a>
+                                        )}
                                     </div>
                                     <span
                                         className={`institution-tag ${inst.type === 'public' ? 'public' : 'private'
