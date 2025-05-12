@@ -30,6 +30,10 @@ const Offers = () => {
     const [showMobileFilters, setShowMobileFilters] = useState(false);
     const initialPosRef = useRef({ x: 0, y: 0 });
     const [dragging, setDragging] = useState(false);
+    
+    // Estados para los filtros en desktop
+    const [showFilters, setShowFilters] = useState(false);
+    const [hasActiveFilters, setHasActiveFilters] = useState(false);
 
     useEffect(() => {
         const fetchOffers = async () => {
@@ -64,8 +68,38 @@ const Offers = () => {
         setFilters(prev => ({ ...prev, [field]: value }));
     };
 
+    const handleOpenFilters = () => {
+        setShowFilters(!showFilters);
+    };
+
     const applyFilters = () => {
-        // Los filtros se aplican dinámicamente
+        // Verificar si hay algún filtro activo
+        const isAnyFilterActive = (
+            filters.search !== '' ||
+            filters.country !== '' ||
+            filters.city !== '' ||
+            filters.companyName !== '' ||
+            filters.jobType !== 'all' ||
+            filters.locationType !== '' ||
+            filters.onlyInternships === true
+        );
+        
+        setHasActiveFilters(isAnyFilterActive);
+        setShowFilters(false); // Cerrar el panel de filtros al aplicar
+        setShowMobileFilters(false); // Cerrar el panel móvil también
+    };
+    
+    const clearFilters = () => {
+        setFilters({
+            search: '',
+            country: '',
+            city: '',
+            companyName: '',
+            jobType: 'all',
+            locationType: '',
+            onlyInternships: false,
+        });
+        setHasActiveFilters(false);
     };
 
     const filteredOffers = offers.filter(o => {
@@ -96,12 +130,12 @@ const Offers = () => {
     return (
         <div className="offers-page-container">
             {/* ------------------ FILTROS ------------------ */}
-            {isMobile && (
+            {/* Botón de filtro para desktop */}
+            {!isMobile && (
                 <Draggable
                     onStart={(e, data) => {
                         initialPosRef.current = { x: data.x, y: data.y };
                         setDragging(false);
-                        return true;
                     }}
                     onDrag={(e, data) => {
                         const dx = data.x - initialPosRef.current.x;
@@ -109,17 +143,28 @@ const Offers = () => {
                         if (Math.abs(dx) > 3 || Math.abs(dy) > 3) setDragging(true);
                     }}
                     onStop={(e, data) => {
-                        if (!dragging) setShowMobileFilters((prev) => !prev);
+                        if (!dragging) handleOpenFilters();
                     }}
                 >
-                    <button className="explorer-filter-button">
+                    <button className={`offers-filter-button ${hasActiveFilters ? 'has-filters' : ''}`}>
                         <MdTune />
                     </button>
                 </Draggable>
             )}
-            {!isMobile && (
-                <div className="filters-section">
-                    <h3>Filtros</h3>
+            
+            {/* Panel de filtros para desktop */}
+            <div className={`offers-filters-panel ${showFilters ? 'show' : ''}`}>
+                <div className="offers-filters-container">
+                    <div className="offers-filters-header">
+                        <h3>Filtros</h3>
+                        <button 
+                            className="offers-filters-close" 
+                            onClick={() => setShowFilters(false)}
+                            title="Cerrar filtros"
+                        >
+                            &times;
+                        </button>
+                    </div>
 
                     <div className="filter-search">
                         <FaSearch className="search-icon" />
@@ -199,11 +244,43 @@ const Offers = () => {
                         <label htmlFor="practicas">Prácticas</label>
                     </div>
 
-                    <button className="apply-filters-btn" onClick={applyFilters}>
-                        Aplicar filtros
-                    </button>
+                    <div className="filter-buttons">
+                        <button className="apply-filters-btn" onClick={applyFilters}>
+                            Aplicar filtros
+                        </button>
+                        {hasActiveFilters && (
+                            <button className="clear-filters-btn" onClick={clearFilters}>
+                                Limpiar filtros
+                            </button>
+                        )}
+                    </div>
                 </div>
+            </div>
+            
+            {/* Botón de filtro para móvil */}
+            {isMobile && (
+                <Draggable
+                    onStart={(e, data) => {
+                        initialPosRef.current = { x: data.x, y: data.y };
+                        setDragging(false);
+                        return true;
+                    }}
+                    onDrag={(e, data) => {
+                        const dx = data.x - initialPosRef.current.x;
+                        const dy = data.y - initialPosRef.current.y;
+                        if (Math.abs(dx) > 3 || Math.abs(dy) > 3) setDragging(true);
+                    }}
+                    onStop={(e, data) => {
+                        if (!dragging) setShowMobileFilters((prev) => !prev);
+                    }}
+                >
+                    <button className={`offers-filter-button mobile ${hasActiveFilters ? 'has-filters' : ''}`}>
+                        <MdTune />
+                    </button>
+                </Draggable>
             )}
+            
+            {/* El panel de filtros antiguo ha sido reemplazado por offers-filters-panel */}
             {isMobile && showMobileFilters && (
                 <div
                     className="explorer-mobile-filters-modal"

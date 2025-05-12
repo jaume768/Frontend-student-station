@@ -268,6 +268,18 @@ const Creatives = () => {
                     />
                 </div>
                 
+                {/* Prácticas */}
+                <div className="filter-checkbox">
+                    <label>
+                        Prácticas
+                        <input 
+                            type="checkbox" 
+                            checked={filters.internships}
+                            onChange={(e) => handleFilterChange('internships', e.target.checked)}
+                        />
+                    </label>
+                </div>
+                
                 {/* Botón para aplicar filtros */}
                 <button className="apply-filters-btn" onClick={applyFilters}>
                     Aplicar filtros

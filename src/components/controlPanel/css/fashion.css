@@ -127,10 +127,114 @@
   background-color: #333;
 }
 
+/* Botón de filtro */
+.fashion-filter-button {
+  position: fixed;
+  left: 15em;
+  top: 17%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  background-color: #000;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  z-index: 10;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.fashion-filter-button.has-filters {
+  border: 2px solid #1a73e8;
+  box-shadow: 0 0 5px rgba(26, 115, 232, 0.5);
+}
+
+.fashion-filter-button:hover {
+  background-color: #333;
+  transform: scale(1.05);
+}
+
+.fashion-filter-button svg {
+  font-size: 25px;
+}
+
+/* Panel de filtros para desktop */
+.fashion-filters-panel {
+  position: fixed;
+  top: 25%;
+  left: 12em;
+  width: 250px;
+  background: #fff;
+  border-radius: 12px;
+  height: 100vh;
+  transform: translateX(-120%);
+  transition: transform 0.3s ease;
+  z-index: 5;
+  overflow-y: auto;
+  padding-top: 20px;
+}
+
+.fashion-filters-panel.show {
+  transform: translateX(0);
+}
+
+.fashion-filters-container {
+  padding: 16px;
+}
+
+/* Estilos para la cabecera del panel de filtros */
+.fashion-filters-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.fashion-filters-header h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.fashion-filters-close {
+  background: #000;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  padding: 0;
+  transition: background-color 0.2s ease;
+}
+
+.fashion-filters-close:hover {
+  background-color: #333;
+}
+
+/* El contenedor principal no se desplaza cuando se muestran los filtros */
+
 /* Ocultar filtros en móvil */
 @media (max-width: 768px) {
-  .filters-section {
+  .fashion-filters-panel {
     display: none;
+  }
+  
+  .fashion-container.with-filters {
+    margin-left: 0;
+  }
+  
+  .fashion-filter-button {
+    left: 87%;
+    top: 9em;
   }
 }
 
@@ -202,8 +306,7 @@
 }
 
 .institution-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: solid 2px #b6b5b5dd;
 }
 
 /* Logo de la institución */

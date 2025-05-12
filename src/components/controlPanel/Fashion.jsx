@@ -29,6 +29,8 @@ const Fashion = () => {
     // Estados y lógica para mobile filters
     const [isMobile, setIsMobile] = useState(false);
     const [showMobileFilters, setShowMobileFilters] = useState(false);
+    const [showFilters, setShowFilters] = useState(false);
+    const [hasActiveFilters, setHasActiveFilters] = useState(false);
     const initialPosRef = useRef({ x: 0, y: 0 });
     const [dragging, setDragging] = useState(false);
 
@@ -38,6 +40,12 @@ const Fashion = () => {
         window.addEventListener('resize', checkIfMobile);
         return () => window.removeEventListener('resize', checkIfMobile);
     }, []);
+    
+    // Función para abrir filtros según dispositivo
+    const handleOpenFilters = () => {
+        if (isMobile) setShowMobileFilters(prev => !prev);
+        else setShowFilters(prev => !prev);
+    };
 
     const educationLevelsList = [
         'Grado o licenciatura',
@@ -85,6 +93,14 @@ const Fashion = () => {
 
     const applyFilters = () => {
         // Si quisieras volver a llamar al backend, aquí iría.
+        
+        // Comprobar si hay algún filtro activo
+        const hasFilters = Object.entries(filters).some(([key, value]) => {
+            if (key === 'centerType' || key === 'visibility') return value !== 'all';
+            return value !== '' && value !== null && value !== undefined;
+        });
+        
+        setHasActiveFilters(hasFilters);
     };
 
     const clearAllFilters = () => {
@@ -98,6 +114,7 @@ const Fashion = () => {
             category: '',
             visibility: 'all',
         });
+        setHasActiveFilters(false);
     };
 
     const filteredInstitutions = institutions.filter((inst) => {
@@ -138,8 +155,9 @@ const Fashion = () => {
     if (error) return <div className="error">{error}</div>;
 
     return (
-        <div className="fashion-container">
+        <div className={`fashion-container ${showFilters ? 'with-filters' : ''}`}>
             {/* ------------------ FILTROS ------------------ */}
+            {/* Botón de filtro para móvil */}
             {isMobile && (
                 <Draggable
                     onStart={(e, data) => {
@@ -150,22 +168,58 @@ const Fashion = () => {
                     onDrag={(e, data) => {
                         const dx = data.x - initialPosRef.current.x;
                         const dy = data.y - initialPosRef.current.y;
-                        if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
-                            setDragging(true);
-                        }
+                        if (Math.abs(dx) > 3 || Math.abs(dy) > 3) setDragging(true);
                     }}
                     onStop={(e, data) => {
-                        if (!dragging) setShowMobileFilters((prev) => !prev);
+                        if (!dragging) setShowMobileFilters(prev => !prev);
                     }}
                 >
-                    <button className="explorer-filter-button">
+                    <button className={`fashion-filter-button ${hasActiveFilters ? 'has-filters' : ''}`}>
                         <MdTune />
                     </button>
                 </Draggable>
             )}
-            {!isMobile && (
-                <div className="filters-section">
-                    <h3>Filtros</h3>
+            
+            {/* Botón de filtro para desktop */}
+            {!isMobile && !showFilters && (
+                <Draggable
+                    onStart={(e, data) => {
+                        // Guardar posición inicial
+                        initialPosRef.current = { x: data.x, y: data.y };
+                    }}
+                    onStop={(e, data) => {
+                        // Calcular cuánto se ha movido
+                        const dx = data.x - initialPosRef.current.x;
+                        const dy = data.y - initialPosRef.current.y;
+
+                        // Si no se ha movido más de 3px en ninguna dirección, considerar un click
+                        if (Math.abs(dx) < 3 && Math.abs(dy) < 3) {
+                            handleOpenFilters();
+                        }
+                    }}
+                >
+                    <button
+                        className={`fashion-filter-button ${hasActiveFilters ? 'has-filters' : ''}`}
+                        title="Abrir filtros"
+                        aria-label="Abrir filtros"
+                    >
+                        <MdTune />
+                    </button>
+                </Draggable>
+            )}
+            {/* Panel de filtros para desktop */}
+            <div className={`fashion-filters-panel ${showFilters ? 'show' : ''}`}>
+                <div className="fashion-filters-container">
+                    <div className="fashion-filters-header">
+                        <h3>Filtros</h3>
+                        <button 
+                            className="fashion-filters-close" 
+                            onClick={() => setShowFilters(false)}
+                            title="Cerrar filtros"
+                        >
+                            &times;
+                        </button>
+                    </div>
 
                     {/* Buscador */}
                     <div className="filter-search">
@@ -278,7 +332,7 @@ const Fashion = () => {
                         Aplicar filtros
                     </button>
                 </div>
-            )}
+            </div>
             {isMobile && showMobileFilters && (
                 <div
                     className="explorer-mobile-filters-modal"
