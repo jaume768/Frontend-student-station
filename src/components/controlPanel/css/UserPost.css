@@ -65,11 +65,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    height: 30em;
 }
 
 .perfil__imagen-principal {
-    width: 50%;
-    height: auto;
+    height: 100%;
     border-radius: 0;
     position: relative;
     display: block;
@@ -156,6 +156,7 @@
     grid-gap: 10px;
     grid-auto-rows: minmax(50px, auto);
     grid-auto-flow: dense;
+    margin-top: 16px;
 }
 
 .gallery-item {
@@ -185,17 +186,16 @@
 
 .perfil__miniatura {
     width: 100%;
-    height: 100%;
+    height: auto;
     object-fit: cover;
     cursor: pointer;
     opacity: 0.7;
     border: 2px solid transparent;
     border-radius: 0;
-    transition: all 0.3s ease;
 }
 
 .perfil__miniatura.active {
-    border-color: #4c85ff;
+    border-color: #2430ff;
     opacity: 1;
 }
 

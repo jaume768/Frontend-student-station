@@ -200,6 +200,28 @@ const CreatePost = () => {
         setMainImageIndex((prev) => (prev - 1 + images.length) % images.length);
     };
 
+    // Controlador de eventos de teclado para navegación con flechas
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (images.length <= 1) return;
+            
+            if (e.key === 'ArrowLeft') {
+                handlePrevImage();
+            } else if (e.key === 'ArrowRight') {
+                handleNextImage();
+            }
+        };
+
+        // Solo añadir el event listener si hay imágenes
+        if (images.length > 0) {
+            document.addEventListener('keydown', handleKeyDown);
+        }
+
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [images.length]);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!isFormComplete) {
@@ -316,16 +338,11 @@ const CreatePost = () => {
                         <div className="image-preview">
                             <div className="main-image-container">
                                 <div className="main-image-wrapper">
-                                    <FaArrowLeft onClick={handlePrevImage} className="arrow" />
                                     <img
                                         src={URL.createObjectURL(images[mainImageIndex])}
                                         alt="Imagen principal"
                                         className="main-image"
                                     />
-                                    <FaArrowRight onClick={handleNextImage} className="arrow" />
-                                    <div className="photo-counter">
-                                        Foto {mainImageIndex + 1} de {images.length}
-                                    </div>
                                     <div className="tags-overlay">
                                         <div className="added-tags">
                                             {(imageTags[mainImageIndex] || []).map((tag, index) => (
@@ -344,15 +361,13 @@ const CreatePost = () => {
                                         <div className="tag-input-wrapper">
                                             <input
                                                 type="text"
-                                                placeholder='Escribe una etiqueta y pulsa "Enter"'
+                                                placeholder='Escribe una etiqueta
+y pulsa "Enter"'
                                                 value={newTag}
                                                 onChange={(e) => setNewTag(e.target.value)}
                                                 onKeyDown={handleTagKeyDown}
                                                 className="overlay-input"
                                             />
-                                            <button type="button" className="overlay-save-btn">
-                                                <FaCheck className="check-icon" /> Guardar tags
-                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -519,15 +534,13 @@ const CreatePost = () => {
                             <div className="tag-input-wrapper-right">
                                 <input
                                     type="text"
-                                    placeholder='Escribe una etiqueta y pulsa "Enter"'
+                                    placeholder='Escribe una etiqueta
+y pulsa "Enter"'
                                     value={newTag}
                                     onChange={(e) => setNewTag(e.target.value)}
                                     onKeyDown={handleTagKeyDown}
                                     className="post-input tag-input"
                                 />
-                                <button type="button" className="save-tags-btn">
-                                    <FaCheck className="check-icon" /> Guardar tags
-                                </button>
                             </div>
                             <p className="max-tags-info">Máximo de 10 etiquetas por fotografía</p>
                         </section>
