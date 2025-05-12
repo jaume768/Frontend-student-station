@@ -297,18 +297,24 @@ const Creatives = () => {
                             className="creative-card"
                             ref={isLastElement ? lastCreativeElementRef : null}
                             onClick={() => handleUserClick(creative.username)}
+                            style={{ 
+                                backgroundImage: `url(${creative.lastPost.mainImage})`,
+                                height: '500px',
+                            }}
                         >
                             <div className="creative-profile">
-                                <img
-                                    src={creative.profile && creative.profile.profilePicture ? creative.profile.profilePicture : "/multimedia/usuarioDefault.jpg"}
-                                    alt={creative.username}
-                                    className="profile-picture"
-                                />
+                                <div className="profile-picture-container">
+                                    <img
+                                        src={creative.profile && creative.profile.profilePicture ? creative.profile.profilePicture : "/multimedia/usuarioDefault.jpg"}
+                                        alt={creative.username}
+                                        className="profile-picture"
+                                    />
+                                </div>
                                 <div className="creative-details">
                                     <h3>{creative.fullName || creative.username}</h3>
-                                    {creative.country && (
+                                    {creative.city && (
                                         <div className="creative-location">
-                                            <span>{creative.country}, {creative.city}</span>
+                                            <span>{creative.city}{creative.country ? `, ${creative.country}` : ''}</span>
                                         </div>
                                     )}
                                 </div>
@@ -321,12 +327,6 @@ const Creatives = () => {
                                 ) : (
                                     <span className="tag-creatives">Sin habilidades</span>
                                 )}
-                            </div>
-                            <div className="creative-post-image">
-                                <img
-                                    src={creative.lastPost.mainImage}
-                                    alt={creative.lastPost.title || "Proyecto creativo"}
-                                />
                             </div>
                         </div>
                     );

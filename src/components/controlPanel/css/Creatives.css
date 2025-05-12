@@ -260,64 +260,93 @@
 /* Galería de creativos */
 .creatives-masonry {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 16px;
     margin-left: 3em;
-    
 }
 
 .creative-card {
-    border-radius: 6px;
+    height: 500px; 
+    border-radius: 8px;
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border: solid 0,5px #f0f0f0;
-    background-color: white;
     cursor: pointer;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+.creative-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.8) 100%);
+    opacity: 0.8;
+    z-index: 1;
 }
 
 .creative-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
 /* Header con foto de perfil y nombre */
 .creative-profile {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    padding: 15px;
+    text-align: center;
+    padding: 0;
+    margin-top: 20px;
+    position: relative;
+    z-index: 2;
 }
 
-.profile-picture {
+.profile-picture-container {
     width: 55px;
     height: 55px;
     border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: 8px;
+    border: 2px solid white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.profile-picture {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
-    margin-right: 15px;
-    border: 2px solid #f8f8f8;
 }
 
 .creative-details {
     overflow: hidden;
+    text-align: center;
 }
 
 .creative-details h3 {
     margin: 0;
-    font-size: 16px;
+    font-size: 24px;
     font-weight: 600;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    color: #444;
+    color: white;
 }
 
 .creative-location {
     display: flex;
+    justify-content: center;
     align-items: center;
-    color: #999;
+    color: rgba(255, 255, 255, 0.8);
     font-size: 14px;
-    margin-top: 2px;
+    margin-top: 4px;
 }
 
 .location-icon {
@@ -358,19 +387,24 @@
 
 /* Etiquetas */
 .creative-tags {
-    padding: 5px 15px 0;
+    padding: 0 12px;
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
 }
+
 .tag-creatives {
-    background-color: #f7f7f7;
-    color: #666;
-    padding: 6px 15px;
+    background-color: #fff;
+    color: #494949;
+    padding: 4px 10px;
     border-radius: 30px;
     font-size: 13px;
-    font-weight: 400;
+    font-weight: 500;
+    border: solid 1px #ccc;
 }
 
 /* Estados de carga y error */
