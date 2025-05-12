@@ -30,6 +30,8 @@ const Creatives = () => {
         internships: false
     });
     
+    const [hasActiveFilters, setHasActiveFilters] = useState(false);
+    
     const [appliedFilters, setAppliedFilters] = useState({});
 
     const navigate = useNavigate();
@@ -144,6 +146,14 @@ const Creatives = () => {
     const applyFilters = () => {
         setAppliedFilters({...filters});
         setPage(1); // Reiniciar paginación
+        
+        // Comprobar si hay algún filtro activo (excluyendo los filtros vacíos)
+        const hasFilters = Object.entries(filters).some(([key, value]) => {
+            if (key === 'internships') return value === true;
+            return value !== '' && value !== null && value !== undefined;
+        });
+        
+        setHasActiveFilters(hasFilters);
     };
 
     // Navegar al perfil del usuario
@@ -173,6 +183,7 @@ const Creatives = () => {
         setFilters(emptyFilters);
         setAppliedFilters(emptyFilters);
         setPage(1);
+        setHasActiveFilters(false); // Resetear el estado de filtros activos
     };
 
     // Renderizado de filtros
@@ -255,18 +266,6 @@ const Creatives = () => {
                         value={filters.software}
                         onChange={(e) => handleFilterChange('software', e.target.value)}
                     />
-                </div>
-                
-                {/* Prácticas */}
-                <div className="filter-checkbox">
-                    <label>
-                        Prácticas
-                        <input 
-                            type="checkbox" 
-                            checked={filters.internships}
-                            onChange={(e) => handleFilterChange('internships', e.target.checked)}
-                        />
-                    </label>
                 </div>
                 
                 {/* Botón para aplicar filtros */}
@@ -410,14 +409,30 @@ const Creatives = () => {
                 )}
                 {/* Botón de filtro para desktop */}
                 {!isMobile && !showFilters && (
-                    <button
-                        className="creatives-filter-button"
-                        title="Abrir filtros"
-                        aria-label="Abrir filtros"
-                        onClick={handleOpenFilters}
+                    <Draggable
+                        onStart={(e, data) => {
+                            // Guardar posición inicial
+                            initialPosRef.current = { x: data.x, y: data.y };
+                        }}
+                        onStop={(e, data) => {
+                            // Calcular cuánto se ha movido
+                            const dx = data.x - initialPosRef.current.x;
+                            const dy = data.y - initialPosRef.current.y;
+
+                            // Si no se ha movido más de 3px en ninguna dirección, considerar un click
+                            if (Math.abs(dx) < 3 && Math.abs(dy) < 3) {
+                                handleOpenFilters();
+                            }
+                        }}
                     >
-                        <MdTune />
-                    </button>
+                        <button
+                            className={`creatives-filter-button ${hasActiveFilters ? 'has-filters' : ''}`}
+                            title="Abrir filtros"
+                            aria-label="Abrir filtros"
+                        >
+                            <MdTune />
+                        </button>
+                    </Draggable>
                 )}
             </div>
             

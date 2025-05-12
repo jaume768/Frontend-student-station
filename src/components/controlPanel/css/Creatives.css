@@ -467,6 +467,11 @@
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
+.creatives-filter-button.has-filters {
+    border: 2px solid #1a73e8;
+    box-shadow: 0 0 5px rgba(26, 115, 232, 0.5);
+}
+
 @media (max-width: 768px) {
     .creatives-filter-button {
         left: 87%;
