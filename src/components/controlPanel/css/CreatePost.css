@@ -1,20 +1,22 @@
 /* Contenedor principal: dos paneles en fila */
 .createpost-wrapper {
     display: flex;
-    gap: 10px;
-    height: 84vh;
+    gap: 16px;
+    justify-content: center;
 }
 
 /* Panel Izquierdo */
 .createpost-left {
-    width: 70%;
-    background-color: #e5eeff;
+    width: 60%;
+    height: 84vh;
     color: blue;
     padding: 20px;
     display: flex;
     flex-direction: column;
     border-radius: 20px;
     position: relative;
+    border: dashed 2px #2430ff;
+    justify-content: space-between;
 }
 
 .createpost-left.with-images {
@@ -32,7 +34,8 @@
 }
 
 .upload-icon-wrapper {
-    margin-bottom: 10px;
+    margin-bottom: 5px;
+    width: 28px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -44,7 +47,7 @@
 }
 
 .upload-text {
-    font-size: 1.2rem;
+    font-size: 1rem;
     text-align: center;
 }
 
@@ -250,7 +253,7 @@
 
 /* Mensaje informativo debajo de la previsualización */
 .preview-message {
-    margin-top: 10px;
+    margin-top: 30px;
     color: #4c85ff;
     font-size: 0.9rem;
     text-align: center;
@@ -259,56 +262,98 @@
 /* Panel Derecho */
 .createpost-right {
     width: 30%;
-    background-color: #f8f8f8;
-    padding: 20px;
+    padding: 24px;
     border-radius: 20px;
+    border: solid 1px #ccc;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.createpost-right.with-images {
+    min-height: 700px;
+    height: auto;
     overflow-y: auto;
-    max-height: 100vh;
+    /* Ocultar la barra de desplazamiento pero mantener la funcionalidad */
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+}
+
+/* Para navegadores webkit (Chrome, Safari) */
+.createpost-right.with-images::-webkit-scrollbar {
+    width: 8px;
+}
+
+.createpost-right.with-images::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
+
+.createpost-right.with-images:hover::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.3);
 }
 
 .createpost-right form {
     width: 100%;
-    max-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 }
 
 .section-title {
-    font-size: 1.5rem;
-    margin-bottom: 10px;
+    font-size: 28px;
+    line-height: 32px;
+    margin-bottom: 24px;
+    font-weight: 500;
 }
 
 /* Paso Labels en el panel derecho (Paso 2, 3, 4) */
 .step-label-dark {
-    background-color: #767676;
-    color: #fff;
-    border-radius: 40px;
-    padding: 5px 20px;
-    width: 100px;
+    background-color: white;
+    color: #2530ff;
+    border-radius: 16px;
+    font-weight: 600;
+    border: solid 1px #2530ff;
+    padding: 2px 0;
+    width: 75px;
+    font-size: 14px;
+    margin-bottom: 8px;
     text-align: center;
     display: inline-block;
-    margin-bottom: 10px;
     font-weight: 700;
+}
+
+/* Estilo específico para el Paso 1 */
+.step-label-blue {
+    background-color: #2430ff;
+    color: white;
+    border-color: #2430ff;
+    position: absolute;
+    top: 15px;
+    left: 15px;
 }
 
 /* Secciones de formulario en el panel derecho */
 .post-section {
     margin-bottom: 10px;
     background-color: white;
-    padding: 15px;
-    margin-left: 10px;
+    padding: 8px;
 }
 
 .post-section h3 {
     margin-bottom: 5px;
+    font-size: 20px;
+    padding: 8px;
 }
 
 .post-input,
 .post-textarea {
     width: 100%;
     padding: 10px;
-    border: none;
+    border: solid 1px #ccc;
     background-color: #f8f8f8;
-    border-radius: 10px;
-    color: black;
+    border-radius: 8px;
+    color: #666;
 }
 
 .post-textarea {

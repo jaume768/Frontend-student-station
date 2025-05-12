@@ -16,7 +16,7 @@
 }
 
 .magazine-header h1 {
-    font-size: 32px;
+    font-size: 44px;
     font-weight: 600;
     color: #333;
     margin: 0 0 16px 0;
@@ -63,7 +63,7 @@
 }
 
 .magazine-image img {
-    width: 80%;
+    width: 60%;
     height: auto;
     margin: auto;
     object-fit: cover;
@@ -85,8 +85,8 @@
 }
 
 .magazine-price {
-    font-size: 18px;
-    font-weight: 600;
+    font-size: 16px;
+    font-weight: 400;
     margin: 0 0 10px;
 }
 

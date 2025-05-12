@@ -304,6 +304,7 @@ const CreatePost = () => {
                 />
                 {/* Panel Izquierdo */}
                 <div className={`createpost-left ${images.length > 0 ? 'with-images' : ''}`}>
+                    <div className="step-label-dark step-label-blue">Paso 1</div>
                     {images.length === 0 ? (
                         <label htmlFor="image-upload" className="left-content clickable-upload-area">
                             <div className="upload-icon-wrapper">
@@ -396,7 +397,7 @@ const CreatePost = () => {
                     )}
                 </div>
                 {/* Panel Derecho */}
-                <div className="createpost-right">
+                <div className={`createpost-right ${images.length > 0 ? 'with-images' : ''}`}>
                     <form onSubmit={handleSubmit}>
                         <h2 className="section-title">Información del post</h2>
                         <div className="step-label-dark">Paso 2</div>

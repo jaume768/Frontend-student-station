@@ -38,7 +38,7 @@
 }
 
 .guardados-header h1 {
-    font-size: 24px;
+    font-size: 44px;
     font-weight: 600;
 }
 
@@ -154,6 +154,7 @@
 /* Tableros */
 .tableros-container {
     padding: 10px 0;
+    border-bottom: solid 1px #e0e0e0;
 }
 
 .tableros-actions {
@@ -163,12 +164,12 @@
 }
 
 .new-tablero-button {
-    background: #535353;
+    background: hsla(0, 0%, 13%, 1);
     color: white;
     border: none;
-    border-radius: 20px;
+    border-radius: 8px;
     padding: 8px 16px;
-    font-size: 14px;
+    font-size: 16px;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -346,7 +347,7 @@
 
 /* Ideas sin organizar */
 .ideas-sin-organizar {
-    margin-top: 40px;
+    margin-top: 20px;
 }
 
 .ideas-header {
@@ -379,12 +380,12 @@
 }
 
 .organizar-button {
-    background: #535353;
+    background: hsla(0, 0%, 13%, 1);
     color: white;
     border: none;
-    border-radius: 20px;
+    border-radius: 8px;
     padding: 8px 16px;
-    font-size: 14px;
+    font-size: 16px;
     cursor: pointer;
 }
 
@@ -405,7 +406,7 @@
 
 .idea-item {
     position: relative;
-    border-radius: 16px;
+    border-radius: 6px;
     overflow: hidden;
     cursor: pointer;
     aspect-ratio: 1 / 1;
