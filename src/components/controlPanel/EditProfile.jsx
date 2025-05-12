@@ -821,22 +821,20 @@ const EditProfile = () => {
         <div className="edit-profile-wrapper">
             <form onSubmit={handleSubmit}>
                 <div className="profile-section">
-                    <ProfileHeader
-                        userData={userData}
-                        selectedProfileImage={selectedProfileImage}
-                        isEditingProfilePicture={isEditingProfilePicture}
-                        isUploadingProfilePicture={isUploadingProfilePicture}
-                        handleProfilePictureClick={handleProfilePictureClick}
-                        handleProfileImageChange={handleProfileImageChange}
-                        handleSaveProfileImage={handleSaveProfileImage}
-                        handleCancelProfileImageEdit={handleCancelProfileImageEdit}
-                        profileImageInputRef={profileImageInputRef}
-                        professionalType={userData.professionalType}
-                    />
                     <div className="profile-body">
                         <NavigationMenu
                             activeOption={activeOption}
                             setActiveOption={setActiveOption}
+                            userData={userData}
+                            selectedProfileImage={selectedProfileImage}
+                            isEditingProfilePicture={isEditingProfilePicture}
+                            isUploadingProfilePicture={isUploadingProfilePicture}
+                            handleProfilePictureClick={handleProfilePictureClick}
+                            handleProfileImageChange={handleProfileImageChange}
+                            handleSaveProfileImage={handleSaveProfileImage}
+                            handleCancelProfileImageEdit={handleCancelProfileImageEdit}
+                            profileImageInputRef={profileImageInputRef}
+                            professionalType={userData.professionalType}
                         />
                         <div className="profile-sections">
                             {activeOption === "editProfile" && (

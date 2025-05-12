@@ -32,11 +32,10 @@ const ProfileHeader = ({
                             ? (userData?.companyName || "Nombre de la Empresa") 
                             : (userData?.fullName || "Nombre Apellido")}
                     </h2>
-                    <p className="profile-username">{userData?.username || ""}</p>
+                    <p className="profile-username">@{userData?.username || ""}</p>
                     <p className="profile-location">
                         {userData?.city ? `${userData.city}${userData?.country ? `, ${userData.country}` : ''}` : 'Ubicación no especificada'}
                     </p>
-                    <p className="profile-email">{userData?.email || ""}</p>
                 </div>
             </div>
             <div className="banner-right">

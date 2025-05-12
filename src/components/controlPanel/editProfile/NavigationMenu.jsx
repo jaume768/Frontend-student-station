@@ -1,9 +1,35 @@
 import React from 'react';
 import { FaPencilAlt, FaBriefcase, FaCog } from 'react-icons/fa';
+import ProfileHeader from './ProfileHeader';
 
-const NavigationMenu = ({ activeOption, setActiveOption }) => {
+const NavigationMenu = ({
+    activeOption,
+    setActiveOption,
+    userData,
+    selectedProfileImage,
+    isEditingProfilePicture,
+    isUploadingProfilePicture,
+    handleProfilePictureClick,
+    handleProfileImageChange,
+    handleSaveProfileImage,
+    handleCancelProfileImageEdit,
+    profileImageInputRef,
+    professionalType
+}) => {
     return (
         <div className="left-options">
+            <ProfileHeader
+                userData={userData}
+                selectedProfileImage={selectedProfileImage}
+                isEditingProfilePicture={isEditingProfilePicture}
+                isUploadingProfilePicture={isUploadingProfilePicture}
+                handleProfilePictureClick={handleProfilePictureClick}
+                handleProfileImageChange={handleProfileImageChange}
+                handleSaveProfileImage={handleSaveProfileImage}
+                handleCancelProfileImageEdit={handleCancelProfileImageEdit}
+                profileImageInputRef={profileImageInputRef}
+                professionalType={professionalType}
+            />
             <div
                 className={`option ${activeOption === "editProfile" ? "active" : ""}`}
                 onClick={() => setActiveOption("editProfile")}
