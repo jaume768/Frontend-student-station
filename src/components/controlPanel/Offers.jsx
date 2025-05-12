@@ -22,6 +22,9 @@ const Offers = () => {
         locationType: '',
         onlyInternships: false,
     });
+
+    const [activeTab, setActiveTab] = useState('all');
+    const [tabDisabled, setTabDisabled] = useState(false);
     const [uniqueCountries, setUniqueCountries] = useState([]);
     const [uniqueCities, setUniqueCities] = useState([]);
 
@@ -30,7 +33,7 @@ const Offers = () => {
     const [showMobileFilters, setShowMobileFilters] = useState(false);
     const initialPosRef = useRef({ x: 0, y: 0 });
     const [dragging, setDragging] = useState(false);
-    
+
     // Estados para los filtros en desktop
     const [showFilters, setShowFilters] = useState(false);
     const [hasActiveFilters, setHasActiveFilters] = useState(false);
@@ -83,12 +86,12 @@ const Offers = () => {
             filters.locationType !== '' ||
             filters.onlyInternships === true
         );
-        
+
         setHasActiveFilters(isAnyFilterActive);
         setShowFilters(false); // Cerrar el panel de filtros al aplicar
         setShowMobileFilters(false); // Cerrar el panel móvil también
     };
-    
+
     const clearFilters = () => {
         setFilters({
             search: '',
@@ -102,20 +105,59 @@ const Offers = () => {
         setHasActiveFilters(false);
     };
 
-    const filteredOffers = offers.filter(o => {
-        const { search, country, city, companyName, jobType, locationType, onlyInternships } = filters;
-        if (onlyInternships && o.jobType !== 'Prácticas') return false;
-        if (jobType !== 'all' && o.jobType !== jobType) return false;
-        if (locationType && o.locationType !== locationType) return false;
-        if (country && o.country !== country) return false;
-        if (city && o.city !== city) return false;
-        if (companyName && !o.companyName.toLowerCase().includes(companyName.toLowerCase())) return false;
-        if (search) {
-            const q = search.toLowerCase();
-            if (!o.position.toLowerCase().includes(q) && !o.companyName.toLowerCase().includes(q)) return false;
+    const filteredOffers = offers.filter(offer => {
+        // Filtro de búsqueda (en título, descripción, nombre de empresa)
+        if (filters.search && !(offer.position.toLowerCase().includes(filters.search.toLowerCase()) ||
+            offer.description.toLowerCase().includes(filters.search.toLowerCase()) ||
+            offer.companyName.toLowerCase().includes(filters.search.toLowerCase()))) {
+            return false;
         }
+
+        // Filtro por país
+        if (filters.country && offer.country !== filters.country) {
+            return false;
+        }
+
+        // Filtro por ciudad
+        if (filters.city && offer.city !== filters.city) {
+            return false;
+        }
+
+        // Filtro por nombre de empresa
+        if (filters.companyName && !offer.companyName.toLowerCase().includes(filters.companyName.toLowerCase())) {
+            return false;
+        }
+
+        // Filtro por tipo de contrato
+        if (filters.jobType !== 'all' && offer.jobType !== filters.jobType) {
+            return false;
+        }
+
+        // Filtro por tipo de ubicación
+        if (filters.locationType && offer.locationType !== filters.locationType) {
+            return false;
+        }
+
+        // Filtro de prácticas
+        if (filters.onlyInternships && offer.jobType !== 'Prácticas') {
+            return false;
+        }
+
         return true;
     });
+
+    // Actualizar el estado de los botones de filtro cuando cambian los filtros
+    useEffect(() => {
+        if (filters.jobType === 'all') {
+            setActiveTab('all');
+        } else if (filters.jobType === 'Tiempo completo') {
+            setActiveTab('fulltime');
+        } else if (filters.jobType === 'Tiempo parcial') {
+            setActiveTab('parttime');
+        } else if (filters.jobType === 'Prácticas') {
+            setActiveTab('internship');
+        }
+    }, [filters.jobType]);
 
     const formatDate = dateString =>
         new Date(dateString).toLocaleDateString('es-ES', {
@@ -151,14 +193,14 @@ const Offers = () => {
                     </button>
                 </Draggable>
             )}
-            
+
             {/* Panel de filtros para desktop */}
             <div className={`offers-filters-panel ${showFilters ? 'show' : ''}`}>
                 <div className="offers-filters-container">
                     <div className="offers-filters-header">
                         <h3>Filtros</h3>
-                        <button 
-                            className="offers-filters-close" 
+                        <button
+                            className="offers-filters-close"
                             onClick={() => setShowFilters(false)}
                             title="Cerrar filtros"
                         >
@@ -256,7 +298,7 @@ const Offers = () => {
                     </div>
                 </div>
             </div>
-            
+
             {/* Botón de filtro para móvil */}
             {isMobile && (
                 <Draggable
@@ -279,7 +321,7 @@ const Offers = () => {
                     </button>
                 </Draggable>
             )}
-            
+
             {/* El panel de filtros antiguo ha sido reemplazado por offers-filters-panel */}
             {isMobile && showMobileFilters && (
                 <div
@@ -382,6 +424,67 @@ const Offers = () => {
                     Descubre los nuevos talentos de la industria de la moda. Usa los filtros para encontrar la oferta que más te interese.
                 </p>
 
+                <div className="explorer-tabs-container">
+                    <div className="explorer-tabs">
+                        <button
+                            className={`user-extern-tab ${activeTab === 'all' ? 'active' : ''}`}
+                            disabled={tabDisabled}
+                            onClick={() => {
+                                if (!tabDisabled) {
+                                    setTabDisabled(true);
+                                    setActiveTab('all');
+                                    setFilters(prev => ({ ...prev, jobType: 'all' }));
+                                    setTimeout(() => setTabDisabled(false), 500);
+                                }
+                            }}
+                        >
+                            Todas las ofertas
+                        </button>
+                        <button
+                            className={`user-extern-tab ${activeTab === 'fulltime' ? 'active' : ''}`}
+                            disabled={tabDisabled}
+                            onClick={() => {
+                                if (!tabDisabled) {
+                                    setTabDisabled(true);
+                                    setActiveTab('fulltime');
+                                    setFilters(prev => ({ ...prev, jobType: 'Tiempo completo' }));
+                                    setTimeout(() => setTabDisabled(false), 500);
+                                }
+                            }}
+                        >
+                            Tiempo completo
+                        </button>
+                        <button
+                            className={`user-extern-tab ${activeTab === 'parttime' ? 'active' : ''}`}
+                            disabled={tabDisabled}
+                            onClick={() => {
+                                if (!tabDisabled) {
+                                    setTabDisabled(true);
+                                    setActiveTab('parttime');
+                                    setFilters(prev => ({ ...prev, jobType: 'Tiempo parcial' }));
+                                    setTimeout(() => setTabDisabled(false), 500);
+                                }
+                            }}
+                        >
+                            Tiempo parcial
+                        </button>
+                        <button
+                            className={`user-extern-tab ${activeTab === 'internship' ? 'active' : ''}`}
+                            disabled={tabDisabled}
+                            onClick={() => {
+                                if (!tabDisabled) {
+                                    setTabDisabled(true);
+                                    setActiveTab('internship');
+                                    setFilters(prev => ({ ...prev, jobType: 'Prácticas' }));
+                                    setTimeout(() => setTabDisabled(false), 500);
+                                }
+                            }}
+                        >
+                            Prácticas
+                        </button>
+                    </div>
+                </div>
+
                 <div className="offers-grid">
                     {filteredOffers.length === 0 ? (
                         <div className="no-offers-message">
@@ -404,7 +507,7 @@ const Offers = () => {
                                     <div className="offer-card-user">{o.publisherName || o.companyName}</div>
                                     <h2 className="offer-card-title">{o.position}</h2>
                                     <div className="offer-card-meta">
-                                        {o.city}, {o.country} <span>│</span> {o.jobType} <span>│</span> {o.locationType}
+                                        {o.city} <span>│</span> {o.jobType} <span>│</span> {o.locationType}
                                     </div>
                                     <div className="offer-card-date">{formatDate(o.publicationDate)}</div>
                                 </div>
