@@ -15,6 +15,8 @@ const Creatives = () => {
     const [error, setError] = useState(null);
     const [showMobileFilters, setShowMobileFilters] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
+    const [activeTab, setActiveTab] = useState('all');
+    const [tabDisabled, setTabDisabled] = useState(false);
     const [filters, setFilters] = useState({
         search: '',
         city: '',
@@ -347,6 +349,42 @@ const Creatives = () => {
                     Descubre los nuevos talentos de la industria de la moda. Usa los filtros para descubrir perfiles según
                     tus estudios, ciudad, especialización, disponibilidad para prácticas, colaboraciones y más.
                 </p>
+                <div className="explorer-tabs-container">
+                    <div className="explorer-tabs">
+                        <button
+                            className={`user-extern-tab ${activeTab === 'all' ? 'active' : ''}`}
+                            disabled={tabDisabled}
+                            onClick={() => {
+                                if (!tabDisabled) {
+                                    setTabDisabled(true);
+                                    setActiveTab('all');
+                                    setPage(1);
+                                    setFilters(prev => ({ ...prev, internships: false }));
+                                    setAppliedFilters(prev => ({ ...prev, internships: false }));
+                                    setTimeout(() => setTabDisabled(false), 500);
+                                }
+                            }}
+                        >
+                            Todos los usuarios
+                        </button>
+                        <button
+                            className={`user-extern-tab ${activeTab === 'internships' ? 'active' : ''}`}
+                            disabled={tabDisabled}
+                            onClick={() => {
+                                if (!tabDisabled) {
+                                    setTabDisabled(true);
+                                    setActiveTab('internships');
+                                    setPage(1);
+                                    setFilters(prev => ({ ...prev, internships: true }));
+                                    setAppliedFilters(prev => ({ ...prev, internships: true }));
+                                    setTimeout(() => setTabDisabled(false), 500);
+                                }
+                            }}
+                        >
+                            Disponible para prácticas
+                        </button>
+                    </div>
+                </div>
                 
                 {/* Botón de filtro para móvil */}
                 {isMobile && (

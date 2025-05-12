@@ -227,7 +227,7 @@ const Explorer = () => {
                                 }}
                             >
                                 <button
-                                    className="explorer-filter-button"
+                                    className={`explorer-filter-button ${hasActiveFilters ? 'has-filters' : ''}`}
                                     disabled={tabDisabled}
                                     title="Abrir filtros"
                                     aria-label="Abrir filtros"
