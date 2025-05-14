@@ -54,8 +54,11 @@ const ArticleDetail = () => {
     }, [id]);
 
     const formatDate = (dateString) => {
-        const options = { year: 'numeric', month: 'long', day: 'numeric' };
-        return new Date(dateString).toLocaleDateString('es-ES', options);
+        const date = new Date(dateString);
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}.${month}.${year}`;
     };
 
     if (loading) {
@@ -92,7 +95,7 @@ const ArticleDetail = () => {
         <div className="article-container">
             <div className="article-header">
                 <Link to="/ControlPanel/blog" className="back-to-blog-btn">
-                    <FaArrowLeft /> Volver al blog
+                    <FaTimes />
                 </Link>
             </div>
             
@@ -115,14 +118,15 @@ const ArticleDetail = () => {
             
             <div className="article-content-container">
                 <div className="article-meta">
-                    <span className="article-category">{article.category}</span>
                     <div className="article-meta-info">
-                        <span className="article-author"><FaUser /> {article.author}</span>
-                        <span className="article-date"><FaCalendarAlt /> {formatDate(article.publishedDate)}</span>
+                        <span className="article-category">{article.category}</span>
+                        <span className="article-date">{formatDate(article.publishedDate)}</span>
                     </div>
                 </div>
                 
                 <h1 className="article-title">{article.title}</h1>
+                <h2 className="article-subtitle">{article.excerpt || 'Subtítulo del artículo'}</h2>
+                <p className="article-author">Palabras de <span className="article-author-name">{article.author}</span></p>
                 
                 {/* Contenido principal del artículo */}
                 <div 
@@ -166,7 +170,7 @@ const ArticleDetail = () => {
             {/* Sección de artículos relacionados */}
             {relatedArticles.length > 0 && (
                 <div className="related-articles-section">
-                    <h2 className="related-articles-title">Más artículos</h2>
+                    <h2 className="related-articles-title">+</h2>
                     <div className="related-articles-grid">
                         {relatedArticles.map(relatedArticle => (
                             <div key={relatedArticle._id} className="related-article-card">
@@ -188,7 +192,7 @@ const ArticleDetail = () => {
                                     <h3 className="related-article-title">{relatedArticle.title}</h3>
                                     <p className="related-article-excerpt">{relatedArticle.excerpt}</p>
                                     <Link to={`/ControlPanel/article/${relatedArticle._id}`} className="related-article-link">
-                                        Leer más <FaArrowRight style={{ marginLeft: '5px', fontSize: '12px' }} />
+                                        Leer más
                                     </Link>
                                 </div>
                             </div>

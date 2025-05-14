@@ -154,7 +154,7 @@ const Blog = () => {
                                     </div>
                                     <div className="blog-card-footer">
                                         <span className="blog-card-author">
-                                            <FaUser className="author-icon" /> {article.author || 'Anónimo'}
+                                            {article.author || 'Anónimo'}
                                         </span>
                                         <span className="blog-card-link">
                                             Leer más
@@ -196,7 +196,7 @@ const Blog = () => {
                                     </div>
                                     <div className="blog-card-footer">
                                         <span className="blog-card-author">
-                                            <FaUser className="author-icon" /> {article.author || 'Anónimo'}
+                                            {article.author || 'Anónimo'}
                                         </span>
                                         <span className="blog-card-link">
                                             Leer más

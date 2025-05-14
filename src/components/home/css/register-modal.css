@@ -101,6 +101,7 @@
 /* Lado izquierdo: imagen del modal */
 .reg-modal-image {
   flex: 1;
+  position: relative;
 }
 
 .reg-modal-image img {
@@ -117,10 +118,14 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  gap: 24px;
 }
 
 .reg-modal-form h1 {
-  text-align: center;
+  text-align: left;
+  margin-bottom: 16px;
+  font-family: inter, sans-serif;
+  font-weight: 600;
 }
 
 /* Grupos de inputs */
@@ -133,28 +138,34 @@
 .reg-input-group label {
   display: block;
   margin-bottom: 0.5rem;
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .reg-input-group input {
   width: 100%;
   padding: 0.75rem;
   color: black;
-  border-radius: 8px;
-  background-color: white;
-  border: 1px solid #ccc;
+  border-radius: 24px;
+  background-color: #f7f7f7;
+  border: 1px solid transparent;
+  font-size: 16px;
 }
 
 /* Grupo de checkbox */
 .reg-checkbox-group {
   display: flex;
   align-items: center;
-  margin-bottom: 1rem;
+  padding: 12px;
 }
 
 .reg-checkbox-group input[type="checkbox"] {
   margin-right: 1rem;
   transform: scale(1.5);
+}
+
+.reg-checkbox-group a {
+  color: inherit;
+  text-decoration: none;
 }
 
 /* Ajustes para pantallas grandes */
@@ -186,6 +197,7 @@
 .reg-register-btn {
   background-color: #000;
   color: #fff;
+  font-size: 16px;
 }
 
 .reg-register-btn:hover {
@@ -195,8 +207,24 @@
 /* Botón de Google */
 .reg-google-btn {
   background-color: #fff;
-  color: #000;
+  color: #555;
   border: 1px solid #ccc;
+  font-size: 16px;
+  position: relative;
+  padding-left: 2.5rem;
+}
+
+.reg-google-btn::before {
+  content: "";
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  background: url('https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg') no-repeat center center;
+  background-size: contain;
+  opacity: 0.7; /* Para que coincida con el color #555 */
 }
 
 .reg-google-btn:hover {
@@ -206,13 +234,13 @@
 /* Enlace para cambiar a login */
 .reg-switch-login {
   text-align: center;
-  font-size: 0.9rem;
+  font-size: 16px;
+  color: #333;
 }
 
 .reg-switch-login a {
-  text-decoration: none;
-  color: #000;
-  font-weight: bold;
+  color: #333;
+  font-weight: 600;
 }
 
 /* Ajustes para pantallas pequeñas */

@@ -247,7 +247,7 @@ const RegisterModal = ({ onClose, onSwitchToLogin }) => {
       {/* Evitamos que se cierre al hacer clic dentro del modal */}
       <div className="reg-modal" onClick={(e) => e.stopPropagation()}>
         <button className="reg-close-button" onClick={onClose}>
-          <FaTimes />
+          <FaTimes size={28} />
         </button>
         <div className="reg-modal-content">
           <div className="reg-modal-image">
@@ -256,10 +256,10 @@ const RegisterModal = ({ onClose, onSwitchToLogin }) => {
           <div className="reg-modal-form">
             {step === "register" ? (
               <>
-                <h1>Registro</h1>
+                <h1>Registra tu email</h1>
                 <form onSubmit={handleSubmit}>
                   <div className="reg-input-group">
-                    <label htmlFor="username">Nombre de usuario *</label>
+                    <label htmlFor="username">Nombre de usuario (*)</label>
                     <input
                       type="text"
                       id="username"
@@ -276,7 +276,7 @@ const RegisterModal = ({ onClose, onSwitchToLogin }) => {
                     )}
                   </div>
                   <div className="reg-input-group">
-                    <label htmlFor="email">Email *</label>
+                    <label htmlFor="email">Email (*)</label>
                     <input
                       type="email"
                       id="email"
@@ -291,7 +291,7 @@ const RegisterModal = ({ onClose, onSwitchToLogin }) => {
                     )}
                   </div>
                   <div className="reg-input-group">
-                    <label htmlFor="password">Contraseña *</label>
+                    <label htmlFor="password">Contraseña (*)</label>
                     <input
                       type="password"
                       id="password"
@@ -303,7 +303,7 @@ const RegisterModal = ({ onClose, onSwitchToLogin }) => {
                     />
                   </div>
                   <div className="reg-input-group">
-                    <label htmlFor="confirmPassword">Repetir contraseña *</label>
+                    <label htmlFor="confirmPassword">Repetir contraseña (*)</label>
                     <input
                       type="password"
                       id="confirmPassword"
@@ -324,7 +324,7 @@ const RegisterModal = ({ onClose, onSwitchToLogin }) => {
                     <p className="reg-success-message">{successMessage}</p>
                   )}
                   <button type="submit" className="reg-btn reg-register-btn">
-                    Registrarse
+                    Registrarme
                   </button>
                   <button
                     type="button"

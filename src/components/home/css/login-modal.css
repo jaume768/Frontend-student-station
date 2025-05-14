@@ -8,6 +8,8 @@
     background-size: cover;
     display: flex;
     justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
 .login-card.with-error {
@@ -24,41 +26,43 @@
     width: 320px;
     background-color: #fff;
     border-radius: 30px;
-    padding: 1.5rem;
-    height: 540px;
-    margin-top: 50px;
+    padding: 2rem 1.5rem;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
     gap: 0.8rem;
+    justify-content: center;
 }
 
 .login-card h1 {
-    font-size: 1.4rem;
-    margin-bottom: 0.5rem;
+    font-size: 2rem;
+    margin-bottom: 1rem;
     text-align: center;
+    font-family: inter, sans-serif;
+    font-weight: 600;
 }
 
 .input-group {
     position: relative;
-    margin-bottom: 1rem;
+    margin-bottom: 1.25rem;
 }
 
 .input-group label {
     display: block;
-    margin-bottom: 0.25rem;
-    font-weight: bold;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
     color: #333;
+    font-size: 18px;
 }
 
 .input-group input {
     width: 100%;
     padding: 0.75rem 1rem;
-    font-size: 0.95rem;
+    font-size: 1rem;
     background-color: #fff;
     color: black;
-    border: 1px solid transparent;
-    border-radius: 8px;
+    border: 1px solid #ccc;
+    border-radius: 24px;
     outline: none;
     transition: border-color 0.3s ease;
 }
@@ -84,11 +88,11 @@
 .password-group input {
     width: 100%;
     padding: 0.75rem 1rem;
-    font-size: 0.95rem;
+    font-size: 1rem;
     background-color: #fff;
     color: black;
-    border: 1px solid transparent;
-    border-radius: 8px;
+    border: 1px solid #ccc;
+    border-radius: 24px;
     outline: none;
     transition: border-color 0.3s ease;
 }
@@ -103,13 +107,12 @@
 }
 
 .forgot-link {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     color: #333;
-    text-decoration: none;
-    margin-left: auto;
-    margin-top: -5px;
-    margin-bottom: 10px;
-    display: inline-block;
+    margin-top: -15px;
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: center;
 }
 
 .forgot-link:hover {
@@ -119,7 +122,7 @@
 .btn {
     width: 100%;
     padding: 0.75rem;
-    font-size: 0.95rem;
+    font-size: 1rem;
     border-radius: 25px;
     border: none;
     cursor: pointer;
@@ -128,7 +131,7 @@
 .login-btn {
     background-color: #000;
     color: #fff;
-    margin-bottom: 0.75rem;
+    font-size: 1rem;
 }
 
 .login-btn:hover {
@@ -139,6 +142,21 @@
     background-color: #fff;
     color: #000;
     border: 1px solid #ccc;
+    font-size: 1rem;
+    position: relative;
+    padding-left: 2.5rem;
+}
+
+.google-btn::before {
+    content: "";
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    background: url('https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg') no-repeat center center;
+    background-size: contain;
 }
 
 .google-btn:hover {
@@ -153,13 +171,13 @@
 }
 
 .extra-links p {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
 }
 
 .extra-links a {
     color: #000;
     text-decoration: none;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
 }
 
 .extra-links a:hover {
@@ -179,10 +197,23 @@
 
 @media (max-width: 668px) {
     .login-card {
-        margin-top: 40%;
+        margin: 16px;
+        padding: 1.2rem;
+        height: 90vh;
+        width: 90%;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        position: relative;
+        right: 150px;
     }
-
+    
     .login-card.with-error {
-        margin-top: 30%;
+        margin: 16px;
+    }
+    
+    /* Ocultar el botón de volver al inicio en móvil */
+    .back-link {
+        display: none;
     }
 }
