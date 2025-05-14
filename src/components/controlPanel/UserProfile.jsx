@@ -25,7 +25,7 @@ const UserProfile = () => {
     const [isFollowing, setIsFollowing] = useState(false);
     const [isNotificationActive, setIsNotificationActive] = useState(false);
     const [isGalleryView, setIsGalleryView] = useState(true);
-    const [activeTab, setActiveTab] = useState('perfil');
+    const [activeTab, setActiveTab] = useState('publicaciones');
     const [userPosts, setUserPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -370,15 +370,6 @@ const UserProfile = () => {
                     <span>{notification.message}</span>
                 </div>
             )}
-
-            {/* Cabecera con botón de volver */}
-            <header className="user-extern-navigation">
-                <button className="user-extern-back-btn" onClick={() => navigate(-1)}>
-                    <FaArrowLeft size={20} />
-                    <span>Volver</span>
-                </button>
-            </header>
-
             <div className="user-extern-content">
                 {/* Columna izquierda con información del perfil */}
                 <div className="user-extern-left-column">

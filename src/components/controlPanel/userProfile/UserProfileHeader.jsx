@@ -61,17 +61,7 @@ const UserProfileHeader = ({
                                     <button
                                         className="notification-button"
                                         onClick={toggleNotification}
-                                        title={
-                                            isNotificationActive
-                                                ? "Desactivar notificaciones"
-                                                : "Activar notificaciones"
-                                        }
                                     >
-                                        {isNotificationActive ? (
-                                            <FaBell />
-                                        ) : (
-                                            <FaBellSlash />
-                                        )}
                                     </button>
                                 </>
                             ) : (

@@ -33,16 +33,47 @@ const RegisterModal = ({ onClose, onSwitchToLogin }) => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+    
+    // Validar username en tiempo real
+    if (name === 'username') {
+      // Limpiar mensajes de error previos
+      setErrors(prev => ({
+        ...prev,
+        username: '',
+      }));
+      
+      // Validar espacios en el username
+      if (value.includes(' ')) {
+        setErrors(prev => ({
+          ...prev,
+          username: 'El nombre de usuario no puede contener espacios',
+        }));
+      }
+      
+      // Validar longitud máxima
+      if (value.length > 20) {
+        setErrors(prev => ({
+          ...prev,
+          username: 'El nombre de usuario debe tener máximo 20 caracteres',
+        }));
+      }
+    }
+    
     setFormData({
       ...formData,
       [name]: type === 'checkbox' ? checked : value,
     });
-    setErrors({
-      passwordMismatch: '',
-      incomplete: '',
-      username: '',
-      email: '',
-    });
+    
+    // No limpiamos los errores de username si estamos editando el username
+    if (name !== 'username') {
+      setErrors({
+        passwordMismatch: '',
+        incomplete: '',
+        username: errors.username, // Mantener el error de username si existe
+        email: '',
+      });
+    }
+    
     setBackendError('');
   };
 
@@ -76,6 +107,24 @@ const RegisterModal = ({ onClose, onSwitchToLogin }) => {
       setErrors(prev => ({
         ...prev,
         passwordMismatch: 'Las contraseñas no coinciden',
+      }));
+      return;
+    }
+    
+    // Validar espacios en el username
+    if (formData.username.includes(' ')) {
+      setErrors(prev => ({
+        ...prev,
+        username: 'El nombre de usuario no puede contener espacios',
+      }));
+      return;
+    }
+    
+    // Validar longitud máxima del username
+    if (formData.username.length > 20) {
+      setErrors(prev => ({
+        ...prev,
+        username: 'El nombre de usuario debe tener máximo 20 caracteres',
       }));
       return;
     }
@@ -215,9 +264,11 @@ const RegisterModal = ({ onClose, onSwitchToLogin }) => {
                       type="text"
                       id="username"
                       name="username"
-                      placeholder="Introduce tu nombre de usuario"
+                      placeholder="Máx. 20 caracteres, sin espacios"
                       value={formData.username}
                       onChange={handleChange}
+                      className={errors.username ? 'error-input' : ''}
+                      maxLength={20}
                       required
                     />
                     {errors.username && (
@@ -264,24 +315,6 @@ const RegisterModal = ({ onClose, onSwitchToLogin }) => {
                     />
                     {errors.passwordMismatch && (
                       <p className="reg-error-message">{errors.passwordMismatch}</p>
-                    )}
-                  </div>
-                  <div className="reg-checkbox-group">
-                    <input
-                      type="checkbox"
-                      id="terms"
-                      name="acceptedTerms"
-                      checked={formData.acceptedTerms}
-                      onChange={handleChange}
-                      required
-                    />
-                    <label htmlFor="terms">
-                      Acepto haber leído los{' '}
-                      <a href="#">Términos y condiciones</a> y la{' '}
-                      <a href="#">Política de privacidad</a>.
-                    </label>
-                    {errors.incomplete && (
-                      <p className="reg-error-message">{errors.incomplete}</p>
                     )}
                   </div>
                   {backendError && (

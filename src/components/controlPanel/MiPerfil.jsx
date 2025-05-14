@@ -22,7 +22,7 @@ import EducationalOffersSection from './miPerfil/EducationalOffersSection';
 const MiPerfil = () => {
     const [profile, setProfile] = useState(null);
     const [isGalleryView, setIsGalleryView] = useState(true);
-    const [activeTab, setActiveTab] = useState('perfil');
+    const [activeTab, setActiveTab] = useState('publicaciones');
     const [userPosts, setUserPosts] = useState([]);
     const [isCompany, setIsCompany] = useState(false);
     const [isEducationalInstitution, setIsEducationalInstitution] = useState(false);
@@ -151,7 +151,6 @@ const MiPerfil = () => {
                         ) }
                         <div className="miPerfil-action-buttons">
                             <button className="miPerfil-follow-button">Seguir</button>
-                            <button className="miPerfil-notification-button"><FaBell /></button>
                         </div>
                         <div className="miPerfil-contact-share">
                             <button 
@@ -173,10 +172,12 @@ const MiPerfil = () => {
                                 className="miPerfil-share-button" 
                                 title="Compartir perfil"
                                 onClick={() => {
-                                    const profileUrl = window.location.href;
+                                    // Construir la URL correcta para el perfil público
+                                    const baseUrl = window.location.origin;
+                                    const profileUrl = `${baseUrl}/user/${profile.username}`;
                                     navigator.clipboard.writeText(profileUrl);
-                                    // Mostrar notificación (puedes implementar un sistema de notificaciones similar al de UserProfile)
-                                    alert('URL del perfil copiada al portapapeles');
+                                    // Mostrar notificación
+                                    alert(`URL del perfil copiada al portapapeles: ${profileUrl}`);
                                 }}
                             >
                                 <FaExternalLinkAlt />
