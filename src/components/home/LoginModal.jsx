@@ -46,6 +46,29 @@ const LoginModal = ({ onClose, onSwitchToRegister, onSwitchToReset }) => {
 
     return (
         <div className="login-modal">
+            <a
+                href="#"
+                className="back-link"
+                onClick={(e) => {
+                    e.preventDefault();
+                    onClose();
+                }}
+                style={{
+                    color: '#333',
+                    marginTop: '-2px',
+                    border: 'solid 1px grey',
+                    background: 'white',
+                    padding: '6px 12px',
+                    position: 'fixed',
+                    top: '24px',
+                    left: '24px',
+                    zIndex: '1',
+                    textDecoration: 'none',
+                    borderRadius: '16px'
+                }}
+            >
+                ← Volver al inicio
+            </a>
             <div className={`login-card ${error ? 'with-error' : ''}`}>
                 <h1>Inicio de sesión</h1>
                 {error && <p className="error">{error}</p>}
@@ -105,16 +128,6 @@ const LoginModal = ({ onClose, onSwitchToRegister, onSwitchToReset }) => {
                             Regístrate
                         </a>
                     </p>
-                    <a
-                        href="#"
-                        className="back-link"
-                        onClick={(e) => {
-                            e.preventDefault();
-                            onClose();
-                        }}
-                    >
-                        Volver al inicio
-                    </a>
                 </div>
             </div>
         </div>
