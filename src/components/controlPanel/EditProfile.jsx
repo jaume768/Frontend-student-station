@@ -22,6 +22,8 @@ import PDFUploadSection from './editProfile/PDFUploadSection';
 import ConfigurationSection from './editProfile/ConfigurationSection';
 import ProfessionalMilestonesSection from './editProfile/ProfessionalMilestonesSection';
 import CompanyContactSection from './editProfile/CompanyContactSection';
+import LanguagesSection from './editProfile/LanguagesSection';
+import SocialNetworksSection from './editProfile/SocialNetworksSection';
 
 const getCreativeTypeText = (type) => {
     switch (type) {
@@ -127,8 +129,20 @@ const EditProfile = () => {
         "Tailornova", "Shopify", "ZBrush"
     ];
     
+    // Lista original de idiomas populares (constante para mantener el orden original)
+    const originalPopularLanguages = [
+        "Español", "Inglés", "Francés", "Alemán", "Italiano", "Portugués", "Chino", "Ruso", "Japonés", "Árabe"
+    ];
+    
     // Estado para el software popular filtrado
     const [popularSoftware, setPopularSoftware] = useState([...originalPopularSoftware]);
+    
+    // Estado para idiomas
+    const [languages, setLanguages] = useState([]);
+    const [newLanguage, setNewLanguage] = useState("");
+    
+    // Estado para los idiomas populares filtrados
+    const [popularLanguages, setPopularLanguages] = useState([...originalPopularLanguages]);
     const [contract, setContract] = useState({ practicas: false, tiempoCompleto: false, parcial: false });
     const [locationType, setLocationType] = useState({ presencial: false, remoto: false, hibrido: false });
     const [social, setSocial] = useState({
@@ -150,6 +164,7 @@ const EditProfile = () => {
     const [isSoftwareEditing, setIsSoftwareEditing] = useState(false);
     const [isEnBuscaEditing, setIsEnBuscaEditing] = useState(false);
     const [isContactEditing, setIsContactEditing] = useState(false);
+    const [isSocialNetworksEditing, setIsSocialNetworksEditing] = useState(false);
     const [isEmailEditing, setIsEmailEditing] = useState(false);
     const [emailInput, setEmailInput] = useState("");
     const [newEmail, setNewEmail] = useState("");
@@ -167,6 +182,9 @@ const EditProfile = () => {
     const [isSoftwareCollapsed, setIsSoftwareCollapsed] = useState(false);
     const [isEnBuscaCollapsed, setIsEnBuscaCollapsed] = useState(false);
     const [isContactCollapsed, setIsContactCollapsed] = useState(false);
+    const [isSocialNetworksCollapsed, setIsSocialNetworksCollapsed] = useState(false);
+    const [isLanguagesCollapsed, setIsLanguagesCollapsed] = useState(false);
+    const [isLanguagesEditing, setIsLanguagesEditing] = useState(false);
     const [professionalTitle, setProfessionalTitle] = useState('');
     const [isProfessionalTitleEditing, setIsProfessionalTitleEditing] = useState(false);
     const [isProfessionalTitleCollapsed, setIsProfessionalTitleCollapsed] = useState(false);
@@ -261,14 +279,19 @@ const EditProfile = () => {
                 }
                 const userSkills = user.skills || [];
                 const userSoftware = user.software || [];
+                const userLanguages = user.languages || [];
                 setSkills(userSkills);
                 setSoftware(userSoftware);
+                setLanguages(userLanguages);
                 
                 // Filtrar las habilidades populares para no mostrar las que ya tiene el usuario
                 setPopularSkills(originalPopularSkills.filter(skill => !userSkills.includes(skill)));
                 
                 // Filtrar el software popular para no mostrar los que ya tiene el usuario
                 setPopularSoftware(originalPopularSoftware.filter(sw => !userSoftware.includes(sw)));
+                
+                // Filtrar los idiomas populares para no mostrar los que ya tiene el usuario
+                setPopularLanguages(originalPopularLanguages.filter(lang => !userLanguages.includes(lang)));
                 setContract(user.contract || { practicas: false, tiempoCompleto: false, parcial: false });
                 setLocationType(user.locationType || { presencial: false, remoto: false, hibrido: false });
                 setSocial(user.social || {
@@ -417,7 +440,7 @@ const EditProfile = () => {
         if (e.key === "Enter") {
             e.preventDefault();
             const currentSkills = Array.isArray(skills) ? skills : [];
-            if (newSkill.trim() && currentSkills.length < 12 && !currentSkills.includes(newSkill.trim())) {
+            if (newSkill.trim() && currentSkills.length < 5 && !currentSkills.includes(newSkill.trim())) {
                 setSkills([...currentSkills, newSkill.trim()]);
                 setNewSkill("");
             }
@@ -453,7 +476,7 @@ const EditProfile = () => {
 
     const addPopularSkill = (skill) => {
         const currentSkills = Array.isArray(skills) ? skills : [];
-        if (isHabilidadesEditing && currentSkills.length < 12 && !currentSkills.includes(skill)) {
+        if (isHabilidadesEditing && currentSkills.length < 5 && !currentSkills.includes(skill)) {
             setSkills([...currentSkills, skill]);
             setPopularSkills(popularSkills.filter(s => s !== skill));
         }
@@ -463,7 +486,7 @@ const EditProfile = () => {
         if (e.key === "Enter") {
             e.preventDefault();
             const currentSoftware = Array.isArray(software) ? software : [];
-            if (newSoftware.trim() && currentSoftware.length < 12 && !currentSoftware.includes(newSoftware.trim())) {
+            if (newSoftware.trim() && currentSoftware.length < 10 && !currentSoftware.includes(newSoftware.trim())) {
                 setSoftware([...currentSoftware, newSoftware.trim()]);
                 setNewSoftware("");
             }
@@ -499,9 +522,55 @@ const EditProfile = () => {
 
     const addPopularSoftware = (sw) => {
         const currentSoftware = Array.isArray(software) ? software : [];
-        if (isSoftwareEditing && currentSoftware.length < 12 && !currentSoftware.includes(sw)) {
+        if (isSoftwareEditing && currentSoftware.length < 10 && !currentSoftware.includes(sw)) {
             setSoftware([...currentSoftware, sw]);
             setPopularSoftware(popularSoftware.filter(s => s !== sw));
+        }
+    };
+    
+    const handleLanguageKeyDown = (e) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            const currentLanguages = Array.isArray(languages) ? languages : [];
+            if (newLanguage.trim() && currentLanguages.length < 5 && !currentLanguages.includes(newLanguage.trim())) {
+                setLanguages([...currentLanguages, newLanguage.trim()]);
+                setNewLanguage("");
+            }
+        }
+    };
+    
+    const removeLanguage = (index) => {
+        if (!Array.isArray(languages)) return;
+        const languageToRemove = languages[index];
+        setLanguages(languages.filter((_, i) => i !== index));
+        
+        // Si el idioma eliminado estaba en la lista original de idiomas populares
+        if (originalPopularLanguages.includes(languageToRemove)) {
+            // Encontrar la posición original del idioma en la lista original
+            const originalIndex = originalPopularLanguages.indexOf(languageToRemove);
+            
+            // Crear una nueva lista con el idioma insertado en su posición original
+            const newPopularLanguages = [...popularLanguages];
+            
+            // Encontrar la posición correcta para insertar el idioma
+            let insertIndex = 0;
+            for (let i = 0; i < originalIndex; i++) {
+                if (newPopularLanguages.includes(originalPopularLanguages[i])) {
+                    insertIndex = newPopularLanguages.indexOf(originalPopularLanguages[i]) + 1;
+                }
+            }
+            
+            // Insertar el idioma en la posición correcta
+            newPopularLanguages.splice(insertIndex, 0, languageToRemove);
+            setPopularLanguages(newPopularLanguages);
+        }
+    };
+    
+    const addPopularLanguage = (language) => {
+        const currentLanguages = Array.isArray(languages) ? languages : [];
+        if (isLanguagesEditing && currentLanguages.length < 5 && !currentLanguages.includes(language)) {
+            setLanguages([...currentLanguages, language]);
+            setPopularLanguages(popularLanguages.filter(l => l !== language));
         }
     };
 
@@ -588,6 +657,7 @@ const EditProfile = () => {
                 professionalFormation: Array.isArray(professionalFormationList) ? professionalFormationList : [],
                 skills: Array.isArray(skills) ? skills : [],
                 software: Array.isArray(software) ? software : [],
+                languages: Array.isArray(languages) ? languages : [],
                 contract: contract || {},
                 locationType: locationType || {},
                 social: updatedSocial,
@@ -613,6 +683,9 @@ const EditProfile = () => {
             });
             if (updatedUser.software) {
                 setSoftware(updatedUser.software);
+            }
+            if (updatedUser.languages) {
+                setLanguages(updatedUser.languages);
             }
             if (updatedUser.contract) {
                 setContract(updatedUser.contract);
@@ -912,6 +985,20 @@ const EditProfile = () => {
                                                 addPopularSkill={addPopularSkill}
                                                 updateProfileData={updateProfileData}
                                             />
+                                            <LanguagesSection
+                                                isLanguagesCollapsed={isLanguagesCollapsed}
+                                                setIsLanguagesCollapsed={setIsLanguagesCollapsed}
+                                                isLanguagesEditing={isLanguagesEditing}
+                                                setIsLanguagesEditing={setIsLanguagesEditing}
+                                                languages={languages}
+                                                newLanguage={newLanguage}
+                                                setNewLanguage={setNewLanguage}
+                                                handleLanguageKeyDown={handleLanguageKeyDown}
+                                                removeLanguage={removeLanguage}
+                                                popularLanguages={popularLanguages}
+                                                addPopularLanguage={addPopularLanguage}
+                                                updateProfileData={updateProfileData}
+                                            />
                                             <CompanyContactSection
                                                 isCompanyContactCollapsed={isCompanyContactCollapsed}
                                                 setIsCompanyContactCollapsed={setIsCompanyContactCollapsed}
@@ -925,6 +1012,15 @@ const EditProfile = () => {
                                                 updateProfileData={updateProfileData}
                                                 social={social}
                                                 handleSocialChange={handleSocialChange}
+                                            />
+                                            <SocialNetworksSection
+                                                isSocialNetworksCollapsed={isSocialNetworksCollapsed}
+                                                setIsSocialNetworksCollapsed={setIsSocialNetworksCollapsed}
+                                                isSocialNetworksEditing={isSocialNetworksEditing}
+                                                setIsSocialNetworksEditing={setIsSocialNetworksEditing}
+                                                social={social}
+                                                handleSocialChange={handleSocialChange}
+                                                updateProfileData={updateProfileData}
                                             />
                                         </>
                                     ) : (
@@ -994,11 +1090,34 @@ const EditProfile = () => {
                                                 handleLocationChange={handleLocationChange}
                                                 updateProfileData={updateProfileData}
                                             />
+                                            <LanguagesSection
+                                                isLanguagesCollapsed={isLanguagesCollapsed}
+                                                setIsLanguagesCollapsed={setIsLanguagesCollapsed}
+                                                isLanguagesEditing={isLanguagesEditing}
+                                                setIsLanguagesEditing={setIsLanguagesEditing}
+                                                languages={languages}
+                                                newLanguage={newLanguage}
+                                                setNewLanguage={setNewLanguage}
+                                                handleLanguageKeyDown={handleLanguageKeyDown}
+                                                removeLanguage={removeLanguage}
+                                                popularLanguages={popularLanguages}
+                                                addPopularLanguage={addPopularLanguage}
+                                                updateProfileData={updateProfileData}
+                                            />
                                             <ContactSection
                                                 isContactCollapsed={isContactCollapsed}
                                                 setIsContactCollapsed={setIsContactCollapsed}
                                                 isContactEditing={isContactEditing}
                                                 setIsContactEditing={setIsContactEditing}
+                                                social={social}
+                                                handleSocialChange={handleSocialChange}
+                                                updateProfileData={updateProfileData}
+                                            />
+                                            <SocialNetworksSection
+                                                isSocialNetworksCollapsed={isSocialNetworksCollapsed}
+                                                setIsSocialNetworksCollapsed={setIsSocialNetworksCollapsed}
+                                                isSocialNetworksEditing={isSocialNetworksEditing}
+                                                setIsSocialNetworksEditing={setIsSocialNetworksEditing}
                                                 social={social}
                                                 handleSocialChange={handleSocialChange}
                                                 updateProfileData={updateProfileData}

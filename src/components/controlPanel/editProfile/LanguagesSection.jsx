@@ -2,45 +2,44 @@ import React from 'react';
 import { FaChevronDown, FaChevronUp, FaTimes, FaPlus } from 'react-icons/fa';
 import EditButton from './EditButton';
 
-const SkillsSection = ({
-    isHabilidadesCollapsed,
-    setIsHabilidadesCollapsed,
-    isHabilidadesEditing,
-    setIsHabilidadesEditing,
-    skills,
-    newSkill,
-    setNewSkill,
-    handleSkillKeyDown,
-    removeSkill,
-    popularSkills,
-    addPopularSkill,
+const LanguagesSection = ({
+    isLanguagesCollapsed,
+    setIsLanguagesCollapsed,
+    isLanguagesEditing,
+    setIsLanguagesEditing,
+    languages,
+    newLanguage,
+    setNewLanguage,
+    handleLanguageKeyDown,
+    removeLanguage,
+    popularLanguages,
+    addPopularLanguage,
     updateProfileData
 }) => {
     return (
         <section className="form-section">
             <div className="section-header-edit">
-                <h3>Habilidades blandas (Softskills)</h3>
-                <button type="button" className="collapse-toggle" onClick={() => setIsHabilidadesCollapsed(!isHabilidadesCollapsed)}>
-                    {isHabilidadesCollapsed ? <FaChevronDown /> : <FaChevronUp />}
+                <h3>Idiomas</h3>
+                <button type="button" className="collapse-toggle" onClick={() => setIsLanguagesCollapsed(!isLanguagesCollapsed)}>
+                    {isLanguagesCollapsed ? <FaChevronDown /> : <FaChevronUp />}
                 </button>
             </div>
-            {!isHabilidadesCollapsed && (
+            {!isLanguagesCollapsed && (
                 <div className="section-content">
                     <p className="tag-instruction">
-                        Agrega etiquetas para que otros puedan identificar tus habilidades. Intenta que
-                        sean claras y concisas. Añade hasta un <strong>máximo de 5 etiquetas</strong>.
+                        Agrega idiomas a tu perfil usando etiquetas.
                     </p>
                     
                     <div className="tags-input-container">
                         <div className="tags-container">
-                            {Array.isArray(skills) && skills.map((skill, index) => (
+                            {Array.isArray(languages) && languages.map((language, index) => (
                                 <div key={index} className="tag">
-                                    {skill}
-                                    {isHabilidadesEditing && (
+                                    {language}
+                                    {isLanguagesEditing && (
                                         <button
                                             type="button"
                                             className="tag-remove"
-                                            onClick={() => removeSkill(index)}
+                                            onClick={() => removeLanguage(index)}
                                         >
                                             <FaTimes />
                                         </button>
@@ -48,15 +47,15 @@ const SkillsSection = ({
                                 </div>
                             ))}
                             
-                            {/* Input para añadir etiquetas escribiendo */}
-                            {isHabilidadesEditing && skills.length < 5 && (
+                            {/* Input para añadir idiomas escribiendo */}
+                            {isLanguagesEditing && languages.length < 5 && (
                                 <input
                                     type="text"
                                     className="tag-input"
                                     placeholder="Escribe aquí."
-                                    value={newSkill}
-                                    onChange={(e) => setNewSkill(e.target.value)}
-                                    onKeyDown={handleSkillKeyDown}
+                                    value={newLanguage}
+                                    onChange={(e) => setNewLanguage(e.target.value)}
+                                    onKeyDown={handleLanguageKeyDown}
                                     maxLength={50}
                                 />
                             )}
@@ -66,19 +65,20 @@ const SkillsSection = ({
                     <p className="tag-hint">
                         Presiona "Enter" al finalizar de escribir para añadir una etiqueta. Elimina haciendo clic en la X.
                     </p>
-                    {isHabilidadesEditing && (
+                    
+                    {isLanguagesEditing && (
                         <>
-                            {Array.isArray(skills) && skills.length < 5 && (
+                            {Array.isArray(languages) && languages.length < 5 && (
                                 <div className="popular-tags-container">
-                                    <h4>Habilidades populares</h4>
+                                    <h4>Idiomas populares</h4>
                                     <div className="popular-tags">
-                                        {popularSkills.map((skill, index) => (
+                                        {popularLanguages.map((language, index) => (
                                             <div
                                                 key={index}
                                                 className="popular-tag"
-                                                onClick={() => addPopularSkill(skill)}
+                                                onClick={() => addPopularLanguage(language)}
                                             >
-                                                {skill}
+                                                {language}
                                                 <span className="add-tag"><FaPlus /></span>
                                             </div>
                                         ))}
@@ -90,12 +90,12 @@ const SkillsSection = ({
                     
                     <div className="button-container">
                         <EditButton
-                            isEditing={isHabilidadesEditing}
+                            isEditing={isLanguagesEditing}
                             onClick={() => {
-                                if (isHabilidadesEditing) {
+                                if (isLanguagesEditing) {
                                     updateProfileData();
                                 }
-                                setIsHabilidadesEditing(!isHabilidadesEditing);
+                                setIsLanguagesEditing(!isLanguagesEditing);
                             }}
                         />
                     </div>
@@ -105,4 +105,4 @@ const SkillsSection = ({
     );
 };
 
-export default SkillsSection;
+export default LanguagesSection;

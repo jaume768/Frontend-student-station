@@ -21,100 +21,19 @@ const ContactSection = ({
             </div>
             {!isContactCollapsed && (
                 <div className="section-content">
+                    <p className="form-description">
+                        Mostraremos tus datos de contacto a los usuarios que se interesen por ellos.
+                    </p>
                     <div className="form-group-edit">
-                        <label>Email de contacto</label>
+                        <label>E-mail de contacto</label>
                         <input
                             type="email"
                             name="emailContacto"
-                            placeholder="Email de contacto"
+                            placeholder="contact@contact.com"
                             value={social?.emailContacto || ""}
                             onChange={handleSocialChange}
                             disabled={!isContactEditing}
                         />
-                    </div>
-                    <div className="form-group-edit">
-                        <label>Instagram</label>
-                        <div className="social-input-container">
-                            <span className="social-prefix">instagram.com/</span>
-                            <input
-                                type="text"
-                                name="instagram"
-                                placeholder="tu_usuario"
-                                value={social?.instagram || ""}
-                                onChange={handleSocialChange}
-                                disabled={!isContactEditing}
-                            />
-                        </div>
-                    </div>
-                    <div className="form-group-edit">
-                        <label>LinkedIn</label>
-                        <div className="social-input-container">
-                            <span className="social-prefix">linkedin.com/in/</span>
-                            <input
-                                type="text"
-                                name="linkedin"
-                                placeholder="tu_usuario"
-                                value={social?.linkedin || ""}
-                                onChange={handleSocialChange}
-                                disabled={!isContactEditing}
-                            />
-                        </div>
-                    </div>
-                    <div className="form-group-edit">
-                        <label>Behance</label>
-                        <div className="social-input-container">
-                            <span className="social-prefix">behance.net/</span>
-                            <input
-                                type="text"
-                                name="behance"
-                                placeholder="tu_usuario"
-                                value={social?.behance || ""}
-                                onChange={handleSocialChange}
-                                disabled={!isContactEditing}
-                            />
-                        </div>
-                    </div>
-                    <div className="form-group-edit">
-                        <label>Tumblr</label>
-                        <div className="social-input-container">
-                            <span className="social-prefix">tumblr.com/</span>
-                            <input
-                                type="text"
-                                name="tumblr"
-                                placeholder="tu_usuario"
-                                value={social?.tumblr || ""}
-                                onChange={handleSocialChange}
-                                disabled={!isContactEditing}
-                            />
-                        </div>
-                    </div>
-                    <div className="form-group-edit">
-                        <label>YouTube</label>
-                        <div className="social-input-container">
-                            <span className="social-prefix">youtube.com/</span>
-                            <input
-                                type="text"
-                                name="youtube"
-                                placeholder="tu_canal"
-                                value={social?.youtube || ""}
-                                onChange={handleSocialChange}
-                                disabled={!isContactEditing}
-                            />
-                        </div>
-                    </div>
-                    <div className="form-group-edit">
-                        <label>Pinterest</label>
-                        <div className="social-input-container">
-                            <span className="social-prefix">pinterest.com/</span>
-                            <input
-                                type="text"
-                                name="pinterest"
-                                placeholder="tu_usuario"
-                                value={social?.pinterest || ""}
-                                onChange={handleSocialChange}
-                                disabled={!isContactEditing}
-                            />
-                        </div>
                     </div>
                     <div className="button-container">
                         <EditButton

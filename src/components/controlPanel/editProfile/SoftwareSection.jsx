@@ -19,14 +19,19 @@ const SoftwareSection = ({
     return (
         <section className="form-section">
             <div className="section-header-edit">
-                <h3>Software</h3>
+                <h3>Softwares o Hardskills</h3>
                 <button type="button" className="collapse-toggle" onClick={() => setIsSoftwareCollapsed(!isSoftwareCollapsed)}>
                     {isSoftwareCollapsed ? <FaChevronDown /> : <FaChevronUp />}
                 </button>
             </div>
             {!isSoftwareCollapsed && (
                 <div className="section-content">
-                    <div className="form-group-edit-etiquetas">
+                    <p className="tag-instruction">
+                        Agrega etiquetas para que otros puedan identificar tus conocimientos o softwares
+                        de especialización. Añade hasta un <strong>máximo de 10 etiquetas</strong>.
+                    </p>
+                    
+                    <div className="tags-input-container">
                         <div className="tags-container">
                             {Array.isArray(software) && software.map((sw, index) => (
                                 <div key={index} className="tag">
@@ -34,7 +39,7 @@ const SoftwareSection = ({
                                     {isSoftwareEditing && (
                                         <button
                                             type="button"
-                                            className="remove-tag"
+                                            className="tag-remove"
                                             onClick={() => removeSoftware(index)}
                                         >
                                             <FaTimes />
@@ -42,23 +47,30 @@ const SoftwareSection = ({
                                     )}
                                 </div>
                             ))}
+                            
+                            {/* Input para añadir etiquetas escribiendo */}
+                            {isSoftwareEditing && software.length < 10 && (
+                                <input
+                                    type="text"
+                                    className="tag-input"
+                                    placeholder="Escribe aquí."
+                                    value={newSoftware}
+                                    onChange={(e) => setNewSoftware(e.target.value)}
+                                    onKeyDown={handleSoftwareKeyDown}
+                                    maxLength={50}
+                                />
+                            )}
                         </div>
-                        {isSoftwareEditing && (
-                            <>
-                                {Array.isArray(software) && software.length < 12 && (
-                                    <div className="software-input-container">
-                                        <input
-                                            type="text"
-                                            placeholder="Añadir software y pulsar Enter"
-                                            value={newSoftware}
-                                            onChange={(e) => setNewSoftware(e.target.value)}
-                                            onKeyDown={handleSoftwareKeyDown}
-                                            maxLength={50}
-                                        />
-                                        <small className="info-text">Puedes añadir hasta 12 programas</small>
-                                    </div>
-                                )}
-                                <div className="popular-tags">
+                    </div>
+
+                    <p className="tag-hint">
+                        Presiona "Enter" al finalizar de escribir para añadir una etiqueta. Elimina haciendo clic en la X.
+                    </p>
+                    
+                    {isSoftwareEditing && (
+                        <>
+                            {Array.isArray(software) && software.length < 10 && (
+                                <div className="popular-tags-container">
                                     <h4>Software popular</h4>
                                     <div className="popular-tags">
                                         {popularSoftware.map((sw, index) => (
@@ -73,9 +85,10 @@ const SoftwareSection = ({
                                         ))}
                                     </div>
                                 </div>
-                            </>
-                        )}
-                    </div>
+                            )}
+                        </>
+                    )}
+                    
                     <div className="button-container">
                         <EditButton
                             isEditing={isSoftwareEditing}
