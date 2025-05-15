@@ -688,6 +688,7 @@
 @media (max-width: 480px) {
     .creatives-masonry {
         grid-template-columns: repeat(2, 1fr);
+        margin-left: 0;
     }
     
     .creative-card {

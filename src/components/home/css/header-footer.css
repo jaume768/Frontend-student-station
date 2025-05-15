@@ -117,7 +117,6 @@
 
 .botones {
     display: flex;
-    justify-content: space-between;
     margin-bottom: 0.5em;
     gap: 20px;
 }
@@ -432,14 +431,19 @@ footer .wrapper {
         margin: auto;
     }
 
+    .boton-inicio-movil {
+        align-self: center;
+    }
+
     .boton-inicio-movil a {
         display: block;
-        margin-top: 10px;
-        margin-bottom: 10px;
+        margin-bottom: 16px;
+        font-weight: 500;
+        padding: 10px 32px;
+        font-size: 18px;
     }
 
     .logo-movil img {
-        width: 250px;
         height: 150px;
     }
 
@@ -450,45 +454,70 @@ footer .wrapper {
 
     .user-actions .user-icon {
         display: block;
+        padding-right: 0.3em;
+        padding-top: 0.3em;
     }
 
     .botones {
         align-items: center;
         flex-direction: row;
-        width: 100%;
-        justify-content: space-between;
-        margin: auto;
-        gap: 5px;
+        gap: 16px;
+        margin-bottom: 16px;
     }
 
     .inicio-sesion {
         margin: 0;
+        height: 80vh;
     }
 
     .inicio-sesion h1 {
-        font-size: 1.9em;
-        margin-top: 60px;
+        font-size: 2.2em;
+        margin: 32px 0 16px;
+        line-height: 2.6rem;
+        text-align: center;
     }
 
-    .botones a {
-        width: 100%;
+    .inicio-sesion p {
+        margin-bottom: 16px;
+        font-size: 20px;
+        font-weight: 500;
+        text-align: center;
+    }
+
+    .botones a:first-child {
+        background-color: #000;
+        color: #eeeeee;
+        font-weight: 500;
+        line-height: 18px;
+        padding: 10px 32px;
+        width: fit-content;
+    }
+
+    .botones a:last-child {
+        background-color: #1962FF;
+        color: #eeeeee;
+        font-weight: 500;
+        line-height: 18px;
+        padding: 10px 32px;
+        width: fit-content;
     }
 
     .wrapper {
-        justify-content: space-between;
-        margin: 0.9em;
+        padding: 0;
     }
 
     .call-to-action {
         position: static;
         margin: auto;
-        padding: 2em;
+        padding: 1.5em;
         display: block;
         width: 100%;
     }
 
     .menu-toggle {
         order: 0;
+        padding-top: 0.5em;
+        padding-left: 0.3em;
     }
 
     .user-actions {
