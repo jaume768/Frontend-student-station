@@ -1,31 +1,78 @@
 import React from 'react';
-import { FaLinkedin, FaInstagram, FaGlobe } from 'react-icons/fa';
+import { FaInstagram, FaLinkedin, FaBehance, FaTumblr, FaYoutube, FaPinterest, FaGlobe } from 'react-icons/fa';
 
 const UserSocialSection = ({ social }) => {
+    // Solo renderizamos la sección si hay al menos una red social
+    if (!social || Object.values(social).every(value => !value)) return null;
+    
     return (
         <section className="user-extern-section">
             <h2>Redes sociales</h2>
-            <div className="user-extern-social-list">
-                {social?.linkedin && (
-                    <a
-                        href={social.linkedin}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="user-extern-social-item"
-                    >
-                        <FaLinkedin className="user-extern-social-icon" size={18} />
-                        LinkedIn
-                    </a>
-                )}
+            <div className="user-extern-social-links">
                 {social?.instagram && (
                     <a
                         href={social.instagram}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="user-extern-social-item"
+                        className="social-icon instagram"
+                        aria-label="Instagram"
                     >
-                        <FaInstagram className="user-extern-social-icon" size={18} />
-                        Instagram
+                        <FaInstagram size={24} />
+                    </a>
+                )}
+                {social?.linkedin && (
+                    <a
+                        href={social.linkedin}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="social-icon linkedin"
+                        aria-label="LinkedIn"
+                    >
+                        <FaLinkedin size={24} />
+                    </a>
+                )}
+                {social?.behance && (
+                    <a
+                        href={social.behance}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="social-icon behance"
+                        aria-label="Behance"
+                    >
+                        <FaBehance size={24} />
+                    </a>
+                )}
+                {social?.tumblr && (
+                    <a
+                        href={social.tumblr}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="social-icon tumblr"
+                        aria-label="Tumblr"
+                    >
+                        <FaTumblr size={24} />
+                    </a>
+                )}
+                {social?.youtube && (
+                    <a
+                        href={social.youtube}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="social-icon youtube"
+                        aria-label="YouTube"
+                    >
+                        <FaYoutube size={24} />
+                    </a>
+                )}
+                {social?.pinterest && (
+                    <a
+                        href={social.pinterest}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="social-icon pinterest"
+                        aria-label="Pinterest"
+                    >
+                        <FaPinterest size={24} />
                     </a>
                 )}
                 {social?.website && (
@@ -33,10 +80,10 @@ const UserSocialSection = ({ social }) => {
                         href={social.website}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="user-extern-social-item"
+                        className="social-icon website"
+                        aria-label="Sitio web"
                     >
-                        <FaGlobe className="user-extern-social-icon" size={18} />
-                        Sitio web
+                        <FaGlobe size={24} />
                     </a>
                 )}
             </div>

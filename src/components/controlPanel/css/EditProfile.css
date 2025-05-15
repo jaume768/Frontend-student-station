@@ -512,11 +512,16 @@
 }
 
 .creative-type {
-    color: #e8f0fe;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-weight: 400;
-    font-size: 0.85rem;
+    color: #333;
+    background-color: #f0f0f0;
+    padding: 8px 20px;
+    border-radius: 50px;
+    border: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-align: center;
+    display: inline-block;
+    min-width: 80px;
 }
 
 /* Cuerpo del perfil: dos columnas */

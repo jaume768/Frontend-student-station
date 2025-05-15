@@ -11,6 +11,7 @@ import ProfessionalExperienceSection from './miPerfil/ProfessionalExperienceSect
 import SkillsSection from './miPerfil/SkillsSection';
 import SoftwareSection from './miPerfil/SoftwareSection';
 import EducationSection from './miPerfil/EducationSection';
+import LanguagesSection from './miPerfil/LanguagesSection';
 import SocialSection from './miPerfil/SocialSection';
 import DownloadableFilesSection from './miPerfil/DownloadableFilesSection';
 import ProjectsSection from './miPerfil/ProjectsSection';
@@ -141,7 +142,19 @@ const MiPerfil = () => {
                                     : profile.city || profile.country}
                             </p>
                         ) }
+                        { profile.bio && (
+                            <p className="miPerfil-bio">
+                                {profile.bio}
+                            </p>
+                        ) }
                         { profile.professionalTitle && <p className="miPerfil-title">{profile.professionalTitle}</p> }
+                        { profile.professionalTags && Array.isArray(profile.professionalTags) && profile.professionalTags.length > 0 && (
+                            <div className="miPerfil-tags">
+                                {profile.professionalTags.map((tag, index) => (
+                                    <span key={index} className="creative-type">{tag}</span>
+                                ))}
+                            </div>
+                        ) }
                         { profile.social?.sitioWeb && (
                             <div className="miPerfil-website">
                                 <a href={profile.social.sitioWeb} target="_blank" rel="noopener noreferrer">
@@ -241,15 +254,16 @@ const MiPerfil = () => {
                                     {profile?.professionalFormation && profile.professionalFormation.some(item => item.trainingName?.trim() || item.institution?.trim()) && (
                                         <ProfessionalExperienceSection professionalFormation={profile.professionalFormation} />
                                     )}
-                                    <SoftwareSection software={profile?.software} />
                                     {profile?.education && profile.education.some(item => item.formationName?.trim() || item.institution?.trim() || item.otherInstitution?.trim()) && (
                                         <EducationSection education={profile.education} />
                                     )}
                                     <SkillsSection skills={profile?.skills} />
+                                    <SoftwareSection software={profile?.software} />
+                                    <LanguagesSection languages={profile?.languages} />
+                                    <SocialSection social={profile?.social} />
                                     {(profile?.cvUrl || profile?.portfolioUrl) && (
                                         <DownloadableFilesSection cvUrl={profile.cvUrl} portfolioUrl={profile.portfolioUrl} />
                                     )}
-                                    <SocialSection social={profile?.social} />
                                 </div>
                             )}
                         </div>

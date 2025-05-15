@@ -8,7 +8,7 @@ const ProfileHeader = () => {
     return (
         <div className="miPerfil-navigation">
             <button className="miPerfil-back-btn" onClick={() => navigate(-1)}>
-                <FaArrowLeft /> Volver
+                <FaArrowLeft /> <span>Volver</span>
             </button>
         </div>
     );

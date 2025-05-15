@@ -11,6 +11,7 @@ import UserProfessionalExperienceSection from './userProfile/UserProfessionalExp
 import UserSkillsSection from './userProfile/UserSkillsSection';
 import UserSoftwareSection from './userProfile/UserSoftwareSection';
 import UserEducationSection from './userProfile/UserEducationSection';
+import UserLanguagesSection from './userProfile/UserLanguagesSection';
 import UserSocialSection from './userProfile/UserSocialSection';
 import UserDownloadableFilesSection from './userProfile/UserDownloadableFilesSection';
 import UserCompanyTagsSection from './userProfile/UserCompanyTagsSection';
@@ -398,9 +399,21 @@ const UserProfile = () => {
                                     : profile?.city || profile?.country}
                             </p>
                         )}
-
-                        {profile?.professionalTitle && (
-                            <p className="user-extern-title">{profile.professionalTitle}</p>
+                        
+                        {profile?.bio && (
+                            <p className="user-extern-bio">
+                                {profile.bio}
+                            </p>
+                        )}
+                        
+                        {profile?.professionalTitle && (<p className="user-extern-title">{profile.professionalTitle}</p>)}
+                        
+                        {profile?.professionalTags && Array.isArray(profile.professionalTags) && profile.professionalTags.length > 0 && (
+                            <div className="user-extern-tags">
+                                {profile.professionalTags.map((tag, index) => (
+                                    <span key={index} className="creative-type">{tag}</span>
+                                ))}
+                            </div>
                         )}
 
                         {/* Sitio web */}
@@ -584,27 +597,30 @@ const UserProfile = () => {
                                 ) : (
                                     <div className="user-extern-creative-profile">
                                         <UserBiographySection biography={profile?.biography} />
-
+                                        
                                         {profile?.professionalFormation && profile.professionalFormation.some(item =>
                                             item.trainingName?.trim() || item.institution?.trim()
                                         ) && (
                                                 <UserProfessionalExperienceSection professionalFormation={profile.professionalFormation} />
                                             )}
-
-                                        <UserSoftwareSection software={profile?.software} />
-
+                                        
                                         {profile?.education && profile.education.some(item =>
                                             item.formationName?.trim() || item.institution?.trim() || item.otherInstitution?.trim()
                                         ) && (
                                                 <UserEducationSection education={profile.education} />
                                             )}
-
+                                        
                                         <UserSkillsSection skills={profile?.skills} />
-
+                                        
+                                        <UserSoftwareSection software={profile?.software} />
+                                        
+                                        <UserLanguagesSection languages={profile?.languages} />
+                                        
+                                        <UserSocialSection social={profile?.social} />
+                                        
                                         {(profile?.cvUrl || profile?.portfolioUrl) && (
                                             <UserDownloadableFilesSection cvUrl={profile.cvUrl} portfolioUrl={profile.portfolioUrl} />
                                         )}
-                                        <UserSocialSection social={profile?.social} />
                                     </div>
                                 )}
                             </div>

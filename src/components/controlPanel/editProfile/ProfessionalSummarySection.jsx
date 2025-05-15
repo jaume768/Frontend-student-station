@@ -14,7 +14,7 @@ const ProfessionalSummarySection = ({
     return (
         <section className="form-section">
             <div className="section-header-edit">
-                <h3>Resumen profesional</h3>
+                <h3>Descripción profesional</h3>
                 <button type="button" className="collapse-toggle" onClick={() => setIsSummaryCollapsed(!isSummaryCollapsed)}>
                     {isSummaryCollapsed ? <FaChevronDown /> : <FaChevronUp />}
                 </button>
@@ -25,7 +25,7 @@ const ProfessionalSummarySection = ({
                     <div className="form-group-edit">
                         <textarea
                             name="professionalSummary"
-                            placeholder="Escribe tu resumen profesional..."
+                            placeholder="Escribe tu descripción profesional..."
                             value={professionalSummary}
                             onChange={handleProfessionalSummaryChange}
                             maxLength={350}

@@ -98,6 +98,27 @@
     margin: 0;
 }
 
+.miPerfil-bio {
+    font-size: 14px;
+    color: #333;
+    margin: 10px 0;
+    text-align: center;
+    max-width: 300px;
+    line-height: 1.4;
+}
+
+.miPerfil-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin: 10px 0 15px;
+}
+
+.miPerfil-tags .creative-type {
+    margin: 0 3px;
+}
+
 .miPerfil-title {
     font-size: 16px;
     font-weight: 500;
@@ -147,6 +168,87 @@
 
 .miPerfil-website a:hover {
     text-decoration: underline;
+}
+
+/* Archivos descargables */
+.miPerfil-downloads {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+/* Estilos para los botones de PDF */
+.miPerfil-downloads {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.pdf-row {
+    display: flex;
+    gap: 10px;
+}
+
+.pdf-row.second-row {
+    justify-content: flex-start;
+}
+
+.pdf-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 15px;
+    background-color: #f0f0f0;
+    border: 1px solid #d5d5d5;
+    border-radius: 50px;
+    color: #333;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    width: auto;
+    white-space: nowrap;
+}
+
+.pdf-button:hover {
+    background-color: #e0e0e0;
+}
+
+.pdf-button.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.pdf-icon {
+    margin-left: 8px;
+    font-size: 14px;
+}
+
+.miPerfil-btn {
+    padding: 8px 16px;
+    background-color: #4c85ff;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+    text-decoration: none;
+}
+
+.miPerfil-btn:hover {
+    background-color: #3d6fd9;
+}
+
+.miPerfil-btn.disabled {
+    background-color: #e0e0e0;
+    color: #666;
+    cursor: not-allowed;
 }
 
 /* Botones de acción */
@@ -258,6 +360,13 @@
     gap: 10px;
     margin-bottom: 20px;
     justify-content: center;
+    margin-left: 6em;
+}
+
+@media (max-width: 768px) {
+    .miPerfil-tabs {
+        margin-left: 0;
+    }
 }
 
 .miPerfil-tab {
@@ -291,6 +400,13 @@
     justify-content: center;
     margin-bottom: 20px;
     gap: 10px;
+    margin-left: 6em;
+}
+
+@media (max-width: 768px) {
+    .miPerfil-view-options {
+        margin-left: 0;
+    }
 }
 
 .miPerfil-view-container {
@@ -790,7 +906,68 @@
     display: inline-block;
 }
 
+/* Idiomas */
+.miPerfil-languages-container {
+    margin-top: 10px;
+}
+
+.miPerfil-languages-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.miPerfil-language-item {
+    background-color: #f0f0f0;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    color: #333;
+    display: inline-block;
+}
+
 /* Redes sociales */
+.miPerfil-social-links {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.social-icon {
+    color: #333;
+    font-size: 24px;
+    transition: all 0.2s ease;
+}
+
+.social-icon:hover {
+    transform: scale(1.1);
+}
+
+.social-icon.instagram:hover {
+    color: #E1306C;
+}
+
+.social-icon.linkedin:hover {
+    color: #0077B5;
+}
+
+.social-icon.behance:hover {
+    color: #1769FF;
+}
+
+.social-icon.tumblr:hover {
+    color: #35465C;
+}
+
+.social-icon.youtube:hover {
+    color: #FF0000;
+}
+
+.social-icon.pinterest:hover {
+    color: #E60023;
+}
+
 .miPerfil-social-list {
     display: flex;
     flex-wrap: wrap;
