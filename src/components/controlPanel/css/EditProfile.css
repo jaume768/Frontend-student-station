@@ -18,9 +18,8 @@
     border-radius: 12px;
     padding-bottom: 16px;
     display: flex;
-    align-items: center;
+    flex-direction: column;
     gap: 12px;
-    justify-content: space-between;
 }
 
 .edit-data-button.save-mode {
@@ -571,7 +570,6 @@
 /* Estilo para “Mis ofertas” y “Configuración” */
 .option-offers,
 .option-settings {
-    background: #fff;
     color: #777;
 }
 
@@ -579,6 +577,7 @@
     .profile-sections {
         width: 60%;
         display: flex;
+        margin-left: 24em;
         flex-direction: column;
         gap: 24px;
     }
@@ -1092,8 +1091,9 @@
     }
 
     .left-options {
-        position: sticky;
+        position: fixed;
         top: 120px;
+        left: 29em;
     }
 
     .right-form {

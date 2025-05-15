@@ -38,6 +38,7 @@ const ProfileHeader = ({
                     </p>
                 </div>
             </div>
+            
             <div className="banner-right">
                 <span className="creative-type">{userData?.creativeType || ""}</span>
                 <input 
