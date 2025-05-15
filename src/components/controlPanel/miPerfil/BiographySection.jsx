@@ -1,11 +1,14 @@
 import React from 'react';
 
 const BiographySection = ({ biography }) => {
+    // No renderizar la sección si no hay biografía
+    if (!biography || biography.trim() === '') return null;
+    
     return (
         <section className="miPerfil-section-description">
             <h2>Descripción</h2>
             <p>
-                {biography || "No hay descripción disponible."}
+                {biography}
             </p>
         </section>
     );

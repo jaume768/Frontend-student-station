@@ -1,17 +1,16 @@
 import React from 'react';
 
 const UserSoftwareSection = ({ software }) => {
+    // No renderizar la sección si no hay software
+    if (!software || software.length === 0) return null;
+    
     return (
         <section className="user-extern-section">
             <h2>Software</h2>
-            <div className="user-extern-software-list">
-                {software && software.length > 0 ? (
-                    software.map((sw, index) => (
-                        <span key={index} className="user-extern-software-item">{sw}</span>
-                    ))
-                ) : (
-                    <span>No se ha agregado software.</span>
-                )}
+            <div className="user-extern-chips">
+                {software.map((sw, index) => (
+                    <span key={index} className="user-extern-skill-tag">{sw}</span>
+                ))}
             </div>
         </section>
     );

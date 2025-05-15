@@ -101,6 +101,20 @@ const Creatives = () => {
 
                 const newCreatives = response.data.creatives;
                 
+                // Depuración: Imprimir los primeros 3 creativos para ver su estructura
+                if (newCreatives.length > 0) {
+                    console.log('Estructura de datos de creativos:');
+                    newCreatives.slice(0, 3).forEach((creative, index) => {
+                        console.log(`Creativo ${index + 1}:`, {
+                            id: creative._id,
+                            username: creative.username,
+                            fullName: creative.fullName,
+                            professionalTags: creative.professionalTags,
+                            skills: creative.skills
+                        });
+                    });
+                }
+                
                 // Filtrar solo creativos que tengan al menos un post
                 const filteredCreatives = newCreatives.filter(creative => creative.lastPost);
 
@@ -319,12 +333,19 @@ const Creatives = () => {
                                 </div>
                             </div>
                             <div className="creative-tags">
-                                {creative.skills && creative.skills.length > 0 ? (
+                                {/* Primero verificamos si hay professionalTags disponibles */}
+                                {creative.professionalTags && creative.professionalTags.length > 0 ? (
+                                    creative.professionalTags.slice(0, 3).map((tag, idx) => (
+                                        <span key={idx} className="tag-creatives">{tag}</span>
+                                    ))
+                                ) : 
+                                /* Si no hay professionalTags, usamos skills como antes */
+                                creative.skills && creative.skills.length > 0 ? (
                                     creative.skills.slice(0, 3).map((skill, idx) => (
                                         <span key={idx} className="tag-creatives">{skill}</span>
                                     ))
                                 ) : (
-                                    <span className="tag-creatives">Sin habilidades</span>
+                                    <span className="tag-creatives">Sin etiquetas</span>
                                 )}
                             </div>
                         </div>

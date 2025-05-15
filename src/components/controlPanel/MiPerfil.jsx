@@ -7,6 +7,7 @@ import { FaBell, FaEnvelope, FaShareAlt, FaExternalLinkAlt } from 'react-icons/f
 // Importar componentes
 import ProfileHeader from './miPerfil/ProfileHeader';
 import BiographySection from './miPerfil/BiographySection';
+import ProfessionalTitleSection from './miPerfil/ProfessionalTitleSection';
 import ProfessionalExperienceSection from './miPerfil/ProfessionalExperienceSection';
 import SkillsSection from './miPerfil/SkillsSection';
 import SoftwareSection from './miPerfil/SoftwareSection';
@@ -251,19 +252,13 @@ const MiPerfil = () => {
                             ) : (
                                 <div className="miPerfil-creative-profile">
                                     <BiographySection biography={profile?.biography} />
-                                    {profile?.professionalFormation && profile.professionalFormation.some(item => item.trainingName?.trim() || item.institution?.trim()) && (
-                                        <ProfessionalExperienceSection professionalFormation={profile.professionalFormation} />
-                                    )}
-                                    {profile?.education && profile.education.some(item => item.formationName?.trim() || item.institution?.trim() || item.otherInstitution?.trim()) && (
-                                        <EducationSection education={profile.education} />
-                                    )}
+                                    <ProfessionalExperienceSection professionalFormation={profile?.professionalFormation} />
+                                    <EducationSection education={profile?.education} />
                                     <SkillsSection skills={profile?.skills} />
                                     <SoftwareSection software={profile?.software} />
                                     <LanguagesSection languages={profile?.languages} />
                                     <SocialSection social={profile?.social} />
-                                    {(profile?.cvUrl || profile?.portfolioUrl) && (
-                                        <DownloadableFilesSection cvUrl={profile.cvUrl} portfolioUrl={profile.portfolioUrl} />
-                                    )}
+                                    <DownloadableFilesSection cvUrl={profile?.cvUrl} portfolioUrl={profile?.portfolioUrl} />
                                 </div>
                             )}
                         </div>

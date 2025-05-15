@@ -186,9 +186,23 @@
     margin-top: 15px;
 }
 
+.user-extern-languages{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.user-extern-tags{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+
 .pdf-row {
     display: flex;
     gap: 10px;
+    margin-bottom: 10px;
 }
 
 .pdf-row.second-row {

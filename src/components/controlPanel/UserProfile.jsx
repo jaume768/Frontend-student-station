@@ -7,6 +7,7 @@ import { FaCheckCircle, FaExclamationCircle, FaArrowLeft, FaUserPlus, FaUserChec
 // Importar componentes
 import UserProfileHeader from './userProfile/UserProfileHeader';
 import UserBiographySection from './userProfile/UserBiographySection';
+import UserProfessionalTitleSection from './userProfile/UserProfessionalTitleSection';
 import UserProfessionalExperienceSection from './userProfile/UserProfessionalExperienceSection';
 import UserSkillsSection from './userProfile/UserSkillsSection';
 import UserSoftwareSection from './userProfile/UserSoftwareSection';
@@ -597,30 +598,13 @@ const UserProfile = () => {
                                 ) : (
                                     <div className="user-extern-creative-profile">
                                         <UserBiographySection biography={profile?.biography} />
-                                        
-                                        {profile?.professionalFormation && profile.professionalFormation.some(item =>
-                                            item.trainingName?.trim() || item.institution?.trim()
-                                        ) && (
-                                                <UserProfessionalExperienceSection professionalFormation={profile.professionalFormation} />
-                                            )}
-                                        
-                                        {profile?.education && profile.education.some(item =>
-                                            item.formationName?.trim() || item.institution?.trim() || item.otherInstitution?.trim()
-                                        ) && (
-                                                <UserEducationSection education={profile.education} />
-                                            )}
-                                        
+                                        <UserProfessionalExperienceSection professionalFormation={profile?.professionalFormation} />
+                                        <UserEducationSection education={profile?.education} />
                                         <UserSkillsSection skills={profile?.skills} />
-                                        
                                         <UserSoftwareSection software={profile?.software} />
-                                        
                                         <UserLanguagesSection languages={profile?.languages} />
-                                        
                                         <UserSocialSection social={profile?.social} />
-                                        
-                                        {(profile?.cvUrl || profile?.portfolioUrl) && (
-                                            <UserDownloadableFilesSection cvUrl={profile.cvUrl} portfolioUrl={profile.portfolioUrl} />
-                                        )}
+                                        <UserDownloadableFilesSection cvUrl={profile?.cvUrl} portfolioUrl={profile?.portfolioUrl} />
                                     </div>
                                 )}
                             </div>

@@ -1,9 +1,27 @@
 import React from 'react';
-import { FaInstagram, FaLinkedin, FaBehance, FaTumblr, FaYoutube, FaPinterest, FaGlobe } from 'react-icons/fa';
+import { FaInstagram, FaLinkedin, FaBehance, FaTumblr, FaYoutube, FaPinterest, FaGlobe, FaEnvelope } from 'react-icons/fa';
 
 const UserSocialSection = ({ social }) => {
     // Solo renderizamos la sección si hay al menos una red social
     if (!social || Object.values(social).every(value => !value)) return null;
+    
+    // Función para asegurar que las URLs tengan el protocolo correcto
+    const ensureHttps = (url) => {
+        if (!url) return '';
+        
+        // Si la URL ya tiene http:// o https://, la devolvemos tal cual
+        if (url.startsWith('http://') || url.startsWith('https://')) {
+            return url;
+        }
+        
+        // Para YouTube, comprobamos si es un nombre de usuario o URL completa
+        if (social?.youtube === url && !url.includes('youtube.com')) {
+            return `https://www.youtube.com/${url}`;
+        }
+        
+        // Añadimos https:// por defecto
+        return `https://${url}`;
+    };
     
     return (
         <section className="user-extern-section">
@@ -11,7 +29,7 @@ const UserSocialSection = ({ social }) => {
             <div className="user-extern-social-links">
                 {social?.instagram && (
                     <a
-                        href={social.instagram}
+                        href={ensureHttps(social.instagram)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="social-icon instagram"
@@ -22,7 +40,7 @@ const UserSocialSection = ({ social }) => {
                 )}
                 {social?.linkedin && (
                     <a
-                        href={social.linkedin}
+                        href={ensureHttps(social.linkedin)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="social-icon linkedin"
@@ -33,7 +51,7 @@ const UserSocialSection = ({ social }) => {
                 )}
                 {social?.behance && (
                     <a
-                        href={social.behance}
+                        href={ensureHttps(social.behance)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="social-icon behance"
@@ -44,7 +62,7 @@ const UserSocialSection = ({ social }) => {
                 )}
                 {social?.tumblr && (
                     <a
-                        href={social.tumblr}
+                        href={ensureHttps(social.tumblr)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="social-icon tumblr"
@@ -55,7 +73,7 @@ const UserSocialSection = ({ social }) => {
                 )}
                 {social?.youtube && (
                     <a
-                        href={social.youtube}
+                        href={ensureHttps(social.youtube)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="social-icon youtube"
@@ -66,7 +84,7 @@ const UserSocialSection = ({ social }) => {
                 )}
                 {social?.pinterest && (
                     <a
-                        href={social.pinterest}
+                        href={ensureHttps(social.pinterest)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="social-icon pinterest"
@@ -75,15 +93,24 @@ const UserSocialSection = ({ social }) => {
                         <FaPinterest size={24} />
                     </a>
                 )}
-                {social?.website && (
+                {social?.sitioWeb && (
                     <a
-                        href={social.website}
+                        href={ensureHttps(social.sitioWeb)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="social-icon website"
                         aria-label="Sitio web"
                     >
                         <FaGlobe size={24} />
+                    </a>
+                )}
+                {social?.emailContacto && (
+                    <a
+                        href={`mailto:${social.emailContacto}`}
+                        className="social-icon email"
+                        aria-label="Email de contacto"
+                    >
+                        <FaEnvelope size={24} />
                     </a>
                 )}
             </div>

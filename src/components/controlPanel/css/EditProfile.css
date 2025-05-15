@@ -969,7 +969,7 @@
 
     .left-options {
         width: 100%;
-        flex-direction: row;
+        flex-direction: column;
         font-size: 0.75em;
         justify-content: space-around;
     }
@@ -995,6 +995,13 @@
     border-radius: 12px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+    /* Contenedor principal */
+    .mis-ofertas-section {
+        margin-bottom: 5em;
+    }
 }
 
 /* Encabezado con pestañas */
@@ -1279,7 +1286,7 @@
 
 /* Estilos para la sección de subida de archivos PDF */
 .pdf-upload-section {
-    margin-bottom: 20px;
+    margin-bottom: 4em;
 }
 
 .pdf-columns {
