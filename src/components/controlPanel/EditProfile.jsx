@@ -9,6 +9,7 @@ import MisOfertasSection from './MisOfertasSection';
 import ProfileHeader from './editProfile/ProfileHeader';
 import NavigationMenu from './editProfile/NavigationMenu';
 import BasicInfoSection from './editProfile/BasicInfoSection';
+import BioSection from './editProfile/BioSection';
 import ProfessionalTitleSection from './editProfile/ProfessionalTitleSection';
 import ProfessionalSummarySection from './editProfile/ProfessionalSummarySection';
 import EducationSection from './editProfile/EducationSection';
@@ -62,11 +63,17 @@ const EditProfile = () => {
         lastName: '',
         country: '',
         city: '',
-        companyName: ''
+        companyName: '',
+        sitioWeb: ''
     });
 
     // Determinar si el usuario es una empresa
     const [isCompany, setIsCompany] = useState(false);
+
+    // Estado para la bio
+    const [bio, setBio] = useState('');
+    const [isBioCollapsed, setIsBioCollapsed] = useState(false);
+    const [isBioEditing, setIsBioEditing] = useState(false);
 
     // Estado para el resumen profesional
     const [professionalSummary, setProfessionalSummary] = useState('');
@@ -163,6 +170,7 @@ const EditProfile = () => {
     const [professionalTitle, setProfessionalTitle] = useState('');
     const [isProfessionalTitleEditing, setIsProfessionalTitleEditing] = useState(false);
     const [isProfessionalTitleCollapsed, setIsProfessionalTitleCollapsed] = useState(false);
+    const [professionalTags, setProfessionalTags] = useState([]);
 
     // Estados para la nueva sección de Formación Profesional
     const [isProfessionalFormationEditing, setIsProfessionalFormationEditing] = useState(false);
@@ -209,15 +217,21 @@ const EditProfile = () => {
                     companyName: user.companyName || ''
                 });
                 setProfessionalTitle(user.professionalTitle || '');
+                setProfessionalTags(user.professionalTags && Array.isArray(user.professionalTags) ? user.professionalTags : []);
                 if (user.fullName) {
-                    const names = user.fullName.split(' ');
+                    const [firstName = '', lastName = ''] = user.fullName.split(' ');
                     setBasicInfo({
-                        firstName: names[0] || '',
-                        lastName: names.slice(1).join(' ') || '',
+                        firstName,
+                        lastName: lastName || '',
                         country: user.country || '',
                         city: user.city || '',
-                        companyName: user.companyName || ''
+                        companyName: user.companyName || '',
+                        sitioWeb: user.social?.sitioWeb || ''
                     });
+                }
+                // Cargar bio
+                if (user.bio) {
+                    setBio(user.bio);
                 }
                 setProfessionalSummary(user.biography || '');
                 setEducationList(
@@ -560,10 +574,15 @@ const EditProfile = () => {
         try {
             const token = localStorage.getItem('authToken');
             const backendUrl = import.meta.env.VITE_BACKEND_URL;
+            // Actualizar el campo sitioWeb en social
+            const updatedSocial = { ...social };
+            updatedSocial.sitioWeb = basicInfo.sitioWeb || '';
+
             const updates = {
                 fullName: `${basicInfo.firstName} ${basicInfo.lastName}`,
                 city: basicInfo.city,
                 country: basicInfo.country,
+                bio: bio,
                 biography: professionalSummary,
                 education: Array.isArray(educationList) ? educationList : [],
                 professionalFormation: Array.isArray(professionalFormationList) ? professionalFormationList : [],
@@ -571,8 +590,9 @@ const EditProfile = () => {
                 software: Array.isArray(software) ? software : [],
                 contract: contract || {},
                 locationType: locationType || {},
-                social: social || {},
+                social: updatedSocial,
                 professionalTitle: professionalTitle,
+                professionalTags: Array.isArray(professionalTags) ? professionalTags : [],
                 companyName: basicInfo.companyName,
                 companyTags: Array.isArray(companyTags) ? companyTags : [],
                 offersPractices
@@ -591,18 +611,6 @@ const EditProfile = () => {
                 country: updatedUser.country,
                 biography: updatedUser.biography,
             });
-            if (updatedUser.education) {
-                setEducationList(updatedUser.education);
-            }
-            if (updatedUser.professionalTitle) {
-                setProfessionalTitle(updatedUser.professionalTitle);
-            }
-            if (updatedUser.professionalFormation) {
-                setProfessionalFormationList(updatedUser.professionalFormation);
-            }
-            if (updatedUser.skills) {
-                setSkills(updatedUser.skills);
-            }
             if (updatedUser.software) {
                 setSoftware(updatedUser.software);
             }
@@ -850,13 +858,22 @@ const EditProfile = () => {
                                         countryOptions={countryOptions}
                                         isCompany={isCompany}
                                     />
+                                    <BioSection
+                                        isBioCollapsed={isBioCollapsed}
+                                        setIsBioCollapsed={setIsBioCollapsed}
+                                        isBioEditing={isBioEditing}
+                                        setIsBioEditing={setIsBioEditing}
+                                        bio={bio}
+                                        setBio={setBio}
+                                        updateProfileData={updateProfileData}
+                                    />
                                     <ProfessionalTitleSection
                                         isProfessionalTitleCollapsed={isProfessionalTitleCollapsed}
                                         setIsProfessionalTitleCollapsed={setIsProfessionalTitleCollapsed}
                                         isProfessionalTitleEditing={isProfessionalTitleEditing}
                                         setIsProfessionalTitleEditing={setIsProfessionalTitleEditing}
-                                        professionalTitle={professionalTitle}
-                                        setProfessionalTitle={setProfessionalTitle}
+                                        professionalTags={professionalTags}
+                                        setProfessionalTags={setProfessionalTags}
                                         updateProfileData={updateProfileData}
                                     />
                                     <ProfessionalSummarySection

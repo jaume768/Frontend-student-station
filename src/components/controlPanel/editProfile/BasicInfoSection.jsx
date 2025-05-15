@@ -90,6 +90,17 @@ const BasicInfoSection = ({
                             disabled={!isBasicEditing}
                         />
                     </div>
+                    <div className="form-group-edit">
+                        <label>Sitio web</label>
+                        <input
+                            type="url"
+                            name="sitioWeb"
+                            placeholder="https://www.tusitio.com"
+                            value={basicInfo.sitioWeb || ""}
+                            onChange={handleBasicInfoChange}
+                            disabled={!isBasicEditing}
+                        />
+                    </div>
                     <div className="button-container">
                         <EditButton
                             isEditing={isBasicEditing}

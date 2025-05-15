@@ -793,6 +793,12 @@
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+.edit-data-button.save-mode {
+    background: #4285F4;
+    color: #ffffff;
+    font-weight: 500;
+}
+
 .button-row {
     display: flex;
     width: 100%;
@@ -801,15 +807,80 @@
     gap: 1rem;
 }
 
+/* Estilos para la sección de Bio */
+.bio-textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.bio-character-count {
+    font-size: 0.85rem;
+    color: #666;
+    text-align: right;
+    margin-top: 0.5rem;
+}
+
 /* Estilos para las etiquetas (tags) */
 .tags-container {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    min-height: 2.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fff;
 }
 
 .tag {
+    display: flex;
+    align-items: center;
+    background-color: #f1f1f1;
+    padding: 0.3rem 0.6rem;
+    border-radius: 20px;
+    margin-right: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.tag-remove {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.8rem;
+    margin-left: 0.3rem;
+    color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tag-input {
+    flex: 1;
+    min-width: 120px;
+    border: none;
+    color: black;
+    outline: none;
+    background-color: white;
+    padding: 0.3rem;
+    font-size: 0.9rem;
+}
+
+.tag-instruction {
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+    color: #555;
+}
+
+.tag-hint {
+    font-size: 0.85rem;
+    color: #666;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Estilos específicos para las etiquetas profesionales */
+.tag.professional-tag {
     background: #01a8e9;
     color: #fff;
     padding: 0.3rem 0.5rem;
@@ -1093,7 +1164,7 @@
     .left-options {
         position: fixed;
         top: 120px;
-        left: 29em;
+        left: 25%;
     }
 
     .right-form {

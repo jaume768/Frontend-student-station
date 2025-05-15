@@ -17,7 +17,7 @@ const ProfessionalFormationSection = ({
     return (
         <section className="form-section">
             <div className="section-header-edit">
-                <h3>Formación Profesional</h3>
+                <h3>Experiencia Profesional</h3>
                 <button type="button" className="collapse-toggle" onClick={() => setIsProfessionalFormationCollapsed(!isProfessionalFormationCollapsed)}>
                     {isProfessionalFormationCollapsed ? <FaChevronDown /> : <FaChevronUp />}
                 </button>
@@ -28,7 +28,7 @@ const ProfessionalFormationSection = ({
                         {Array.isArray(professionalFormationList) && professionalFormationList.map((item, index) => (
                             <div key={index} className="professional-formation-item">
                                 <div className="formation-header">
-                                    <h4>Formación {index + 1}</h4>
+                                    <h4>Experiencia {index + 1}</h4>
                                     {isProfessionalFormationEditing && professionalFormationList.length > 1 && (
                                         <button
                                             type="button"

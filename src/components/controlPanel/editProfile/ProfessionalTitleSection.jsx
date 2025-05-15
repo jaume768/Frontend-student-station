@@ -1,5 +1,5 @@
-import React from 'react';
-import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import React, { useState } from 'react';
+import { FaChevronDown, FaChevronUp, FaTimes } from 'react-icons/fa';
 import EditButton from './EditButton';
 
 const ProfessionalTitleSection = ({
@@ -7,10 +7,36 @@ const ProfessionalTitleSection = ({
     setIsProfessionalTitleCollapsed,
     isProfessionalTitleEditing,
     setIsProfessionalTitleEditing,
-    professionalTitle,
-    setProfessionalTitle,
+    professionalTags,
+    setProfessionalTags,
     updateProfileData
 }) => {
+    const [inputValue, setInputValue] = useState('');
+
+    const handleInputChange = (e) => {
+        setInputValue(e.target.value);
+    };
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter' && inputValue.trim() !== '') {
+            e.preventDefault();
+            if (professionalTags.length >= 3) {
+                // Ya tenemos 3 etiquetas (máximo)
+                return;
+            }
+            
+            // Verificar si la etiqueta ya existe
+            if (!professionalTags.includes(inputValue.trim())) {
+                setProfessionalTags([...professionalTags, inputValue.trim()]);
+            }
+            setInputValue('');
+        }
+    };
+
+    const removeTag = (indexToRemove) => {
+        setProfessionalTags(professionalTags.filter((_, index) => index !== indexToRemove));
+    };
+
     return (
         <section className="form-section">
             <div className="section-header-edit">
@@ -25,17 +51,49 @@ const ProfessionalTitleSection = ({
             </div>
             {!isProfessionalTitleCollapsed && (
                 <div className="section-content">
-                    <div className="form-group-edit">
-                        <label>Título profesional</label>
-                        <input
-                            type="text"
-                            name="professionalTitle"
-                            placeholder="Introduce tu título profesional"
-                            value={professionalTitle}
-                            onChange={(e) => setProfessionalTitle(e.target.value)}
-                            disabled={!isProfessionalTitleEditing}
-                        />
+                    <p className="tag-instruction">
+                        Agrega etiquetas para que otros puedan identificar tu campo de especialización.
+                        Intenta que sean claras y concisas. Añade hasta un <strong>máximo de 3 etiquetas</strong>.
+                    </p>
+                    
+                    <div className="tags-input-container">
+                        {/* Contenedor de etiquetas existentes */}
+                        <div className="tags-container">
+                            {professionalTags.map((tag, index) => (
+                                <div key={index} className="tag">
+                                    {tag}
+                                    {isProfessionalTitleEditing && (
+                                        <button 
+                                            type="button" 
+                                            className="tag-remove" 
+                                            onClick={() => removeTag(index)}
+                                            disabled={!isProfessionalTitleEditing}
+                                        >
+                                            <FaTimes />
+                                        </button>
+                                    )}
+                                </div>
+                            ))}
+                            
+                            {/* Input para agregar nuevas etiquetas */}
+                            {isProfessionalTitleEditing && professionalTags.length < 3 && (
+                                <input
+                                    type="text"
+                                    className="tag-input"
+                                    placeholder="Escribe aquí."
+                                    value={inputValue}
+                                    onChange={handleInputChange}
+                                    onKeyDown={handleKeyDown}
+                                    disabled={!isProfessionalTitleEditing}
+                                />
+                            )}
+                        </div>
                     </div>
+                    
+                    <p className="tag-hint">
+                        Presiona "Enter" al finalizar de escribir para añadir una etiqueta. Elimina haciendo clic en la X.
+                    </p>
+                    
                     <div className="button-container">
                         <EditButton
                             isEditing={isProfessionalTitleEditing}

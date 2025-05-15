@@ -33,17 +33,6 @@ const ContactSection = ({
                         />
                     </div>
                     <div className="form-group-edit">
-                        <label>Sitio web</label>
-                        <input
-                            type="url"
-                            name="sitioWeb"
-                            placeholder="https://www.tusitio.com"
-                            value={social?.sitioWeb || ""}
-                            onChange={handleSocialChange}
-                            disabled={!isContactEditing}
-                        />
-                    </div>
-                    <div className="form-group-edit">
                         <label>Instagram</label>
                         <div className="social-input-container">
                             <span className="social-prefix">instagram.com/</span>
