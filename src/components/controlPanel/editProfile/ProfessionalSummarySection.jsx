@@ -28,11 +28,11 @@ const ProfessionalSummarySection = ({
                             placeholder="Escribe tu descripción profesional..."
                             value={professionalSummary}
                             onChange={handleProfessionalSummaryChange}
-                            maxLength={350}
+                            maxLength={500}
                             disabled={!isSummaryEditing}
                         />
-                        <small className="char-count" style={{ color: professionalSummary.length === 350 ? 'red' : '#4c85ff' }}>
-                            {professionalSummary.length === 350 ? "Tu texto supera los 350 caracteres" : "Debe tener un máximo de 350 caracteres"}
+                        <small className="char-count" style={{ color: professionalSummary.length === 500 ? 'red' : '#4c85ff' }}>
+                            {professionalSummary.length === 500 ? "Tu texto supera los 500 caracteres" : "Debe tener un máximo de 500 caracteres"}
                         </small>
                     </div>
                     <div className="button-container">

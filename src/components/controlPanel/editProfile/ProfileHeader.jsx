@@ -22,8 +22,7 @@ const ProfileHeader = ({
                 <div className="profile-picture-container" onClick={handleProfilePictureClick}>
                     <img src={selectedProfileImage || userData?.profilePicture || "/multimedia/usuarioDefault.jpg"} alt="Perfil" className="profile-picture-edit" />
                     <div className="profile-picture-overlay">
-                        <FaCamera />
-                        <span>Cambiar foto</span>
+                        <span style={{ fontSize: '28px', fontWeight: 'bold' }}>+</span>
                     </div>
                 </div>
                 <div className="profile-info">

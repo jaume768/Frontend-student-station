@@ -304,11 +304,26 @@ const EditProfile = () => {
                     youtube: "",
                     pinterest: ""
                 });
+                // Usar los nombres de archivo originales guardados y decodificarlos
                 if (user.cvUrl) {
-                    setCvFileName(user.cvUrl.split('/').pop());
+                    try {
+                        // Obtener nombre original del archivo y decodificar caracteres especiales
+                        const fileName = user.cvFileName || user.cvUrl.split('/').pop();
+                        setCvFileName(decodeURIComponent(fileName));
+                    } catch (error) {
+                        console.error('Error al decodificar nombre de CV:', error);
+                        setCvFileName(user.cvFileName || user.cvUrl.split('/').pop());
+                    }
                 }
                 if (user.portfolioUrl) {
-                    setPortfolioFileName(user.portfolioUrl.split('/').pop());
+                    try {
+                        // Obtener nombre original del archivo y decodificar caracteres especiales
+                        const fileName = user.portfolioFileName || user.portfolioUrl.split('/').pop();
+                        setPortfolioFileName(decodeURIComponent(fileName));
+                    } catch (error) {
+                        console.error('Error al decodificar nombre de portfolio:', error);
+                        setPortfolioFileName(user.portfolioFileName || user.portfolioUrl.split('/').pop());
+                    }
                 }
                 const userIsCompany = user.professionalType === 1 || user.professionalType === 2 || user.professionalType === 4;
                 setIsCompany(userIsCompany);
@@ -726,11 +741,8 @@ const EditProfile = () => {
         "India", "Rusia", "Corea del Sur"
     ];
 
-    const institutionOptions = [
-        "Universidad de Harvard", "Universidad de Oxford", "Universidad de Stanford",
-        "MIT", "Universidad de Cambridge", "Universidad de Tokyo", "Universidad de Salamanca",
-        "Universidad de Buenos Aires", "Universidad de Sydney", "Universidad de Pekín"
-    ];
+    // Ya no usamos opciones predefinidas para instituciones
+    const institutionOptions = [];
 
     const handleFileChange = (e) => {
         const { name, files } = e.target;
@@ -740,12 +752,14 @@ const EditProfile = () => {
             alert('Solo se permiten archivos PDF');
             return;
         }
+        // Usar el nombre original decodificado
+        const fileName = file.name;
         if (name === 'cv') {
             setCvFile(file);
-            setCvFileName(file.name);
+            setCvFileName(fileName); // Ya no necesita decodificación por ser el nombre original del sistema
         } else if (name === 'portfolio') {
             setPortfolioFile(file);
-            setPortfolioFileName(file.name);
+            setPortfolioFileName(fileName); // Ya no necesita decodificación por ser el nombre original del sistema
         }
     };
 
@@ -769,8 +783,19 @@ const EditProfile = () => {
                         'Content-Type': 'multipart/form-data'
                     }
                 });
-                if (cvResponse.data.cvUrl) {
-                    setCvFileName(cvResponse.data.cvUrl.split('/').pop());
+                if (cvResponse.data) {
+                    // Usar el nombre del archivo original si está disponible, de lo contrario extraer y decodificar el nombre de la URL
+                    if (cvResponse.data.cvFileName) {
+                        setCvFileName(cvResponse.data.cvFileName);
+                    } else if (cvResponse.data.cvUrl) {
+                        try {
+                            const encodedName = cvResponse.data.cvUrl.split('/').pop();
+                            setCvFileName(decodeURIComponent(encodedName));
+                        } catch (error) {
+                            console.error('Error al decodificar nombre de CV:', error);
+                            setCvFileName(cvResponse.data.cvUrl.split('/').pop());
+                        }
+                    }
                 }
                 setUploadingCV(false);
             }
@@ -784,8 +809,19 @@ const EditProfile = () => {
                         'Content-Type': 'multipart/form-data'
                     }
                 });
-                if (portfolioResponse.data.portfolioUrl) {
-                    setPortfolioFileName(portfolioResponse.data.portfolioUrl.split('/').pop());
+                if (portfolioResponse.data) {
+                    // Usar el nombre del archivo original si está disponible, de lo contrario extraer y decodificar el nombre de la URL
+                    if (portfolioResponse.data.portfolioFileName) {
+                        setPortfolioFileName(portfolioResponse.data.portfolioFileName);
+                    } else if (portfolioResponse.data.portfolioUrl) {
+                        try {
+                            const encodedName = portfolioResponse.data.portfolioUrl.split('/').pop();
+                            setPortfolioFileName(decodeURIComponent(encodedName));
+                        } catch (error) {
+                            console.error('Error al decodificar nombre del portfolio:', error);
+                            setPortfolioFileName(portfolioResponse.data.portfolioUrl.split('/').pop());
+                        }
+                    }
                 }
                 setUploadingPortfolio(false);
             }

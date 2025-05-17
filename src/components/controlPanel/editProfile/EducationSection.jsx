@@ -21,8 +21,24 @@ const EducationSection = ({
         <section className="form-section">
             <div className="section-header-edit">
                 <h3>Formación educativa</h3>
-                <button type="button" className="collapse-toggle" onClick={() => setIsEducationCollapsed(!isEducationCollapsed)}>
-                    {isEducationCollapsed ? <FaChevronDown /> : <FaChevronUp />}
+                <button 
+                    type="button" 
+                    className="collapse-toggle" 
+                    onClick={(e) => {
+                        e.preventDefault();
+                        setIsEducationCollapsed(!isEducationCollapsed);
+                    }}
+                >
+                    {isEducationCollapsed ? 
+                        <FaChevronDown onClick={(e) => {
+                            e.stopPropagation();
+                            setIsEducationCollapsed(false);
+                        }} /> : 
+                        <FaChevronUp onClick={(e) => {
+                            e.stopPropagation();
+                            setIsEducationCollapsed(true);
+                        }} />
+                    }
                 </button>
             </div>
             {!isEducationCollapsed && (
@@ -44,32 +60,15 @@ const EducationSection = ({
                                 </div>
                                 <div className="form-group-edit">
                                     <label>Institución</label>
-                                    <select
+                                    <input
+                                        type="text"
                                         name="institution"
-                                        value={edu.institution}
+                                        placeholder="Nombre de la institución"
+                                        value={edu.institution || ''}
                                         onChange={(e) => handleEducationListChange(index, e)}
                                         disabled={!isEducationEditing}
-                                    >
-                                        <option value="">Selecciona una institución</option>
-                                        {institutionOptions.map((inst, i) => (
-                                            <option key={i} value={inst}>{inst}</option>
-                                        ))}
-                                        <option value="other">Otra</option>
-                                    </select>
+                                    />
                                 </div>
-                                {edu.institution === 'other' && (
-                                    <div className="form-group-edit">
-                                        <label>Otra institución</label>
-                                        <input
-                                            type="text"
-                                            name="otherInstitution"
-                                            placeholder="Nombre de la institución"
-                                            value={edu.otherInstitution || ''}
-                                            onChange={(e) => handleEducationListChange(index, e)}
-                                            disabled={!isEducationEditing}
-                                        />
-                                    </div>
-                                )}
                                 <div className="form-group-edit">
                                     <label>Nombre de la formación</label>
                                     <input
@@ -84,30 +83,148 @@ const EducationSection = ({
                                 <div className="date-range">
                                     <div className="form-group-edit">
                                         <label>Fecha de inicio</label>
-                                        <input
-                                            type="date"
-                                            name="formationStart"
-                                            value={edu.formationStart}
-                                            max={currentDate}
-                                            onChange={(e) => handleEducationListChange(index, e)}
-                                            disabled={!isEducationEditing}
-                                        />
+                                        <div style={{ display: 'flex', gap: '4px' }}>
+                                            <div style={{ flex: '0.4' }}>
+                                                <label style={{ fontSize: '0.85rem', marginBottom: '2px', display: 'block' }}>Mes</label>
+                                                <input
+                                                    type="text"
+                                                    inputMode="numeric"
+                                                    pattern="[0-9]*"
+                                                    name="formationStartMonth"
+                                                    placeholder="1-12"
+                                                    value={edu.formationStartMonth || ''}
+                                                    onChange={(e) => {
+                                                        // Permitir solo números
+                                                        const numericValue = e.target.value.replace(/[^0-9]/g, '');
+                                                        const value = numericValue ? parseInt(numericValue) : '';
+                                                        
+                                                        // Validar rango 1-12
+                                                        if (!value || (value >= 1 && value <= 12)) {
+                                                            handleEducationListChange(index, {
+                                                                target: {
+                                                                    name: 'formationStartMonth',
+                                                                    value: value
+                                                                }
+                                                            });
+                                                        }
+                                                    }}
+                                                    disabled={!isEducationEditing}
+                                                    style={{ width: '100%' }}
+                                                />
+                                            </div>
+                                            <div style={{ flex: '0.6' }}>
+                                                <label style={{ fontSize: '0.85rem', marginBottom: '2px', display: 'block' }}>Año</label>
+                                                <input
+                                                    type="text"
+                                                    inputMode="numeric"
+                                                    pattern="[0-9]*"
+                                                    name="formationStartYear"
+                                                    placeholder="Año"
+                                                    value={edu.formationStartYear || ''}
+                                                    onChange={(e) => {
+                                                        // Permitir solo números
+                                                        const numericValue = e.target.value.replace(/[^0-9]/g, '');
+                                                        
+                                                        // Validar rango de años
+                                                        const currentYear = new Date().getFullYear();
+                                                        const year = numericValue ? parseInt(numericValue) : '';
+                                                        
+                                                        if (!numericValue || (year >= 1950 && year <= currentYear)) {
+                                                            handleEducationListChange(index, {
+                                                                target: {
+                                                                    name: 'formationStartYear',
+                                                                    value: numericValue ? year : ''
+                                                                }
+                                                            });
+                                                        }
+                                                    }}
+                                                    disabled={!isEducationEditing}
+                                                    style={{ width: '100%' }}
+                                                />
+                                            </div>
+                                        </div>
                                     </div>
+
                                     <div className="form-group-edit">
                                         <label>Fecha de finalización</label>
-                                        <input
-                                            type="date"
-                                            name="formationEnd"
-                                            value={edu.formationEnd}
-                                            min={edu.formationStart}
-                                            max={currentDate}
-                                            onChange={(e) => handleEducationListChange(index, e)}
-                                            disabled={!isEducationEditing || edu.currentlyEnrolled}
-                                        />
+                                        <div style={{ display: 'flex', gap: '4px' }}>
+                                            <div style={{ flex: '0.4' }}>
+                                                <label style={{ fontSize: '0.85rem', marginBottom: '2px', display: 'block' }}>Mes</label>
+                                                <input
+                                                    type="text"
+                                                    inputMode="numeric"
+                                                    pattern="[0-9]*"
+                                                    name="formationEndMonth"
+                                                    placeholder="1-12"
+                                                    value={edu.formationEndMonth || ''}
+                                                    onChange={(e) => {
+                                                        // Permitir solo números
+                                                        const numericValue = e.target.value.replace(/[^0-9]/g, '');
+                                                        const value = numericValue ? parseInt(numericValue) : '';
+                                                        
+                                                        // Validar rango 1-12
+                                                        if (!value || (value >= 1 && value <= 12)) {
+                                                            handleEducationListChange(index, {
+                                                                target: {
+                                                                    name: 'formationEndMonth',
+                                                                    value: value
+                                                                }
+                                                            });
+                                                        }
+                                                    }}
+                                                    disabled={!isEducationEditing || edu.currentlyEnrolled}
+                                                    style={{ width: '100%' }}
+                                                />
+                                            </div>
+                                            <div style={{ flex: '0.6' }}>
+                                                <label style={{ fontSize: '0.85rem', marginBottom: '2px', display: 'block' }}>Año</label>
+                                                <input
+                                                    type="text"
+                                                    inputMode="numeric"
+                                                    pattern="[0-9]*"
+                                                    name="formationEndYear"
+                                                    placeholder="Año"
+                                                    value={edu.formationEndYear || ''}
+                                                    onChange={(e) => {
+                                                        // Permitir solo números
+                                                        const numericValue = e.target.value.replace(/[^0-9]/g, '');
+                                                        
+                                                        // Validar rango de años
+                                                        const currentYear = new Date().getFullYear();
+                                                        const year = numericValue ? parseInt(numericValue) : '';
+                                                        
+                                                        if (!numericValue || (year >= (edu.formationStartYear || 1950) && year <= currentYear + 5)) {
+                                                            handleEducationListChange(index, {
+                                                                target: {
+                                                                    name: 'formationEndYear',
+                                                                    value: numericValue ? year : ''
+                                                                }
+                                                            });
+                                                        }
+                                                    }}
+                                                    disabled={!isEducationEditing || edu.currentlyEnrolled}
+                                                    style={{ width: '100%' }}
+                                                />
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="form-group-edit-checkbox checkbox-group">
-                                    <div className="custom-checkbox">
+                                    <div 
+                                        className="custom-checkbox"
+                                        onClick={(e) => {
+                                            if (!isEducationEditing) return;
+                                            e.preventDefault();
+                                            // Simular clic en el checkbox
+                                            handleEducationListChange(index, {
+                                                target: {
+                                                    name: 'currentlyEnrolled',
+                                                    type: 'checkbox',
+                                                    checked: !edu.currentlyEnrolled
+                                                }
+                                            });
+                                        }}
+                                    >
                                         <input
                                             type="checkbox"
                                             id={`currentlyEnrolled-${index}`}
@@ -118,7 +235,20 @@ const EducationSection = ({
                                         />
                                         <span className="checkmark"></span>
                                     </div>
-                                    <label htmlFor={`currentlyEnrolled-${index}`}>Actualmente cursando</label>
+                                    <label 
+                                        htmlFor={`currentlyEnrolled-${index}`}
+                                        onClick={(e) => {
+                                            if (!isEducationEditing) return;
+                                            // Simular clic en el checkbox
+                                            handleEducationListChange(index, {
+                                                target: {
+                                                    name: 'currentlyEnrolled',
+                                                    type: 'checkbox',
+                                                    checked: !edu.currentlyEnrolled
+                                                }
+                                            });
+                                        }}
+                                    >Actualmente cursando</label>
                                 </div>
                             </div>
                         ))}
@@ -132,7 +262,21 @@ const EducationSection = ({
                         )}
                     </div>
                     <div className="form-group-edit-checkbox checkbox-group self-taught">
-                        <div className="custom-checkbox">
+                        <div 
+                            className="custom-checkbox"
+                            onClick={(e) => {
+                                if (!isEducationEditing) return;
+                                e.preventDefault();
+                                // Simular clic en el checkbox
+                                handleSelfTaughtChange({
+                                    target: {
+                                        name: 'selfTaught',
+                                        type: 'checkbox',
+                                        checked: !selfTaught
+                                    }
+                                });
+                            }}
+                        >
                             <input
                                 type="checkbox"
                                 id="selfTaught"
@@ -143,7 +287,20 @@ const EducationSection = ({
                             />
                             <span className="checkmark"></span>
                         </div>
-                        <label htmlFor="selfTaught">Soy autodidacta</label>
+                        <label 
+                            htmlFor="selfTaught"
+                            onClick={(e) => {
+                                if (!isEducationEditing) return;
+                                // Simular clic en el checkbox
+                                handleSelfTaughtChange({
+                                    target: {
+                                        name: 'selfTaught',
+                                        type: 'checkbox',
+                                        checked: !selfTaught
+                                    }
+                                });
+                            }}
+                        >Soy autodidacta</label>
                     </div>
                     <div className="button-container">
                         <EditButton

@@ -48,16 +48,20 @@ const PDFUploadSection = ({
                                 {cvFileName && (
                                     <div className="selected-file">
                                         {cvFileName}
-                                        <button 
-                                            type="button" 
-                                            className="remove-file-btn" 
-                                            onClick={() => {
-                                                setCvFile(null);
-                                                setCvFileName('');
-                                            }}
-                                        >
-                                            ✕
-                                        </button>
+                                        {isPdfEditing && (
+                                            <button 
+                                                type="button" 
+                                                className="remove-file-btn" 
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    e.stopPropagation();
+                                                    setCvFile(null);
+                                                    setCvFileName('');
+                                                }}
+                                            >
+                                                ✕
+                                            </button>
+                                        )}
                                     </div>
                                 )}
                             </div>
@@ -82,16 +86,20 @@ const PDFUploadSection = ({
                                 {portfolioFileName && (
                                     <div className="selected-file">
                                         {portfolioFileName}
-                                        <button 
-                                            type="button" 
-                                            className="remove-file-btn" 
-                                            onClick={() => {
-                                                setPortfolioFile(null);
-                                                setPortfolioFileName('');
-                                            }}
-                                        >
-                                            ✕
-                                        </button>
+                                        {isPdfEditing && (
+                                            <button 
+                                                type="button" 
+                                                className="remove-file-btn" 
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    e.stopPropagation();
+                                                    setPortfolioFile(null);
+                                                    setPortfolioFileName('');
+                                                }}
+                                            >
+                                                ✕
+                                            </button>
+                                        )}
                                     </div>
                                 )}
                             </div>
