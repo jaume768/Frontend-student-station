@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Masonry from 'react-masonry-css';
-import { FaBookmark, FaRegBookmark } from 'react-icons/fa';
+import { FaBookmark, FaRegBookmark, FaTrash } from 'react-icons/fa';
 import { MdTune, MdClose } from 'react-icons/md';
 import Draggable from 'react-draggable';
 import './css/explorer.css';
@@ -322,7 +322,7 @@ const Explorer = () => {
                                 setHasActiveFilters(false);
                             }}
                         >
-                            Borrar Filtros
+                            <FaTrash style={{ marginRight: '8px' }} /> Borrar Filtros
                         </button>
                     </div>
                 </div>
