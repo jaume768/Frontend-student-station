@@ -361,11 +361,22 @@
     border: none;
 }
 
-.dashboard-header img {
+/* Estilo general para iconos en el header */
+.dashboard-header img.sidebar-icon {
     width: 48px;
     height: 48px;
     border-radius: 50%;
     cursor: pointer;
+}
+
+/* Estilo específico para la imagen de perfil */
+.dashboard-header img.profile-img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    cursor: pointer;
+    object-fit: cover;
+    border: solid 0.3px #ddd;
 }
 
 .profile-dropdown-icon {
@@ -437,7 +448,7 @@
 .my-masonry-grid {
     display: flex;
     /* Importante para Masonry */
-    margin-left: -16px;
+    justify-content: center;
     /* Ajusta al gap que quieras entre columnas */
     width: auto;
 }
@@ -467,9 +478,7 @@
     transition: transform 0.3s ease;
 }
 
-.masonry-item:hover img {
-    transform: scale(1.05);
-}
+/* Se ha eliminado el efecto de zoom en las imágenes */
 
 /* ======== Overlay con información sobre la imagen ======== */
 .overlay {

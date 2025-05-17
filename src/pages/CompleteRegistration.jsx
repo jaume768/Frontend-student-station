@@ -101,7 +101,7 @@ const CompleteRegistration = () => {
         <div className="complete-registration-container">
             <div className="contenedor-registro-objetivo">
                 <h1 className="greeting">Hola,</h1>
-                <h2 className="username">@{username}!</h2>
+                <h2 className="username-registro">@{username}!</h2>
                 <p className="question">¿Cuál es tu objetivo en la plataforma?</p>
                 <div className="objectives-list">
                     {objectives.map((obj, index) => (

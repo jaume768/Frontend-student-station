@@ -365,9 +365,6 @@
     cursor: pointer;
 }
 
-.masonry-item:hover {
-    transform: scale(1.02);
-}
 
 .masonry-item img {
     width: 100%;
@@ -433,6 +430,13 @@
     font-size: 14px;
     font-weight: 600;
     color: white;
+    margin-bottom: 4px;
+}
+
+.username-registro {
+    font-size: 14px;
+    font-weight: 600;
+    color: black;
     margin-bottom: 4px;
 }
 

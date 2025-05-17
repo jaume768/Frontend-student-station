@@ -197,7 +197,7 @@ const Explorer = () => {
         setHasActiveFilters(true);
     };
 
-    const breakpointColumns = { default: 6, 1400: 5, 1200: 4, 992: 3, 768: 2, 480: 2 };
+    const breakpointColumns = { default: 5, 1400: 5, 1200: 4, 992: 3, 768: 2, 480: 2 };
 
     return (
         <div className="explorer-container">

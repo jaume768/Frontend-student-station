@@ -79,6 +79,7 @@ const RegisterModal = ({ onClose, onSwitchToLogin }) => {
 
   // Paso 1: Enviar datos para que se envíe el código (sin crear el usuario)
   const handleSubmit = async (e) => {
+    console.log('handleSubmit ejecutado!');
     e.preventDefault();
     setErrors({
       passwordMismatch: '',
@@ -317,13 +318,37 @@ const RegisterModal = ({ onClose, onSwitchToLogin }) => {
                       <p className="reg-error-message">{errors.passwordMismatch}</p>
                     )}
                   </div>
+                  
+                  <div className="reg-input-group reg-checkbox-group">
+                    <label className="reg-checkbox-label">
+                      <input
+                        type="checkbox"
+                        name="acceptedTerms"
+                        checked={formData.acceptedTerms}
+                        onChange={handleChange}
+                        required
+                      />
+                      Acepto los <a href="#" onClick={(e) => e.preventDefault()}>términos y condiciones</a>
+                    </label>
+                  </div>
+                  
+                  {errors.incomplete && (
+                    <p className="reg-error-message">{errors.incomplete}</p>
+                  )}
+                  
                   {backendError && (
                     <p className="reg-error-message">{backendError}</p>
                   )}
                   {successMessage && (
                     <p className="reg-success-message">{successMessage}</p>
                   )}
-                  <button type="submit" className="reg-btn reg-register-btn">
+                  <button 
+                    type="submit" 
+                    className="reg-btn reg-register-btn"
+                    onClick={(e) => {
+                      console.log('Botón Registrarme clickeado!');
+                    }}
+                  >
                     Registrarme
                   </button>
                   <button

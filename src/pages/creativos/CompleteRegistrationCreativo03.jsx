@@ -78,7 +78,7 @@ const CompleteRegistrationCreativo03 = () => {
                     <img
                         src={selectedImage || '/multimedia/usuarioDefault.jpg'}
                         alt="Foto de perfil"
-                        style={{ width: '150px', height: '150px', borderRadius: '50%', objectFit: 'cover' }}
+                        style={{ width: '150px', height: '150px', borderRadius: '50%', objectFit: 'cover', border: 'solid 0.5px #ddd' }}
                     />
                     <div style={{ marginTop: '1rem' }}>
                         <button className="next-button" onClick={handleUploadClick}>

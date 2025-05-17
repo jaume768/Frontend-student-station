@@ -99,7 +99,7 @@
 }
 
 .objective-button.selected {
-    background-color: #38c887;
+    background-color: #1a73e8;
     color: white;
 }
 
@@ -179,7 +179,7 @@
 
 .finalRegistro-title {
     font-size: 2.2rem;
-    color: #666;
+    color: #333;
     margin-bottom: 1rem;
     font-weight: 600;
 }
@@ -216,7 +216,7 @@
 }
 
 .finalRegistro-finish-button {
-    background-color: #38c887;
+    background-color: #1a73e8;
     color: white;
     border: none;
     padding: 0.75rem 1.5rem;
@@ -228,7 +228,7 @@
 }
 
 .finalRegistro-finish-button:hover {
-    background-color: #2eaa73;
+    background-color: #1559c2;
 }
 
 @media (max-width: 668px) {

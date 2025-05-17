@@ -69,7 +69,7 @@ const CompleteRegistrationCreativoGraduado06 = () => {
             <div className="contenedor-registro-objetivo">
                 <p className="paso" style={{ color: 'gray', fontSize: '0.8rem' }}>paso 6</p>
                 <h2 className="titulo">Tu última formación</h2>
-                <p className="question">¿Qué tipo de formación estás cursando actualmente?</p>
+                <p className="question">¿En qué universidad o escuela estudiaste?</p>
 
                 {/* Mensaje de error */}
                 {error && <p style={{ color: 'red', marginBottom: '1rem' }}>{error}</p>}
