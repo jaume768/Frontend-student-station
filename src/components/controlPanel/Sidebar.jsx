@@ -29,8 +29,8 @@ const Sidebar = ({ onLinkClick }) => {
             setActiveSection(currentState);
         } else {
             const path = location.pathname.split('/').pop() || 'explorer';
-            if (path === 'profile') {
-                setActiveSection('profile');
+            if (path === 'profile' || path.includes('user/')) {
+                setActiveSection('creatives');
             } else if (path === 'editProfile') {
                 setActiveSection('editProfile');
             } else if (path === 'community') {

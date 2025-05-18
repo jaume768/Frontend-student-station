@@ -163,32 +163,15 @@ const MiPerfil = () => {
                                 </a>
                             </div>
                         ) }
-                        <div className="miPerfil-action-buttons">
-                            <button className="miPerfil-follow-button">Seguir</button>
-                        </div>
+                        {/* Botón de seguir eliminado */}
                         <div className="miPerfil-contact-share">
-                            <button 
-                                className="miPerfil-contact-button" 
-                                title="Contactar"
-                                onClick={() => {
-                                    if (profile?.email) {
-                                        window.location.href = `mailto:${profile.email}`;
-                                    } else {
-                                        // Mostrar notificación (puedes implementar un sistema de notificaciones similar al de UserProfile)
-                                        alert('No hay dirección de correo disponible para este usuario.');
-                                    }
-                                }}
-                            >
-                                <FaEnvelope />
-                                <span>Contactar</span>
-                            </button>
                             <button 
                                 className="miPerfil-share-button" 
                                 title="Compartir perfil"
                                 onClick={() => {
                                     // Construir la URL correcta para el perfil público
                                     const baseUrl = window.location.origin;
-                                    const profileUrl = `${baseUrl}/user/${profile.username}`;
+                                    const profileUrl = `${baseUrl}/ControlPanel/profile/${profile.username}`;
                                     navigator.clipboard.writeText(profileUrl);
                                     // Mostrar notificación
                                     alert(`URL del perfil copiada al portapapeles: ${profileUrl}`);

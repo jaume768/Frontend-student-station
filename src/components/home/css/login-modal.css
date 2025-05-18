@@ -144,7 +144,6 @@
     border: 1px solid #ccc;
     font-size: 1rem;
     position: relative;
-    padding-left: 2.5rem;
 }
 
 .google-btn::before {
@@ -196,16 +195,18 @@
 }
 
 @media (max-width: 668px) {
+    .login-modal {
+        background-position: -100px;
+    }
+    
     .login-card {
         margin: 16px;
         padding: 1.2rem;
-        height: 90vh;
         width: 90%;
         display: flex;
         justify-content: flex-end;
         align-items: center;
         position: relative;
-        right: 150px;
     }
     
     .login-card.with-error {

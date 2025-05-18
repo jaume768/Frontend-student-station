@@ -5,6 +5,11 @@
 */
 
 /* Contenedor principal */
+.miPerfil-view-container {
+    border-radius: 10px;
+    padding: 4px;
+}
+
 .miPerfil-container {
     position: relative;
     max-width: 1200px;
@@ -86,14 +91,13 @@
     font-size: 16px;
     color: #666;
     margin: 0;
-    margin-bottom: 10px;
     text-transform: lowercase;
 }
 
 .miPerfil-location {
     font-size: 14px;
     color: #666;
-    margin: 0 0 12px;
+    margin: 0;
 }
 
 .miPerfil-bio {
@@ -420,7 +424,7 @@
 .miPerfil-view-container {
     display: flex;
     border: 1px solid #e0e0e0;
-    border-radius: 20px;
+    border-radius: 9px;
     overflow: hidden;
 }
 
@@ -1236,6 +1240,7 @@
 @media (max-width: 768px) {
     .miPerfil-content {
         flex-direction: column;
+        margin-bottom: 3em;
     }
 
     .miPerfil-about-content {
@@ -1388,4 +1393,34 @@
     height: auto;
     display: block;
     border: solid 0.5px #eee;
+}
+
+/* Nuevos estilos añadidos */
+.miPerfil-section h2 {
+    font-size: 24px;
+    font-weight: 500;
+}
+
+.miPerfil-section-description h2 {
+    font-size: 24px;
+    font-weight: 500;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.miPerfil-about-content {
+    margin-left: 0;
+}
+
+.miPerfil-section-description p {
+    height: fit-content;
+}
+
+ul {
+    list-style: none;
+}
+
+li strong {
+    font-size: 18px;
+    font-weight: 500;
 }

@@ -220,7 +220,7 @@
     display: flex;
     gap: 28px;
     margin-top: 10px;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
 }
 
@@ -943,6 +943,7 @@
 
     .user-extern-container{
         padding: 0;
+        margin-bottom: 3em;
     }
     
     .user-extern-company-profile,

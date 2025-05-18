@@ -61,6 +61,9 @@ const MobileNavbar = ({ profilePicture }) => {
 
     // Función para determinar si una ruta está activa
     const isActive = (itemId) => {
+        if (itemId === 'creatives' && (currentPath.includes('/ControlPanel/profile') || currentPath.includes('/ControlPanel/user/'))) {
+            return true;
+        }
         return currentPath.includes(`/ControlPanel/${itemId}`);
     };
 

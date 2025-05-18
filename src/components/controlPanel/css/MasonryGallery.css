@@ -1,4 +1,8 @@
 /* Estilos para la galería masonry */
+.masonry-item {
+    margin-bottom: 180px;
+}
+
 .masonry-gallery {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
