@@ -55,23 +55,23 @@ const ProjectsSection = ({ isGalleryView, toggleView, userPosts = [] }) => {
 
     return (
         <div className="miPerfil-right">
-            <div className="miPerfil-view-options">
+            <div className="user-extern-view-options">
                 <div className="miPerfil-view-container">
                     <button
-                        className={`miPerfil-view-button ${isGalleryView ? 'active' : ''}`}
+                        className={`user-extern-view-button ${isGalleryView ? 'active' : ''}`}
                         onClick={() => !isGalleryView && toggleView()}
                         title="Vista de galería"
                     >
-                        <FaTh />
                         <span>Galería</span>
+                        <FaTh />
                     </button>
                     <button
-                        className={`miPerfil-view-button ${!isGalleryView ? 'active' : ''}`}
+                        className={`user-extern-view-button ${!isGalleryView ? 'active' : ''}`}
                         onClick={() => isGalleryView && toggleView()}
                         title="Vista individual"
                     >
-                        <FaList />
                         <span>Individual</span>
+                        <FaList />
                     </button>
                 </div>
             </div>

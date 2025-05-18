@@ -524,16 +524,16 @@ const UserProfile = () => {
                                     onClick={() => setIsGalleryView(true)}
                                     title="Vista de galería"
                                 >
-                                    <FaTh />
                                     <span>Galería</span>
+                                    <FaTh />
                                 </button>
                                 <button
                                     className={`user-extern-view-button ${!isGalleryView ? 'active' : ''}`}
                                     onClick={() => setIsGalleryView(false)}
                                     title="Vista individual"
                                 >
-                                    <FaList />
                                     <span>Individual</span>
+                                    <FaList />
                                 </button>
                             </div>
                         </div>

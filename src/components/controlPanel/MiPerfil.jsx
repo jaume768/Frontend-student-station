@@ -202,22 +202,22 @@ const MiPerfil = () => {
                 </div>
                 {/* Columna derecha con pestañas y contenido */}
                 <div className="miPerfil-right-column">
-                    <div className="miPerfil-tabs">
+                    <div className="user-extern-tabs">
                         <button
-                            className={`miPerfil-tab ${activeTab === 'publicaciones' ? 'active' : ''}`}
+                            className={`user-extern-tab ${activeTab === 'publicaciones' ? 'active' : ''}`}
                             onClick={() => setActiveTab('publicaciones')}
                         >
                             Portfolio
                         </button>
                         <button
-                            className={`miPerfil-tab ${activeTab === 'perfil' ? 'active' : ''}`}
+                            className={`user-extern-tab ${activeTab === 'perfil' ? 'active' : ''}`}
                             onClick={() => setActiveTab('perfil')}
                         >
                             About
                         </button>
                         {(isCompany || isEducationalInstitution) && (
                             <button
-                                className={`miPerfil-tab ${activeTab === 'ofertas' ? 'active' : ''}`}
+                                className={`user-extern-tab ${activeTab === 'ofertas' ? 'active' : ''}`}
                                 onClick={() => setActiveTab('ofertas')}
                             >
                                 {isEducationalInstitution ? 'Ofertas educativas' : 'Ofertas de trabajo'}
