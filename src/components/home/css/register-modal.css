@@ -20,6 +20,9 @@
 /* Contenedor de la sección de verificación */
 .reg-verification-content {
   height: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 /* Estilo para el mensaje de email enviado */

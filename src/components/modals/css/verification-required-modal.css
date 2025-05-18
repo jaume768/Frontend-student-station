@@ -59,6 +59,12 @@
     gap: 20px;
 }
 
+.reg-verification-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
 .verification-modal-content h2 {
     font-size: 24px;
     color: #333;
