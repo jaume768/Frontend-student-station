@@ -7,8 +7,8 @@
 
 /* Panel Izquierdo */
 .createpost-left {
-    width: 60%;
-    height: 84vh;
+    width: 55%;
+    height: fit-content;
     color: blue;
     padding: 20px;
     display: flex;
@@ -65,6 +65,7 @@
     align-items: center;
     justify-content: center;
     flex: 1;
+    margin-top: 32px;
 }
 
 /* Modificación principal: contenedor de la imagen con posición relativa y overflow oculto */
@@ -74,13 +75,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 30rem;
 }
 
 .main-image {
     max-height: 30em;
     display: block;
-    border-radius: 8px;
+    border-radius: 6px;
+    border: solid .5px #ddd;
 }
 
 /* Flechas para cambiar imágenes */

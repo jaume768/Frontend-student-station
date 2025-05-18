@@ -18,12 +18,10 @@ const ProjectsSection = ({ isGalleryView, toggleView, userPosts = [] }) => {
                     key={index}
                     className="miPerfil-project-placeholder"
                     onClick={() => navigate(`/ControlPanel/post/${post._id}`)}
-                    style={{ cursor: 'pointer' }}
                 >
                     <img
                         src={post.mainImage}
                         alt={`Publicación ${index + 1}`}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }}
                     />
                 </div>
             ));
@@ -38,12 +36,10 @@ const ProjectsSection = ({ isGalleryView, toggleView, userPosts = [] }) => {
                         key={index}
                         className="miPerfil-project-placeholder"
                         onClick={() => navigate(`/ControlPanel/post/${post._id}`)}
-                        style={{ cursor: 'pointer' }}
                     >
                         <img
                             src={post.mainImage}
                             alt={`Publicación ${index + 1}`}
-                            style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }}
                         />
                     </div>
                 );
