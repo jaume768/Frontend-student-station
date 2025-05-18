@@ -1,5 +1,4 @@
 .magazine-container {
-    padding: 24px;
     background-color: white;
     min-height: calc(100vh - 80px);
     display: flex;
@@ -26,9 +25,7 @@
     font-size: 16px;
     color: #666;
     text-align: center;
-    margin: auto;
     line-height: 1.6;
-    margin-bottom: 24px;
     max-width: 800px;
 }
 
@@ -37,7 +34,7 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 12em;
+    gap: 8em;
     max-width: 1200px;
     margin: 0 auto;
 }
@@ -52,14 +49,12 @@
     margin-bottom: 20px;
 }
 
-.magazine-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
-}
+/* Se quitó el hover effect de las tarjetas de revista */
 
 .magazine-image {
     position: relative;
     overflow: hidden;
+    margin-bottom: 12px;
 }
 
 .magazine-image img {
@@ -73,7 +68,6 @@
 
 
 .magazine-info {
-    padding: 20px;
     text-align: center;
 }
 
@@ -99,6 +93,7 @@
 .magazine-card a {
     text-decoration: none;
     color: inherit;
+    padding: 12px;
     display: block;
 }
 

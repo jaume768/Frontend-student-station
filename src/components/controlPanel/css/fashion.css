@@ -3,7 +3,6 @@
 /* ------------------ CONTENEDOR Y LAYOUT ------------------ */
 .fashion-container {
   display: flex;
-  padding: 20px;
   min-height: 100vh;
   background-color: white;
 }

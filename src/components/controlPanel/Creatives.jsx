@@ -115,8 +115,8 @@ const Creatives = () => {
                     });
                 }
                 
-                // Filtrar solo creativos que tengan al menos un post
-                const filteredCreatives = newCreatives.filter(creative => creative.lastPost);
+                // Ya no necesitamos filtrar por lastPost ya que el backend ya incluye solo perfiles con posts
+                const filteredCreatives = newCreatives;
 
                 // Actualizar estado
                 setCreatives(prev => {
