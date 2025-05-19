@@ -106,14 +106,14 @@
 }
 
 .save-button-post.saved {
-    background: #08b599;
+    background: #4c85ff;
 }
 
 .saved-text {
     position: absolute;
     top: 40px;
     right: -30px;
-    background-color: #08b599;
+    background-color: #4c85ff;
     color: white;
     padding: 2px 8px;
     border-radius: 4px;
@@ -540,7 +540,7 @@
 }
 
 .modal-actions button:first-child {
-    background-color: #08b599;
+    background-color: #4c85ff;
     color: #fff;
 }
 
