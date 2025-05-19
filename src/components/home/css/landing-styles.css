@@ -122,19 +122,19 @@ a.landing-btn.landing-registro {
 .landing-hero {
   display: flex;
   height: 92vh;
-  margin: 0 auto 4.5em auto;
+  margin: 0 0 4.5em 0;
 }
 
 .landing-hero-content {
   flex: 1;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   padding: 0 2.5rem;
   box-sizing: border-box;
   padding-bottom: 50px;
   flex-direction: column;
-  justify-content: center;
-  width: 50vw;
+  justify-content: flex-end;
+  width: 45vw;
 }
 
 .landing-hero-content header {
@@ -199,7 +199,7 @@ h2.landing-h2 {
 
 h3.landing-h3 {
   font-size: 1.4rem;
-  margin-bottom: 0;
+  margin: 12px 0;
 }
 
 p {
@@ -209,7 +209,7 @@ p {
 }
 
 .landing-grid {
-  max-width: 1000px;
+  max-width: 1200px;
   display: flex;
   gap: 2rem;
   margin: 2em 0;
@@ -323,7 +323,8 @@ p {
   text-align: center;
   color: #333;
   font-weight: bold;
-  padding: 8px 14px;
+  padding: 20px 14px;
+  line-height: 0px;
   border-radius: 42px;
   background-color: #ffffff;
   border: solid #333;

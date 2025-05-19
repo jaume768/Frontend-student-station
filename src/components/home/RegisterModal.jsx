@@ -252,7 +252,7 @@ const RegisterModal = ({ onClose, onSwitchToLogin }) => {
         </button>
         <div className="reg-modal-content">
           <div className="reg-modal-image">
-            <img src="/multimedia/foto-registro.png" alt="Imagen de registro" />
+            <img src="/multimedia/foto-registro.webp" alt="Imagen de registro" />
           </div>
           <div className="reg-modal-form">
             {step === "register" ? (
@@ -328,7 +328,7 @@ const RegisterModal = ({ onClose, onSwitchToLogin }) => {
                         onChange={handleChange}
                         required
                       />
-                      Acepto los <a href="#" onClick={(e) => e.preventDefault()}>términos y condiciones</a>
+                      Acepto los <a href="#" onClick={(e) => e.preventDefault()}> términos y condiciones</a>
                     </label>
                   </div>
                   

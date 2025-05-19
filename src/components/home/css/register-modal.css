@@ -155,7 +155,7 @@
 /* Grupo de checkbox */
 .reg-checkbox-group {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   padding: 8px 0;
 }
 

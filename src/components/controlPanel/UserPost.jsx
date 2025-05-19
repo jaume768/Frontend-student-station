@@ -418,7 +418,7 @@ const UserPost = () => {
                         <button className="compartir" onClick={handleShare}>
                             <FaShareAlt size={18} />
                         </button>
-                        {post.user?._id === currentUserId && (
+                        {post.user && post.user?._id === currentUserId && (
                             <button
                                 className="delete-button"
                                 onClick={(e) => {
@@ -434,15 +434,17 @@ const UserPost = () => {
                         <div 
                             className="perfil__usuario" 
                             onClick={() => {
-                                navigate(`/ControlPanel/profile/${post.user.username}`);
-                                // Desplazar al inicio de la página
-                                window.scrollTo(0, 0);
+                                if (post.user?.username) {
+                                    navigate(`/ControlPanel/profile/${post.user.username}`);
+                                    // Desplazar al inicio de la página
+                                    window.scrollTo(0, 0);
+                                }
                             }}
                             style={{ cursor: 'pointer' }}
                         >
                             {post.user?.profile?.profilePicture ? (
                                 <img
-                                    src={post.user.profile.profilePicture}
+                                    src={post.user?.profile?.profilePicture}
                                     alt="Avatar"
                                     className="perfil__avatar"
                                 />
@@ -451,12 +453,12 @@ const UserPost = () => {
                             )}
                             <div className="perfil__datos">
                                 <h2 className="perfil__nombre">
-                                    {post.user.professionalType === 1 || post.user.professionalType === 2 || post.user.professionalType === 4 
-                                        ? post.user.companyName || `@${post.user.username}` 
-                                        : post.user.fullName || `@${post.user.username}`}
+                                    {post.user?.professionalType === 1 || post.user?.professionalType === 2 || post.user?.professionalType === 4 
+                                        ? post.user?.companyName || `@${post.user?.username}` 
+                                        : post.user?.fullName || `@${post.user?.username}`}
                                 </h2>
                                 <p className="perfil__ubicacion">
-                                    {post.user.city && post.user.country ? `${post.user.city}, ${post.user.country}` : ''}
+                                    {post.user?.city && post.user?.country ? `${post.user?.city}, ${post.user?.country}` : ''}
                                 </p>
                             </div>
                         </div>
@@ -589,11 +591,11 @@ const UserPost = () => {
                                 <div className="overlay">
                                     <div className="user-info">
                                         <img
-                                            src={post.user.profileImage || "/multimedia/usuarioDefault.jpg"}
-                                            alt={post.user.username}
+                                            src={post.user?.profile?.profilePicture || "/multimedia/usuarioDefault.jpg"}
+                                            alt={post.user?.username || "Usuario"}
                                             loading="lazy"
                                         />
-                                        <span>{post.user.username}</span>
+                                        <span>{post.user?.username || "Usuario"}</span>
                                     </div>
                                 </div>
                             </div>
