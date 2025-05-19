@@ -22,6 +22,10 @@ import Fashion from '../components/controlPanel/Fashion';
 import Blog from '../components/controlPanel/Blog';
 import Magazine from '../components/controlPanel/Magazine';
 import ArticleDetail from '../components/controlPanel/ArticleDetail';
+import AvisoLegal from '../components/controlPanel/AvisoLegal';
+import Privacidad from '../components/controlPanel/Privacidad';
+import Cookies from '../components/controlPanel/Cookies';
+import Contacto from '../components/controlPanel/Contacto';
 import './css/control-panel.css';
 
 const ControlPanel = () => {
@@ -70,6 +74,10 @@ const ControlPanel = () => {
                 <Route path="blog" element={<Blog />} />
                 <Route path="magazine" element={<Magazine />} />
                 <Route path="article/:id" element={<ArticleDetail />} />
+                <Route path="legal" element={<AvisoLegal />} />
+                <Route path="privacy" element={<Privacidad />} />
+                <Route path="cookies" element={<Cookies />} />
+                <Route path="contact" element={<Contacto />} />
                 <Route path="info" element={<div><h1>Información</h1></div>} />
                 <Route path="editProfile" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
                 <Route path="misOfertas" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />

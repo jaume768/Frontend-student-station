@@ -219,7 +219,7 @@ const Sidebar = ({ onLinkClick }) => {
                     <ul className="sidebar-menu sidebar-info-menu">
                         <li>
                             <button 
-                                className="sidebar-menu-item" 
+                                className={`sidebar-menu-item ${activeSection === 'contact' ? 'active' : ''}`}
                                 onClick={() => onSelectOption('contact')}
                             >
                                 <span>Contacto</span>
@@ -227,7 +227,7 @@ const Sidebar = ({ onLinkClick }) => {
                         </li>
                         <li>
                             <button 
-                                className="sidebar-menu-item" 
+                                className={`sidebar-menu-item ${activeSection === 'legal' ? 'active' : ''}`}
                                 onClick={() => onSelectOption('legal')}
                             >
                                 <span>Aviso legal</span>
@@ -235,7 +235,7 @@ const Sidebar = ({ onLinkClick }) => {
                         </li>
                         <li>
                             <button 
-                                className="sidebar-menu-item" 
+                                className={`sidebar-menu-item ${activeSection === 'cookies' ? 'active' : ''}`}
                                 onClick={() => onSelectOption('cookies')}
                             >
                                 <span>Política de cookies</span>
@@ -243,7 +243,7 @@ const Sidebar = ({ onLinkClick }) => {
                         </li>
                         <li>
                             <button 
-                                className="sidebar-menu-item" 
+                                className={`sidebar-menu-item ${activeSection === 'privacy' ? 'active' : ''}`}
                                 onClick={() => onSelectOption('privacy')}
                             >
                                 <span>Política de privacidad</span>
