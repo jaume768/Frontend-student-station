@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import '../components/home/css/header-footer.css';
-import '../components/home/css/efecto-parallex.css';
+import '../components/home/css/landing-styles.css';
+import '../components/home/css/page-wrapper.css';
+import '../components/home/css/modal-overlay.css';
 
-import Parallax from '../components/home/Parallax';
-import Header from '../components/home/HeaderHome';
-import Footer from '../components/home/FooterHome';
-import CallToAction from '../components/home/CallToAction';
+import LandingHeader from '../components/home/LandingHeader';
+import LandingHero from '../components/home/LandingHero';
+import LandingAddressTo from '../components/home/LandingAddressTo';
+import LandingHowItWorks from '../components/home/LandingHowItWorks';
+import LandingFooter from '../components/home/LandingFooter';
 import LoginModal from '../components/home/LoginModal';
 import RegisterModal from '../components/home/RegisterModal';
 import PasswordResetModal from '../components/home/PasswordResetModal';
@@ -38,14 +40,21 @@ const Home = () => {
 
   return (
     <div className="page-wrapper">
-      {!showLogin && !showPasswordReset && (
-        <>
-          <Parallax />
-          <Header onLoginClick={() => setShowLogin(true)} onRegisterClick={() => setShowRegister(true)} />
-          <CallToAction onLoginClick={() => setShowLogin(true)} onRegisterClick={() => setShowRegister(true)} />
-        </>
-      )}
+      {/* Always render the landing page content */}
+      <LandingHeader 
+        onLoginClick={() => setShowLogin(true)} 
+        onRegisterClick={() => setShowRegister(true)} 
+      />
+      <LandingHero 
+        onRegisterClick={() => setShowRegister(true)} 
+      />
+      <LandingAddressTo />
+      <LandingHowItWorks 
+        onRegisterClick={() => setShowRegister(true)} 
+      />
+      <LandingFooter />
 
+      {/* Modals are rendered as overlays */}
       {showLogin && (
         <LoginModal
           onClose={() => setShowLogin(false)}
@@ -73,8 +82,6 @@ const Home = () => {
           }}
         />
       )}
-
-      <Footer isVisible={!showLogin && !showPasswordReset} />
     </div>
   );
 };
