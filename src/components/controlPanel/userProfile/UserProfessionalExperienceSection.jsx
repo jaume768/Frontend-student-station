@@ -7,15 +7,15 @@ const UserProfessionalExperienceSection = ({ professionalFormation }) => {
     
     // Filtrar para asegurarse que al menos hay un elemento con datos relevantes
     const validExperience = professionalFormation.filter(exp => 
-        exp.trainingName?.trim() || exp.institution?.trim()
+        exp.title?.trim() || exp.institution?.trim()
     );
     
     if (validExperience.length === 0) return null;
     
-    const formatDate = (dateString) => {
-        if (!dateString) return "";
-        const date = new Date(dateString);
-        return date.toLocaleDateString();
+    // Función para formatear la fecha en formato mes/año
+    const formatDate = (month, year) => {
+        if (!month || !year) return "";
+        return `${month}/${year}`;
     };
 
     return (
@@ -28,11 +28,12 @@ const UserProfessionalExperienceSection = ({ professionalFormation }) => {
                             <FaBriefcase />
                         </div>
                         <div className="user-extern-experience-content">
-                            <div className="user-extern-experience-title">{exp.trainingName}</div>
+                            <div className="user-extern-experience-title">{exp.title}</div>
                             <div className="user-extern-experience-company">{exp.institution}</div>
                             <div className="user-extern-experience-date">
-                                {formatDate(exp.trainingStart)} - {exp.currentlyInProgress ? "Actual" : formatDate(exp.trainingEnd)}
-                                {exp.duration && ` · ${exp.duration}`}
+                                {exp.startMonth && exp.startYear ? formatDate(exp.startMonth, exp.startYear) : ""} - 
+                                {exp.currentlyWorking ? "Actual" : 
+                                 (exp.endMonth && exp.endYear ? formatDate(exp.endMonth, exp.endYear) : "")}
                             </div>
                             {exp.description && (
                                 <div className="user-extern-experience-description">{exp.description}</div>

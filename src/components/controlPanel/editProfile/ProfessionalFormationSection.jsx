@@ -61,36 +61,166 @@ const ProfessionalFormationSection = ({
                                         disabled={!isProfessionalFormationEditing}
                                     />
                                 </div>
-                                <div className="form-row">
+                                <div className="date-range">
                                     <div className="form-group-edit">
                                         <label>Fecha de inicio</label>
-                                        <input
-                                            type="month"
-                                            name="startDate"
-                                            value={item.startDate || ''}
-                                            onChange={(e) => onProfessionalFormationChange(index, e)}
-                                            max={item.endDate || currentDate}
-                                            disabled={!isProfessionalFormationEditing}
-                                        />
+                                        <div style={{ display: 'flex', gap: '4px' }}>
+                                            <div style={{ flex: '0.4' }}>
+                                                <label style={{ fontSize: '0.85rem', marginBottom: '2px', display: 'block' }}>Mes</label>
+                                                <input
+                                                    type="text"
+                                                    inputMode="numeric"
+                                                    pattern="[0-9]*"
+                                                    name="startMonth"
+                                                    placeholder="1-12"
+                                                    value={item.startMonth || ''}
+                                                    onChange={(e) => {
+                                                        // Permitir solo números
+                                                        const numericValue = e.target.value.replace(/[^0-9]/g, '');
+                                                        
+                                                        // Actualizar el estado siempre que sea un número válido
+                                                        onProfessionalFormationChange(index, {
+                                                            target: {
+                                                                name: 'startMonth',
+                                                                value: numericValue
+                                                            }
+                                                        });
+                                                    }}
+                                                    disabled={!isProfessionalFormationEditing}
+                                                    style={{ width: '100%' }}
+                                                />
+                                            </div>
+                                            <div style={{ flex: '0.6' }}>
+                                                <label style={{ fontSize: '0.85rem', marginBottom: '2px', display: 'block' }}>Año</label>
+                                                <input
+                                                    type="text"
+                                                    inputMode="numeric"
+                                                    pattern="[0-9]*"
+                                                    name="startYear"
+                                                    placeholder="1950-2025"
+                                                    value={item.startYear || ''}
+                                                    onChange={(e) => {
+                                                        // Permitir solo números
+                                                        const numericValue = e.target.value.replace(/[^0-9]/g, '');
+                                                        
+                                                        // Actualizar el estado siempre que sea un número válido
+                                                        onProfessionalFormationChange(index, {
+                                                            target: {
+                                                                name: 'startYear',
+                                                                value: numericValue
+                                                            }
+                                                        });
+                                                    }}
+                                                    disabled={!isProfessionalFormationEditing}
+                                                    style={{ width: '100%' }}
+                                                />
+                                            </div>
+                                        </div>
                                     </div>
+
                                     <div className="form-group-edit">
                                         <label>Fecha de finalización</label>
-                                        <input
-                                            type="month"
-                                            name="endDate"
-                                            value={item.endDate || ''}
-                                            onChange={(e) => onProfessionalFormationChange(index, e)}
-                                            min={item.startDate || ''}
-                                            max={currentDate}
-                                            disabled={!isProfessionalFormationEditing}
-                                        />
+                                        <div style={{ display: 'flex', gap: '4px' }}>
+                                            <div style={{ flex: '0.4' }}>
+                                                <label style={{ fontSize: '0.85rem', marginBottom: '2px', display: 'block' }}>Mes</label>
+                                                <input
+                                                    type="text"
+                                                    inputMode="numeric"
+                                                    pattern="[0-9]*"
+                                                    name="endMonth"
+                                                    placeholder="1-12"
+                                                    value={item.endMonth || ''}
+                                                    onChange={(e) => {
+                                                        // Permitir solo números
+                                                        const numericValue = e.target.value.replace(/[^0-9]/g, '');
+                                                        
+                                                        // Actualizar el estado siempre que sea un número válido
+                                                        onProfessionalFormationChange(index, {
+                                                            target: {
+                                                                name: 'endMonth',
+                                                                value: numericValue
+                                                            }
+                                                        });
+                                                    }}
+                                                    disabled={!isProfessionalFormationEditing || item.currentlyWorking}
+                                                    style={{ width: '100%' }}
+                                                />
+                                            </div>
+                                            <div style={{ flex: '0.6' }}>
+                                                <label style={{ fontSize: '0.85rem', marginBottom: '2px', display: 'block' }}>Año</label>
+                                                <input
+                                                    type="text"
+                                                    inputMode="numeric"
+                                                    pattern="[0-9]*"
+                                                    name="endYear"
+                                                    placeholder="1950-2025"
+                                                    value={item.endYear || ''}
+                                                    onChange={(e) => {
+                                                        // Permitir solo números
+                                                        const numericValue = e.target.value.replace(/[^0-9]/g, '');
+                                                        
+                                                        // Actualizar el estado siempre que sea un número válido
+                                                        onProfessionalFormationChange(index, {
+                                                            target: {
+                                                                name: 'endYear',
+                                                                value: numericValue
+                                                            }
+                                                        });
+                                                    }}
+                                                    disabled={!isProfessionalFormationEditing || item.currentlyWorking}
+                                                    style={{ width: '100%' }}
+                                                />
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
+                                <div className="form-group-edit-checkbox checkbox-group">
+                                    <div 
+                                        className="custom-checkbox"
+                                        onClick={(e) => {
+                                            if (!isProfessionalFormationEditing) return;
+                                            e.preventDefault();
+                                            // Simular clic en el checkbox
+                                            onProfessionalFormationChange(index, {
+                                                target: {
+                                                    name: 'currentlyWorking',
+                                                    type: 'checkbox',
+                                                    checked: !item.currentlyWorking
+                                                }
+                                            });
+                                        }}
+                                    >
+                                        <input
+                                            type="checkbox"
+                                            id={`currentlyWorking-${index}`}
+                                            name="currentlyWorking"
+                                            checked={item.currentlyWorking}
+                                            onChange={(e) => onProfessionalFormationChange(index, e)}
+                                            disabled={!isProfessionalFormationEditing}
+                                        />
+                                        <span className="checkmark"></span>
+                                    </div>
+                                    <label 
+                                        htmlFor={`currentlyWorking-${index}`}
+                                        onClick={(e) => {
+                                            if (!isProfessionalFormationEditing) return;
+                                            // Simular clic en el checkbox
+                                            onProfessionalFormationChange(index, {
+                                                target: {
+                                                    name: 'currentlyWorking',
+                                                    type: 'checkbox',
+                                                    checked: !item.currentlyWorking
+                                                }
+                                            });
+                                        }}
+                                    >Actualmente trabajando</label>
+                                </div>
+
                                 <div className="form-group-edit">
                                     <label>Descripción</label>
                                     <textarea
                                         name="description"
-                                        placeholder="Describe brevemente esta formación"
+                                        placeholder="Describe brevemente esta experiencia profesional"
                                         value={item.description || ''}
                                         onChange={(e) => onProfessionalFormationChange(index, e)}
                                         disabled={!isProfessionalFormationEditing}

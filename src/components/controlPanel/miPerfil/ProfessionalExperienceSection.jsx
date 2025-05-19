@@ -6,7 +6,7 @@ const ProfessionalExperienceSection = ({ professionalFormation }) => {
     
     // Filtrar para asegurarse que al menos hay un elemento con datos relevantes
     const validExperience = professionalFormation.filter(exp => 
-        exp.trainingName?.trim() || exp.institution?.trim()
+        exp.title?.trim() || exp.institution?.trim()
     );
     
     if (validExperience.length === 0) return null;
@@ -18,12 +18,19 @@ const ProfessionalExperienceSection = ({ professionalFormation }) => {
                 {validExperience.map((exp, index) => (
                     <li key={index}>
                         <strong>
-                            {exp.trainingStart ? new Date(exp.trainingStart).toLocaleDateString() : ""}
+                            {/* Mostrar fecha de inicio con el formato mes/año */}
+                            {exp.startMonth && exp.startYear ? 
+                                `${exp.startMonth}/${exp.startYear}` : ""}
                             {" - "}
-                            {exp.trainingEnd ? new Date(exp.trainingEnd).toLocaleDateString() : (exp.currentlyInProgress ? "Actual" : "")}
+                            {/* Mostrar fecha de fin o "Actual" si está cursando actualmente */}
+                            {exp.currentlyWorking ? 
+                                "Actual" : 
+                                (exp.endMonth && exp.endYear ? 
+                                    `${exp.endMonth}/${exp.endYear}` : "")}
                         </strong>
                         <p>
-                            {exp.trainingName} en {exp.institution}
+                            {exp.title} en {exp.institution}
+                            {exp.description && <div className="experience-description">{exp.description}</div>}
                         </p>
                     </li>
                 ))}

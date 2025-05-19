@@ -12,10 +12,10 @@ const UserEducationSection = ({ education }) => {
     
     if (validEducation.length === 0) return null;
     
-    const formatDate = (dateString) => {
-        if (!dateString) return "";
-        const date = new Date(dateString);
-        return `${date.getFullYear()}`;
+    // Función para formatear la fecha en formato mes/año
+    const formatDate = (month, year) => {
+        if (!month || !year) return "";
+        return `${month}/${year}`;
     };
 
     return (
@@ -25,9 +25,15 @@ const UserEducationSection = ({ education }) => {
                 {validEducation.map((edu, index) => (
                     <div key={index} className="user-extern-education-item">
                         <div className="user-extern-education-dates">
-                            {edu.formationStart ? new Date(edu.formationStart).toLocaleDateString() : ""}
+                            {/* Mostrar fecha de inicio con el formato mes/año */}
+                            {edu.formationStartMonth && edu.formationStartYear ? 
+                                formatDate(edu.formationStartMonth, edu.formationStartYear) : ""}
                             {" - "}
-                            {edu.formationEnd ? new Date(edu.formationEnd).toLocaleDateString() : "Actual"}
+                            {/* Mostrar fecha de fin o "Actual" si está cursando actualmente */}
+                            {edu.currentlyEnrolled ? 
+                                "Actual" : 
+                                (edu.formationEndMonth && edu.formationEndYear ? 
+                                    formatDate(edu.formationEndMonth, edu.formationEndYear) : "")}
                         </div>
                         <div className="user-extern-education-details">
                             <h3>{edu.formationName}</h3>

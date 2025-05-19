@@ -119,24 +119,20 @@ const EducationSection = ({
                                                     inputMode="numeric"
                                                     pattern="[0-9]*"
                                                     name="formationStartYear"
-                                                    placeholder="Año"
+                                                    placeholder="1950-2025"
                                                     value={edu.formationStartYear || ''}
                                                     onChange={(e) => {
                                                         // Permitir solo números
                                                         const numericValue = e.target.value.replace(/[^0-9]/g, '');
                                                         
-                                                        // Validar rango de años
-                                                        const currentYear = new Date().getFullYear();
-                                                        const year = numericValue ? parseInt(numericValue) : '';
-                                                        
-                                                        if (!numericValue || (year >= 1950 && year <= currentYear)) {
-                                                            handleEducationListChange(index, {
-                                                                target: {
-                                                                    name: 'formationStartYear',
-                                                                    value: numericValue ? year : ''
-                                                                }
-                                                            });
-                                                        }
+                                                        // Actualizar el estado siempre que sea un número válido
+                                                        // Evitamos validaciones estrictas que impidan la entrada
+                                                        handleEducationListChange(index, {
+                                                            target: {
+                                                                name: 'formationStartYear',
+                                                                value: numericValue
+                                                            }
+                                                        });
                                                     }}
                                                     disabled={!isEducationEditing}
                                                     style={{ width: '100%' }}
@@ -183,24 +179,20 @@ const EducationSection = ({
                                                     inputMode="numeric"
                                                     pattern="[0-9]*"
                                                     name="formationEndYear"
-                                                    placeholder="Año"
+                                                    placeholder="1950-2025"
                                                     value={edu.formationEndYear || ''}
                                                     onChange={(e) => {
                                                         // Permitir solo números
                                                         const numericValue = e.target.value.replace(/[^0-9]/g, '');
                                                         
-                                                        // Validar rango de años
-                                                        const currentYear = new Date().getFullYear();
-                                                        const year = numericValue ? parseInt(numericValue) : '';
-                                                        
-                                                        if (!numericValue || (year >= (edu.formationStartYear || 1950) && year <= currentYear + 5)) {
-                                                            handleEducationListChange(index, {
-                                                                target: {
-                                                                    name: 'formationEndYear',
-                                                                    value: numericValue ? year : ''
-                                                                }
-                                                            });
-                                                        }
+                                                        // Actualizar el estado siempre que sea un número válido
+                                                        // Evitamos validaciones estrictas que impidan la entrada
+                                                        handleEducationListChange(index, {
+                                                            target: {
+                                                                name: 'formationEndYear',
+                                                                value: numericValue
+                                                            }
+                                                        });
                                                     }}
                                                     disabled={!isEducationEditing || edu.currentlyEnrolled}
                                                     style={{ width: '100%' }}

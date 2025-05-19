@@ -18,9 +18,15 @@ const EducationSection = ({ education }) => {
                 {validEducation.map((edu, index) => (
                     <li key={index}>
                         <strong>
-                            {edu.formationStart ? new Date(edu.formationStart).toLocaleDateString() : ""}
+                            {/* Mostrar fecha de inicio con el formato mes/año */}
+                            {edu.formationStartMonth && edu.formationStartYear ? 
+                                `${edu.formationStartMonth}/${edu.formationStartYear}` : ""}
                             {" - "}
-                            {edu.formationEnd ? new Date(edu.formationEnd).toLocaleDateString() : "Actual"}
+                            {/* Mostrar fecha de fin o "Actual" si está cursando actualmente */}
+                            {edu.currentlyEnrolled ? 
+                                "Actual" : 
+                                (edu.formationEndMonth && edu.formationEndYear ? 
+                                    `${edu.formationEndMonth}/${edu.formationEndYear}` : "")}
                         </strong>
                         <p>
                             {edu.formationName} en {edu.institution || edu.otherInstitution}

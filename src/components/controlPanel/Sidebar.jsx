@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
-import logo from '../../assets/st-isotipo-temporal.png';
+import logo from '../../assets/thefolder-logotipo.png';
 import './css/sidebar.css';
 
 const Sidebar = ({ onLinkClick }) => {
@@ -28,10 +28,22 @@ const Sidebar = ({ onLinkClick }) => {
         if (currentState) {
             setActiveSection(currentState);
         } else {
+            const fullPath = location.pathname;
             const path = location.pathname.split('/').pop() || 'explorer';
-            if (path === 'profile' || path.includes('user/')) {
+
+            // Verifica si estamos viendo un perfil de usuario
+            if (path === 'profile' || path.includes('user/') || fullPath.includes('/profile/')) {
                 setActiveSection('creatives');
-            } else if (path === 'editProfile') {
+            } 
+            // Verifica si estamos viendo una oferta de trabajo
+            else if (fullPath.includes('/JobOfferDetail/')) {
+                setActiveSection('offers');
+            }
+            // Verifica si estamos viendo un artículo del blog
+            else if (fullPath.includes('/article/')) {
+                setActiveSection('blog');
+            }
+            else if (path === 'editProfile') {
                 setActiveSection('editProfile');
             } else if (path === 'community') {
                 setActiveSection('community');
@@ -123,8 +135,8 @@ const Sidebar = ({ onLinkClick }) => {
     return (
         <aside className="dashboard-sidebar">
             <div>
-                <div className="logo-dashboard">
-                    <img src={logo} alt="Logo" style={{ width: '50px', height: '60px' }} />
+                <div className="logo-dashboard" style={{ cursor: 'pointer' }} onClick={() => onSelectOption('explorer')}>
+                    <img src={logo} alt="Logo" style={{ width: '100%', height: '60px' }} />
                 </div>
                 
                 {/* Menú principal */}
