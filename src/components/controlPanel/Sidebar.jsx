@@ -135,9 +135,7 @@ const Sidebar = ({ onLinkClick }) => {
     return (
         <aside className="dashboard-sidebar">
             <div>
-                <div className="logo-dashboard" style={{ cursor: 'pointer' }} onClick={() => onSelectOption('explorer')}>
-                    <img src={logo} alt="Logo" style={{ width: '100%', height: '60px' }} />
-                </div>
+                {/* Logo moved to Header component */}
                 
                 {/* Menú principal */}
                 <div className="sidebar-section">

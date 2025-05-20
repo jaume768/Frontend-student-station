@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { FaSearch, FaBars, FaPlus, FaTimes, FaChevronDown } from 'react-icons/fa';
 import axios from 'axios';
+import logo from '../../assets/thefolder-logotipo-beta.png';
 import ProfileOptionsModal from './ProfileOptionsModal';
 import CreateOptionsModal from './CreateOptionsModal';
 import SearchResults from './SearchResults';
@@ -229,6 +230,9 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
 
     return (
         <header className="dashboard-header">
+            <div className="logo-dashboard" style={{ cursor: 'pointer' }} onClick={() => navigate('/ControlPanel/explorer')}>
+                <img src={logo} alt="Logo" style={{ width: '120px' }} />
+            </div>
             <div className={`dahsboard-search ${isSearchExpanded ? 'expanded' : ''}`} ref={searchRef}>
                 <div className="search-input-container">
                     <FaSearch className="search-icon" />

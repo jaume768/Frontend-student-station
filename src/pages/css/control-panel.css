@@ -117,8 +117,10 @@
     object-fit: cover;
 }
 
-.dashboard-sidebar .logo-dashboard {
-    margin-bottom: 2em;
+.logo-dashboard {
+    position: absolute;
+    left: 0;
+    padding: 0 14px;
 }
 
 /* Eliminamos el fondo del contenedor de íconos */
@@ -211,8 +213,9 @@
 
 .dashboard-header {
     position: fixed;
-    width: 95%;
+    width: calc(100% - 200px);
     top: 0;
+    right: 0;
     z-index: 10;
     display: flex;
     gap: 5px;
@@ -282,6 +285,7 @@
     width: 130px;
     transition: width 0.3s ease;
     margin-right: 5px;
+    margin-left: 128px;
 }
 
 @media (max-width: 769px) {
@@ -324,6 +328,7 @@
 .search-input-container input:focus {
     background-color: #f2f2f2 !important;
     outline: none;
+    border-color: #0051ff !important;
 }
 
 .search-icon {
