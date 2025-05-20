@@ -285,7 +285,7 @@
     width: 130px;
     transition: width 0.3s ease;
     margin-right: 5px;
-    margin-left: 128px;
+    margin-left: 160px;
 }
 
 @media (max-width: 769px) {

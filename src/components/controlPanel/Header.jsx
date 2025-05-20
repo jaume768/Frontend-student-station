@@ -231,7 +231,7 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
     return (
         <header className="dashboard-header">
             <div className="logo-dashboard" style={{ cursor: 'pointer' }} onClick={() => navigate('/ControlPanel/explorer')}>
-                <img src={logo} alt="Logo" style={{ width: '120px' }} />
+                <img src={logo} alt="Logo" style={{ width: '150px' }} />
             </div>
             <div className={`dahsboard-search ${isSearchExpanded ? 'expanded' : ''}`} ref={searchRef}>
                 <div className="search-input-container">

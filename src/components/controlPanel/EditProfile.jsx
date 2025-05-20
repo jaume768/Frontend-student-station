@@ -616,11 +616,16 @@ const EditProfile = () => {
     const addProfessionalFormation = () => {
         const currentList = Array.isArray(professionalFormationList) ? professionalFormationList : [];
         setProfessionalFormationList([...currentList, {
-            trainingName: '',
+            title: '',
             institution: '',
-            trainingStart: '',
-            trainingEnd: '',
-            currentlyInProgress: false
+            startMonth: '',
+            startYear: '',
+            endMonth: '',
+            endYear: '',
+            currentlyWorking: false,
+            description: '',
+            companyLogo: '',
+            location: ''
         }]);
     };
 

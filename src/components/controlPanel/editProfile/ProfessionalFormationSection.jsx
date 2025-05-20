@@ -1,5 +1,7 @@
-import React from 'react';
-import { FaChevronDown, FaChevronUp, FaTrash } from 'react-icons/fa';
+import React, { useState } from 'react';
+import { FaChevronDown, FaChevronUp, FaTrash, FaCamera, FaSpinner } from 'react-icons/fa';
+import axios from 'axios';
+import '../css/companyLogo.css';
 import EditButton from './EditButton';
 
 const ProfessionalFormationSection = ({
@@ -14,6 +16,52 @@ const ProfessionalFormationSection = ({
     updateProfileData,
     currentDate
 }) => {
+    // Estado para controlar la carga del logo
+    const [logoUploading, setLogoUploading] = useState(false);
+    const [activeUploadIndex, setActiveUploadIndex] = useState(null);
+
+    // Función para manejar la carga del logo
+    const handleLogoUpload = async (e, index) => {
+        if (!e.target.files || !e.target.files[0]) return;
+    
+        const file = e.target.files[0];
+        const formData = new FormData();
+        formData.append('file', file);
+        
+        setLogoUploading(true);
+        setActiveUploadIndex(index);
+        
+        try {
+            const backendUrl = import.meta.env.VITE_BACKEND_URL;
+            const token = localStorage.getItem('authToken');
+            const response = await axios.post(
+                `${backendUrl}/api/users/company-logo`,
+                formData,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }
+            );
+            
+            if (response.data.logoUrl) {
+                // Actualizar el estado con la URL del logo
+                onProfessionalFormationChange(index, {
+                    target: {
+                        name: 'companyLogo',
+                        value: response.data.logoUrl
+                    }
+                });
+            }
+        } catch (error) {
+            console.error('Error al subir el logo:', error);
+            alert('Ha ocurrido un error al subir el logo. Por favor, inténtalo de nuevo.');
+        } finally {
+            setLogoUploading(false);
+            setActiveUploadIndex(null);
+        }
+    };
     return (
         <section className="form-section">
             <div className="section-header-edit">
@@ -39,24 +87,67 @@ const ProfessionalFormationSection = ({
                                         </button>
                                     )}
                                 </div>
+                                <div className="form-group-edit logo-upload-container">
+                                    <label>Logo de la empresa</label>
+                                    <div className="company-logo-upload">
+                                        {item.companyLogo ? (
+                                            <img 
+                                                src={item.companyLogo} 
+                                                alt="Logo de la empresa" 
+                                                className="company-logo-preview"
+                                            />
+                                        ) : (
+                                            <div className="company-logo-placeholder">
+                                                <FaCamera />
+                                            </div>
+                                        )}
+                                        {isProfessionalFormationEditing && (
+                                            <>
+                                              <input
+                                                  type="file"
+                                                  accept="image/*"
+                                                  onChange={(e) => handleLogoUpload(e, index)}
+                                                  className="logo-file-input"
+                                                  disabled={logoUploading}
+                                              />
+                                              {logoUploading && (
+                                                <div className="logo-loading-indicator">
+                                                  <FaSpinner className="logo-spinner" />
+                                                </div>
+                                              )}
+                                            </>
+                                        )}
+                                    </div>
+                                </div>
                                 <div className="form-group-edit">
                                     <label>Título</label>
                                     <input
                                         type="text"
                                         name="title"
-                                        placeholder="Ej: Curso de diseño de moda"
+                                        placeholder="Ej: Asistente de ventas"
                                         value={item.title || ''}
                                         onChange={(e) => onProfessionalFormationChange(index, e)}
                                         disabled={!isProfessionalFormationEditing}
                                     />
                                 </div>
                                 <div className="form-group-edit">
-                                    <label>Institución</label>
+                                    <label>Empresa</label>
                                     <input
                                         type="text"
                                         name="institution"
-                                        placeholder="Ej: Escuela de Diseño"
+                                        placeholder="Ej: Nombre de la empresa"
                                         value={item.institution || ''}
+                                        onChange={(e) => onProfessionalFormationChange(index, e)}
+                                        disabled={!isProfessionalFormationEditing}
+                                    />
+                                </div>
+                                <div className="form-group-edit">
+                                    <label>Ubicación</label>
+                                    <input
+                                        type="text"
+                                        name="location"
+                                        placeholder="Ej: Madrid, España"
+                                        value={item.location || ''}
                                         onChange={(e) => onProfessionalFormationChange(index, e)}
                                         disabled={!isProfessionalFormationEditing}
                                     />
@@ -234,7 +325,7 @@ const ProfessionalFormationSection = ({
                                 className="add-button"
                                 onClick={onAddProfessionalFormation}
                             >
-                                + Añadir formación profesional
+                                + Añadir experiencia profesional
                             </button>
                         )}
                     </div>
