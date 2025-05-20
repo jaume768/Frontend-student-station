@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
-import logo from '../../assets/thefolder-logotipo.png';
+import logo from '../../assets/thefolder-logotipo-beta.png';
 import './css/sidebar.css';
 
 const Sidebar = ({ onLinkClick }) => {
