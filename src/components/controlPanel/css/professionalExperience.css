@@ -57,6 +57,7 @@
     font-size: 14px;
     margin: 0 0 4px 0;
     color: #666;
+    text-align: left;
 }
 
 .experience-location {
@@ -68,6 +69,7 @@
 .experience-period {
     font-size: 13px;
     color: #666;
+    text-align: left;
     margin: 0 0 8px 0;
 }
 
