@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './css/miPerfil.css';
+import './css/printProfile.css'; // Importar estilos específicos para impresión
 import { useNavigate } from 'react-router-dom';
 import { FaBell, FaEnvelope, FaShareAlt, FaExternalLinkAlt } from 'react-icons/fa';
 

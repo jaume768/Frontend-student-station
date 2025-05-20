@@ -604,7 +604,12 @@ const UserProfile = () => {
                                         <UserSoftwareSection software={profile?.software} />
                                         <UserLanguagesSection languages={profile?.languages} />
                                         <UserSocialSection social={profile?.social} />
-                                        <UserDownloadableFilesSection cvUrl={profile?.cvUrl} portfolioUrl={profile?.portfolioUrl} />
+                                        <UserDownloadableFilesSection 
+                                            cvUrl={profile?.cvUrl} 
+                                            portfolioUrl={profile?.portfolioUrl} 
+                                            userId={profile?._id}
+                                            username={username}
+                                        />
                                     </div>
                                 )}
                             </div>

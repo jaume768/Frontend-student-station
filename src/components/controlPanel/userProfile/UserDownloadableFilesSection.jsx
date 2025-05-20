@@ -1,7 +1,50 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaFilePdf } from 'react-icons/fa';
+import axios from 'axios';
+import { printUserProfile } from '../miPerfil/printProfile';
 
-const UserDownloadableFilesSection = ({ cvUrl, portfolioUrl }) => {
+const UserDownloadableFilesSection = ({ cvUrl, portfolioUrl, userId, username }) => {
+    const [profileData, setProfileData] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        // Cargar los datos del perfil solo cuando se necesiten para imprimir
+        if (userId) {
+            const fetchProfileData = async () => {
+                try {
+                    setIsLoading(true);
+                    const token = localStorage.getItem('authToken');
+                    if (!token) {
+                        setIsLoading(false);
+                        return;
+                    }
+                    
+                    const backendUrl = import.meta.env.VITE_BACKEND_URL;
+                    const headers = { Authorization: `Bearer ${token}` };
+                    const res = await axios.get(`${backendUrl}/api/users/profile/${username}`, { headers });
+                    
+                    setProfileData(res.data);
+                    setIsLoading(false);
+                } catch (error) {
+                    console.error('Error al cargar los datos del perfil para imprimir:', error);
+                    setIsLoading(false);
+                }
+            };
+            
+            fetchProfileData();
+        }
+    }, [userId, username]);
+
+    const handlePrintProfile = () => {
+        if (!profileData) {
+            alert('Cargando datos del perfil. Por favor, espere un momento.');
+            return;
+        }
+        
+        // Usar la misma función de impresión que se usa en MiPerfil
+        printUserProfile(profileData);
+    };
+
     return (
         <section className="user-extern-section">
             <h2>Archivos descargables</h2>
@@ -9,7 +52,10 @@ const UserDownloadableFilesSection = ({ cvUrl, portfolioUrl }) => {
                 <div className="pdf-row">
                     <a 
                         href="#" 
-                        onClick={(e) => e.preventDefault()}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            handlePrintProfile();
+                        }}
                         className="pdf-button"
                     >
                         Visualizar página PDF
