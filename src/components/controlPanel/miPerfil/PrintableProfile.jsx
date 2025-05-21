@@ -17,7 +17,6 @@ const PrintableProfile = ({ profile }) => {
         <h1 className="print-profile-name">
           {profile.companyName || profile.fullName}
         </h1>
-        <p className="print-profile-username">@{profile.username}</p>
         
         {(profile.city || profile.country) && (
           <p className="print-profile-location">
