@@ -397,7 +397,6 @@ export const printUserProfile = (profileData) => {
           <img src="${profileData?.profile?.profilePicture || '/multimedia/usuarioDefault.jpg'}" alt="${profileData?.fullName || 'Usuario'}" />
         </div>
         <h1 class="profile-name">${profileData.companyName || profileData.fullName}</h1>
-        <p class="profile-username">@${profileData.username}</p>
         
         ${(profileData.city || profileData.country) ? `
           <p class="profile-location">
