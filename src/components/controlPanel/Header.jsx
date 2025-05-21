@@ -25,6 +25,15 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
     const location = useLocation();
     const createButtonRef = useRef(null);
     
+    // This effect ensures search results close whenever searchQuery becomes empty
+    useEffect(() => {
+        if (!searchQuery || searchQuery.trim() === '') {
+            setSearchResults(null);
+            setShowResults(false);
+            setShowFullScreenSearch(false);
+        }
+    }, [searchQuery]);
+    
     useEffect(() => {
         const fetchUserType = async () => {
             const token = localStorage.getItem('authToken');
@@ -45,7 +54,7 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
 
     // Función para realizar la búsqueda
     const performSearch = useCallback(async (term) => {
-        if (term.trim().length < 2) {
+        if (!term || term.trim().length < 2) {
             setSearchResults(null);
             setShowResults(false);
             return;
@@ -76,6 +85,8 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
     // Manejar cambios en el input con debounce
     const handleSearchInputChange = (e) => {
         const value = e.target.value;
+        
+        // Actualizar el valor del query inmediatamente
         setSearchQuery(value);
         
         // Limpiar cualquier timeout pendiente
@@ -83,19 +94,26 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
             clearTimeout(searchTimeout);
         }
         
-        if (value.trim() === '') {
+        // Si el valor está vacío, cerrar los resultados
+        if (!value || value.trim() === '') {
             setSearchResults(null);
             setShowResults(false);
+            setShowFullScreenSearch(false);
             return;
         }
         
         // Configurar un nuevo timeout para debouncing (300ms)
         const timeout = setTimeout(async () => {
-            if (value.trim().length >= 2) {
+            if (value && value.trim().length >= 2) {
                 const results = await performSearch(value);
-                if (results) {
+                // Solo mostrar resultados si el query actual tiene al menos 2 caracteres
+                if (results && value && value.trim().length >= 2) {
                     setShowResults(true);
                 }
+            } else {
+                // Si el valor es menor de 2 caracteres, asegurarse de que no haya resultados
+                setSearchResults(null);
+                setShowResults(false);
             }
         }, 300);
         
@@ -104,8 +122,15 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
     
     // Manejar el evento Enter para abrir la búsqueda completa
     const handleSearch = async (e) => {
-        if (e.key === 'Enter' && searchQuery.trim().length >= 2) {
+        if (e.key === 'Enter') {
             e.preventDefault();
+            if (!searchQuery || searchQuery.trim().length < 2) {
+                setSearchResults(null);
+                setShowResults(false);
+                setShowFullScreenSearch(false);
+                return;
+            }
+            
             const results = await performSearch(searchQuery);
             if (results) {
                 setShowFullScreenSearch(true);
@@ -119,6 +144,7 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
         setSearchResults(null);
         setShowResults(false);
         setShowFullScreenSearch(false);
+        setIsSearchExpanded(false);
     };
     
     const handleProfileClick = () => {
@@ -257,13 +283,19 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
                         onKeyDown={handleSearch}
                         onFocus={() => {
                             setIsSearchExpanded(true);
-                            if (searchQuery.trim().length >= 2 && searchResults) {
+                            if (searchQuery && searchQuery.trim().length >= 2 && searchResults) {
                                 setShowResults(true);
                             }
                         }}
                         onBlur={() => {
-                            if (!searchQuery) {
+                            if (!searchQuery || !searchQuery.trim()) {
                                 setIsSearchExpanded(false);
+                                // Give a small delay before hiding the results to allow for clicks
+                                setTimeout(() => {
+                                    if (!searchQuery || !searchQuery.trim()) {
+                                        setShowResults(false);
+                                    }
+                                }, 200);
                             }
                         }}
                         className="modern-search-input"
@@ -276,7 +308,7 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
                         />
                     )}
                 </div>
-                {showResults && searchResults && (
+                {showResults && searchResults && searchQuery && searchQuery.trim().length >= 2 && (
                     <SearchResults 
                         results={searchResults} 
                         onResultClick={handleResultClick}
