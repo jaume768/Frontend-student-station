@@ -13,6 +13,14 @@
     padding: 10px;
 }
 
+@media (max-width: 768px) {
+    .create-options-modal {
+        top: -113px;
+        right: -87px;
+        text-align: center;
+    }
+}
+
 .create-options-content-ul {
     list-style: none;
     margin: 0;

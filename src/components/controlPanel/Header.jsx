@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { FaSearch, FaBars, FaPlus, FaTimes, FaChevronDown } from 'react-icons/fa';
 import axios from 'axios';
 import logo from '../../assets/thefolder-logotipo-beta.png';
+import logoMobile from '../../assets/logo-f-folder.png';
 import ProfileOptionsModal from './ProfileOptionsModal';
 import CreateOptionsModal from './CreateOptionsModal';
 import SearchResults from './SearchResults';
@@ -228,10 +229,22 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
         }
     };
 
+    // Check if the screen is mobile sized
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 769);
+    
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 769);
+        };
+        
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     return (
         <header className="dashboard-header">
             <div className="logo-dashboard" style={{ cursor: 'pointer' }} onClick={() => navigate('/ControlPanel/explorer')}>
-                <img src={logo} alt="Logo" style={{ width: '150px' }} />
+                <img src={isMobile ? logoMobile : logo} alt="Logo" style={{ width: isMobile ? '40px' : '150px' }} />
             </div>
             <div className={`dahsboard-search ${isSearchExpanded ? 'expanded' : ''}`} ref={searchRef}>
                 <div className="search-input-container">
@@ -283,20 +296,22 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
                     <img src="/iconos/save.svg" alt="Guardados" className="sidebar-icon" />
                     <span>Guardados</span>
                 </button>
-                <div className="create-button-container" ref={createButtonRef} style={{ position: 'relative' }}>
-                    <button
-                        className="create-post-btn"
-                        onClick={handleCreateClick}
-                    >
-                        <FaPlus style={{ color: '##555' }} /> {getCreateButtonText()}
-                    </button>
-                    {showCreateOptions && (
-                        <CreateOptionsModal
-                            onClose={() => setShowCreateOptions(false)}
-                            professionalType={professionalType}
-                        />
-                    )}
-                </div>
+                {!isMobile && (
+                    <div className="create-button-container" ref={createButtonRef} style={{ position: 'relative' }}>
+                        <button
+                            className="create-post-btn"
+                            onClick={handleCreateClick}
+                        >
+                            <FaPlus style={{ color: '##555' }} /> {getCreateButtonText()}
+                        </button>
+                        {showCreateOptions && (
+                            <CreateOptionsModal
+                                onClose={() => setShowCreateOptions(false)}
+                                professionalType={professionalType}
+                            />
+                        )}
+                    </div>
+                )}
                 <div className="profile-wrapper" style={{ position: 'relative' }}>
                     <img
                         className="profile-img"

@@ -291,6 +291,7 @@
 @media (max-width: 769px) {
     .dahsboard-search {
         width: 100%;
+        margin-left: 60px;
     }
 
     .dashboard-header .saved-button {

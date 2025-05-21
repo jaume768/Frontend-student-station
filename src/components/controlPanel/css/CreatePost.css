@@ -635,6 +635,7 @@
     .createpost-wrapper {
         flex-direction: column;
         height: auto;
+        margin-top: 10px;
         /* Para que crezca en altura */
     }
 

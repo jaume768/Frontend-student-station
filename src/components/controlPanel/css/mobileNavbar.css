@@ -1,8 +1,35 @@
-.mobile-nav-icon {
+.mobile-nav-icon,
+.mobile-nav-icon-plus {
   width: 20px;
   height: 20px;
   object-fit: contain;
   filter: grayscale(100%) brightness(70%);
+}
+
+.mobile-nav-icon-plus {
+  color: #555;
+}
+
+/* Style for create button when active (modal open) */
+.nav-link-container.create-container.active .mobile-nav-icon-plus,
+.nav-link-container.create-container.active span {
+  color: #1a73e8;
+}
+
+.nav-link-container.create-container.active .mobile-nav-icon-plus {
+  filter: none !important;
+}
+
+.nav-link-container.create-container.active {
+  background-color: #e8f0fe;
+  border: 1px solid #1a73e8;
+  border-radius: 8px;
+}
+
+.create-container.nav-link-container {
+  position: relative;
+  padding: 6px 2px;
+  transition: all 0.2s ease;
 }
 
 .nav-link-container {
@@ -20,6 +47,7 @@
   filter: invert(43%) sepia(73%) saturate(5451%) hue-rotate(202deg) brightness(93%) contrast(92%) !important;
 }
 
-.nav-link-container.active {
+.nav-link-container.active,
+.create-container.nav-link-container:active {
   color: #1a73e8 !important;
 }
