@@ -732,10 +732,6 @@ const EditProfile = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log({
-            userData, basicInfo, professionalSummary, educationList, selfTaught,
-            professionalFormationList, skills, software, contract, locationType, social
-        });
     };
 
     const currentDate = new Date().toISOString().split('T')[0];

@@ -183,10 +183,6 @@ const UserPost = () => {
                 
                 // También actualizar savedPosts para la sección de "Más posts"
                 setSavedPosts(savedImagesMap);
-                
-                console.log("Imágenes guardadas:", Array.from(savedImagesMap.keys()));
-                console.log("Post ID actual:", id);
-                console.log("Imágenes del post:", response.data.post.images);
             } catch (error) {
                 console.error('Error al cargar la publicación o favoritos:', error);
             } finally {
@@ -327,7 +323,6 @@ const UserPost = () => {
 
     const handleShare = (e) => {
         e.stopPropagation();
-        console.log('Compartir post', post._id);
         // Lógica para compartir el post
     };
 

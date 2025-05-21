@@ -135,11 +135,7 @@ const MisOfertasSection = ({ userRole, professionalType }) => {
             
             // Extraer los candidatos de las aplicaciones
             if (offer && offer.applications && offer.applications.length > 0) {
-                console.log('Aplicaciones recibidas:', offer.applications);
-                
-                // Asegurarse de que cada aplicación tenga toda la información del usuario
                 const applicationsWithUserDetails = offer.applications.map(app => {
-                    // Crear una copia segura de la aplicación
                     const appCopy = { ...app };
                     
                     // Verificar si app.user es un objeto o un string (ID)

@@ -42,9 +42,7 @@ const FolderContent = () => {
                     );
                     
                     setFolderItems(sortedItems);
-                    console.log("Items cargados correctamente:", sortedItems.length);
                 } else {
-                    console.log("No se encontraron imágenes en la carpeta");
                     setFolderItems([]);
                 }
             } catch (error) {

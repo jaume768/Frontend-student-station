@@ -165,6 +165,7 @@
     gap: 10px;
     margin: 20px 0 15px;
     justify-content: center;
+    align-items: center;
 }
 
 .user-extern-follow-button {
@@ -178,6 +179,7 @@
     cursor: pointer;
     display: flex;
     align-items: center;
+    width: fit-content;
     justify-content: center;
     gap: 8px;
     transition: background-color 0.2s;
@@ -284,7 +286,7 @@
     border: 1px solid #e0e0e0;
     border-radius: 10px;
     padding: 6px 16px;
-    min-width: 130px;
+    /* min-width eliminado */
     font-size: 14px;
     font-weight: 500;
     color: #666;
@@ -358,8 +360,7 @@
 .user-extern-projects.gallery-view {
     column-count: 3;
     column-gap: 14px;
-    margin-left: 3em;
-    margin-right: 3em;
+    margin: 0 16px;
 }
 
 .user-extern-projects.list-view {
@@ -972,6 +973,7 @@
         grid-template-columns: repeat(2, 1fr);
         margin-left: 0;
         margin-right: 0;
+        column-count: 2;
     }
 }
 

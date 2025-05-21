@@ -13,7 +13,7 @@ const LandingHero = ({ onRegisterClick }) => {
     const frases = [
       "Muestra tu CV + Portfolio.",
       "Encuentra talento emergente.",
-      "Accede a ofertas laborales",
+      "Accede a ofertas laborales.",
       "Descubre tus próximas prácticas.",
       "Explora formación educativa.",
     ];

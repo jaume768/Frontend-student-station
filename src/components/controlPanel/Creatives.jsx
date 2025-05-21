@@ -101,20 +101,6 @@ const Creatives = () => {
 
                 const newCreatives = response.data.creatives;
                 
-                // Depuración: Imprimir los primeros 3 creativos para ver su estructura
-                if (newCreatives.length > 0) {
-                    console.log('Estructura de datos de creativos:');
-                    newCreatives.slice(0, 3).forEach((creative, index) => {
-                        console.log(`Creativo ${index + 1}:`, {
-                            id: creative._id,
-                            username: creative.username,
-                            fullName: creative.fullName,
-                            professionalTags: creative.professionalTags,
-                            skills: creative.skills
-                        });
-                    });
-                }
-                
                 // Ya no necesitamos filtrar por lastPost ya que el backend ya incluye solo perfiles con posts
                 const filteredCreatives = newCreatives;
 

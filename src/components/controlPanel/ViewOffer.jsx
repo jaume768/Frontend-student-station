@@ -27,7 +27,6 @@ const ViewOffer = () => {
                 
                 // Obtener detalles de la oferta
                 const response = await axios.get(`${backendUrl}/api/offers/${offerId}`);
-                console.log('Datos de la oferta recibidos:', response.data);
                 
                 if (!response.data) {
                     setError('No se recibieron datos de la oferta');

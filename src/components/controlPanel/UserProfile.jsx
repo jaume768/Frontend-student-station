@@ -48,7 +48,6 @@ const UserProfile = () => {
                 const backendUrl = import.meta.env.VITE_BACKEND_URL;
                 const headers = { Authorization: `Bearer ${token}` };
                 const res = await axios.get(`${backendUrl}/api/users/profile/${username}`, { headers });
-                console.log('Datos del perfil:', res.data);
                 setProfile(res.data);
 
                 // Verificar si el usuario actual sigue al usuario del perfil

@@ -79,7 +79,6 @@ const RegisterModal = ({ onClose, onSwitchToLogin }) => {
 
   // Paso 1: Enviar datos para que se envíe el código (sin crear el usuario)
   const handleSubmit = async (e) => {
-    console.log('handleSubmit ejecutado!');
     e.preventDefault();
     setErrors({
       passwordMismatch: '',
@@ -345,9 +344,6 @@ const RegisterModal = ({ onClose, onSwitchToLogin }) => {
                   <button 
                     type="submit" 
                     className="reg-btn reg-register-btn"
-                    onClick={(e) => {
-                      console.log('Botón Registrarme clickeado!');
-                    }}
                   >
                     Registrarme
                   </button>

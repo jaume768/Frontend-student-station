@@ -511,7 +511,7 @@
 /* Contenido de About */
 .miPerfil-about-content {
     padding: 10px;
-    margin-left: 10em;
+    margin: 0 4em;
 }
 
 /* Estilos específicos para perfiles de empresa e institución */
@@ -1246,6 +1246,10 @@
 
     .miPerfil-about-content {
         margin-left: 0;
+    }
+    
+    .miPerfil-projects-grid.gallery {
+        column-count: 2;
     }
 
     .miPerfil-container {
