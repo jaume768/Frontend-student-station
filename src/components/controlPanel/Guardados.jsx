@@ -259,7 +259,7 @@ const Guardados = () => {
 
             setNotification({
                 show: true,
-                message: 'Creando tablero...',
+                message: 'Creando carpeta...',
                 type: 'info'
             });
 
@@ -276,7 +276,7 @@ const Guardados = () => {
                 
                 setNotification({
                     show: true,
-                    message: 'Tablero creado correctamente',
+                    message: 'Carpeta creada correctamente',
                     type: 'success'
                 });
                 setTimeout(() => setNotification({ show: false, message: '', type: '' }), 3000);
@@ -285,7 +285,7 @@ const Guardados = () => {
             console.error('Error al crear tablero:', error);
             setNotification({
                 show: true,
-                message: 'Error al crear el tablero',
+                message: 'Error al crear la carpeta',
                 type: 'error'
             });
             setTimeout(() => setNotification({ show: false, message: '', type: '' }), 3000);
@@ -309,7 +309,7 @@ const Guardados = () => {
 
             setNotification({
                 show: true,
-                message: 'Tablero eliminado correctamente',
+                message: 'Carpeta eliminada correctamente',
                 type: 'success'
             });
             setTimeout(() => setNotification({ show: false, message: '', type: '' }), 3000);
@@ -317,7 +317,7 @@ const Guardados = () => {
             console.error('Error al eliminar carpeta:', error);
             setNotification({
                 show: true,
-                message: 'Error al eliminar el tablero',
+                message: 'Error al eliminar la carpeta',
                 type: 'error'
             });
             setTimeout(() => setNotification({ show: false, message: '', type: '' }), 3000);
@@ -376,7 +376,7 @@ const Guardados = () => {
                 
                 setNotification({
                     show: true,
-                    message: 'Nombre de tablero actualizado',
+                    message: 'Nombre de carpeta actualizado',
                     type: 'success'
                 });
                 setTimeout(() => setNotification({ show: false, message: '', type: '' }), 3000);
@@ -414,7 +414,7 @@ const Guardados = () => {
             
             setNotification({
                 show: true,
-                message: 'Moviendo la imagen al tablero...',
+                message: 'Moviendo la imagen a la carpeta...',
                 type: 'info'
             });
             
@@ -492,15 +492,15 @@ const Guardados = () => {
     return (
         <div className="guardados-container">
             <div className="guardados-header">
-                <h1>Tus ideas guardadas</h1>
+                <h1>Tus clips guardados</h1>
             </div>
             <div className="guardados-header-actions">
-                <h2>Tus tableros</h2>
+                <h2>Tus carpetas</h2>
                 <button
                     className="new-tablero-button"
                     onClick={() => setIsCreatingFolder(true)}
                 >
-                    <FaPlus /> Crear tablero
+                    <FaPlus /> Nueva carpeta
                 </button>
             </div>
 
@@ -511,7 +511,7 @@ const Guardados = () => {
                             type="text"
                             value={newFolderName}
                             onChange={(e) => setNewFolderName(e.target.value)}
-                            placeholder="Nombre del tablero"
+                            placeholder="Nombre de la carpeta"
                             className="tablero-name-input"
                         />
                         <div className="form-actions">
@@ -558,7 +558,7 @@ const Guardados = () => {
                                 ) : (
                                     <div className="empty-tablero">
                                         <FaFolder size={30} />
-                                        <p>Tablero vacío</p>
+                                        <p>Carpeta vacía</p>
                                     </div>
                                 )}
                             </div>
@@ -599,6 +599,7 @@ const Guardados = () => {
                             Organizar
                         </button>
                     </div>
+                    <p className="blog-card-excerpt">Pulsa el botón "Organizar" para organizar tus fotos en carpetas.</p>
                     <div className="ideas-grid">
                         {ideasSinOrganizar.map(post => (
                             <div 

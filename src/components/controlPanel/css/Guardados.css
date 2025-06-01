@@ -40,6 +40,7 @@
 .guardados-header h1 {
     font-size: 44px;
     font-weight: 600;
+    line-height: 44px;
 }
 
 .profile-info {
@@ -153,8 +154,8 @@
 
 /* Tableros */
 .tableros-container {
-    padding: 10px 0;
     border-bottom: solid 1px #e0e0e0;
+    padding-bottom: 24px;
 }
 
 .tableros-actions {
@@ -164,7 +165,7 @@
 }
 
 .new-tablero-button {
-    background: hsla(0, 0%, 13%, 1);
+    background: #1a73e8;
     color: white;
     border: none;
     border-radius: 8px;
@@ -181,7 +182,7 @@
 }
 
 .create-tablero-form {
-    background: #f9f9f9;
+    background-color: #f5f5f5;
     padding: 20px;
     border-radius: 12px;
     margin-bottom: 20px;
@@ -214,18 +215,19 @@
 }
 
 .confirm-button {
-    background: #0066ff;
+    background-color: #1a73e8;
     color: white;
 }
 
 .confirm-button:disabled {
-    background: #91b7f2;
+    background-color: #666;
     cursor: not-allowed;
 }
 
 .cancel-button {
-    background: #e9e9e9;
+    background-color: #ddd;
     color: #333;
+    height: fit-content;
 }
 
 .tableros-grid {
@@ -244,21 +246,19 @@
 
 .tablero-item {
     background: #fff;
-    border-radius: 16px;
+    border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border: solid 1px #e0e0e0;
     cursor: pointer;
     transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .tablero-item:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
 }
 
 .tablero-preview {
     background: #f5f5f5;
-    padding: 16px;
     height: 160px;
     display: flex;
     align-items: center;
@@ -269,7 +269,7 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(2, 1fr);
-    gap: 8px;
+    gap: 3px;
     width: 100%;
     height: 100%;
 }
@@ -302,6 +302,7 @@
 .tablero-info {
     padding: 16px;
     position: relative;
+    border-top: solid 1px #e0e0e0;
 }
 
 .tablero-info h3 {
@@ -338,11 +339,11 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    background: #535353;
+    background: #eee;
 }
 
 .edit-tablero-button:hover, .delete-tablero-button:hover {
-    background: #535353;
+    background: #ddd;
 }
 
 /* Ideas sin organizar */
@@ -375,7 +376,7 @@
 }
 
 .ideas-header h2 {
-    font-size: 20px;
+    font-size: 24px;
     margin: 0;
 }
 
@@ -569,7 +570,7 @@
     max-height: 50vh;
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 10px 0;
+    padding: 10px;
 }
 
 .organize-image-item {
@@ -587,7 +588,7 @@
 }
 
 .organize-image-item.selected {
-    box-shadow: 0 0 0 3px #535353;
+    border: solid 2px #1a73e8;
 }
 
 .organize-image {
@@ -601,7 +602,6 @@
     justify-content: space-between;
     align-items: center;
     margin-top: 20px;
-    padding-top: 15px;
     border-top: 1px solid #eee;
 }
 
@@ -613,10 +613,11 @@
 .organize-modal-actions {
     display: flex;
     gap: 10px;
+    align-items: flex-end;
 }
 
 .next-button {
-    background: #535353;
+    background: #1a73e8;
     color: white;
     border: none;
     border-radius: 20px;

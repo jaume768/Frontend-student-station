@@ -126,7 +126,7 @@ const ArticleDetail = () => {
                 
                 <h1 className="article-title">{article.title}</h1>
                 <h2 className="article-subtitle">{article.excerpt || 'Subtítulo del artículo'}</h2>
-                <p className="article-author">Palabras de <span className="article-author-name">{article.author}</span></p>
+                <p className="article-author">Palabras de <span className="article-author-name"> {article.author}</span></p>
                 
                 {/* Contenido principal del artículo */}
                 <div 
