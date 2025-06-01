@@ -213,6 +213,10 @@
         margin: 16px;
     }
     
+    .login-card form {
+        width: 100%;
+    }
+    
     /* Ocultar el botón de volver al inicio en móvil */
     .back-link {
         display: none;

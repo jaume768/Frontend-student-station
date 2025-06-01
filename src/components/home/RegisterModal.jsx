@@ -252,6 +252,7 @@ const RegisterModal = ({ onClose, onSwitchToLogin }) => {
         <div className="reg-modal-content">
           <div className="reg-modal-image">
             <img src="/multimedia/foto-registro.webp" alt="Imagen de registro" />
+            <p className="photo-autor-tag">Fotografía de <a href="https://www.instagram.com/manel.png" target="_blank" rel="noopener noreferrer">@manel.png</a></p>
           </div>
           <div className="reg-modal-form">
             {step === "register" ? (

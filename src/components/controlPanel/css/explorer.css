@@ -1,5 +1,4 @@
 .explorer-container {
-    padding: 0 1rem;
     max-width: 1920px;
     margin: 0 auto;
 }
@@ -72,7 +71,6 @@
     border: 1px solid #e0e0e0;
     border-radius: 10px;
     padding: 8px 1px;
-    width: 160px;
     font-size: 14px;
     font-weight: 500;
     color: #666;
@@ -129,7 +127,8 @@
 /* Botón de filtro */
 .explorer-filter-button {
     position: fixed;
-    left: 15em;
+    left: 2em;
+    top: 100px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -157,8 +156,8 @@
 /* Panel de filtros para desktop */
 .explorer-filters-panel {
     position: fixed;
-    top: 25%;
-    left: 12em;
+    top: 120px;
+    left: -5em;
     width: 250px;
     height: 100vh;
     transform: translate(-100%);
@@ -175,13 +174,14 @@
     }
 
     .explorer-filter-button {
-        left: 0;
-        top: 8em;
+        left: unset;
+        right: 1em;
+        top: 20em;
     }
 }
 
 .explorer-filters-panel.show {
-    transform: translateX(0);
+    left: 17em;
     margin-left: 1vw;
 }
 
@@ -277,7 +277,6 @@
     color: #000;
     background-color: transparent !important;
     border: solid 1px #000;
-    margin-top: 10px;
 }
 
 .explorer-clear-filters-btn:hover {
@@ -323,13 +322,15 @@
     padding: 20px;
     overflow-y: auto;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
 
 .explorer-mobile-filters-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 24px;
 }
 
 .explorer-mobile-filters-header h3 {
@@ -420,8 +421,7 @@
     border-radius: 50%;
     overflow: hidden;
     margin-bottom: 8px;
-    border: 2px solid white;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    border: .2px solid #f0f0f0;
 }
 
 .user-avatar {
@@ -441,14 +441,12 @@
     font-size: 14px;
     font-weight: 600;
     color: white;
-    margin-bottom: 4px;
 }
 
 .username-registro {
     font-size: 14px;
     font-weight: 600;
     color: black;
-    margin-bottom: 4px;
 }
 
 .user-location {

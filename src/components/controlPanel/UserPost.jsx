@@ -363,12 +363,6 @@ const UserPost = () => {
 
     return (
         <div className="perfil">
-            <header className="perfil__header">
-                <button className="perfil__volver" onClick={() => navigate(-1)}>
-                    <FaArrowLeft size={20} />
-                    <p>Volver</p>
-                </button>
-            </header>
             <section className="perfil__contenido">
                 <div className="perfil__imagenes">
                     <div

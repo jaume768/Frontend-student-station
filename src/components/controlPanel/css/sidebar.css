@@ -15,9 +15,8 @@
 .sidebar-section-title {
     font-size: 12px;
     color: #666;
+    padding: 0 12px;
     margin-bottom: 8px;
-    padding: 0 15px 0 18px;
-    margin-bottom: 12px;
     display: flex;
     align-items: center;
     gap: 8px;

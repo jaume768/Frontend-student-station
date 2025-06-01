@@ -12,12 +12,10 @@ const Blog = () => {
 
     const categories = [
         { id: 'all', name: 'Todos' },
-        { id: 'fashion', name: 'Moda' },
         { id: 'designers', name: 'Diseñadores' },
         { id: 'industry', name: 'Industria' },
         { id: 'education', name: 'Educación' },
-        { id: 'events', name: 'Eventos' },
-        { id: 'other', name: 'Otros' }
+        { id: 'events', name: 'Eventos' }
     ];
 
     useEffect(() => {

@@ -8,10 +8,9 @@
 
 .profile-options-modal {
     position: absolute;
-    top: 41px;
-    right: -13px;
+    top: 60px;
+    right: 14px;
     font-size: 16px;
-    width: 200px;
     text-align: left;
     background: #fff;
     border: 1px solid #ccc;
@@ -38,6 +37,7 @@
     margin-bottom: 2px;
     transition: background-color 0.2s ease;
     cursor: pointer;
+    gap: 8px;
 }
 
 .profile-options-modal li:hover {
@@ -291,7 +291,7 @@
 
 @media (max-width: 769px) {
     .dahsboard-search {
-        width: 100%;
+        width: 130px;
         margin-left: 60px;
     }
 
@@ -307,6 +307,13 @@
 @media (max-width: 1660px) {
     .dahsboard-search.expanded {
         width: 65%;
+    }
+}
+
+@media (max-width: 769px) {
+    .dahsboard-search.expanded {
+        width: 100%;
+        margin-left: 0;
     }
 }
 
@@ -387,14 +394,10 @@
 }
 
 .profile-dropdown-icon {
-    position: absolute;
-    right: -20px;
-    top: 50%;
-    transform: translateY(-50%);
     cursor: pointer;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
 }
 
 .dropdown-arrow {
@@ -423,8 +426,9 @@
 
     .dashboard-content {
         flex: 1;
-        padding: 0;
+        padding: 0 24px;
         margin-left: 0;
+        margin-bottom: 100px;
         background-color: rgb(255, 255, 255);
     }
 }
@@ -432,7 +436,6 @@
 /* ======== Contenedor principal de la sección Explorer ======== */
 .explorer-container {
     width: 100%;
-    padding: 0 1rem;
 }
 
 /* 
@@ -461,8 +464,7 @@
 }
 
 .my-masonry-grid_column {
-    padding-left: 16px;
-    /* Debe coincidir con el margin-left de arriba */
+    /* padding-left eliminado */
     background-clip: padding-box;
 }
 
@@ -761,7 +763,7 @@
     .profile-options-modal {
         position: absolute;
         top: -245px;
-        width: 171px;
+        width: 175px;
         text-align: left;
         right: -13px;
         background: #fff;
