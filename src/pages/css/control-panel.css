@@ -257,22 +257,32 @@
     border-color: #ccc;
 }
 
-/* BOTÓN “Crear” */
+/* BOTÓN "Crear" */
 .dashboard-header .create-post-btn {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 3px;
     padding: 8px 16px;
-    border-radius: 9999px;
-    background-color: #06b69f;
-    border: none;
-    color: #fff;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    background-color: #f2f2f2;
+    color: #555;
     font-weight: 500;
-    font-size: 12px;
+    font-size: 16px;
+    transition: background-color .2s, border-color .2s;
+}
+
+.dashboard-header .create-post-btn.active {
+    background-color: #e8f0fe !important;
+    color: #1a73e8 !important;
+    border-color: #1a73e8;
+    font-weight: 500;
+    box-shadow: 0 0 5px rgba(26, 115, 232, 0.3);
 }
 
 .dashboard-header .create-post-btn:hover {
-    background-color: #05a58c;
+    background-color: #e0e0e0;
+    border-color: #ccc;
 }
 
 /* Iconos unificados */
@@ -280,6 +290,11 @@
 .dashboard-header .create-post-btn svg {
     font-size: 16px;
     flex-shrink: 0;
+    transition: color 0.3s ease;
+}
+
+.dashboard-header .create-post-btn.active svg {
+    color: #1a73e8 !important;
 }
 
 .dahsboard-search {

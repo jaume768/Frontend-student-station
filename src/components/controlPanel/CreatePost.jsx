@@ -361,8 +361,7 @@ const CreatePost = () => {
                                         <div className="tag-input-wrapper">
                                             <input
                                                 type="text"
-                                                placeholder='Escribe una etiqueta
-y pulsa "Enter"'
+                                                placeholder='Escribe una etiqueta y pulsa "Enter"'
                                                 value={newTag}
                                                 onChange={(e) => setNewTag(e.target.value)}
                                                 onKeyDown={handleTagKeyDown}
@@ -417,7 +416,7 @@ y pulsa "Enter"'
                         <h2 className="section-title">Información del post</h2>
                         <div className="step-label-dark">Paso 2</div>
                         <section className="post-section">
-                            <h3>Título</h3>
+                            <h3>Título*</h3>
                             <input
                                 type="text"
                                 placeholder="Introduce el título del post"
@@ -427,7 +426,7 @@ y pulsa "Enter"'
                             />
                         </section>
                         <section className="post-section">
-                            <h3>Descripción</h3>
+                            <h3>Descripción*</h3>
                             <textarea
                                 placeholder="Introduce la descripción del post"
                                 value={postDescription}

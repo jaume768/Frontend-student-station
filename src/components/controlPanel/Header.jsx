@@ -331,10 +331,10 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
                 {!isMobile && (
                     <div className="create-button-container" ref={createButtonRef} style={{ position: 'relative' }}>
                         <button
-                            className="create-post-btn"
+                            className={`create-post-btn ${location.pathname.includes('createPost') ? 'active' : ''}`}
                             onClick={handleCreateClick}
                         >
-                            <FaPlus style={{ color: '##555' }} /> {getCreateButtonText()}
+                            <FaPlus /> {getCreateButtonText()}
                         </button>
                         {showCreateOptions && (
                             <CreateOptionsModal
