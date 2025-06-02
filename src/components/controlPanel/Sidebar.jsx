@@ -59,6 +59,8 @@ const Sidebar = ({ onLinkClick }) => {
                 setActiveSection('blog');
             } else if (path === 'magazine') {
                 setActiveSection('magazine');
+            } else if (path === 'about') {
+                setActiveSection('about');
             } else {
                 setActiveSection('explorer');
             }

@@ -26,6 +26,7 @@ import AvisoLegal from '../components/controlPanel/AvisoLegal';
 import Privacidad from '../components/controlPanel/Privacidad';
 import Cookies from '../components/controlPanel/Cookies';
 import Contacto from '../components/controlPanel/Contacto';
+import About from '../components/controlPanel/About';
 import './css/control-panel.css';
 
 const ControlPanel = () => {
@@ -78,6 +79,7 @@ const ControlPanel = () => {
                 <Route path="privacy" element={<Privacidad />} />
                 <Route path="cookies" element={<Cookies />} />
                 <Route path="contact" element={<Contacto />} />
+                <Route path="about" element={<About />} />
                 <Route path="info" element={<div><h1>Información</h1></div>} />
                 <Route path="editProfile" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
                 <Route path="misOfertas" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
