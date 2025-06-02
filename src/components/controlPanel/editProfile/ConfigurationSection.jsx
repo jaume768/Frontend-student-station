@@ -74,13 +74,15 @@ const ConfigurationSection = ({
                     {!isPasswordEditing ? (
                         <div className="password-display">
                             <p>********</p>
-                            <button
-                                type="button"
-                                className="edit-password-button edit-data-button"
-                                onClick={() => setIsPasswordEditing(true)}
-                            >
-                                Cambiar contraseña
-                            </button>
+                            <div className="button-row">
+                                <button
+                                    type="button"
+                                    className="edit-password-button edit-data-button"
+                                    onClick={() => setIsPasswordEditing(true)}
+                                >
+                                    Cambiar contraseña
+                                </button>
+                            </div>
                         </div>
                     ) : (
                         <div className="password-edit-form">
@@ -146,13 +148,15 @@ const ConfigurationSection = ({
                     <h3>Cerrar sesión</h3>
                 </div>
                 <div className="section-content">
-                    <button
-                        type="button"
-                        className="logout-button edit-data-button"
-                        onClick={handleLogout}
-                    >
-                        Cerrar sesión
-                    </button>
+                    <div className="button-row">
+                        <button
+                            type="button"
+                            className="logout-button edit-data-button"
+                            onClick={handleLogout}
+                        >
+                            Cerrar sesión
+                        </button>
+                    </div>
                 </div>
             </section>
 
@@ -166,13 +170,15 @@ const ConfigurationSection = ({
                             Al eliminar tu cuenta, todos tus datos personales, publicaciones y ofertas serán eliminados permanentemente.
                             Esta acción no se puede deshacer.
                         </p>
-                        <button 
-                            type="button" 
-                            className="delete-account-button edit-data-button"
-                            onClick={() => setIsDeleteModalOpen(true)}
-                        >
-                            Eliminar mi cuenta
-                        </button>
+                        <div className="button-row">
+                            <button 
+                                type="button" 
+                                className="delete-account-button edit-data-button"
+                                onClick={() => setIsDeleteModalOpen(true)}
+                            >
+                                Eliminar mi cuenta
+                            </button>
+                        </div>
                     </div>
                 </div>
             </section>

@@ -845,7 +845,7 @@ const MisOfertasSection = ({ userRole, professionalType }) => {
                 
                 <div className="ofertas-footer">
                     <button className="buscar-ofertas-btn" onClick={handleSearchMoreOffers}>
-                        Buscar más ofertas
+                        Buscar ofertas
                     </button>
                 </div>
             </div>

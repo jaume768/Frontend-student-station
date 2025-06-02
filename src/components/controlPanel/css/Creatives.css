@@ -562,8 +562,8 @@
 /* Panel de filtros para desktop */
 .creatives-filters-panel {
     position: fixed;
-    top: 120px;
-    left: 17em;
+    top: 194px;
+    left: 12em;
     width: 280px;
     height: calc(100vh - 150px);
     transform: translateX(-100%);
@@ -584,7 +584,7 @@
 
 /* Mostrar panel */
 .creatives-filters-panel.show {
-    transform: translateX(0);
+    transform: translateX(23px);
 }
 
 .creatives-filters-container {

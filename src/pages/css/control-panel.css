@@ -306,7 +306,7 @@
 
 @media (max-width: 769px) {
     .dahsboard-search {
-        width: 130px;
+        width: 40px;
         margin-left: 60px;
     }
 
@@ -916,6 +916,7 @@
 .close-icon {
     font-size: 1.5rem;
     cursor: pointer;
+    color: #333;
 }
 
 .mobile-side-menu .menu-content {
@@ -926,7 +927,7 @@
 }
 
 .mobile-side-menu .menu-item {
-    font-size: 1rem;
+    font-size: 1.1rem;
     color: #000;
     text-decoration: none;
     transition: color 0.3s ease;
@@ -934,7 +935,7 @@
 
 .mobile-side-menu .menu-item:hover,
 .mobile-side-menu .menu-item.active {
-    color: rgba(6, 182, 160, 1);
+    color: #4c85ff;
 }
 
 @keyframes slideIn {

@@ -591,7 +591,7 @@ const Guardados = () => {
             {ideasSinOrganizar.length > 0 && (
                 <div className="ideas-sin-organizar">
                     <div className="ideas-header">
-                        <h2>Ideas sin organizar</h2>
+                        <h2>Clips sin organizar</h2>
                         <button 
                             className="organizar-button"
                             onClick={openOrganizeModal}

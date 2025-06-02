@@ -8,7 +8,6 @@
 
 .search-input-container.full-screen {
     background-color: #f5f5f5;
-    border-radius: 24px;
     margin: 0 15px;
     width: calc(100% - 80px);
 }
@@ -583,4 +582,10 @@
     .grid-result-info p {
         font-size: 12px;
     }
+}
+
+.grid-img-container img {
+    width: 100%;
+    height: 15vw;
+    object-fit: cover;
 }
