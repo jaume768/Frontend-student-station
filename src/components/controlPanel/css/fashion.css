@@ -240,37 +240,74 @@
 }
 
 /* ------------------ VIEW TOGGLE (Todo / Pública / Privada) ------------------ */
-.view-toggle-group {
+/* Tabs y botón de filtro */
+.explorer-tabs-container {
   display: flex;
-  gap: 8px;
-  margin-bottom: 20px;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
+  gap: 20px;
+  position: relative;
+}
+
+.explorer-tabs {
+  display: flex;
+  gap: 10px;
   justify-content: center;
 }
 
-.view-toggle-group .toggle {
-  display: flex;
-  align-items: center;
-  padding: 10px 18px;
-  border-radius: 8px;
-  background: transparent;
-  border: none;
-  font-size: 15px;
-  color: #333;
+/* Estilo de tab basado en user-extern-tab */
+.user-extern-tab {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #666;
   cursor: pointer;
-  text-align: left;
-  transition: all 0.2s ease;
-  gap: 6px;
+  position: relative;
+  transition: all 0.2s;
 }
 
-.view-toggle-group .toggle:hover {
-  background-color: #f8f8f8;
+.user-extern-tab:hover {
+  border-color: #d0d0d0;
+  color: #333;
 }
 
-.view-toggle-group .toggle.active {
-  background-color: #f0f4f9;
-  color: #222;
-  font-weight: 600;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+.user-extern-tab.active {
+  background-color: #e8f0fe;
+  color: #1a73e8;
+  border-color: #1a73e8;
+}
+
+.user-extern-tab:disabled {
+  background-color: #f5f5f5;
+  color: #aaa;
+  border-color: #ddd;
+  cursor: not-allowed;
+  position: relative;
+  overflow: hidden;
+}
+
+.user-extern-tab:disabled::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  background-size: 200% 100%;
+  animation: loading 2s infinite linear;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
 }
 
 /* ------------------ LISTADO DE INSTITUCIONES ------------------ */

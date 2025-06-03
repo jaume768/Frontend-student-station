@@ -407,21 +407,22 @@ const Fashion = () => {
                 </p>
 
                 {/* Vista: todo / pública / privada */}
-                <div className="view-toggle-group">
-                    {['all', 'public', 'private'].map((v) => (
-                        <button
-                            key={v}
-                            className={`toggle ${filters.visibility === v ? 'active' : ''
-                                }`}
-                            onClick={() => handleFilterChange('visibility', v)}
-                        >
-                            {v === 'all'
-                                ? 'Todo'
-                                : v === 'public'
-                                    ? 'Pública'
-                                    : 'Privada'}
-                        </button>
-                    ))}
+                <div className="explorer-tabs-container">
+                    <div className="explorer-tabs">
+                        {['all', 'public', 'private'].map((v) => (
+                            <button
+                                key={v}
+                                className={`user-extern-tab ${filters.visibility === v ? 'active' : ''}`}
+                                onClick={() => handleFilterChange('visibility', v)}
+                            >
+                                {v === 'all'
+                                    ? 'Todo'
+                                    : v === 'public'
+                                        ? 'Pública'
+                                        : 'Privada'}
+                            </button>
+                        ))}
+                    </div>
                 </div>
 
                 {/* Lista */}
