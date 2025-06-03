@@ -47,7 +47,7 @@ const Magazine = () => {
             <div className="magazine-header">
                 <h1>Revista</h1>
                 <p className="magazine-description">
-                    La revista del diseño independiente y diseñadores emergentes.
+                    Publicación anual del talento emergente en diseño y moda, con proyectos y colecciones creados por estudiantes y graduados.
                 </p>
             </div>
 
@@ -85,6 +85,8 @@ const Magazine = () => {
                     ))}
                 </div>
             )}
+            
+            <p className="about-photo-autor"> <b>¿Tienes una publicación propia?</b> Si eres autopublicado o quieres mostrar tu proyecto en este espacio, escríbenos a <a href="mailto:thefolderworld@gmail.com">thefolderworld@gmail.com</a>. ¡Queremos conocerte!</p>
         </div>
     );
 };

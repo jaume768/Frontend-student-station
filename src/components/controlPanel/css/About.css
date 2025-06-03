@@ -71,6 +71,10 @@ h1 {
     color: #444;
 }
 
+.about-text h1 {
+    font-size: 2rem;
+}
+
 .about-text strong {
     font-family: 'Poppins', sans-serif;
     font-weight: 700;
@@ -110,5 +114,9 @@ b {
     
     .about-section:nth-child(even) {
         direction: ltr !important;
+    }
+
+    .about-container {
+        margin: 0px;
     }
 }

@@ -127,8 +127,8 @@
 /* Botón de filtro */
 .explorer-filter-button {
     position: fixed;
-    left: 2em;
-    top: 100px;
+    left: 20em;
+    top: 125px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -151,6 +151,13 @@
 
 .explorer-filter-button svg {
     font-size: 25px;
+}
+
+/* Mobile styles */
+@media (max-width: 480px) {
+    .explorer-filter-button {
+        top: 80%;
+    }
 }
 
 /* Panel de filtros para desktop */
@@ -181,7 +188,7 @@
 }
 
 .explorer-filters-panel.show {
-    left: 17em;
+    left: 30em;
     margin-left: 1vw;
 }
 
@@ -285,6 +292,10 @@
 
 /* Contenido principal con transición */
 .explorer-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     transition: margin-left 0.3s ease;
 }
 

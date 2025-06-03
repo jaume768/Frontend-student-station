@@ -298,7 +298,6 @@ const Creatives = () => {
                             onClick={() => handleUserClick(creative.username)}
                             style={{ 
                                 backgroundImage: `url(${creative.lastPost.mainImage})`,
-                                height: '500px',
                             }}
                         >
                             <div className="creative-profile">
@@ -352,8 +351,8 @@ const Creatives = () => {
             <div className="offers-header">
                 <h1>Creativos</h1>
                 <p className="offers-description">
-                    Descubre los nuevos talentos de la industria de la moda. Usa los filtros para descubrir perfiles según
-                    tus estudios, ciudad, especialización, disponibilidad para prácticas, colaboraciones y más.
+                    Descubre los nuevos talentos de la industria de la moda. Usa <strong>los filtros para descubrir perfiles</strong> según
+                    tus estudios, ciudad, especialización, disponibilidad para <strong>prácticas</strong>, colaboraciones y más.
                 </p>
                 <div className="explorer-tabs-container">
                     <div className="explorer-tabs">
@@ -371,7 +370,7 @@ const Creatives = () => {
                                 }
                             }}
                         >
-                            Todos los usuarios
+                            Todos
                         </button>
                         <button
                             className={`user-extern-tab ${activeTab === 'internships' ? 'active' : ''}`}
@@ -387,7 +386,7 @@ const Creatives = () => {
                                 }
                             }}
                         >
-                            Disponible para prácticas
+                            Convenio de prácticas
                         </button>
                     </div>
                 </div>

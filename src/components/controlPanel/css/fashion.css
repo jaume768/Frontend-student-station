@@ -34,14 +34,14 @@
   color: #333;
   margin-bottom: 8px;
   text-align: center;
+  line-height: 44px;
 }
 
 .page-description {
   font-size: 16px;
   color: #666;
-  margin-bottom: 20px;
   width: 50%;
-  margin: auto auto 10px auto;
+  margin: auto auto 20px;
   text-align: center;
   line-height: 1.5;
 }
@@ -55,7 +55,7 @@
 .filter-search .search-icon {
   position: absolute;
   left: 12px;
-  top: 50%;
+  top: 37%;
   transform: translateY(-50%);
   color: #888;
   font-size: 14px;
@@ -69,6 +69,7 @@
   font-size: 14px;
   background-color: #fff;
   color: #333;
+  box-shadow: none;
 }
 
 .filter-input input {
@@ -97,6 +98,7 @@
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
+  box-shadow: none;
 }
 
 .filter-select .chevron-icon {
