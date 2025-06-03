@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './css/jobOfferDetail.css';
 import ApplyOfferModal from './ApplyOfferModal';
-import { FaBookmark, FaRegBookmark } from 'react-icons/fa';
+import { FaBookmark, FaRegBookmark, FaTimes } from 'react-icons/fa';
 
 const JobOfferDetail = () => {
     const { offerId } = useParams();
@@ -203,42 +203,50 @@ const JobOfferDetail = () => {
                         className="banner-image-jobdetail"
                     />
                 </div>
+            </div>
+            
+            <div className="article-content-container">
                 <div className="job-offer-title-section-jobdetail">
+                    <div className="job-offer-company-name-jobdetail">
+                        <img 
+                            src={offer.companyLogo || '/multimedia/company-default.png'}
+                            alt={offer.companyName}
+                            className="perfil__avatar"
+                        />
+                        {offer.companyName}
+                    </div>
                     <div className="job-offer-title-row-jobdetail">
                         <h1 className="job-offer-position-jobdetail">{offer.position}</h1>
                         {offer.isUrgent && (
                             <span className="urgent-label-jobdetail">Urgente</span>
                         )}
                     </div>
-                    <div className="job-offer-company-name-jobdetail">{offer.companyName}</div>
                 </div>
-            </div>
-
-            {/* Sección con la información básica de la oferta */}
-            <div className="job-offer-main-info-jobdetail">
-                <div className="job-offer-info-left-jobdetail">
-                    <div className="job-offer-metadata-jobdetail">
-                        <div className="metadata-tag-jobdetail">
-                            <i className="fas fa-map-marker-alt"></i>
-                            <span>{offer.city}</span>
-                        </div>
-                        <div className="metadata-tag-jobdetail">
-                            <i className="fas fa-building"></i>
-                            <span>{offer.jobType}</span>
-                        </div>
-                        <div className="metadata-tag-jobdetail">
-                            <i className="fas fa-map-marked-alt"></i>
-                            <span>{offer.locationType}</span>
-                        </div>
-                        {offer.experience && (
+                {/* Sección con la información básica de la oferta */}
+                <div className="job-offer-main-info-jobdetail">
+                    <div className="job-offer-info-left-jobdetail">
+                        <div className="job-offer-metadata-jobdetail">
                             <div className="metadata-tag-jobdetail">
-                                <i className="fas fa-briefcase"></i>
-                                <span>{offer.experience}</span>
+                                <i className="fas fa-map-marker-alt"></i>
+                                <span>{offer.city}</span>
                             </div>
-                        )}
+                            <div className="metadata-tag-jobdetail">
+                                <i className="fas fa-building"></i>
+                                <span>{offer.jobType}</span>
+                            </div>
+                            <div className="metadata-tag-jobdetail">
+                                <i className="fas fa-map-marked-alt"></i>
+                                <span>{offer.locationType}</span>
+                            </div>
+                            {offer.experience && (
+                                <div className="metadata-tag-jobdetail">
+                                    <i className="fas fa-briefcase"></i>
+                                    <span>{offer.experience}</span>
+                                </div>
+                            )}
+                        </div>
                     </div>
-                </div>
-                <div className="job-offer-info-right-jobdetail">
+                    <div className="job-offer-info-right-jobdetail">
                     <div className="job-offer-publication-date-jobdetail">
                         Publicado: {formatDate(offer.publicationDate)}
                     </div>
@@ -269,8 +277,8 @@ const JobOfferDetail = () => {
                 </div>
             </div>
 
-            {/* Contenido principal de la oferta */}
-            <div className="job-offer-content-jobdetail">
+                {/* Contenido principal de la oferta */}
+                <div className="job-offer-content-jobdetail">
                 <section className="job-section-jobdetail">
                     <h3 className="section-title-jobdetail">Descripción de la compañía</h3>
                     <div className="rich-text-jobdetail">
@@ -333,6 +341,7 @@ const JobOfferDetail = () => {
                         </a>
                     </section>
                 )}
+                </div>
             </div>
 
             <ApplyOfferModal
