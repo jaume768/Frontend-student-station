@@ -260,23 +260,6 @@ const Fashion = () => {
                         </select>
                         <FaChevronDown className="chevron-icon" />
                     </div>
-                    {/* Nivel de estudios */}
-                    <div className="filter-select">
-                        <select
-                            value={filters.educationLevel}
-                            onChange={(e) =>
-                                handleFilterChange('educationLevel', e.target.value)
-                            }
-                        >
-                            <option value="">Nivel de estudios</option>
-                            {educationLevelsList.map((l) => (
-                                <option key={l} value={l}>
-                                    {l}
-                                </option>
-                            ))}
-                        </select>
-                        <FaChevronDown className="chevron-icon" />
-                    </div>
                     {/* Modalidad */}
                     <div className="filter-select">
                         <select
@@ -373,19 +356,7 @@ const Fashion = () => {
                                         <option value="private">Privado</option>
                                     </select>
                                 </div>
-                                <div className="explorer-filter-select">
-                                    <select
-                                        value={filters.educationLevel}
-                                        onChange={(e) => handleFilterChange('educationLevel', e.target.value)}
-                                    >
-                                        <option value="">Nivel de estudios</option>
-                                        {educationLevelsList.map((l) => (
-                                            <option key={l} value={l}>
-                                                {l}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
+                                {/* Nivel de estudios filter removed */}
                                 <div className="explorer-filter-select">
                                     <select
                                         value={filters.modality}
