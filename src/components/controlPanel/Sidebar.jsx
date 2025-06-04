@@ -135,133 +135,108 @@ const Sidebar = ({ onLinkClick }) => {
     };
 
     return (
-        <aside className="dashboard-sidebar">
-            <div>
-                {/* Logo moved to Header component */}
-                
-                {/* Menú principal */}
-                <div className="sidebar-section">
-                    <div className="sidebar-section-title">Menú</div>
-                    <ul className="sidebar-menu">
-                        <li>
-                            <button 
-                                className={`sidebar-menu-item ${activeSection === 'explorer' ? 'active' : ''}`}
-                                onClick={() => onSelectOption('explorer')}
-                            >
-                                <img src="/iconos/explorer.svg" alt="Explorador" className="sidebar-icon" />
-                                <span>Explorador</span>
-                            </button>
-                        </li>
-                        <li>
-                            <button 
-                                className={`sidebar-menu-item ${activeSection === 'creatives' ? 'active' : ''}`}
-                                onClick={() => onSelectOption('creatives')}
-                            >
-                                <img src="/iconos/creatives.svg" alt="Creativos" className="sidebar-icon" />
-                                <span>Creativos</span>
-                            </button>
-                        </li>
-                        <li>
-                            <button 
-                                className={`sidebar-menu-item ${activeSection === 'fashion' ? 'active' : ''}`}
-                                onClick={() => onSelectOption('fashion')}
-                            >
-                                <img src="/iconos/study.svg" alt="Estudiar moda" className="sidebar-icon" />
-                                <span>Estudiar moda</span>
-                            </button>
-                        </li>
-                        <li>
-                            <button 
-                                className={`sidebar-menu-item ${activeSection === 'offers' ? 'active' : ''}`}
-                                onClick={() => onSelectOption('offers')}
-                            >
-                                <img src="/iconos/job-offer.svg" alt="Ofertas de trabajo" className="sidebar-icon" />
-                                <span>Ofertas de trabajo</span>
-                            </button>
-                        </li>
-                        <li>
-                            <button 
-                                className={`sidebar-menu-item ${activeSection === 'blog' ? 'active' : ''}`}
-                                onClick={() => onSelectOption('blog')}
-                            >
-                                <img src="/iconos/blog.svg" alt="Blog" className="sidebar-icon" />
-                                <span>Blog</span>
-                            </button>
-                        </li>
-                        <li>
-                            <button 
-                                className={`sidebar-menu-item ${activeSection === 'magazine' ? 'active' : ''}`}
-                                onClick={() => onSelectOption('magazine')}
-                            >
-                                <img src="/iconos/magazine.svg" alt="Revista" className="sidebar-icon" />
-                                <span>Revista</span>
-                            </button>
-                        </li>
-                        <li>
-                            <button 
-                                className={`sidebar-menu-item ${activeSection === 'about' ? 'active' : ''}`}
-                                onClick={() => onSelectOption('about')}
-                            >
-                                <img src="/iconos/about.svg" alt="About" className="sidebar-icon" />
-                                <span>About</span>
-                            </button>
-                        </li>
-                    </ul>
-                </div>
-                
-                {/* Más información */}
-                <div className="sidebar-section">
-                    <div className="sidebar-section-title" onClick={toggleInfo} style={{ cursor: 'pointer' }}>
-                        <img src={infoOpen ? "/iconos/less.svg" : "/iconos/more.svg"} alt="Más información" className="sidebar-icon" />
-                        <span>Más información</span>
-                    </div>
-                    {infoOpen && (
-                    <ul className="sidebar-menu sidebar-info-menu">
-                        <li>
-                            <button 
-                                className={`sidebar-menu-item ${activeSection === 'contact' ? 'active' : ''}`}
-                                onClick={() => onSelectOption('contact')}
-                            >
-                                <span>Contacto</span>
-                            </button>
-                        </li>
-                        <li>
-                            <button 
-                                className={`sidebar-menu-item ${activeSection === 'legal' ? 'active' : ''}`}
-                                onClick={() => onSelectOption('legal')}
-                            >
-                                <span>Aviso legal</span>
-                            </button>
-                        </li>
-                        <li>
-                            <button 
-                                className={`sidebar-menu-item ${activeSection === 'cookies' ? 'active' : ''}`}
-                                onClick={() => onSelectOption('cookies')}
-                            >
-                                <span>Política de cookies</span>
-                            </button>
-                        </li>
-                        <li>
-                            <button 
-                                className={`sidebar-menu-item ${activeSection === 'privacy' ? 'active' : ''}`}
-                                onClick={() => onSelectOption('privacy')}
-                            >
-                                <span>Política de privacidad</span>
-                            </button>
-                        </li>
-                        <li>
-                            <button 
-                                className="sidebar-menu-item" 
-                                onClick={() => onSelectOption('logout')}
-                            >
-                                <span>Cerrar sesión</span>
-                            </button>
-                        </li>
-                    </ul>
-                    )}
-                </div>
+        <div className="menu-tab-menu-container">
+            <div className="menu-tab-menu-button">
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
-        </aside>
+            <div className="menu-tab-menu-tabs">
+                {/* Menú principal */}
+                <button 
+                    className={`menu-tab-tab ${activeSection === 'explorer' ? 'active' : ''}`}
+                    onClick={() => onSelectOption('explorer')}
+                >
+                    <img src="/iconos/explorer.svg" alt="Explorador" className="sidebar-icon" />
+                    Explorador
+                </button>
+                <button 
+                    className={`menu-tab-tab ${activeSection === 'creatives' ? 'active' : ''}`}
+                    onClick={() => onSelectOption('creatives')}
+                >
+                    <img src="/iconos/creatives.svg" alt="Creativos" className="sidebar-icon" />
+                    Creativos
+                </button>
+                <button 
+                    className={`menu-tab-tab ${activeSection === 'fashion' ? 'active' : ''}`}
+                    onClick={() => onSelectOption('fashion')}
+                >
+                    <img src="/iconos/study.svg" alt="Estudiar moda" className="sidebar-icon" />
+                    Estudiar moda
+                </button>
+                <button 
+                    className={`menu-tab-tab ${activeSection === 'offers' ? 'active' : ''}`}
+                    onClick={() => onSelectOption('offers')}
+                >
+                    <img src="/iconos/job-offer.svg" alt="Ofertas de trabajo" className="sidebar-icon" />
+                    Ofertas de trabajo
+                </button>
+                <button 
+                    className={`menu-tab-tab ${activeSection === 'blog' ? 'active' : ''}`}
+                    onClick={() => onSelectOption('blog')}
+                >
+                    <img src="/iconos/blog.svg" alt="Blog" className="sidebar-icon" />
+                    Blog
+                </button>
+                <button 
+                    className={`menu-tab-tab ${activeSection === 'magazine' ? 'active' : ''}`}
+                    onClick={() => onSelectOption('magazine')}
+                >
+                    <img src="/iconos/magazine.svg" alt="Revista" className="sidebar-icon" />
+                    Revista
+                </button>
+                <button 
+                    className={`menu-tab-tab ${activeSection === 'about' ? 'active' : ''}`}
+                    onClick={() => onSelectOption('about')}
+                >
+                    <img src="/iconos/about.svg" alt="About" className="sidebar-icon" />
+                    About
+                </button>
+                
+                {/* Más información (desplegable al hacer hover) */}
+                {infoOpen && (
+                    <>
+                        <button 
+                            className={`menu-tab-tab ${activeSection === 'contact' ? 'active' : ''}`}
+                            onClick={() => onSelectOption('contact')}
+                        >
+                            Contacto
+                        </button>
+                        <button 
+                            className={`menu-tab-tab ${activeSection === 'legal' ? 'active' : ''}`}
+                            onClick={() => onSelectOption('legal')}
+                        >
+                            Aviso legal
+                        </button>
+                        <button 
+                            className={`menu-tab-tab ${activeSection === 'cookies' ? 'active' : ''}`}
+                            onClick={() => onSelectOption('cookies')}
+                        >
+                            Política de cookies
+                        </button>
+                        <button 
+                            className={`menu-tab-tab ${activeSection === 'privacy' ? 'active' : ''}`}
+                            onClick={() => onSelectOption('privacy')}
+                        >
+                            Política de privacidad
+                        </button>
+                        <button 
+                            className="menu-tab-tab"
+                            onClick={() => onSelectOption('logout')}
+                        >
+                            Cerrar sesión
+                        </button>
+                    </>
+                )}
+                <button 
+                    className="menu-tab-tab"
+                    onClick={toggleInfo}
+                >
+                    <img src={infoOpen ? "/iconos/less.svg" : "/iconos/more.svg"} alt="Más información" className="sidebar-icon" />
+                    {infoOpen ? 'Menos información' : 'Más información'}
+                </button>
+            </div>
+        </div>
     );
 };
 

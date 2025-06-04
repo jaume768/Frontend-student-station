@@ -132,6 +132,7 @@
 .fashion-filter-button {
   position: fixed;
   top: 120px;
+  left: 200px;
   z-index: 50;
   width: 40px;
   height: 40px;
@@ -166,9 +167,9 @@
 .fashion-filters-panel {
   position: fixed;
   top: 25%;
-  left: 12em;
+  left: 2em;
   width: 250px;
-  background: #fff;
+  background: transparent;
   border-radius: 12px;
   height: 100vh;
   transform: translateX(-120%);
@@ -179,7 +180,7 @@
 }
 
 .fashion-filters-panel.show {
-  transform: translateX(0);
+  transform: translateX(60px);
 }
 
 .fashion-filters-container {

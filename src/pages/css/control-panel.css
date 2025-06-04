@@ -210,7 +210,6 @@
 }
 
 .dashboard-main {
-    margin-left: 60px;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -218,7 +217,7 @@
 
 .dashboard-header {
     position: fixed;
-    width: calc(100% - 200px);
+    width: 100%;
     top: 0;
     right: 0;
     z-index: 10;
@@ -227,7 +226,7 @@
     background-color: white;
     align-items: center;
     justify-content: flex-end;
-    padding: 20px 14px;
+    padding: 20px 24px;
 }
 
 @media (max-width: 769px) {
@@ -434,7 +433,6 @@
     flex: 1;
     padding: 20px 16px;
     margin-top: 5em;
-    margin-left: 8.5em;
 }
 
 @media (max-width: 768px) {
