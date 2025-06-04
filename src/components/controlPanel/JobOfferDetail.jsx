@@ -192,6 +192,9 @@ const JobOfferDetail = () => {
 
     return (
         <div className="job-offer-detail-container-jobdetail">
+            <a href="/ControlPanel/offers" className="back-to-blog-btn offers">
+                <FaTimes />
+            </a>
             
             {/* Cabecera con imagen (simulando banner) y título */}
             <div className="job-offer-header-jobdetail">

@@ -268,13 +268,14 @@
 }
 
 .offer-card:hover {
-  box-shadow: rgb(0 0 0 / 12%) 0px 0px 0px 1px;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px #00000014;
 }
 
 .offer-card-logo {
-  flex: 0 0 80px;
-  width: 80px;
-  height: 80px;
+  flex: 0 0 140px;
+  width: 140px;
+  height: 140px;
   border-radius: 8px;
   overflow: hidden;
   background: #f9f9f9;
@@ -282,6 +283,7 @@
   align-items: center;
   justify-content: center;
   margin-right: 16px;
+  border: solid .5px #eee;
 }
 
 .offer-card-logo img {
@@ -297,7 +299,7 @@
 .offer-card-user {
   font-size: 15px;
   color: #1a73e8;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 }
 
 .offer-card-title {
@@ -331,7 +333,7 @@
   top: 16px;
   right: 16px;
   padding: 4px 12px;
-  border-radius: 12px;
+  border-radius: 16px;
   font-size: 12px;
   font-weight: 500;
 }

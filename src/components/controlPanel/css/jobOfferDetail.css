@@ -2,10 +2,35 @@
 .job-offer-detail-container-jobdetail {
     background-color: white;
     margin: auto;
-    padding: 24px;
+    padding: 30px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 20px;
+    position: relative;
+}
+
+/* Botón de cierre (X) */
+.back-to-blog-btn.offers {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+    font-size: 18px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+    z-index: 10;
+}
+
+.back-to-blog-btn.offers:hover {
+    background-color: #f0f0f0;
+    transform: scale(1.05);
 }
 
 /* Cabecera con banner */
@@ -33,10 +58,10 @@
 
 /* Título y sección de empresa */
 .job-offer-title-section-jobdetail {
-    padding: 16px 24px;
+    padding: 20px 30px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 12px;
 }
 
 .job-offer-title.job-section-jobdetail {
@@ -87,12 +112,13 @@
 /* Información principal de la oferta */
 .job-offer-main-info-jobdetail {
     background-color: #fff;
-    border-radius: 8px;
+    border-radius: 10px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: flex-start;
-    gap: 16px;
+    gap: 20px;
+    padding: 10px 0;
 }
 
 .job-offer-info-left-jobdetail,
@@ -113,7 +139,8 @@
     align-items: center;
     font-size: 16px;
     color: #666;
-    padding: 32px 0 16px;
+    padding: 10px 0;
+    margin-right: 15px;
 }
 
 .metadata-tag-jobdetail i {
@@ -160,11 +187,11 @@
 /* Acciones de la oferta (aplicar y guardar) */
 .job-offer-actions-jobdetail {
     display: flex;
-    gap: 12px;
+    gap: 15px;
     align-items: center;
     position: absolute;
-    top: 8em;
-    right: 3em;
+    top: 7em;
+    right: 5em;
     line-height: 44px;
 }
 
@@ -227,11 +254,12 @@
 /* Contenido principal (descripciones, funciones, etc.) */
 .job-offer-content-jobdetail {
     background-color: #fff;
-    border-radius: 8px;
-    padding: 24px;
+    border-radius: 10px;
+    padding: 30px;
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 30px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
 .job-section-jobdetail {

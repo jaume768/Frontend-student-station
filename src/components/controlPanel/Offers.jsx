@@ -421,7 +421,7 @@ const Offers = () => {
             <div className="offers-main-content">
                 <h1 className="page-title">Ofertas de empleo</h1>
                 <p className="page-description">
-                    Descubre los nuevos talentos de la industria de la moda. Usa los filtros para encontrar la oferta que más te interese.
+                    Descubre los nuevos talentos de la industria de la moda. <br /> Usa los filtros para encontrar la oferta que más te interese.
                 </p>
 
                 <div className="explorer-tabs-container">
