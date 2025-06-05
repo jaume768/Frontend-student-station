@@ -125,7 +125,7 @@
 .logo-dashboard {
     position: absolute;
     left: 0;
-    padding: 0 14px;
+    padding: 0 0 0 24px;
 }
 
 /* Eliminamos el fondo del contenedor de íconos */
@@ -222,11 +222,21 @@
     right: 0;
     z-index: 10;
     display: flex;
-    gap: 5px;
+    gap: 12px;
     background-color: white;
     align-items: center;
     justify-content: flex-end;
     padding: 20px 24px;
+}
+
+@media (max-width: 768px) {
+    .dashboard-sidebar {
+        display: none;
+    }
+    
+    .menu-tab-menu-container {
+        display: none;
+    }
 }
 
 @media (max-width: 769px) {
@@ -238,17 +248,17 @@
 .dashboard-header .header-right {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
 }
 
 .dashboard-header .saved-button {
     display: inline-flex;
     align-items: center;
     gap: 3px;
-    padding: 8px 16px;
+    padding: 9px 16px;
     border-radius: 12px;
-    border-color: #ccc;
-    background-color: #f2f2f2;
+    border: 0px solid #ccc;
+    background-color: #f5f5f5d6;
     color: #555;
     font-weight: 500;
     font-size: 16px;
@@ -265,7 +275,7 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 8px 16px;
+    padding: 9px 12px;
     border-radius: 12px;
     border: 1px solid #ccc;
     background-color: #f2f2f2;
@@ -296,6 +306,12 @@
     transition: color 0.3s ease;
 }
 
+.sidebar-icon {
+    width: 18px;
+    height: 18px;
+    margin-right: 8px;
+}
+
 .dashboard-header .create-post-btn.active svg {
     color: #1a73e8 !important;
 }
@@ -303,8 +319,7 @@
 .dahsboard-search {
     width: 130px;
     transition: width 0.3s ease;
-    margin-right: 5px;
-    margin-left: 150px;
+    margin-left: 175px;
 }
 
 @media (max-width: 769px) {
@@ -337,7 +352,6 @@
 
 .search-input-container {
     position: relative;
-    border: 1px solid #ccc;
     width: 100%;
     overflow: hidden;
 }
@@ -348,7 +362,6 @@
     border: none;
     color: black;
     font-size: 16px;
-    border: solid 1px #e0e0e0;
     outline: none;
 }
 
@@ -445,6 +458,7 @@
         flex: 1;
         padding: 0px 16px;
         margin-left: 0;
+        margin-top: 4rem;
         margin-bottom: 100px;
         background-color: rgb(255, 255, 255);
     }
@@ -784,6 +798,12 @@
     .user-info img {
         width: 24px;
         height: 24px;
+    }
+}
+
+@media (max-width: 768px) {
+    .menu-tab-menu-container {
+        display: none;
     }
 }
 

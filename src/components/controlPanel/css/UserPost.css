@@ -50,6 +50,13 @@
     }
 }
 
+/* Min-width 1200px media query: flex-direction: column removed as requested */
+@media (min-width: 1200px) {
+    .perfil__contenido {
+        display: flex;
+    }
+}
+
 /* Imágenes */
 .perfil__imagenes {
     display: flex;
@@ -57,7 +64,7 @@
     align-items: center;
     overflow: hidden;
     position: relative;
-    max-width: 900px;
+    max-width: 700px;
 }
 
 .perfil__imagen {
@@ -83,7 +90,7 @@
     display: flex;
     gap: 6px;
     justify-content: flex-end;
-    padding: 10px 0;
+    padding: 24px 0 0;
 }
 
 .save-button-post,
@@ -93,7 +100,7 @@
     background-color: #1a73e8;
     color: #666;
     padding: 0.5em;
-    border: solid 2px grey;
+    border: solid 2px #1a73e8;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -152,7 +159,7 @@
 /* Estilo masonry para la galería */
 .masonry-gallery {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
     grid-gap: 10px;
     grid-auto-rows: minmax(50px, auto);
     grid-auto-flow: dense;
@@ -182,6 +189,10 @@
     .masonry-gallery {
         grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
     }
+    
+    .perfil__imagenes {
+        padding: 0 16px;
+    }
 }
 
 .perfil__miniatura {
@@ -195,7 +206,7 @@
 }
 
 .perfil__miniatura.active {
-    border-color: #007bff;
+    border: solid 2px #1a73e8;
     border-radius: 8px;
     opacity: 1;
 }
@@ -248,6 +259,7 @@
 .publicacion__titulo {
     font-size: 1.4rem;
     color: #333;
+    margin-bottom: 6px;
 }
 
 .publicacion__descripcion {
@@ -292,19 +304,19 @@ text-align: left;
 .image-tags__lista {
     display: flex;
     flex-wrap: wrap;
+    gap: 8px;
 }
 
 .etiqueta,
 .image-tag {
     display: inline-block;
-    margin-right: 8px;
-    margin-bottom: 8px;
     padding: 4px 16px;
     background-color: #f5f5f5;
     border-radius: 16px;
     font-size: 0.9em;
     color: #333;
     border: 1px solid #e0e0e0;
+    margin-top: 8px;
 }
 
 /* Personas */

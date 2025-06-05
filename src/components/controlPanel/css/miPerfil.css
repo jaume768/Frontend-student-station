@@ -12,7 +12,6 @@
 
 .miPerfil-container {
     position: relative;
-    max-width: 1200px;
     margin: 0 auto;
     font-family: 'Inter', sans-serif;
     color: #333;
@@ -49,12 +48,11 @@
 /* Estructura de contenido principal - layout de dos columnas */
 .miPerfil-content {
     display: flex;
-    gap: 60px;
 }
 
 /* Columna izquierda - Información del perfil */
 .miPerfil-left-column {
-    flex: 0 0 350px;
+    width: 25%;
     position: sticky;
     top: 120px;
     align-self: flex-start;
@@ -344,14 +342,13 @@
     gap: 8px;
     background: none;
     border: none;
-    color: #888;
+    color: #666;
     font-size: 16px;
     font-family: inherit;
     font-weight: 400;
-    box-shadow: none;
-    border-radius: 0;
-    padding: 0 8px;
-    height: 32px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 13px 0px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+    border-radius: 50%;
+    padding: 16px;
     cursor: pointer;
     transition: none;
 }
@@ -365,14 +362,12 @@
 
 .miPerfil-contact-button:hover,
 .miPerfil-share-button:hover {
-    background: none;
     color: #555;
 }
 
 /* Columna derecha - Contenido de pestañas */
 .miPerfil-right-column {
-    flex: 1;
-    max-width: 800px;
+    width: 75%;
 }
 
 /* Pestañas superiores */
@@ -458,9 +453,6 @@
 }
 
 /* Contenido de Portfolio */
-.miPerfil-portfolio-content {
-    margin-top: 12px;
-}
 
 .miPerfil-projects {
     display: grid;
@@ -1094,8 +1086,8 @@
 
 /* Portfolio section alignment with UserProfile */
 .miPerfil-projects-grid.gallery {
-    column-count: 3;
-    column-gap: 14px;
+    column-count: 4;
+    column-gap: 12px;
 }
 .miPerfil-projects-grid.individual {
     grid-template-columns: 1fr;
@@ -1105,6 +1097,7 @@
     border-radius: 2px;
     cursor: pointer;
     transition: transform .2s;
+    margin-bottom: 12px;
 }
 /* Se quitan width y margin para los placeholders de la galería */
 .miPerfil-projects-grid.individual .miPerfil-project-placeholder {
@@ -1116,7 +1109,6 @@
     display: block;
     object-fit: contain;
     width: 100%;
-    margin-bottom: 15px;
     break-inside: avoid;
 }
 .miPerfil-projects-grid.individual .miPerfil-project-placeholder img {

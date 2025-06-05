@@ -55,7 +55,7 @@ const ProjectsSection = ({ isGalleryView, toggleView, userPosts = [] }) => {
 
     return (
         <div className="miPerfil-right">
-            <div className="user-extern-view-options">
+            {/* <div className="user-extern-view-options">
                 <div className="miPerfil-view-container">
                     <button
                         className={`user-extern-view-button ${isGalleryView ? 'active' : ''}`}
@@ -74,7 +74,7 @@ const ProjectsSection = ({ isGalleryView, toggleView, userPosts = [] }) => {
                         <FaList />
                     </button>
                 </div>
-            </div>
+            </div> */}
             <div
                 className={`miPerfil-projects-grid ${isGalleryView ? 'gallery' : 'individual'}`}
             >

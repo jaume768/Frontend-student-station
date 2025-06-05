@@ -2,7 +2,6 @@
 .job-offer-detail-container-jobdetail {
     background-color: white;
     margin: auto;
-    padding: 30px;
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -12,20 +11,19 @@
 /* Botón de cierre (X) */
 .back-to-blog-btn.offers {
     position: absolute;
-    top: 20px;
-    right: 20px;
-    width: 40px;
-    height: 40px;
+    top: 1em;
+    left: 1em;
     background-color: rgba(255, 255, 255, 0.9);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #333;
-    font-size: 18px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    color: #555;
+    font-size: 16px;
+    padding: 6px 16px;
+    border: solid .5px #ccc;
     transition: all 0.2s ease;
-    z-index: 10;
+    z-index: 2;
 }
 
 .back-to-blog-btn.offers:hover {
@@ -58,7 +56,7 @@
 
 /* Título y sección de empresa */
 .job-offer-title-section-jobdetail {
-    padding: 20px 30px;
+    padding: 24px 0px;
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -117,7 +115,7 @@
     flex-direction: column;
     justify-content: space-between;
     align-items: flex-start;
-    gap: 20px;
+    gap: 8px;
     padding: 10px 0;
 }
 
@@ -189,9 +187,9 @@
     display: flex;
     gap: 15px;
     align-items: center;
-    position: absolute;
+    position: fixed;
     top: 7em;
-    right: 5em;
+    right: 2em;
     line-height: 44px;
 }
 
@@ -255,11 +253,10 @@
 .job-offer-content-jobdetail {
     background-color: #fff;
     border-radius: 10px;
-    padding: 30px;
+    padding: 16px 0px;
     display: flex;
     flex-direction: column;
     gap: 30px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
 .job-section-jobdetail {
@@ -269,10 +266,10 @@
 }
 
 .section-title-jobdetail {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 600;
     color: #333;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
 }
 
 .rich-text-jobdetail {
@@ -395,27 +392,35 @@
     .metadata-tag-jobdetail {
         font-size: 18px;
     }
-    
+
     .job-offer-actions-jobdetail {
+        right: 24px;
+        top: 74px;
         flex-direction: column;
         align-items: flex-end;
-        right: 3em;
-        top: 6.7em;
         gap: 8px;
-        line-height: 48px;
     }
+
+    a.back-to-blog-btn.offers {
+        display: none;
+    }
+}
+
+.job-offer-actions-jobdetail {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    position: fixed;
+    top: 7em;
+    right: 2em;
+    line-height: 44px;
+}
+
+.job-offer-company-name-jobdetail {
+    margin-left: 4px;
+}
     
-    .job-offer-title-section-jobdetail {
-        gap: 12px;
-        padding: 24px 0 16px;
-    }
-    
-    .job-offer-company-name-jobdetail {
-        margin-left: 4px;
-    }
-    
-    .job-offer-position-jobdetail {
-        font-size: 38px;
-        line-height: 40px;
-    }
+.job-offer-position-jobdetail {
+    font-size: 38px;
+    line-height: 40px;
 }

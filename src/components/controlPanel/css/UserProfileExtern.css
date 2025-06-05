@@ -271,6 +271,21 @@
     gap: 10px;
     margin-bottom: 10px;
     justify-content: center;
+    position: fixed;
+    bottom: 24px;
+    width: 100%;
+    z-index: 20;
+}
+
+.user-extern-tabs-box { 
+    width: fit-content;
+    display: flex;
+    gap: 2px;
+    padding: 6px;
+    border-radius: 12px;
+    background-color: #ffffff;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 13px 0px, 
+    rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
 }
 
 @media (max-width: 768px) {
@@ -282,27 +297,27 @@
 
 .user-extern-tab {
     background: white;
-    border: 1px solid #e0e0e0;
-    border-radius: 10px;
-    padding: 6px 16px;
+    border: 0px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 10px 40px;
     /* min-width eliminado */
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 500;
-    color: #666;
+    color: #555;
     cursor: pointer;
     position: relative;
     transition: all 0.2s;
+    letter-spacing: 0.02em;
 }
 
 .user-extern-tab:hover {
-    border-color: #d0d0d0;
-    color: #333;
+    border-color: #e6e6e6;
+    color: #555;
 }
 
 .user-extern-tab.active {
-    background-color: #e8f0fe;
-    color: #1a73e8;
-    border-color: #1a73e8;
+    background-color: #1a73e8;
+    color: #ffffff;
 }
 
 /* Opciones de visualización para Portfolio */

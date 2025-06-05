@@ -123,6 +123,38 @@ const MiPerfil = () => {
 
     return (
         <div className="miPerfil-container">
+            <div className="user-extern-tabs">
+                <div className="user-extern-tabs-box">
+                    <button
+                        className={`user-extern-tab ${activeTab === 'publicaciones' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('publicaciones')}
+                    >
+                        Portfolio
+                    </button>
+                    <button
+                        className={`user-extern-tab ${activeTab === 'perfil' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('perfil')}
+                    >
+                        About
+                    </button>
+                </div>
+                <div className="miPerfil-contact-share">
+                    <button 
+                        className="miPerfil-share-button" 
+                        title="Compartir perfil"
+                        onClick={() => {
+                            // Construir la URL correcta para el perfil público
+                            const baseUrl = window.location.origin;
+                            const profileUrl = `${baseUrl}/ControlPanel/profile/${profile.username}`;
+                            navigator.clipboard.writeText(profileUrl);
+                            // Mostrar notificación
+                            alert(`URL del perfil copiada al portapapeles: ${profileUrl}`);
+                        }}
+                    >
+                        <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M432,320H400a16,16,0,0,0-16,16V448H64V128H208a16,16,0,0,0,16-16V80a16,16,0,0,0-16-16H48A48,48,0,0,0,0,112V464a48,48,0,0,0,48,48H400a48,48,0,0,0,48-48V336A16,16,0,0,0,432,320ZM488,0h-128c-21.37,0-32.05,25.91-17,41l35.73,35.73L135,320.37a24,24,0,0,0,0,34L157.67,377a24,24,0,0,0,34,0L435.28,133.32,471,169c15,15,41,4.5,41-17V24A24,24,0,0,0,488,0Z"></path></svg>
+                    </button>
+                </div>
+            </div>
             <ProfileHeader />
             <div className="miPerfil-content">
                 {/* Columna izquierda con foto e info */}
@@ -186,28 +218,6 @@ const MiPerfil = () => {
                 </div>
                 {/* Columna derecha con pestañas y contenido */}
                 <div className="miPerfil-right-column">
-                    <div className="user-extern-tabs">
-                        <button
-                            className={`user-extern-tab ${activeTab === 'publicaciones' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('publicaciones')}
-                        >
-                            Portfolio
-                        </button>
-                        <button
-                            className={`user-extern-tab ${activeTab === 'perfil' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('perfil')}
-                        >
-                            About
-                        </button>
-                        {(isCompany || isEducationalInstitution) && (
-                            <button
-                                className={`user-extern-tab ${activeTab === 'ofertas' ? 'active' : ''}`}
-                                onClick={() => setActiveTab('ofertas')}
-                            >
-                                {isEducationalInstitution ? 'Ofertas educativas' : 'Ofertas de trabajo'}
-                            </button>
-                        )}
-                    </div>
                     {activeTab === 'publicaciones' && (
                         <div className="miPerfil-portfolio-content">
                             <ProjectsSection

@@ -32,10 +32,10 @@
 .menu-tab-menu-tabs {
   position: absolute;
   top: 40px;
-  left: 0;
+  left: -1em;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
   margin-top: 12px;
 }
 
@@ -81,10 +81,13 @@
 }
 
 .menu-tab-tab.active {
-  background-color: #e8f0fe !important;
-  color: #1a73e8 !important;
-  border-color: #1a73e8;
-  font-weight: 500;
+  background: #e8f0fe;
+  border-right: solid 5px #1a73e8;
+  color: #1a73e8;
+}
+
+button.menu-tab-tab.active:hover {
+  border-right: solid 10px #e8f0fe;
 }
 
 /* Maintain compatibility with sidebar icons */

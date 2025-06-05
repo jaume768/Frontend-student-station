@@ -293,7 +293,7 @@
 
 .creative-card {
     height: 450px;
-    width: 300px;
+    max-width: 300px;
     border-radius: 8px;
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
