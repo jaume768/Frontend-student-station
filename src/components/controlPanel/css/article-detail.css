@@ -51,7 +51,7 @@
     max-height: 600px;
     object-fit: cover;
     display: block;
-    border-radius: 6px;
+    border-radius: 16px 16px 0 0;
 }
 
 .article-content-container {

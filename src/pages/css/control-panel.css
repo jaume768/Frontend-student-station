@@ -264,7 +264,7 @@
 .dashboard-header .create-post-btn {
     display: inline-flex;
     align-items: center;
-    gap: 3px;
+    gap: 8px;
     padding: 8px 16px;
     border-radius: 12px;
     border: 1px solid #ccc;
@@ -483,6 +483,17 @@
 
 .my-masonry-grid_column {
     background-clip: padding-box;
+}
+
+/* Media query para dispositivos móviles */
+@media (max-width: 768px) {
+    .my-masonry-grid {
+        width: 100%;
+    }
+    
+    .my-masonry-grid_column {
+        padding-left: 0px;
+    }
 }
 
 /* Puedes ajustar 16px por el espacio que desees entre columnas */

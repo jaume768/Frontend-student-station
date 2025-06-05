@@ -1,9 +1,10 @@
 .cookie-consent {
   position: fixed;
   bottom: 12px;
-  right: 20px;
+  right: 12px;
+  left: 12px;
   max-width: 400px;
-  padding: 20px;
+  padding: 16px;
   background: #fff;
   color: #333;
   display: flex;

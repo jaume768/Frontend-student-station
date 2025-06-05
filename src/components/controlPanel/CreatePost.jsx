@@ -406,7 +406,7 @@ const CreatePost = () => {
                     )}
                     {images.length > 0 && (
                         <div className="preview-message">
-                            La imagen se ajusta durante la vista previa, una vez publicada se mostrará en su tamaño completo.
+                            Describe cada una de tus imágenes mediante tags para que otros usuarios puedan filtrar mejor tu contenido.
                         </div>
                     )}
                 </div>
@@ -514,35 +514,6 @@ const CreatePost = () => {
                             </button>
                         </section>
                         <div className="step-label-dark">Paso 4</div>
-                        <section className="post-section image-tags-section">
-                            <h3>Etiquetas de imagen</h3>
-                            <div className="tags-container">
-                                {(imageTags[mainImageIndex] || []).map((tag, index) => (
-                                    <span key={index} className="tag">
-                                        {tag}
-                                        <button
-                                            type="button"
-                                            onClick={() => removeImageTag(index)}
-                                            className="remove-tag-btn"
-                                        >
-                                            X
-                                        </button>
-                                    </span>
-                                ))}
-                            </div>
-                            <div className="tag-input-wrapper-right">
-                                <input
-                                    type="text"
-                                    placeholder='Escribe una etiqueta
-y pulsa "Enter"'
-                                    value={newTag}
-                                    onChange={(e) => setNewTag(e.target.value)}
-                                    onKeyDown={handleTagKeyDown}
-                                    className="post-input tag-input"
-                                />
-                            </div>
-                            <p className="max-tags-info">Máximo de 10 etiquetas por fotografía</p>
-                        </section>
                         {images.length > 0 && (
                             <div className="photo-order-section">
                                 <h3>Orden de fotos</h3>

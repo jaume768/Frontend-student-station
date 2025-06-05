@@ -181,9 +181,8 @@
     }
 
     .explorer-filter-button {
-        left: unset;
-        right: 1em;
-        top: 20em;
+        left: 1em;
+        top: 80%;
     }
 }
 
