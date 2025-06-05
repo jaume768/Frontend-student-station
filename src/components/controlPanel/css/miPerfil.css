@@ -365,9 +365,25 @@
     color: #555;
 }
 
+/* Media query para dispositivos móviles */
+@media (max-width: 768px) {
+    .miPerfil-left-column {
+        width: 100%;
+    }
+    
+    .miPerfil-right-column {
+        width: 100%;
+    }
+    
+    button.miPerfil-share-button {
+        padding: 14px;
+    }
+}
+
 /* Columna derecha - Contenido de pestañas */
 .miPerfil-right-column {
-    width: 75%;
+    width: 90%;
+    margin: auto;
 }
 
 /* Pestañas superiores */

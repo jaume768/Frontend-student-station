@@ -291,6 +291,12 @@
 @media (max-width: 768px) {
     .user-extern-tabs {
         margin-left: 0;
+        bottom: 74px;
+        width: 91%;
+    }
+    
+    .user-extern-tab {
+        padding: 8px 20px;
     }
 }
 
