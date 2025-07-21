@@ -362,7 +362,7 @@ const UserProfile = () => {
             <div className="user-extern-error">
                 <h2>Error</h2>
                 <p>{error}</p>
-                <button onClick={() => navigate('/ControlPanel/explorer')}>Volver al explorador</button>
+                <button onClick={() => navigate('/explorer')}>Volver al explorador</button>
             </div>
         );
     }
@@ -571,7 +571,7 @@ const UserProfile = () => {
                                             <div
                                                 key={index}
                                                 className="user-extern-project-card"
-                                                onClick={() => navigate(`/ControlPanel/post/${post._id}`)}
+                                                onClick={() => navigate(`/post/${post._id}`)}
                                             >
                                                 <img
                                                     src={post.mainImage}

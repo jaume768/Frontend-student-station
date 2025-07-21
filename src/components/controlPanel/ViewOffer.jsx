@@ -89,7 +89,7 @@ const ViewOffer = () => {
     };
 
     const handleEdit = () => {
-        navigate(`/ControlPanel/edit-offer/${offerId}`);
+        navigate(`/edit-offer/${offerId}`);
     };
 
     if (loading) {
@@ -288,7 +288,7 @@ const ViewOffer = () => {
                             <h4>{offer.companyName || 'Sin nombre de empresa'}</h4>
                             {offer.publisher && (
                                 typeof offer.publisher === 'object' && offer.publisher.username ? (
-                                    <a href={`/ControlPanel/profile/${offer.publisher.username}`} className="view-profile-link-view">
+                                    <a href={`/profile/${offer.publisher.username}`} className="view-profile-link-view">
                                         Ver perfil de la empresa
                                     </a>
                                 ) : (

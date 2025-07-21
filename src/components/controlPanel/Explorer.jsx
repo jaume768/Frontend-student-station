@@ -152,7 +152,7 @@ const Explorer = () => {
     }, [loading, hasMore, activeTab, postImages]);
 
     const handlePostClick = (postId, imageUrl) => {
-        navigate(`/ControlPanel/post/${postId}`, { state: { clickedImageUrl: imageUrl } });
+        navigate(`/post/${postId}`, { state: { clickedImageUrl: imageUrl } });
     };
 
     const handleSavePost = async (e, postId, imageUrl) => {

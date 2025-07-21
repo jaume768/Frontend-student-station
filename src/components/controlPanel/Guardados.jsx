@@ -40,7 +40,7 @@ const Guardados = () => {
         const postIdToNavigate = post.postId || post._id;
         // Pasar la URL de la imagen clickeada como state para que se muestre como principal
         const clickedImageUrl = post.imageUrl || post.savedImage || post.mainImage;
-        navigate(`/ControlPanel/post/${postIdToNavigate}`, { 
+        navigate(`/post/${postIdToNavigate}`, { 
             state: { clickedImageUrl: clickedImageUrl } 
         });
     };
@@ -168,7 +168,7 @@ const Guardados = () => {
     
     // Función para abrir el contenido de una carpeta/tablero
     const openFolderContent = (folderId) => {
-        navigate(`/ControlPanel/guardados/folder/${folderId}`);
+        navigate(`/guardados/folder/${folderId}`);
     };
 
     // Función para filtrar imágenes que ya están en carpetas

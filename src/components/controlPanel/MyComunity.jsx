@@ -112,7 +112,7 @@ const MyComunity = () => {
 
     // Navegar al perfil de usuario
     const navigateToProfile = (username) => {
-        navigate(`/ControlPanel/profile/${username}`);
+        navigate(`/profile/${username}`);
     };
     
     // Filtrar perfiles basado en el término de búsqueda

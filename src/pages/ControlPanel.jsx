@@ -93,7 +93,7 @@ const ControlPanel = () => {
                 <Route path="offer/:offerId" element={<ProtectedRoute><ViewOffer /></ProtectedRoute>} />
                 <Route path="edit-offer/:offerId" element={<ProtectedRoute><CreateOffer /></ProtectedRoute>} />
                 <Route path="edit-educational-offer/:offerId" element={<ProtectedRoute><CreateEducationalOffer /></ProtectedRoute>} />
-                <Route path="*" element={<Navigate to="/ControlPanel/explorer" replace />} />
+                <Route path="*" element={<Navigate to="/explorer" replace />} />
             </Routes>
         );
     };

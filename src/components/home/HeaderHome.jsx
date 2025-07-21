@@ -19,37 +19,37 @@ const Header = ({ onLoginClick, onRegisterClick }) => {
                 <nav className={`header-home-nav ${isMenuOpen ? 'open' : ''}`}>
                     <ul>
                         <li>
-                            <Link to="/ControlPanel/explorer">
+                            <Link to="/explorer">
                                 Explorar
                             </Link>
                         </li>
                         <li>
-                            <Link to="/ControlPanel/creatives">
+                            <Link to="/creatives">
                                 Creativos
                             </Link>
                         </li>
                         <li>
-                            <Link to="/ControlPanel/fashion">
+                            <Link to="/fashion">
                                 Escuelas
                             </Link>
                         </li>
                         <li>
-                            <Link to="/ControlPanel/offers">
+                            <Link to="/offers">
                                 Trabajos
                             </Link>
                         </li>
                         <li>
-                            <Link to="/ControlPanel/magazine">
+                            <Link to="/magazine">
                                 Revista
                             </Link>
                         </li>
                         <li>
-                            <Link to="/ControlPanel/blog">
+                            <Link to="/blog">
                                 Blog
                             </Link>
                         </li>
                         <li>
-                            <Link to="/ControlPanel/info">
+                            <Link to="/info">
                                 About
                             </Link>
                         </li>

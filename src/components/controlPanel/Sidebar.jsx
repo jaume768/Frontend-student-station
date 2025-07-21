@@ -13,13 +13,33 @@ const Sidebar = ({ onLinkClick }) => {
     // Función para manejar la navegación y cerrar sidebar en móvil si es necesario
     const handleNavigation = (path, stateObj = null) => {
         if (stateObj) {
-            navigate(`/ControlPanel/${path}`, { state: stateObj });
+            navigate(`/${path}`, { state: stateObj });
         } else {
-            navigate(`/ControlPanel/${path}`);
+            navigate(`/${path}`);
         }
         if (onLinkClick) onLinkClick();
     };
     
+    // Función para obtener la sección activa basada en la URL
+    const getActiveSection = () => {
+        const path = location.pathname;
+        
+        if (path === '/' || path === '/login') return 'community';
+        if (path.includes('/profile/') && !path.includes('/editProfile')) return 'creatives';
+        if (path.includes('/editProfile')) return 'editProfile';
+        if (path.includes('/misOfertas')) return 'misOfertas';
+        if (path.includes('/configuracion')) return 'configuracion';
+        if (path.includes('/community') || path.includes('/createPost')) return 'community';
+        if (path.includes('/explorer')) return 'explorer';
+        if (path.includes('/creatives')) return 'creatives';
+        if (path.includes('/offers') || path.includes('/createOffer') || path.includes('/createEducationalOffer') || path.includes('/offer/') || path.includes('/edit-offer/') || path.includes('/edit-educational-offer/') || path.includes('/JobOfferDetail/') || path.includes('/EducationalOfferDetail/')) return 'offers';
+        if (path.includes('/fashion')) return 'fashion';
+        if (path.includes('/guardados')) return 'guardados';
+        if (path.includes('/blog') || path.includes('/magazine') || path.includes('/article/')) return 'blog';
+        if (path.includes('/legal') || path.includes('/privacy') || path.includes('/cookies') || path.includes('/contact') || path.includes('/about') || path.includes('/info')) return 'info';
+        return 'community'; // Valor por defecto
+    };
+
     // Detectar la sección activa basada en la URL y el estado
     useEffect(() => {
         // Comprobar si hay estado en la localización actual
@@ -28,42 +48,7 @@ const Sidebar = ({ onLinkClick }) => {
         if (currentState) {
             setActiveSection(currentState);
         } else {
-            const fullPath = location.pathname;
-            const path = location.pathname.split('/').pop() || 'explorer';
-
-            // Verifica si estamos viendo un perfil de usuario
-            if (path === 'profile' || path.includes('user/') || fullPath.includes('/profile/')) {
-                setActiveSection('creatives');
-            } 
-            // Verifica si estamos viendo una oferta de trabajo
-            else if (fullPath.includes('/JobOfferDetail/')) {
-                setActiveSection('offers');
-            }
-            // Verifica si estamos viendo un artículo del blog
-            else if (fullPath.includes('/article/')) {
-                setActiveSection('blog');
-            }
-            else if (path === 'editProfile') {
-                setActiveSection('editProfile');
-            } else if (path === 'community') {
-                setActiveSection('community');
-            } else if (path === 'explorer') {
-                setActiveSection('explorer');
-            } else if (path === 'creatives') {
-                setActiveSection('creatives');
-            } else if (path === 'fashion') {
-                setActiveSection('fashion');
-            } else if (path === 'offers') {
-                setActiveSection('offers');
-            } else if (path === 'blog') {
-                setActiveSection('blog');
-            } else if (path === 'magazine') {
-                setActiveSection('magazine');
-            } else if (path === 'about') {
-                setActiveSection('about');
-            } else {
-                setActiveSection('explorer');
-            }
+            setActiveSection(getActiveSection());
         }
     }, [location]);
 

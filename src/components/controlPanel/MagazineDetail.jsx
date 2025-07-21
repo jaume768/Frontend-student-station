@@ -61,7 +61,7 @@ const MagazineDetail = () => {
                 <div className="magazine-detail-error">
                     <FaExclamationTriangle />
                     <p>{error}</p>
-                    <Link to="/ControlPanel/magazine" className="back-button">
+                    <Link to="/magazine" className="back-button">
                         <FaArrowLeft /> Volver a revistas
                     </Link>
                 </div>
@@ -74,7 +74,7 @@ const MagazineDetail = () => {
             <div className="magazine-detail-container">
                 <div className="magazine-detail-not-found">
                     <p>Revista no encontrada</p>
-                    <Link to="/ControlPanel/magazine" className="back-button">
+                    <Link to="/magazine" className="back-button">
                         <FaArrowLeft /> Volver a revistas
                     </Link>
                 </div>
@@ -85,7 +85,7 @@ const MagazineDetail = () => {
     return (
         <div className="magazine-detail-container">
             <div className="magazine-detail-header">
-                <Link to="/ControlPanel/magazine" className="back-button">
+                <Link to="/magazine" className="back-button">
                     <FaArrowLeft /> Volver a revistas
                 </Link>
                 <h1>{magazine.name}</h1>

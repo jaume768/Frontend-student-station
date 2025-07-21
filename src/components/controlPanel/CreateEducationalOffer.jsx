@@ -208,7 +208,7 @@ const CreateEducationalOffer = () => {
             );
 
             if (response.data){
-                navigate('/ControlPanel/fashion');
+                navigate('/fashion');
             }
         } catch (error) {
             console.error('Error al crear la oferta educativa:', error);

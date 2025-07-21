@@ -451,7 +451,7 @@ const Fashion = () => {
                                     className="institution-card"
                                     onClick={() =>
                                         inst.username &&
-                                        navigate(`/ControlPanel/profile/${inst.username}`)
+                                        navigate(`/profile/${inst.username}`)
                                     }
                                 >
                                     <img

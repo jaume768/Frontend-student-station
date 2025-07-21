@@ -33,7 +33,7 @@ const MobileSideMenu = ({ onClose }) => {
                     {menuItems.map(item => (
                         <Link
                             key={item.id}
-                            to={`/ControlPanel/${item.id}`}
+                            to={`/${item.id}`}
                             onClick={onClose}
                             className={`menu-item ${activeMenu === item.id ? 'active' : ''}`}
                         >

@@ -7,7 +7,7 @@ const CompleteRegistrationCreativoFinal = () => {
     const navigate = useNavigate();
 
     const handleFinishRegistration = () => {
-        navigate('/ControlPanel');
+        navigate('/explorer');
     };
 
     return (

@@ -94,7 +94,7 @@ const UserCompanyOffersSection = ({ offers = [] }) => {
                     </div>
                     
                     <div className="user-extern-offer-footer">
-                        <Link to={`/ControlPanel/JobOfferDetail/${offer._id}`} className="user-extern-offer-button">
+                        <Link to={`/JobOfferDetail/${offer._id}`} className="user-extern-offer-button">
                             Más información
                         </Link>
                     </div>

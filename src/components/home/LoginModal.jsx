@@ -30,7 +30,7 @@ const LoginModal = ({ onClose, onSwitchToRegister, onSwitchToReset }) => {
                 if (data.user && data.user.professionalType !== undefined) {
                     localStorage.setItem('professionalType', data.user.professionalType);
                 }
-                navigate('/ControlPanel');
+                navigate('/explorer');
             } else {
                 setError(data.message || 'Error en el inicio de sesión');
             }

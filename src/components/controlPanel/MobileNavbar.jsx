@@ -7,11 +7,11 @@ import CreateOptionsModal from './CreateOptionsModal';
 import './css/mobileNavbar.css';
 
 const mobileNavItems = [
-    { id: 'explorer', icon: <img src="/iconos/explorer.svg" alt="Explorar" className="mobile-nav-icon" />, label: 'Explorar', route: '/ControlPanel/explorer' },
-    { id: 'creatives', icon: <img src="/iconos/creatives.svg" alt="Creativos" className="mobile-nav-icon" />, label: 'Creativos', route: '/ControlPanel/creatives' },
+    { id: 'explorer', icon: <img src="/iconos/explorer.svg" alt="Explorar" className="mobile-nav-icon" />, label: 'Explorar', route: '/explorer' },
+    { id: 'creatives', icon: <img src="/iconos/creatives.svg" alt="Creativos" className="mobile-nav-icon" />, label: 'Creativos', route: '/creatives' },
     { id: 'create', icon: <FaPlus className="mobile-nav-icon-plus" />, label: 'Crear', route: null },
-    { id: 'guardados', icon: <img src="/iconos/save.svg" alt="Guardados" className="mobile-nav-icon" />, label: 'Guardados', route: '/ControlPanel/guardados' },
-    { id: 'profile', icon: null, label: 'Mi perfil', route: '/ControlPanel/profile' },
+    { id: 'guardados', icon: <img src="/iconos/save.svg" alt="Guardados" className="mobile-nav-icon" />, label: 'Guardados', route: '/guardados' },
+    { id: 'profile', icon: null, label: 'Mi perfil', route: '/profile' },
 ];
 
 const MobileNavbar = ({ profilePicture }) => {
@@ -74,19 +74,19 @@ const MobileNavbar = ({ profilePicture }) => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
         switch (option) {
             case 'editProfile':
-                navigate('/ControlPanel/editProfile');
+                navigate('/editProfile');
                 break;
             case 'profile':
-                navigate('/ControlPanel/profile');
+                navigate('/profile');
                 break;
             case 'community':
-                navigate('/ControlPanel/community');
+                navigate('/community');
                 break;
             case 'misOfertas':
-                navigate('/ControlPanel/misOfertas');
+                navigate('/misOfertas');
                 break;
             case 'configuracion':
-                navigate('/ControlPanel/configuracion');
+                navigate('/configuracion');
                 break;
             case 'logout':
                 localStorage.removeItem('authToken');
@@ -99,17 +99,19 @@ const MobileNavbar = ({ profilePicture }) => {
 
     // Función para determinar si una ruta está activa
     const isActive = (itemId) => {
-        if (itemId === 'creatives' && (currentPath.includes('/ControlPanel/profile') || currentPath.includes('/ControlPanel/user/'))) {
+        if (itemId === 'creatives' && (currentPath.includes('/profile') || currentPath.includes('/user/'))) {
             return true;
         }
+        
         if (itemId === 'create' && (
-            currentPath.includes('/ControlPanel/createPost') || 
-            currentPath.includes('/ControlPanel/createOffer') || 
-            currentPath.includes('/ControlPanel/createEducationalOffer')
+            currentPath.includes('/createPost') || 
+            currentPath.includes('/createOffer') || 
+            currentPath.includes('/createEducationalOffer')
         )) {
             return true;
         }
-        return currentPath.includes(`/ControlPanel/${itemId}`);
+        
+        return currentPath.includes(`/${itemId}`);
     };
     
     const handleCreateClick = () => {
@@ -119,7 +121,7 @@ const MobileNavbar = ({ profilePicture }) => {
         }
         
         if (!professionalType || professionalType === 0) {
-            navigate('/ControlPanel/createPost');
+            navigate('/createPost');
             return;
         }
         

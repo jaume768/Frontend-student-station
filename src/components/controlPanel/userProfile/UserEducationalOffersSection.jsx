@@ -147,7 +147,7 @@ const UserEducationalOffersSection = ({ offers = [] }) => {
                             </div>
                             
                             <div className="user-extern-offer-footer">
-                                <Link to={`/ControlPanel/EducationalOfferDetail/${offer._id}`} className="user-extern-offer-button">
+                                <Link to={`/EducationalOfferDetail/${offer._id}`} className="user-extern-offer-button">
                                     Más información
                                 </Link>
                                 {statusFilter === 'all' && (

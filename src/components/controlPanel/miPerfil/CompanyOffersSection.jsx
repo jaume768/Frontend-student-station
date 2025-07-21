@@ -13,7 +13,7 @@ const CompanyOffersSection = ({ offers = [] }) => {
                 </div>
                 <h3>No hay ofertas publicadas</h3>
                 <p>Aún no has publicado ninguna oferta de trabajo.</p>
-                <Link to="/ControlPanel/createOffer" className="create-offer-button-company">
+                <Link to="/createOffer" className="create-offer-button-company">
                     Publicar oferta
                 </Link>
             </div>
@@ -75,7 +75,7 @@ const CompanyOffersSection = ({ offers = [] }) => {
                         </div>
 
                         <div className="offer-actions-company">
-                            <Link to={`/ControlPanel/JobOfferDetail/${offer._id}`} className="view-offer-button-company">
+                            <Link to={`/JobOfferDetail/${offer._id}`} className="view-offer-button-company">
                                 Ver detalles
                             </Link>
                         </div>

@@ -424,7 +424,7 @@ const UserPost = () => {
                             className="perfil__usuario" 
                             onClick={() => {
                                 if (post.user?.username) {
-                                    navigate(`/ControlPanel/profile/${post.user.username}`);
+                                    navigate(`/profile/${post.user.username}`);
                                     // Desplazar al inicio de la página
                                     window.scrollTo(0, 0);
                                 }
@@ -477,7 +477,7 @@ const UserPost = () => {
                                                     <a
                                                         onClick={(e) => {
                                                             e.preventDefault();
-                                                            navigate(`/ControlPanel/profile/${person.name}`);
+                                                            navigate(`/profile/${person.name}`);
                                                             // Desplazar al inicio de la página
                                                             window.scrollTo(0, 0);
                                                         }}
@@ -551,7 +551,7 @@ const UserPost = () => {
                                     
                                     // Usar setTimeout para asegurar que la navegación ocurra después del desplazamiento
                                     setTimeout(() => {
-                                        navigate(`/ControlPanel/post/${targetPostId}`, {
+                                        navigate(`/post/${targetPostId}`, {
                                             state: { scrollToTop: true, timestamp: Date.now() }
                                         });
                                     }, 10);

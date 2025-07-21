@@ -163,7 +163,7 @@ const Creatives = () => {
             navigate('/', { state: { showRegister: true } });
             return;
         }
-        navigate(`/ControlPanel/profile/${username}`);
+        navigate(`/profile/${username}`);
     };
 
     // Función para limpiar todos los filtros

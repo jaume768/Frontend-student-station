@@ -8,7 +8,7 @@ const VerificationRequiredModal = ({ onClose }) => {
     const handleContactClick = () => {
         // Cerrar el modal y navegar al explorador
         onClose();
-        navigate('/ControlPanel/explorer');
+        navigate('/explorer');
     };
 
     return (

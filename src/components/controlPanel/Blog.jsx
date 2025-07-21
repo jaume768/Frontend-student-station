@@ -125,7 +125,7 @@ const Blog = () => {
                     <div className="blog-featured-section">
                         {featuredArticles.map(article => (
                             <Link 
-                                to={`/ControlPanel/article/${article._id}`}
+                                to={`/article/${article._id}`}
                                 key={article._id} 
                                 className="blog-featured-card"
                             >
@@ -167,7 +167,7 @@ const Blog = () => {
                     <div className="blog-regular-section">
                         {regularArticles.map(article => (
                             <Link 
-                                to={`/ControlPanel/article/${article._id}`}
+                                to={`/article/${article._id}`}
                                 key={article._id} 
                                 className="blog-regular-card"
                             >

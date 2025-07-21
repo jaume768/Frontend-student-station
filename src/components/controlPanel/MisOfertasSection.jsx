@@ -291,15 +291,15 @@ const MisOfertasSection = ({ userRole, professionalType }) => {
     };
 
     const handleJobOfferClick = (offerId) => {
-        navigate(`/ControlPanel/JobOfferDetail/${offerId}`);
+        navigate(`/JobOfferDetail/${offerId}`);
     };
 
     const handleSearchMoreOffers = () => {
-        navigate('/ControlPanel/offers');
+        navigate('/offers');
     };
 
     const handleCreateOffer = () => {
-        navigate('/ControlPanel/CreateOffer');
+        navigate('/CreateOffer');
     };
     
     // Esta función ha sido reemplazada por la nueva implementación arriba
@@ -532,7 +532,7 @@ const MisOfertasSection = ({ userRole, professionalType }) => {
                                             <div className="candidatos-info">
                                                 <h3  
                                                     className="candidatos-name"  
-                                                    onClick={() => navigate(`/ControlPanel/profile/${candidate.user.username}`)}  
+                                                    onClick={() => navigate(`/profile/${candidate.user.username}`)}  
                                                     style={{ cursor: 'pointer' }}  
                                                 >  
                                                     {candidate.user.fullName}  
@@ -585,7 +585,7 @@ const MisOfertasSection = ({ userRole, professionalType }) => {
                                         {showResponses && (
                                             <button 
                                                 className="candidatos-view-profile"  
-                                                onClick={() => navigate(`/ControlPanel/profile/${candidate.user.username}`)}  
+                                                onClick={() => navigate(`/profile/${candidate.user.username}`)}  
                                             >  
                                                 Ver perfil  
                                             </button>  

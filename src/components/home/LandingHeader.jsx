@@ -8,13 +8,13 @@ const LandingHeader = ({ onLoginClick, onRegisterClick }) => {
         <img src="/multimedia/thefolder-logotipo-beta.png" alt="TheFolder Logo" />
       </div>
       <nav className="landing-nav-menu">
-        <Link to="/ControlPanel/explorer">Explorar</Link>
-        <Link to="/ControlPanel/creatives">Creativos</Link>
-        <Link to="/ControlPanel/fashion">Estudiar moda</Link>
-        <Link to="/ControlPanel/offers">Ofertas de trabajo</Link>
-        <Link to="/ControlPanel/magazine">Revista</Link>
-        <Link to="/ControlPanel/blog">Blog</Link>
-        <Link to="/ControlPanel/info">About</Link>
+        <Link to="/explorer">Explorar</Link>
+        <Link to="/creatives">Creativos</Link>
+        <Link to="/fashion">Estudiar moda</Link>
+        <Link to="/offers">Ofertas de trabajo</Link>
+        <Link to="/magazine">Revista</Link>
+        <Link to="/blog">Blog</Link>
+        <Link to="/info">About</Link>
       </nav>
       <div className="landing-auth-buttons">
         <button 

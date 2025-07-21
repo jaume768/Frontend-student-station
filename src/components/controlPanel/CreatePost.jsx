@@ -307,7 +307,7 @@ const CreatePost = () => {
     // Navegación al post recién creado
     const handleViewPost = () => {
         if (createdPostId) {
-            navigate(`/ControlPanel/post/${createdPostId}`);
+            navigate(`/post/${createdPostId}`);
         }
         setUploadSuccess(false);
     };

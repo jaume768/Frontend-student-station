@@ -78,7 +78,7 @@ const ArticleDetail = () => {
                 <div className="article-error">
                     <FaExclamationTriangle />
                     <span>{error || 'No se pudo cargar el artículo'}</span>
-                    <Link to="/ControlPanel/blog" className="back-to-blog-btn">
+                    <Link to="/blog" className="back-to-blog-btn">
                         <FaArrowLeft /> Volver al blog
                     </Link>
                 </div>
@@ -94,7 +94,7 @@ const ArticleDetail = () => {
     return (
         <div className="article-container">
             <div className="article-header">
-                <Link to="/ControlPanel/blog" className="back-to-blog-btn">
+                <Link to="/blog" className="back-to-blog-btn">
                     <FaTimes />
                 </Link>
             </div>
@@ -191,7 +191,7 @@ const ArticleDetail = () => {
                                     </div>
                                     <h3 className="related-article-title">{relatedArticle.title}</h3>
                                     <p className="related-article-excerpt">{relatedArticle.excerpt}</p>
-                                    <Link to={`/ControlPanel/article/${relatedArticle._id}`} className="related-article-link">
+                                    <Link to={`/article/${relatedArticle._id}`} className="related-article-link">
                                         Leer más
                                     </Link>
                                 </div>

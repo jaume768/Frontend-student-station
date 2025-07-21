@@ -17,7 +17,7 @@ const ProjectsSection = ({ isGalleryView, toggleView, userPosts = [] }) => {
                 <div
                     key={index}
                     className="miPerfil-project-placeholder"
-                    onClick={() => navigate(`/ControlPanel/post/${post._id}`)}
+                    onClick={() => navigate(`/post/${post._id}`)}
                 >
                     <img
                         src={post.mainImage}
@@ -35,7 +35,7 @@ const ProjectsSection = ({ isGalleryView, toggleView, userPosts = [] }) => {
                     <div
                         key={index}
                         className="miPerfil-project-placeholder"
-                        onClick={() => navigate(`/ControlPanel/post/${post._id}`)}
+                        onClick={() => navigate(`/post/${post._id}`)}
                     >
                         <img
                             src={post.mainImage}

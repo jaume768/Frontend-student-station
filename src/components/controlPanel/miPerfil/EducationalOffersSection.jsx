@@ -13,7 +13,7 @@ const EducationalOffersSection = ({ offers = [] }) => {
                 </div>
                 <h3>No hay ofertas educativas publicadas</h3>
                 <p>Aún no has publicado ninguna oferta educativa.</p>
-                <Link to="/ControlPanel/createEducationalOffer" className="create-offer-button-company">
+                <Link to="/createEducationalOffer" className="create-offer-button-company">
                     Publicar oferta educativa
                 </Link>
             </div>
@@ -85,7 +85,7 @@ const EducationalOffersSection = ({ offers = [] }) => {
                         </div>
 
                         <div className="offer-actions-company">
-                            <Link to={`/ControlPanel/EducationalOfferDetail/${offer._id}`} className="view-offer-button-company">
+                            <Link to={`/EducationalOfferDetail/${offer._id}`} className="view-offer-button-company">
                                 Ver detalles
                             </Link>
                         </div>

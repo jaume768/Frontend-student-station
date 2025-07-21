@@ -192,7 +192,7 @@ const JobOfferDetail = () => {
 
     return (
         <div className="job-offer-detail-container-jobdetail">
-            <a href="/ControlPanel/offers" className="back-to-blog-btn offers">
+            <a href="/offers" className="back-to-blog-btn offers">
                 <FaTimes />
             </a>
             

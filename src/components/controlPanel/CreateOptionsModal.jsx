@@ -9,13 +9,13 @@ const CreateOptionsModal = ({ onClose, professionalType }) => {
         onClose();
         switch (option) {
             case 'createPost':
-                navigate('/ControlPanel/createPost');
+                navigate('/createPost');
                 break;
             case 'createOffer':
-                navigate('/ControlPanel/createOffer');
+                navigate('/createOffer');
                 break;
             case 'createEducationalOffer':
-                navigate('/ControlPanel/createEducationalOffer');
+                navigate('/createEducationalOffer');
                 break;
             default:
                 break;

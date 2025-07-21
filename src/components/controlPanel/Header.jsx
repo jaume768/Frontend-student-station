@@ -170,19 +170,19 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
         switch (option) {
             case 'editProfile':
-                navigate('/ControlPanel/editProfile');
+                navigate('/editProfile');
                 break;
             case 'profile':
-                navigate('/ControlPanel/profile');
+                navigate('/profile');
                 break;
             case 'community':
-                navigate('/ControlPanel/community');
+                navigate('/community');
                 break;
             case 'misOfertas':
-                navigate('/ControlPanel/editProfile', { state: { activeMenu: 'misOfertas' } });
+                navigate('/editProfile', { state: { activeMenu: 'misOfertas' } });
                 break;
             case 'configuracion':
-                navigate('/ControlPanel/editProfile', { state: { activeMenu: 'configuracion' } });
+                navigate('/editProfile', { state: { activeMenu: 'configuracion' } });
                 break;
             case 'logout':
                 localStorage.removeItem('authToken');
@@ -201,7 +201,7 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
         }
         
         if (!professionalType || professionalType === 0) {
-            navigate('/ControlPanel/createPost');
+            navigate('/createPost');
             return;
         }
         
@@ -239,16 +239,16 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
         setShowFullScreenSearch(false);
         switch (type) {
             case 'user':
-                navigate(`/ControlPanel/profile/${item.username}`);
+                navigate(`/profile/${item.username}`);
                 break;
             case 'post':
-                navigate(`/ControlPanel/post/${item._id}`);
+                navigate(`/post/${item._id}`);
                 break;
             case 'offer':
-                navigate(`/ControlPanel/JobOfferDetail/${item._id}`);
+                navigate(`/JobOfferDetail/${item._id}`);
                 break;
             case 'educationalOffer':
-                navigate(`/ControlPanel/educational-offer/${item._id}`);
+                navigate(`/educational-offer/${item._id}`);
                 break;
             default:
                 break;
@@ -269,7 +269,7 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
 
     return (
         <header className="dashboard-header">
-            <div className="logo-dashboard" style={{ cursor: 'pointer' }} onClick={() => navigate('/ControlPanel/explorer')}>
+            <div className="logo-dashboard" style={{ cursor: 'pointer' }} onClick={() => navigate('/explorer')}>
                 <img src={logo} alt="Logo" style={{ width: '170px' }} />
             </div>
             <div className={`dahsboard-search ${isSearchExpanded ? 'expanded' : ''}`} ref={searchRef}>
@@ -323,7 +323,7 @@ const Header = ({ profilePicture, onHamburgerClick }) => {
             <div className="header-right">
                 <button
                     className={`sidebar-menu-item saved-button ${location.pathname.includes('guardados') ? 'active' : ''}`}
-                    onClick={() => navigate('/ControlPanel/guardados')}
+                    onClick={() => navigate('/guardados')}
                 >
                     <img src="/iconos/save.svg" alt="Guardados" className="sidebar-icon" />
                     <span>Guardados</span>

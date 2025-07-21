@@ -79,7 +79,7 @@ const FolderContent = () => {
 
     const openPost = (postId, imageUrl) => {
         // Pasar la URL de la imagen clickeada como state para que se muestre como principal
-        navigate(`/ControlPanel/post/${postId}`, { 
+        navigate(`/post/${postId}`, { 
             state: { clickedImageUrl: imageUrl } 
         });
     };

@@ -12,7 +12,7 @@ const TokenHandler = () => {
         if (token) {
             localStorage.setItem('authToken', token);
 
-            navigate('/ControlPanel', { replace: true });
+            navigate('/explorer', { replace: true });
         }
     }, [location, navigate]);
 

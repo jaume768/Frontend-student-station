@@ -212,7 +212,7 @@ const CreateOffer = () => {
             } else {
                 await axios.post(`${backendUrl}/api/offers/create`, fd, axiosConfig);
             }
-            navigate('/ControlPanel/misOfertas');
+            navigate('/misOfertas');
         } catch (err) {
             console.error(err);
             setError(err.response?.data?.message || 'Error al enviar la oferta');

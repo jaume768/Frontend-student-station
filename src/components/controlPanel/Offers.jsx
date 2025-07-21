@@ -495,7 +495,7 @@ const Offers = () => {
                             <article
                                 key={o._id}
                                 className="offer-card"
-                                onClick={() => navigate(`/ControlPanel/JobOfferDetail/${o._id}`)}
+                                onClick={() => navigate(`/JobOfferDetail/${o._id}`)}
                             >
                                 <div className="offer-card-logo">
                                     <img

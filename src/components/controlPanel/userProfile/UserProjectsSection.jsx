@@ -14,7 +14,7 @@ const UserProjectsSection = ({ isGalleryView, toggleView, userPosts }) => {
                 <div
                     key={index}
                     className="user-profile-project-card"
-                    onClick={() => navigate(`/ControlPanel/post/${post._id}`)}
+                    onClick={() => navigate(`/post/${post._id}`)}
                     style={{ cursor: 'pointer' }}
                 >
                     <img
@@ -34,7 +34,7 @@ const UserProjectsSection = ({ isGalleryView, toggleView, userPosts }) => {
                     <div
                         key={index}
                         className="user-profile-project-card"
-                        onClick={() => navigate(`/ControlPanel/post/${post._id}`)}
+                        onClick={() => navigate(`/post/${post._id}`)}
                         style={{ cursor: 'pointer' }}
                     >
                         <img
