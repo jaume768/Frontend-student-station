@@ -63,7 +63,7 @@ const ControlPanel = () => {
         return (
             <Routes>
                 <Route path="post/:id" element={<ProtectedRoute><UserPost /></ProtectedRoute>} />
-                <Route path="profile/:username" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
+                <Route path="profile/:username" element={<UserProfile />} />
                 <Route path="guardados/folder/:folderId" element={<ProtectedRoute><FolderContent /></ProtectedRoute>} />
                 <Route path="explorer" element={<Explorer />} />
                 <Route path="offers" element={<Offers />} />

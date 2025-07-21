@@ -44,16 +44,32 @@ const UserProfile = () => {
             try {
                 setLoading(true);
                 const token = localStorage.getItem('authToken');
-                if (!token) return;
                 const backendUrl = import.meta.env.VITE_BACKEND_URL;
-                const headers = { Authorization: `Bearer ${token}` };
-                const res = await axios.get(`${backendUrl}/api/users/profile/${username}`, { headers });
+                
+                // Obtener perfil del usuario (público)
+                const res = await axios.get(`${backendUrl}/api/users/profile/${username}`);
                 setProfile(res.data);
 
-                // Verificar si el usuario actual sigue al usuario del perfil
-                const currentUser = await axios.get(`${backendUrl}/api/users/profile`, { headers });
-                const isFollowingUser = currentUser.data.following.includes(res.data._id);
-                setIsFollowing(isFollowingUser);
+                // Si hay token, verificar información adicional del usuario autenticado
+                if (token) {
+                    try {
+                        const headers = { Authorization: `Bearer ${token}` };
+                        const currentUser = await axios.get(`${backendUrl}/api/users/profile`, { headers });
+                        const isFollowingUser = currentUser.data.following.includes(res.data._id);
+                        setIsFollowing(isFollowingUser);
+
+                        // Verificar si las notificaciones están activas
+                        if (isFollowingUser && currentUser.data.notifications) {
+                            const notificationActive = currentUser.data.notifications.some(
+                                notif => notif.userId === res.data._id && notif.active
+                            );
+                            setIsNotificationActive(notificationActive);
+                        }
+                    } catch (authError) {
+                        console.log('Error al obtener información del usuario autenticado:', authError);
+                        // No es un error crítico, continúa sin la información de seguimiento
+                    }
+                }
 
                 // Verificar si es una empresa o institución educativa
                 const userIsCompany =
@@ -63,14 +79,6 @@ const UserProfile = () => {
                 const userIsEducationalInstitution = res.data.professionalType === 4;
                 setIsCompany(userIsCompany);
                 setIsEducationalInstitution(userIsEducationalInstitution);
-
-                // Verificar si las notificaciones están activas
-                if (isFollowingUser && currentUser.data.notifications) {
-                    const notificationActive = currentUser.data.notifications.some(
-                        notif => notif.userId === res.data._id && notif.active
-                    );
-                    setIsNotificationActive(notificationActive);
-                }
 
                 setLoading(false);
             } catch (error) {
