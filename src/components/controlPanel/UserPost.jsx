@@ -424,7 +424,13 @@ const UserPost = () => {
                             className="perfil__usuario" 
                             onClick={() => {
                                 if (post.user?.username) {
-                                    navigate(`/profile/${post.user.username}`);
+                                    // Si es mi propio post, ir a mi perfil
+                                    if (post.user._id === currentUserId) {
+                                        navigate(`/ControlPanel/profile`);
+                                    } else {
+                                        // Si es de otro usuario, ir a su perfil externo
+                                        navigate(`/ControlPanel/profile/${post.user.username}`);
+                                    }
                                     // Desplazar al inicio de la página
                                     window.scrollTo(0, 0);
                                 }
