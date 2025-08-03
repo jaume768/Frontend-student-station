@@ -292,24 +292,10 @@ const CreatePost = () => {
             return;
         }
         
-        // Validar nombres de usuario antes de enviar
         setIsLoading(true);
         
-        // Validar nombres de usuario
-        const allUsernamesValid = await validateAllUsernames();
-        
-        if (!allUsernamesValid) {
-            setIsLoading(false);
-            // Scroll to the first error
-            if (validationErrors.length > 0) {
-                const firstErrorIndex = validationErrors[0].index;
-                const errorElement = document.getElementById(`people-tag-${firstErrorIndex}`);
-                if (errorElement) {
-                    errorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }
-            }
-            return;
-        }
+        // Ya no validamos que todos los usuarios existan - permitimos nombres libres
+        // La validación ahora es opcional y solo para mostrar sugerencias
         
         const formData = new FormData();
         formData.append('title', postTitle);
@@ -533,18 +519,21 @@ const CreatePost = () => {
                         <div className="step-label-dark">Paso 3</div>
                         <section className="post-section">
                             <h3>Etiqueta personas</h3>
+                            <p className="section-description">
+                                Puedes etiquetar tanto usuarios registrados (aparecerán como sugerencias) como personas que no estén en la plataforma escribiendo su nombre libremente.
+                            </p>
                             {peopleTags.map((tag, index) => (
                                 <div 
                                     key={index} 
                                     id={`people-tag-${index}`}
-                                    className={`people-tag-card ${validationErrors.some(e => e.index === index) ? 'validation-error' : ''}`}
+                                    className="people-tag-card"
                                 >
                                     <div className="form-group-create-post">
                                         <label>Nombre</label>
                                         <div className="autocomplete-wrapper">
                                             <input
                                                 type="text"
-                                                placeholder="Nombre de usuario a etiquetar"
+                                                placeholder="Nombre de usuario o persona a etiquetar"
                                                 name="name"
                                                 value={tag.name}
                                                 onChange={(e) => handlePeopleTagChange(index, e)}
@@ -552,7 +541,7 @@ const CreatePost = () => {
                                                     setActiveTagIndex(index);
                                                     setSearchTerm(tag.name);
                                                 }}
-                                                className={`post-input ${validationErrors.some(e => e.index === index) ? 'input-error' : ''}`}
+                                                className="post-input"
                                             />
                                             {activeTagIndex === index && suggestedUsers.length > 0 && (
                                                 <div className="autocomplete-dropdown">
@@ -570,17 +559,16 @@ const CreatePost = () => {
                                                                     alt={user.username} 
                                                                     className="autocomplete-avatar"
                                                                 />
-                                                                <span>{user.username}</span>
+                                                                <div className="autocomplete-user-info">
+                                                                    <span className="username">{user.username}</span>
+                                                                    <span className="registered-badge">Usuario registrado</span>
+                                                                </div>
                                                             </div>
                                                         ))
                                                     )}
                                                 </div>
                                             )}
-                                            {validationErrors.some(e => e.index === index) && (
-                                                <div className="username-error-message">
-                                                    <FaExclamationCircle /> {validationErrors.find(e => e.index === index).message}
-                                                </div>
-                                            )}
+
                                         </div>
                                     </div>
                                     <div className="form-group-create-post">
@@ -651,9 +639,9 @@ const CreatePost = () => {
                         <button
                             type="submit"
                             className={`publish-btn ${isFormComplete ? 'active' : 'inactive'}`}
-                            disabled={!isFormComplete || isLoading || isValidating}
+                            disabled={!isFormComplete || isLoading}
                         >
-                            {isLoading || isValidating ? 'Validando...' : 'Publicar'}
+                            {isLoading ? 'Publicando...' : 'Publicar'}
                         </button>
                     </form>
                 </div>

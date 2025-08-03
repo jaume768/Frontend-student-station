@@ -472,9 +472,18 @@
 }
 
 .post-section h3 {
-    margin-bottom: 5px;
-    font-size: 20px;
-    padding: 8px;
+    margin-bottom: 8px;
+    font-size: 1.1rem;
+    color: #333;
+    font-weight: 700;
+}
+
+.section-description {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 15px;
+    line-height: 1.4;
+    font-style: italic;
 }
 
 .post-input,
@@ -708,6 +717,26 @@
     height: 30px;
     border-radius: 50%;
     object-fit: cover;
+}
+
+.autocomplete-user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.autocomplete-user-info .username {
+    font-weight: 500;
+    color: #333;
+}
+
+.autocomplete-user-info .registered-badge {
+    font-size: 11px;
+    color: #1a73e8;
+    background-color: #e8f0fe;
+    padding: 2px 6px;
+    border-radius: 10px;
+    width: fit-content;
 }
 
 .loading-users {
