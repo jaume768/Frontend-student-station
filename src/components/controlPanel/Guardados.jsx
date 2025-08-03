@@ -563,7 +563,20 @@ const Guardados = () => {
                                 )}
                             </div>
                             <div className="tablero-info">
-                                <h3>{folder.name}</h3>
+                                {editingFolderName.id === folder._id ? (
+                                    <form onSubmit={updateFolderName} className="edit-folder-form">
+                                        <input
+                                            type="text"
+                                            value={editingFolderName.name}
+                                            onChange={(e) => setEditingFolderName(prev => ({...prev, name: e.target.value}))}
+                                            className="edit-folder-input"
+                                            autoFocus
+                                            onBlur={cancelEditFolderName}
+                                        />
+                                    </form>
+                                ) : (
+                                    <h3>{folder.name}</h3>
+                                )}
                                 <p>
                                     {folder.items ? folder.items.length : 0} {folder.items && folder.items.length === 1 ? 'imagen' : 'imágenes'}
                                 </p>
