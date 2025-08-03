@@ -297,7 +297,8 @@ const MisOfertasSection = ({ userRole, professionalType }) => {
             // Procesar ofertas educativas
             let educationalOffers = [];
             if (educationalOffersResponse.status === 'fulfilled') {
-                educationalOffers = (educationalOffersResponse.value.data.offers || []).map(offer => ({
+                // Obtener todas las ofertas educativas y mapear campos
+                const allEducationalOffers = (educationalOffersResponse.value.data.offers || []).map(offer => ({
                     ...offer,
                     offerType: 'educational', // Marcar como oferta educativa
                     // Mapear campos para compatibilidad con el renderizado existente
@@ -306,6 +307,32 @@ const MisOfertasSection = ({ userRole, professionalType }) => {
                     city: offer.city,
                     publicationDate: offer.createdAt || offer.startDate
                 }));
+                
+                // Aplicar filtros de estado a las ofertas educativas
+                educationalOffers = allEducationalOffers.filter(offer => {
+                    // Mapear los filtros de UI a los valores del backend para ofertas educativas
+                    if (statusFilter === 'activas') {
+                        return offer.status === 'accepted' || offer.status === 'active';
+                    } else if (statusFilter === 'pendientes') {
+                        return offer.status === 'pending';
+                    } else if (statusFilter === 'inactivas') {
+                        return offer.status === 'cancelled' || offer.status === 'inactive';
+                    }
+                    return true; // Si no hay filtro específico, mostrar todas
+                });
+                
+                // Si se solicitan solo prácticas, filtrar ofertas educativas que puedan ser prácticas
+                if (showPracticas) {
+                    educationalOffers = educationalOffers.filter(offer => {
+                        // Buscar en el nombre del programa o descripción palabras relacionadas con prácticas
+                        const searchText = `${offer.programName || ''} ${offer.description || ''}`.toLowerCase();
+                        return searchText.includes('práctica') || 
+                               searchText.includes('practica') || 
+                               searchText.includes('internship') ||
+                               searchText.includes('prácticas') ||
+                               searchText.includes('practicas');
+                    });
+                }
             } else {
                 console.error('Error al obtener ofertas educativas:', educationalOffersResponse.reason);
             }
@@ -803,16 +830,9 @@ const MisOfertasSection = ({ userRole, professionalType }) => {
                                         <>
                                             <button 
                                                 className="action-btn view-btn"
-                                                onClick={() => navigate(`/educational-offer/${offer._id}`)}
+                                                onClick={() => navigate(`/EducationalOfferDetail/${offer._id}`)}
                                             >
                                                 Ver detalles
-                                            </button>
-                                            
-                                            <button 
-                                                className="action-btn edit-btn"
-                                                onClick={() => navigate(`/edit-educational-offer/${offer._id}`)}
-                                            >
-                                                Editar
                                             </button>
                                             
                                             <button 
