@@ -52,6 +52,13 @@ const MiPerfil = () => {
                     res.data.professionalType === 4;
                 setIsCompany(userIsCompany);
                 setIsEducationalInstitution(userIsEducationalInstitution);
+                
+                // Cargar ofertas según el tipo de usuario
+                if (userIsCompany) {
+                    fetchCompanyOffers();
+                } else if (userIsEducationalInstitution) {
+                    fetchEducationalOffers();
+                }
             } catch (error) {
                 console.error("Error al cargar el perfil", error);
             }
@@ -137,6 +144,14 @@ const MiPerfil = () => {
                     >
                         About
                     </button>
+                    {(isCompany || isEducationalInstitution) && (
+                        <button
+                            className={`user-extern-tab ${activeTab === 'ofertas' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('ofertas')}
+                        >
+                            {isEducationalInstitution ? 'Ofertas educativas' : 'Ofertas de trabajo'}
+                        </button>
+                    )}
                 </div>
                 <div className="miPerfil-contact-share">
                     <button 
