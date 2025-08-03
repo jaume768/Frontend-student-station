@@ -75,6 +75,7 @@ const EducationalOfferDetail = () => {
                 banner={offer.headerImage} 
                 programName={offer.programName} 
                 studyType={offer.educationType} 
+                institutionName={offer.institutionName || offer.publisher?.companyName}
             />
 
             <MainInfoSection 

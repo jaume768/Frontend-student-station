@@ -1,6 +1,6 @@
 import React from 'react';
 
-const HeaderSection = ({ banner, programName, studyType }) => {
+const HeaderSection = ({ banner, programName, studyType, institutionName }) => {
     return (
         <div className="job-offer-header-jobdetail">
             {banner && (
@@ -16,6 +16,9 @@ const HeaderSection = ({ banner, programName, studyType }) => {
                 <div className="job-offer-title-row-jobdetail">
                     <h1 className="job-offer-position-jobdetail">{programName}</h1>
                 </div>
+                {institutionName && (
+                    <div className="job-offer-company-name-jobdetail">{institutionName}</div>
+                )}
                 <div className="job-offer-company-name-jobdetail">{studyType}</div>
             </div>
         </div>
