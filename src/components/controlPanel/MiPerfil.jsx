@@ -191,7 +191,7 @@ const MiPerfil = () => {
                         />
                     </div>
                     <div className="miPerfil-profile-info">
-                        <h1 className="miPerfil-fullname">{isCompany ? profile.companyName : profile.fullName}</h1>
+                        <h1 className="miPerfil-fullname">{isCompany || isEducationalInstitution ? profile.companyName : profile.fullName}</h1>
                         <p className="miPerfil-username">@{profile.username}</p>
                         { (profile.city || profile.country) && (
                             <p className="miPerfil-location">

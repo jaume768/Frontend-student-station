@@ -71,6 +71,9 @@ const EditProfile = () => {
 
     // Determinar si el usuario es una empresa
     const [isCompany, setIsCompany] = useState(false);
+    
+    // Determinar si el usuario es una institución educativa
+    const [isEducationalInstitution, setIsEducationalInstitution] = useState(false);
 
     // Estado para la bio
     const [bio, setBio] = useState('');
@@ -327,6 +330,10 @@ const EditProfile = () => {
                 }
                 const userIsCompany = user.professionalType === 1 || user.professionalType === 2 || user.professionalType === 4;
                 setIsCompany(userIsCompany);
+                
+                // Determinar si el usuario es específicamente una institución educativa
+                const userIsEducationalInstitution = user.professionalType === 4;
+                setIsEducationalInstitution(userIsEducationalInstitution);
                 if (userIsCompany) {
                     if (user.professionalMilestones && Array.isArray(user.professionalMilestones)) {
                         setProfessionalMilestones(user.professionalMilestones);
@@ -1022,20 +1029,22 @@ const EditProfile = () => {
                                                 addPopularSkill={addPopularSkill}
                                                 updateProfileData={updateProfileData}
                                             />
-                                            <LanguagesSection
-                                                isLanguagesCollapsed={isLanguagesCollapsed}
-                                                setIsLanguagesCollapsed={setIsLanguagesCollapsed}
-                                                isLanguagesEditing={isLanguagesEditing}
-                                                setIsLanguagesEditing={setIsLanguagesEditing}
-                                                languages={languages}
-                                                newLanguage={newLanguage}
-                                                setNewLanguage={setNewLanguage}
-                                                handleLanguageKeyDown={handleLanguageKeyDown}
-                                                removeLanguage={removeLanguage}
-                                                popularLanguages={popularLanguages}
-                                                addPopularLanguage={addPopularLanguage}
-                                                updateProfileData={updateProfileData}
-                                            />
+                                            {!isEducationalInstitution && (
+                                                <LanguagesSection
+                                                    isLanguagesCollapsed={isLanguagesCollapsed}
+                                                    setIsLanguagesCollapsed={setIsLanguagesCollapsed}
+                                                    isLanguagesEditing={isLanguagesEditing}
+                                                    setIsLanguagesEditing={setIsLanguagesEditing}
+                                                    languages={languages}
+                                                    newLanguage={newLanguage}
+                                                    setNewLanguage={setNewLanguage}
+                                                    handleLanguageKeyDown={handleLanguageKeyDown}
+                                                    removeLanguage={removeLanguage}
+                                                    popularLanguages={popularLanguages}
+                                                    addPopularLanguage={addPopularLanguage}
+                                                    updateProfileData={updateProfileData}
+                                                />
+                                            )}
                                             <CompanyContactSection
                                                 isCompanyContactCollapsed={isCompanyContactCollapsed}
                                                 setIsCompanyContactCollapsed={setIsCompanyContactCollapsed}
@@ -1149,16 +1158,19 @@ const EditProfile = () => {
                                                 social={social}
                                                 handleSocialChange={handleSocialChange}
                                                 updateProfileData={updateProfileData}
+                                                isEducationalInstitution={isEducationalInstitution}
                                             />
-                                            <SocialNetworksSection
-                                                isSocialNetworksCollapsed={isSocialNetworksCollapsed}
-                                                setIsSocialNetworksCollapsed={setIsSocialNetworksCollapsed}
-                                                isSocialNetworksEditing={isSocialNetworksEditing}
-                                                setIsSocialNetworksEditing={setIsSocialNetworksEditing}
-                                                social={social}
-                                                handleSocialChange={handleSocialChange}
-                                                updateProfileData={updateProfileData}
-                                            />
+                                            {!isEducationalInstitution && (
+                                                <SocialNetworksSection
+                                                    isSocialNetworksCollapsed={isSocialNetworksCollapsed}
+                                                    setIsSocialNetworksCollapsed={setIsSocialNetworksCollapsed}
+                                                    isSocialNetworksEditing={isSocialNetworksEditing}
+                                                    setIsSocialNetworksEditing={setIsSocialNetworksEditing}
+                                                    social={social}
+                                                    handleSocialChange={handleSocialChange}
+                                                    updateProfileData={updateProfileData}
+                                                />
+                                            )}
                                             <PDFUploadSection
                                                 isPdfEditing={isPdfEditing}
                                                 setIsPdfEditing={setIsPdfEditing}
