@@ -26,7 +26,6 @@ const Creatives = () => {
         skills: '',
         graduationYear: '',
         professionalProfile: '',
-        software: '',
         availability: '',
         internships: false
     });
@@ -92,7 +91,6 @@ const Creatives = () => {
                 if (appliedFilters.skills) params.append('skills', appliedFilters.skills);
                 if (appliedFilters.graduationYear) params.append('graduationYear', appliedFilters.graduationYear);
                 if (appliedFilters.professionalProfile) params.append('professionalProfile', appliedFilters.professionalProfile);
-                if (appliedFilters.software) params.append('software', appliedFilters.software);
                 if (appliedFilters.availability) params.append('availability', appliedFilters.availability);
                 if (appliedFilters.internships) params.append('internships', appliedFilters.internships);
 
@@ -260,23 +258,13 @@ const Creatives = () => {
                     </select>
                 </div>
                 
-                {/* Softskills */}
+                {/* Skills (unificado: Softskills + Hardskills/Software) */}
                 <div className="filter-input">
                     <input 
                         type="text" 
-                        placeholder="Softskills" 
+                        placeholder="Skills" 
                         value={filters.skills}
                         onChange={(e) => handleFilterChange('skills', e.target.value)}
-                    />
-                </div>
-                
-                {/* Hardskills / Software */}
-                <div className="filter-input">
-                    <input 
-                        type="text" 
-                        placeholder="Hardskills / Software" 
-                        value={filters.software}
-                        onChange={(e) => handleFilterChange('software', e.target.value)}
                     />
                 </div>
                 
