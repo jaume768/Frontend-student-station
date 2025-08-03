@@ -177,10 +177,43 @@ const CreatePost = () => {
 
     const removeImageTag = (tagIndex) => {
         const currentTags = imageTags[mainImageIndex] || [];
-        setImageTags({
-            ...imageTags,
-            [mainImageIndex]: currentTags.filter((_, i) => i !== tagIndex)
+        const updatedTags = currentTags.filter((_, index) => index !== tagIndex);
+        setImageTags(prev => ({
+            ...prev,
+            [mainImageIndex]: updatedTags
+        }));
+    };
+
+    const removeImage = (indexToRemove) => {
+        const updatedImages = images.filter((_, index) => index !== indexToRemove);
+        setImages(updatedImages);
+        
+        // Si eliminamos la imagen principal actual, ajustar el índice
+        if (indexToRemove === mainImageIndex) {
+            if (updatedImages.length > 0) {
+                setMainImageIndex(indexToRemove > 0 ? indexToRemove - 1 : 0);
+            }
+        } else if (indexToRemove < mainImageIndex) {
+            // Si eliminamos una imagen anterior a la principal, decrementar el índice
+            setMainImageIndex(mainImageIndex - 1);
+        }
+        
+        // Limpiar tags de imagen si existían
+        const updatedImageTags = { ...imageTags };
+        delete updatedImageTags[indexToRemove];
+        
+        // Reindexar las tags restantes
+        const reindexedTags = {};
+        Object.keys(updatedImageTags).forEach(key => {
+            const oldIndex = parseInt(key);
+            if (oldIndex > indexToRemove) {
+                reindexedTags[oldIndex - 1] = updatedImageTags[key];
+            } else {
+                reindexedTags[key] = updatedImageTags[key];
+            }
         });
+        
+        setImageTags(reindexedTags);
     };
 
     const handleImageUpload = (e) => {
@@ -381,15 +414,30 @@ const CreatePost = () => {
                                         {images.map((img, index) => (
                                             <Draggable key={`thumb-${index}`} draggableId={`thumb-${index}`} index={index}>
                                                 {(providedDraggable) => (
-                                                    <img
+                                                    <div 
                                                         ref={providedDraggable.innerRef}
                                                         {...providedDraggable.draggableProps}
                                                         {...providedDraggable.dragHandleProps}
-                                                        src={URL.createObjectURL(img)}
-                                                        alt={`Miniatura ${index}`}
-                                                        className={`thumbnail ${index === mainImageIndex ? 'active' : ''}`}
-                                                        onClick={() => setMainImageIndex(index)}
-                                                    />
+                                                        className="thumbnail-container"
+                                                    >
+                                                        <img
+                                                            src={URL.createObjectURL(img)}
+                                                            alt={`Miniatura ${index}`}
+                                                            className={`thumbnail ${index === mainImageIndex ? 'active' : ''}`}
+                                                            onClick={() => setMainImageIndex(index)}
+                                                        />
+                                                        <button
+                                                            type="button"
+                                                            className="remove-image-btn"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                removeImage(index);
+                                                            }}
+                                                            title="Eliminar imagen"
+                                                        >
+                                                            <FaTrash />
+                                                        </button>
+                                                    </div>
                                                 )}
                                             </Draggable>
                                         ))}

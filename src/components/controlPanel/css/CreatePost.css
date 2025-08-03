@@ -124,6 +124,38 @@
     padding: 16px 0;
 }
 
+/* Contenedor de miniatura con botón de eliminar */
+.thumbnail-container {
+    position: relative;
+    display: inline-block;
+}
+
+/* Botón para eliminar imagen de la miniatura */
+.remove-image-btn {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #ff4444;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    z-index: 10;
+    transition: all 0.2s ease;
+}
+
+.remove-image-btn:hover {
+    background: #dd3333;
+    transform: scale(1.1);
+}
+
 /* Overlay de etiquetas dentro de la imagen, en la parte inferior */
 .tags-overlay {
     position: absolute;
