@@ -293,6 +293,9 @@ const Fashion = () => {
                     <button className="apply-filters-btn" onClick={applyFilters}>
                         Aplicar filtros
                     </button>
+                    <button className="clear-filters-btn" onClick={clearAllFilters}>
+                        Borrar filtros
+                    </button>
                 </div>
             </div>
             {isMobile && showMobileFilters && (

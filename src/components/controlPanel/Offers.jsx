@@ -92,7 +92,7 @@ const Offers = () => {
         setShowMobileFilters(false); // Cerrar el panel móvil también
     };
 
-    const clearFilters = () => {
+    const clearAllFilters = () => {
         setFilters({
             search: '',
             country: '',
@@ -286,16 +286,12 @@ const Offers = () => {
                         <label htmlFor="practicas">Prácticas</label>
                     </div>
 
-                    <div className="filter-buttons">
-                        <button className="apply-filters-btn" onClick={applyFilters}>
-                            Aplicar filtros
-                        </button>
-                        {hasActiveFilters && (
-                            <button className="clear-filters-btn" onClick={clearFilters}>
-                                Limpiar filtros
-                            </button>
-                        )}
-                    </div>
+                    <button className="apply-filters-btn" onClick={applyFilters}>
+                        Aplicar filtros
+                    </button>
+                    <button className="clear-filters-btn" onClick={clearAllFilters}>
+                        Borrar filtros
+                    </button>
                 </div>
             </div>
 
@@ -411,6 +407,12 @@ const Offers = () => {
                                 onClick={() => { applyFilters(); setShowMobileFilters(false); }}
                             >
                                 Aplicar filtros
+                            </button>
+                            <button
+                                className="explorer-clear-filters-btn"
+                                onClick={() => { clearAllFilters(); setShowMobileFilters(false); }}
+                            >
+                                Borrar filtros
                             </button>
                         </div>
                     </div>

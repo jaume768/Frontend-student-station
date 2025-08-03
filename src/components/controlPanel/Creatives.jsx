@@ -10,6 +10,7 @@ const Creatives = () => {
     const [creatives, setCreatives] = useState([]);
     const [loading, setLoading] = useState(false);
     const [countries, setCountries] = useState([]);
+    const [cities, setCities] = useState([]);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
     const [error, setError] = useState(null);
@@ -118,9 +119,10 @@ const Creatives = () => {
                 const filteredLength = filteredCreatives.length;
                 setHasMore(filteredLength > 0 && originalLength > 0 && page < response.data.totalPages);
 
-                // Guardar países para filtro si es la primera página
+                // Guardar países y ciudades para filtros si es la primera página
                 if (page === 1) {
                     setCountries(response.data.countries);
+                    setCities(response.data.cities || []); // Update to handle cities data from backend
                 }
 
             } catch (error) {
@@ -205,21 +207,31 @@ const Creatives = () => {
                 {/* País */}
                 <div className="filter-input">
                     <input 
-                        type="text" 
+                        list="countries-creatives"
                         placeholder="País" 
                         value={filters.country}
                         onChange={(e) => handleFilterChange('country', e.target.value)}
                     />
+                    <datalist id="countries-creatives">
+                        {countries.map((c) => (
+                            <option key={c} value={c} />
+                        ))}
+                    </datalist>
                 </div>
                 
                 {/* Ciudad */}
                 <div className="filter-input">
                     <input 
-                        type="text" 
+                        list="cities-creatives"
                         placeholder="Ciudad" 
                         value={filters.city}
                         onChange={(e) => handleFilterChange('city', e.target.value)}
                     />
+                    <datalist id="cities-creatives">
+                        {cities.map((c) => (
+                            <option key={c} value={c} />
+                        ))}
+                    </datalist>
                 </div>
                 
                 {/* Centro de estudios */}
