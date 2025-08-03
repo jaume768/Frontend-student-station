@@ -156,6 +156,67 @@
     transform: scale(1.1);
 }
 
+/* Errores de subida de imágenes */
+.upload-errors {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.upload-error {
+    background-color: #fee;
+    border: 1px solid #fcc;
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    animation: slideIn 0.3s ease-out;
+}
+
+.upload-error .error-icon {
+    color: #d73527;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.upload-error .error-message {
+    flex: 1;
+    color: #721c24;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.upload-error .close-error-btn {
+    background: transparent;
+    border: none;
+    color: #d73527;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.upload-error .close-error-btn:hover {
+    background-color: rgba(215, 53, 39, 0.1);
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 /* Overlay de etiquetas dentro de la imagen, en la parte inferior */
 .tags-overlay {
     position: absolute;

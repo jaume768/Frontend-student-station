@@ -37,6 +37,9 @@ const CreatePost = () => {
     const [uploadSuccess, setUploadSuccess] = useState(false);
     const [createdPostId, setCreatedPostId] = useState(null);
     
+    // Estados para errores de subida de imágenes
+    const [imageUploadErrors, setImageUploadErrors] = useState([]);
+    
     const navigate = useNavigate();
 
     // Función para buscar usuarios mientras el usuario escribe
@@ -218,10 +221,37 @@ const CreatePost = () => {
 
     const handleImageUpload = (e) => {
         const files = Array.from(e.target.files);
-        const updatedImages = [...images, ...files].slice(0, 6);
-        setImages(updatedImages);
-        if (updatedImages.length === 1) {
-            setMainImageIndex(0);
+        const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB en bytes (límite de Cloudinary gratuito)
+        const validFiles = [];
+        const invalidFiles = [];
+        
+        // Limpiar errores previos
+        setImageUploadErrors([]);
+        
+        files.forEach(file => {
+            if (file.size > MAX_FILE_SIZE) {
+                const fileSizeInMB = (file.size / (1024 * 1024)).toFixed(1);
+                invalidFiles.push(`${file.name} (${fileSizeInMB} MB)`);
+            } else {
+                validFiles.push(file);
+            }
+        });
+        
+        // Mostrar errores por archivos demasiado grandes
+        if (invalidFiles.length > 0) {
+            const errorMessage = invalidFiles.length === 1 
+                ? `La imagen ${invalidFiles[0]} supera el tamaño máximo permitido de 10 MB.`
+                : `Las siguientes imágenes superan el tamaño máximo permitido de 10 MB: ${invalidFiles.join(', ')}`;
+            setImageUploadErrors([errorMessage]);
+        }
+        
+        // Solo añadir archivos válidos
+        if (validFiles.length > 0) {
+            const updatedImages = [...images, ...validFiles].slice(0, 6);
+            setImages(updatedImages);
+            if (images.length === 0 && updatedImages.length === 1) {
+                setMainImageIndex(0);
+            }
         }
     };
 
@@ -455,6 +485,24 @@ const CreatePost = () => {
                     {images.length > 0 && (
                         <div className="preview-message">
                             Describe cada una de tus imágenes mediante tags para que otros usuarios puedan filtrar mejor tu contenido.
+                        </div>
+                    )}
+                    {/* Mostrar errores de subida de imágenes */}
+                    {imageUploadErrors.length > 0 && (
+                        <div className="upload-errors">
+                            {imageUploadErrors.map((error, index) => (
+                                <div key={index} className="upload-error">
+                                    <FaExclamationCircle className="error-icon" />
+                                    <span className="error-message">{error}</span>
+                                    <button 
+                                        className="close-error-btn"
+                                        onClick={() => setImageUploadErrors([])}
+                                        title="Cerrar mensaje"
+                                    >
+                                        <FaTimes />
+                                    </button>
+                                </div>
+                            ))}
                         </div>
                     )}
                 </div>
