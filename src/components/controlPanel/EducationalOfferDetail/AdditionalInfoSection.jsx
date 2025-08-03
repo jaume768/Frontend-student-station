@@ -7,17 +7,17 @@ const AdditionalInfoSection = ({ offer, formatPrice, formatDate }) => {
                 <h3 className="section-title-jobdetail">Información adicional</h3>
                 <div className="additional-info-jobdetail">
                     <div className="info-row-jobdetail">
-                        <span className="info-label-jobdetail">Precio:</span>
-                        <span className="info-value-jobdetail">{formatPrice(offer.price)}</span>
+                        <span className="info-label-jobdetail">Créditos:</span>
+                        <span className="info-value-jobdetail">{offer.credits || 'No especificado'}</span>
                     </div>
                     <div className="info-row-jobdetail">
                         <span className="info-label-jobdetail">Fecha de inicio:</span>
-                        <span className="info-value-jobdetail">{formatDate(offer.startDate)}</span>
+                        <span className="info-value-jobdetail">{offer.enrollmentPeriod?.startDate ? formatDate(offer.enrollmentPeriod.startDate) : 'No especificada'}</span>
                     </div>
-                    {offer.endDate && (
+                    {offer.enrollmentPeriod?.endDate && (
                         <div className="info-row-jobdetail">
                             <span className="info-label-jobdetail">Fecha de finalización:</span>
-                            <span className="info-value-jobdetail">{formatDate(offer.endDate)}</span>
+                            <span className="info-value-jobdetail">{formatDate(offer.enrollmentPeriod.endDate)}</span>
                         </div>
                     )}
                 </div>

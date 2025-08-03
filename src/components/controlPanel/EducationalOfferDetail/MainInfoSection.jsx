@@ -13,7 +13,7 @@ const MainInfoSection = ({ offer, formatDuration, formatDate }) => {
                     )}
                     <div className="metadata-tag-jobdetail">
                         <i className="fas fa-graduation-cap"></i>
-                        <span>{offer.knowledgeArea || "No especificada"}</span>
+                        <span>"No especificada"</span>
                     </div>
                     <div className="metadata-tag-jobdetail">
                         <i className="fas fa-map-marked-alt"></i>
@@ -29,14 +29,14 @@ const MainInfoSection = ({ offer, formatDuration, formatDate }) => {
                 <div className="job-offer-publication-date-jobdetail">
                     Publicado: {formatDate(offer.publicationDate)}
                 </div>
-                {offer.applicationLink && (
+                {offer.websiteUrl && (
                     <a 
-                        href={offer.applicationLink} 
+                        href={offer.websiteUrl} 
                         target="_blank" 
                         rel="noopener noreferrer" 
                         className="apply-button-jobdetail"
                     >
-                        Solicitar información
+                        Más información
                     </a>
                 )}
             </div>

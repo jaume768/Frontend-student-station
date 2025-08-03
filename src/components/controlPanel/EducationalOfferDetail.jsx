@@ -7,7 +7,7 @@ import DescriptionSection from './EducationalOfferDetail/DescriptionSection';
 import GallerySection from './EducationalOfferDetail/GallerySection';
 import AdditionalInfoSection from './EducationalOfferDetail/AdditionalInfoSection';
 import { formatDate, formatPrice, formatDuration } from './EducationalOfferDetail/utils';
-import './css/jobOfferDetail.css';
+import './css/educationalOfferDetail.css';
 
 const EducationalOfferDetail = () => {
     const { offerId } = useParams();
@@ -72,9 +72,9 @@ const EducationalOfferDetail = () => {
             </button>
             
             <HeaderSection 
-                banner={offer.banner} 
+                banner={offer.headerImage} 
                 programName={offer.programName} 
-                studyType={offer.studyType} 
+                studyType={offer.educationType} 
             />
 
             <MainInfoSection 
@@ -84,7 +84,7 @@ const EducationalOfferDetail = () => {
             />
 
             <div className="job-offer-content-jobdetail">
-                <DescriptionSection description={offer.description} />
+                <DescriptionSection content={offer.description} />
 
                 {offer.requirements && (
                     <DescriptionSection 
