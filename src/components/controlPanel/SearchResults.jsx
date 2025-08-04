@@ -65,7 +65,7 @@ const SearchResults = ({ results, onResultClick, isLoading, onViewAll }) => {
                                     {user.professionalType === 1 && <span className="user-badge creative">Creativo</span>}
                                     {user.professionalType === 2 && <span className="user-badge company">Empresa</span>}
                                     {user.professionalType === 3 && <span className="user-badge institution">Institución</span>}
-                                    {user.professionalType === 4 && <span className="user-badge expert">Experto</span>}
+                                    {user.professionalType === 4 && <span className="user-badge expert">Institución</span>}
                                 </div>
                             </div>
                         ))}

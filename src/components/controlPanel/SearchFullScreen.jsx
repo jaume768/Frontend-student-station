@@ -114,7 +114,7 @@ const SearchFullScreen = ({ initialResults, initialQuery, onClose, onSearch, onR
                         {user.professionalType === 1 && <span className="user-badge creative">Creativo</span>}
                         {user.professionalType === 2 && <span className="user-badge company">Empresa</span>}
                         {user.professionalType === 3 && <span className="user-badge institution">Institución</span>}
-                        {user.professionalType === 4 && <span className="user-badge expert">Experto</span>}
+                        {user.professionalType === 4 && <span className="user-badge expert">Institución</span>}
                         {user.professionalType && [1, 2, 4].includes(user.professionalType) ? (
                             <p className="subtitle">Empresa</p>
                         ) : (
