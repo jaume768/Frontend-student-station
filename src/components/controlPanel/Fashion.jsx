@@ -373,19 +373,6 @@ const Fashion = () => {
                                         ))}
                                     </select>
                                 </div>
-                                <div className="explorer-filter-select">
-                                    <select
-                                        value={filters.category}
-                                        onChange={(e) => handleFilterChange('category', e.target.value)}
-                                    >
-                                        <option value="">Categoría</option>
-                                        {categoriesList.map((c) => (
-                                            <option key={c} value={c}>
-                                                {c}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
                             </div>
                             <button
                                 className="explorer-apply-filters-btn"
