@@ -1,27 +1,10 @@
 import React from 'react';
 import { FaInstagram, FaLinkedin, FaBehance, FaTumblr, FaYoutube, FaPinterest, FaGlobe, FaEnvelope } from 'react-icons/fa';
+import { buildSocialMediaUrl } from '../../../utils/socialMediaUtils';
 
 const UserSocialSection = ({ social }) => {
     // Solo renderizamos la sección si hay al menos una red social
     if (!social || Object.values(social).every(value => !value)) return null;
-    
-    // Función para asegurar que las URLs tengan el protocolo correcto
-    const ensureHttps = (url) => {
-        if (!url) return '';
-        
-        // Si la URL ya tiene http:// o https://, la devolvemos tal cual
-        if (url.startsWith('http://') || url.startsWith('https://')) {
-            return url;
-        }
-        
-        // Para YouTube, comprobamos si es un nombre de usuario o URL completa
-        if (social?.youtube === url && !url.includes('youtube.com')) {
-            return `https://www.youtube.com/${url}`;
-        }
-        
-        // Añadimos https:// por defecto
-        return `https://${url}`;
-    };
     
     return (
         <section className="user-extern-section">
@@ -29,7 +12,7 @@ const UserSocialSection = ({ social }) => {
             <div className="user-extern-social-links">
                 {social?.instagram && (
                     <a
-                        href={ensureHttps(social.instagram)}
+                        href={buildSocialMediaUrl('instagram', social.instagram)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="social-icon instagram"
@@ -40,7 +23,7 @@ const UserSocialSection = ({ social }) => {
                 )}
                 {social?.linkedin && (
                     <a
-                        href={ensureHttps(social.linkedin)}
+                        href={buildSocialMediaUrl('linkedin', social.linkedin)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="social-icon linkedin"
@@ -51,7 +34,7 @@ const UserSocialSection = ({ social }) => {
                 )}
                 {social?.behance && (
                     <a
-                        href={ensureHttps(social.behance)}
+                        href={buildSocialMediaUrl('behance', social.behance)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="social-icon behance"
@@ -62,7 +45,7 @@ const UserSocialSection = ({ social }) => {
                 )}
                 {social?.tumblr && (
                     <a
-                        href={ensureHttps(social.tumblr)}
+                        href={buildSocialMediaUrl('tumblr', social.tumblr)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="social-icon tumblr"
@@ -73,7 +56,7 @@ const UserSocialSection = ({ social }) => {
                 )}
                 {social?.youtube && (
                     <a
-                        href={ensureHttps(social.youtube)}
+                        href={buildSocialMediaUrl('youtube', social.youtube)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="social-icon youtube"
@@ -84,7 +67,7 @@ const UserSocialSection = ({ social }) => {
                 )}
                 {social?.pinterest && (
                     <a
-                        href={ensureHttps(social.pinterest)}
+                        href={buildSocialMediaUrl('pinterest', social.pinterest)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="social-icon pinterest"
@@ -95,7 +78,7 @@ const UserSocialSection = ({ social }) => {
                 )}
                 {social?.sitioWeb && (
                     <a
-                        href={ensureHttps(social.sitioWeb)}
+                        href={buildSocialMediaUrl('sitioweb', social.sitioWeb)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="social-icon website"

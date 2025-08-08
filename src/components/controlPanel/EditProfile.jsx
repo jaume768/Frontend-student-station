@@ -66,7 +66,8 @@ const EditProfile = () => {
         country: '',
         city: '',
         companyName: '',
-        sitioWeb: ''
+        sitioWeb: '',
+        institutionOwnership: ''
     });
 
     // Determinar si el usuario es una empresa
@@ -247,7 +248,8 @@ const EditProfile = () => {
                         country: user.country || '',
                         city: user.city || '',
                         companyName: user.companyName || '',
-                        sitioWeb: user.social?.sitioWeb || ''
+                        sitioWeb: user.social?.sitioWeb || '',
+                        institutionOwnership: user.institutionOwnership || ''
                     });
                 }
                 // Cargar bio
@@ -692,7 +694,8 @@ const EditProfile = () => {
                 professionalTags: Array.isArray(professionalTags) ? professionalTags : [],
                 companyName: basicInfo.companyName,
                 companyTags: Array.isArray(companyTags) ? companyTags : [],
-                offersPractices
+                offersPractices,
+                institutionOwnership: basicInfo.institutionOwnership
             };
             if (isCompany) {
                 updates.professionalMilestones = Array.isArray(professionalMilestones) ? professionalMilestones : [];
@@ -974,6 +977,7 @@ const EditProfile = () => {
                                         updateProfileData={updateProfileData}
                                         countryOptions={countryOptions}
                                         isCompany={isCompany}
+                                        isEducationalInstitution={isEducationalInstitution}
                                     />
                                     <BioSection
                                         isBioCollapsed={isBioCollapsed}

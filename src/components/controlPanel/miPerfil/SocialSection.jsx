@@ -1,5 +1,6 @@
 import React from 'react';
 import { FaLinkedin, FaInstagram, FaBehance, FaTumblr, FaYoutube, FaPinterest } from 'react-icons/fa';
+import { buildSocialMediaUrl } from '../../../utils/socialMediaUtils';
 
 const SocialSection = ({ social }) => {
     // Solo renderizamos la sección si hay al menos una red social
@@ -11,7 +12,7 @@ const SocialSection = ({ social }) => {
             <div className="miPerfil-social-links">
                 {social?.instagram && (
                     <a
-                        href={social.instagram}
+                        href={buildSocialMediaUrl('instagram', social.instagram)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="social-icon instagram"
@@ -22,7 +23,7 @@ const SocialSection = ({ social }) => {
                 )}
                 {social?.linkedin && (
                     <a
-                        href={social.linkedin}
+                        href={buildSocialMediaUrl('linkedin', social.linkedin)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="social-icon linkedin"
@@ -33,7 +34,7 @@ const SocialSection = ({ social }) => {
                 )}
                 {social?.behance && (
                     <a
-                        href={social.behance}
+                        href={buildSocialMediaUrl('behance', social.behance)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="social-icon behance"
@@ -44,7 +45,7 @@ const SocialSection = ({ social }) => {
                 )}
                 {social?.tumblr && (
                     <a
-                        href={social.tumblr}
+                        href={buildSocialMediaUrl('tumblr', social.tumblr)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="social-icon tumblr"
@@ -55,7 +56,7 @@ const SocialSection = ({ social }) => {
                 )}
                 {social?.youtube && (
                     <a
-                        href={social.youtube}
+                        href={buildSocialMediaUrl('youtube', social.youtube)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="social-icon youtube"
@@ -66,7 +67,7 @@ const SocialSection = ({ social }) => {
                 )}
                 {social?.pinterest && (
                     <a
-                        href={social.pinterest}
+                        href={buildSocialMediaUrl('pinterest', social.pinterest)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="social-icon pinterest"

@@ -220,39 +220,33 @@ const CreatePost = () => {
     };
 
     const handleImageUpload = (e) => {
-        const files = Array.from(e.target.files);
+        const file = e.target.files[0];
         const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB en bytes (límite de Cloudinary gratuito)
-        const validFiles = [];
-        const invalidFiles = [];
         
         // Limpiar errores previos
         setImageUploadErrors([]);
         
-        files.forEach(file => {
-            if (file.size > MAX_FILE_SIZE) {
-                const fileSizeInMB = (file.size / (1024 * 1024)).toFixed(1);
-                invalidFiles.push(`${file.name} (${fileSizeInMB} MB)`);
-            } else {
-                validFiles.push(file);
-            }
-        });
+        if (!file) return;
         
-        // Mostrar errores por archivos demasiado grandes
-        if (invalidFiles.length > 0) {
-            const errorMessage = invalidFiles.length === 1 
-                ? `La imagen ${invalidFiles[0]} supera el tamaño máximo permitido de 10 MB.`
-                : `Las siguientes imágenes superan el tamaño máximo permitido de 10 MB: ${invalidFiles.join(', ')}`;
+        // Verificar el tamaño del archivo
+        if (file.size > MAX_FILE_SIZE) {
+            const fileSizeInMB = (file.size / (1024 * 1024)).toFixed(1);
+            const errorMessage = `La imagen ${file.name} (${fileSizeInMB} MB) supera el tamaño máximo permitido de 10 MB.`;
             setImageUploadErrors([errorMessage]);
+            return;
         }
         
-        // Solo añadir archivos válidos
-        if (validFiles.length > 0) {
-            const updatedImages = [...images, ...validFiles].slice(0, 6);
-            setImages(updatedImages);
-            if (images.length === 0 && updatedImages.length === 1) {
-                setMainImageIndex(0);
-            }
+        // Añadir la imagen al array (máximo 6 imágenes)
+        const updatedImages = [...images, file].slice(0, 6);
+        setImages(updatedImages);
+        
+        // Si es la primera imagen, establecerla como imagen principal
+        if (images.length === 0) {
+            setMainImageIndex(0);
         }
+        
+        // Limpiar el input para permitir seleccionar la misma imagen de nuevo si es necesario
+        e.target.value = '';
     };
 
     const handleNextImage = () => {
@@ -369,7 +363,6 @@ const CreatePost = () => {
                     id="image-upload"
                     type="file"
                     accept="image/*"
-                    multiple
                     onChange={handleImageUpload}
                     style={{ display: 'none' }}
                 />

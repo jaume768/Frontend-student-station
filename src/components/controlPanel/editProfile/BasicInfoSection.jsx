@@ -11,7 +11,8 @@ const BasicInfoSection = ({
     handleBasicInfoChange,
     updateProfileData,
     countryOptions,
-    isCompany
+    isCompany,
+    isEducationalInstitution
 }) => {
     return (
         <section className="form-section">
@@ -64,6 +65,21 @@ const BasicInfoSection = ({
                                 />
                             </div>
                         </>
+                    )}
+                    {isEducationalInstitution && (
+                        <div className="form-group-edit">
+                            <label>Tipo de institución</label>
+                            <select
+                                name="institutionOwnership"
+                                value={basicInfo.institutionOwnership || ''}
+                                onChange={handleBasicInfoChange}
+                                disabled={!isBasicEditing}
+                            >
+                                <option value="">Selecciona una opción</option>
+                                <option value="publica">Pública</option>
+                                <option value="privada">Privada</option>
+                            </select>
+                        </div>
                     )}
                     <div className="form-group-edit">
                         <label>País de residencia</label>
