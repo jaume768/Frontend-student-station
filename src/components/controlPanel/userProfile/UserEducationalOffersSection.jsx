@@ -150,9 +150,6 @@ const UserEducationalOffersSection = ({ offers = [] }) => {
                                 <Link to={`/EducationalOfferDetail/${offer._id}`} className="user-extern-offer-button">
                                     Más información
                                 </Link>
-                                {statusFilter === 'all' && (
-                                    <span className="user-extern-offer-status">{translateStatus(offer.status)}</span>
-                                )}
                             </div>
                         </div>
                     ))

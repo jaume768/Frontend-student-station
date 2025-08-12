@@ -41,6 +41,7 @@ const UserPost = () => {
     const [savedPosts, setSavedPosts] = useState(new Map());
     const [savedImages, setSavedImages] = useState(new Map());
     const [saveFeedback, setSaveFeedback] = useState({ show: false, postId: null, imageUrl: null, text: "", message: '' });
+    const [taggedUsersExistence, setTaggedUsersExistence] = useState({});
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -191,6 +192,51 @@ const UserPost = () => {
         };
         fetchPost();
     }, [id]);
+
+    // Verificar si los usuarios etiquetados existen para renderizar enlaces solo cuando corresponda
+    useEffect(() => {
+        const checkTaggedUsers = async () => {
+            try {
+                if (!post || !Array.isArray(post.peopleTags)) return;
+                const token = localStorage.getItem('authToken');
+                if (!token) return;
+                const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+                const uniqueNames = [...new Set(
+                    post.peopleTags
+                        .map(p => (p && p.name ? p.name.trim() : ''))
+                        .filter(Boolean)
+                )];
+
+                if (uniqueNames.length === 0) {
+                    setTaggedUsersExistence({});
+                    return;
+                }
+
+                const results = await Promise.all(uniqueNames.map(async (username) => {
+                    try {
+                        const res = await axios.get(
+                            `${backendUrl}/api/users/check-username/${encodeURIComponent(username)}`,
+                            { headers: { Authorization: `Bearer ${token}` } }
+                        );
+                        return [username, !!res.data?.exists];
+                    } catch (err) {
+                        return [username, false];
+                    }
+                }));
+
+                const map = {};
+                results.forEach(([name, exists]) => {
+                    map[name] = exists;
+                });
+                setTaggedUsersExistence(map);
+            } catch (error) {
+                console.error('Error al verificar usuarios etiquetados:', error);
+            }
+        };
+
+        checkTaggedUsers();
+    }, [post?.peopleTags]);
 
     if (loading) return (
         <div className="modern-loading-container">
@@ -458,12 +504,12 @@ const UserPost = () => {
                             </div>
                         </div>
                     </div>
-                    <div 
+                    <div
                         className={`perfil__publicacion ${
-                            !post.imageTags || 
-                            !post.imageTags[currentImageIndex] || 
-                            post.imageTags[currentImageIndex].length === 0 
-                                ? 'no-image-tags' 
+                            !post.imageTags ||
+                            !post.imageTags[currentImageIndex] ||
+                            post.imageTags[currentImageIndex].length === 0
+                                ? 'no-image-tags'
                                 : ''
                         }`}
                     >
@@ -477,49 +523,52 @@ const UserPost = () => {
                                     <ul className="personas__lista">
                                         {post.peopleTags
                                             .filter(person => person.name && person.name.trim() !== '')
-                                            .map((person, idx) => (
-                                                <li key={idx} className="personas__item">
-                                                    {person.role}:{' '}
-                                                    <a
-                                                        onClick={(e) => {
-                                                            e.preventDefault();
-                                                            navigate(`/profile/${person.name}`);
-                                                            // Desplazar al inicio de la página
-                                                            window.scrollTo(0, 0);
-                                                        }}
-                                                        className="personas__enlace"
-                                                        style={{ cursor: 'pointer' }}
-                                                    >
-                                                        @{person.name}
-                                                    </a>
-                                                </li>
-                                            ))}
+                                            .map((person, idx) => {
+                                                const username = person.name.trim();
+                                                const exists = taggedUsersExistence[username];
+                                                return (
+                                                    <li key={idx} className="personas__item">
+                                                        {person.role}:{' '}
+                                                        {exists ? (
+                                                            <a
+                                                                onClick={(e) => {
+                                                                    e.preventDefault();
+                                                                    navigate(`/profile/${username}`);
+                                                                    window.scrollTo(0, 0);
+                                                                }}
+                                                                className="personas__enlace"
+                                                                style={{ cursor: 'pointer' }}
+                                                            >
+                                                                @{username}
+                                                            </a>
+                                                        ) : (
+                                                            <span className="personas__texto">@{username}</span>
+                                                        )}
+                                                    </li>
+                                                );
+                                            })}
                                     </ul>
                                 </div>
                             )}
-                    </div>
-                    {post.imageTags &&
-                        post.imageTags[currentImageIndex] &&
-                        post.imageTags[currentImageIndex].length > 0 && (
-                            <div className="perfil__image-tags">
-                                <h3 className="image-tags__titulo">Etiquetas</h3>
-                                <div className="image-tags__lista">
-                                    {post.imageTags[currentImageIndex].map((tag, idx) => (
-                                        <span key={idx} className="image-tag">
-                                            {tag}
-                                        </span>
-                                    ))}
+                        {post.imageTags &&
+                            post.imageTags[currentImageIndex] &&
+                            post.imageTags[currentImageIndex].length > 0 && (
+                                <div className="perfil__image-tags">
+                                    <h3 className="image-tags__titulo">Etiquetas</h3>
+                                    <div className="image-tags__lista">
+                                        {post.imageTags[currentImageIndex].map((tag, idx) => (
+                                            <span key={idx} className="image-tag">{tag}</span>
+                                        ))}
+                                    </div>
                                 </div>
-                            </div>
-                        )}
+                            )}
+                    </div>
                     {post.tags && post.tags.length > 0 && (
                         <div className="perfil__etiquetas">
                             <h3 className="etiquetas__titulo">Etiquetas de la imagen</h3>
                             <div className="etiquetas__lista">
                                 {post.tags.map((tag, index) => (
-                                    <span key={index} className="etiqueta">
-                                        {tag}
-                                    </span>
+                                    <span key={index} className="etiqueta">{tag}</span>
                                 ))}
                             </div>
                         </div>
