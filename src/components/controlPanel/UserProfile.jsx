@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import './css/UserProfileExtern.css';
-import { FaCheckCircle, FaExclamationCircle, FaArrowLeft, FaUserPlus, FaUserCheck, FaBell, FaBellSlash, FaEnvelope, FaShareAlt, FaTh, FaList, FaGlobe, FaUpload, FaExternalLinkAlt } from 'react-icons/fa';
+import { FaCheckCircle, FaExclamationCircle, FaArrowLeft, FaUserPlus, FaUserCheck, FaBell, FaBellSlash, FaEnvelope, FaShareAlt, FaTh, FaList, FaGlobe, FaUpload, FaExternalLinkAlt, FaCopy, FaTimes } from 'react-icons/fa';
 
 // Importar componentes
 import UserProfileHeader from './userProfile/UserProfileHeader';
@@ -38,6 +38,7 @@ const UserProfile = () => {
     const [isEducationalInstitution, setIsEducationalInstitution] = useState(false);
     const [companyRightTab, setCompanyRightTab] = useState('ofertas');
     const [companyOffers, setCompanyOffers] = useState([]);
+    const [showEmailPopup, setShowEmailPopup] = useState(false);
 
     useEffect(() => {
         const fetchUserProfile = async () => {
@@ -468,7 +469,7 @@ const UserProfile = () => {
                                 title="Contactar"
                                 onClick={() => {
                                     if (profile?.email) {
-                                        window.location.href = `mailto:${profile.email}`;
+                                        setShowEmailPopup(true);
                                     } else {
                                         setNotification({
                                             show: true,
@@ -642,6 +643,41 @@ const UserProfile = () => {
                     </div>
                 </div>
             </div>
+            
+            {/* Popup de Email */}
+            {showEmailPopup && (
+                <div className="success-popup-overlay" onClick={() => setShowEmailPopup(false)}>
+                    <div className="success-popup" onClick={(e) => e.stopPropagation()}>
+                        <div className="success-popup-header">
+                            <h3>Información de contacto</h3>
+                            <button 
+                                className="email-popup-close"
+                                onClick={() => setShowEmailPopup(false)}
+                                title="Cerrar"
+                            >
+                                <FaTimes />
+                            </button>
+                        </div>
+                        <div className="email-popup-content">
+                            <p>Email de contacto:</p>
+                            <div className="email-display">
+                                <span className="email-text">{profile?.email}</span>
+                                <button 
+                                    className="copy-email-btn"
+                                    onClick={() => {
+                                        navigator.clipboard.writeText(profile?.email);
+                                        showNotification('success', 'Email copiado al portapapeles');
+                                        setShowEmailPopup(false);
+                                    }}
+                                    title="Copiar email"
+                                >
+                                    <FaCopy /> Copiar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
