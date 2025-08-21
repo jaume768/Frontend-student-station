@@ -427,7 +427,14 @@ const UserProfile = () => {
                         {/* Sitio web */}
                         {profile?.social?.sitioWeb && (
                             <div className="user-extern-website">
-                                <a href={profile.social.sitioWeb} target="_blank" rel="noopener noreferrer">
+                                <a 
+                                    href={profile.social.sitioWeb.startsWith('http://') || profile.social.sitioWeb.startsWith('https://') 
+                                        ? profile.social.sitioWeb 
+                                        : `https://${profile.social.sitioWeb}`
+                                    } 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                >
                                     {profile.social.sitioWeb}
                                 </a>
                             </div>

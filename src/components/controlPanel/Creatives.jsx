@@ -205,31 +205,21 @@ const Creatives = () => {
                 {/* País */}
                 <div className="filter-input">
                     <input 
-                        list="countries-creatives"
+                        type="text"
                         placeholder="País" 
                         value={filters.country}
                         onChange={(e) => handleFilterChange('country', e.target.value)}
                     />
-                    <datalist id="countries-creatives">
-                        {countries.map((c) => (
-                            <option key={c} value={c} />
-                        ))}
-                    </datalist>
                 </div>
                 
                 {/* Ciudad */}
                 <div className="filter-input">
                     <input 
-                        list="cities-creatives"
+                        type="text"
                         placeholder="Ciudad" 
                         value={filters.city}
                         onChange={(e) => handleFilterChange('city', e.target.value)}
                     />
-                    <datalist id="cities-creatives">
-                        {cities.map((c) => (
-                            <option key={c} value={c} />
-                        ))}
-                    </datalist>
                 </div>
                 
                 {/* Centro de estudios */}
