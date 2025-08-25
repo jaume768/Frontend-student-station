@@ -2,19 +2,13 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Masonry from 'react-masonry-css';
-import { FaBookmark, FaRegBookmark, FaTrash } from 'react-icons/fa';
-import { MdTune, MdClose } from 'react-icons/md';
-import Draggable from 'react-draggable';
+import { FaBookmark, FaRegBookmark } from 'react-icons/fa';
 import './css/explorer.css';
 
 const Explorer = () => {
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('explorer');
     const [tabDisabled, setTabDisabled] = useState(false);
-    const [showFilters, setShowFilters] = useState(false);
-    const [showMobileFilters, setShowMobileFilters] = useState(false);
-    const [hasActiveFilters, setHasActiveFilters] = useState(false);
-    const [isMobile, setIsMobile] = useState(false);
 
     // Para evitar recarga inicial al montar
     const initialExplorerRef = useRef(true);
@@ -26,13 +20,6 @@ const Explorer = () => {
         sessionStorage.removeItem('viewedPosts');
     }, []);
 
-    // Detectar móvil
-    useEffect(() => {
-        const checkIfMobile = () => setIsMobile(window.innerWidth <= 768);
-        checkIfMobile();
-        window.addEventListener('resize', checkIfMobile);
-        return () => window.removeEventListener('resize', checkIfMobile);
-    }, []);
 
     // Recarga al volver de otra pestaña
     useEffect(() => {
@@ -183,19 +170,6 @@ const Explorer = () => {
         }
     };
 
-    // === Draggable sólo para arrastrar ===
-    const initialPosRef = useRef({ x: 0, y: 0 });
-    const [dragging, setDragging] = useState(false);
-
-    const handleOpenFilters = () => {
-        if (isMobile) setShowMobileFilters(true);
-        else setShowFilters(true);
-    };
-
-    const applyFilters = () => {
-        // Aplicar filtros (aquí iría la lógica para filtrar)
-        setHasActiveFilters(true);
-    };
 
     const breakpointColumns = { default: 5, 1400: 5, 1200: 4, 992: 3, 768: 2, 480: 2 };
 
@@ -205,39 +179,9 @@ const Explorer = () => {
             <div className="explorer-header">
                 <h1>Explorador</h1>
                 <p className="explorer-description">
-                    Explora las imágenes subidas por creativos. Selecciona <span className="highlight">Staff Picks</span> o <span className="highlight">Fotos aleatorias</span>. Refina con <span className="highlight">filtros</span>.
+                    Explora las imágenes subidas por creativos. Selecciona <span className="highlight">Staff Picks</span> o <span className="highlight">Fotos aleatorias</span>.
                 </p>
                 <div className="explorer-tabs-container">
-                    {
-                        !showFilters && !showMobileFilters && (
-                            <Draggable
-                                onStart={(e, data) => {
-                                    // guardamos la posición inicial
-                                    initialPosRef.current = { x: data.x, y: data.y };
-                                }}
-                                onStop={(e, data) => {
-                                    // calculamos cuánto te has movido
-                                    const dx = data.x - initialPosRef.current.x;
-                                    const dy = data.y - initialPosRef.current.y;
-
-                                    // si no te has movido más de 3px en ninguna dirección, lo consideramos un click
-                                    if (Math.abs(dx) < 3 && Math.abs(dy) < 3) {
-                                        handleOpenFilters();
-                                    }
-                                }}
-                            >
-                                <button
-                                    className={`explorer-filter-button ${hasActiveFilters ? 'has-filters' : ''}`}
-                                    disabled={tabDisabled}
-                                    title="Abrir filtros"
-                                    aria-label="Abrir filtros"
-                                >
-                                    <MdTune />
-                                </button>
-                            </Draggable>
-                        )
-                    }
-
                     <div className="explorer-tabs">
                         <button
                             className={`user-extern-tab ${activeTab === 'explorer' ? 'active' : ''}`}
@@ -269,133 +213,9 @@ const Explorer = () => {
                 </div>
             </div>
 
-            <div className={`explorer-filters-panel ${showFilters ? 'show' : ''}`}>
-                <div className="explorer-filters-container">
-                    <div className="explorer-filters-header">
-                        <h3>Filtros</h3>
-                        <button 
-                            className="explorer-filters-header-close" 
-                            onClick={() => setShowFilters(false)}
-                            title="Cerrar filtros"
-                        >
-                            <MdClose />
-                        </button>
-                    </div>
-                    <div className="explorer-filters-content">
-                        <div className="explorer-filter-group">
-                            <div className="explorer-filter-search">
-                                <input type="text" placeholder="Buscar" />
-                            </div>
-                            <div className="explorer-filter-select">
-                                <select defaultValue="">
-                                    <option value="" disabled>País</option>
-                                    <option value="espana">España</option>
-                                    <option value="francia">Francia</option>
-                                    <option value="alemania">Alemania</option>
-                                </select>
-                            </div>
-                            <div className="explorer-filter-select">
-                                <select defaultValue="">
-                                    <option value="" disabled>Ciudad</option>
-                                    <option value="madrid">Madrid</option>
-                                    <option value="barcelona">Barcelona</option>
-                                    <option value="valencia">Valencia</option>
-                                </select>
-                            </div>
-                            <div className="explorer-filter-select">
-                                <select defaultValue="">
-                                    <option value="" disabled>Centro de estudios</option>
-                                    <option value="ied">IED</option>
-                                    <option value="esdemga">ESDEMGA</option>
-                                    <option value="elisava">Elisava</option>
-                                </select>
-                            </div>
-                        </div>
-                        <button className="explorer-apply-filters-btn" onClick={applyFilters}>Aplicar filtros</button>
-                        <button
-                            className="explorer-apply-filters-btn explorer-clear-filters-btn"
-                            onClick={() => {
-                                document.querySelectorAll('.explorer-filter-select select').forEach(select => {
-                                    select.value = "";
-                                });
-                                document.querySelector('.explorer-filter-search input').value = '';
-                                setHasActiveFilters(false);
-                            }}
-                        >
-                            <FaTrash style={{ marginRight: '8px' }} /> Borrar Filtros
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            {/* --- Modal de filtros (móvil) --- */}
-            {showMobileFilters && (
-                <div
-                    className="explorer-mobile-filters-modal"
-                    onClick={e => {
-                        if (e.target.className === 'explorer-mobile-filters-modal') {
-                            setShowMobileFilters(false);
-                        }
-                    }}
-                >
-                    <div className="explorer-mobile-filters-content">
-                        {/* Cabecera con título y botón cerrar */}
-                        <div className="explorer-mobile-filters-header">
-                            <h3>Filtros</h3>
-                            <button
-                                className="explorer-mobile-filters-close"
-                                onClick={() => setShowMobileFilters(false)}
-                            >
-                                <MdClose />
-                            </button>
-                        </div>
-
-                        {/* Cuerpo de filtros */}
-                        <div className="explorer-filter-group">
-                            <div className="explorer-filter-search">
-                                <input type="text" placeholder="Buscar" />
-                            </div>
-                            <div className="explorer-filter-select">
-                                <select defaultValue="">
-                                    <option value="" disabled>País</option>
-                                    <option value="espana">España</option>
-                                    <option value="francia">Francia</option>
-                                    <option value="alemania">Alemania</option>
-                                </select>
-                            </div>
-                            <div className="explorer-filter-select">
-                                <select defaultValue="">
-                                    <option value="" disabled>Ciudad</option>
-                                    <option value="madrid">Madrid</option>
-                                    <option value="barcelona">Barcelona</option>
-                                    <option value="valencia">Valencia</option>
-                                </select>
-                            </div>
-                            <div className="explorer-filter-select">
-                                <select defaultValue="">
-                                    <option value="" disabled>Centro de estudios</option>
-                                    <option value="ied">IED</option>
-                                    <option value="esdemga">ESDEMGA</option>
-                                    <option value="elisava">Elisava</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <button
-                            className="explorer-apply-filters-btn"
-                            onClick={() => {
-                                applyFilters();
-                                setShowMobileFilters(false);
-                            }}
-                        >
-                            Aplicar filtros
-                        </button>
-                    </div>
-                </div>
-            )}
 
             {/* --- Grid de imágenes --- */}
-            <div className={`explorer-content ${showFilters ? 'with-filters' : ''}`}>
+            <div className="explorer-content">
                 <Masonry
                     breakpointCols={breakpointColumns}
                     className="my-masonry-grid"
